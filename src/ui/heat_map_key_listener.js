@@ -389,8 +389,9 @@ phantasus.HeatMapKeyListener = function (heatMap) {
     if (sc.shiftKey) {
       s.push('Shift+');
     }
-    s.push(phantasus.KeyboardCharMap[sc.which[0]]);
-
+    if (sc.which) {
+      s.push(phantasus.KeyboardCharMap[sc.which[0]]);
+    }
     s.push('</b>');
     return s.join('');
   }

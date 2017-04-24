@@ -549,10 +549,8 @@ phantasus.ActionManager = function () {
   });
   this.add({
     name: 'Keymap Reference',
-    cb: function () {
-      new phantasus.HeatMapKeyListener({
-        $tabPanel: $()
-      }).showKeyMapReference();
+    cb: function (options) {
+      new phantasus.HeatMapKeyListener(options.heatMap).showKeyMapReference();
     }
   });
 
