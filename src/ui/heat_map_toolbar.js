@@ -53,9 +53,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   searchHtml.push('</label>');
   searchHtml.push('</div>');
 
-  function createSearchMenu(dataName, navigation) {
-    searchHtml.push('<div style="display:inline-block;" data-name="' + dataName + '">');
-    searchHtml.push('<div class="form-group">');
+  function createSearchOptionsMenu() {
     searchHtml.push('<div style="display:inline-block;" class="dropdown">');
     searchHtml
       .push('<button type="button" class="btn btn-default btn-xxs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="fa fa-caret-down"></span></button>');
@@ -85,7 +83,10 @@ phantasus.HeatMapToolBar = function (heatMap) {
       .push('<li><a data-name="searchHelp" href="#">Help</a></li>');
     searchHtml.push('</ul>');
     searchHtml.push('</div>');
+  }
 
+  function createSearchMenu(dataName, navigation) {
+    searchHtml.push('<div style="display:inline-block;" data-name="' + dataName + '">');
     searchHtml.push('<div class="form-group">');
     searchHtml
       .push('<input type="text" class="form-control input-sm" autocomplete="off"' +
@@ -109,6 +110,9 @@ phantasus.HeatMapToolBar = function (heatMap) {
     searchHtml.push('</div>');
   }
 
+  if (heatMap.options.toolbar.searchRows || heatMap.options.toolbar.searchColumns || heatMap.options.toolbar.searchValues) {
+    createSearchOptionsMenu();
+  }
   if (heatMap.options.toolbar.searchRows) {
     createSearchMenu('searchRowsGroup', true);
   }
@@ -410,7 +414,8 @@ phantasus.HeatMapToolBar = function (heatMap) {
 
   this.$searchRowDendrogramGroup = $searchRowDendrogramGroup;
   this.$searchColumnDendrogramGroup = $searchColumnDendrogramGroup;
-
+  this.matchMode = 'contains';
+  this.matchAllPredicates = false;
   var $searchToggle = $searchForm.find('[name=searchToggle]'); // buttons
   var nameToSearchObject = {};
 
@@ -423,37 +428,62 @@ phantasus.HeatMapToolBar = function (heatMap) {
       $previousMatch: $group.find('[name=previousMatch]'),
       $nextMatch: $group.find('[name=nextMatch]'),
       $matchesToTop: $group.find('[name=matchesToTop]'),
-      matchMode: 'contains',
-      matchAllPredicates: false,
       $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').parent()
     };
-    var $searchOptions = $group.find('[data-name=searchOptions]');
-    $searchOptions.on('click', 'li > a', function (e) {
-      e.preventDefault();
-      var $this = $(this);
-      var group = $this.data('group');
-      if (group === 'matchMode') {
-        obj.matchMode = $this.data('name');
-      } else {
-        obj.matchAllPredicates = $this.data('name') === 'matchAll';
-      }
-      cb();
-      var $span = $(this).find('span');
-      if ($span.data('type') === 'toggle') {
-        $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').removeClass('dropdown-checkbox' +
-          ' fa' +
-          ' fa-check');
-        $span.addClass('dropdown-checkbox fa fa-check');
-      }
-      phantasus.Util.trackEvent({
-        eventCategory: 'ToolBar',
-        eventAction: 'searchMatchMode'
-      });
-    });
+
     nameToSearchObject[searchName] = obj;
     return obj;
   }
 
+  var $searchOptions = $el.find('[data-name=searchOptions]');
+  $searchOptions.on('click', 'li > a', function (e) {
+    e.preventDefault();
+    var $this = $(this);
+    var group = $this.data('group');
+    if (group === 'matchMode') {
+      _this.matchMode = $this.data('name');
+    } else {
+      _this.matchAllPredicates = $this.data('name') === 'matchAll';
+    }
+    for (var i = 0; i < $searchToggle.length; i++) {
+      var $button = $($searchToggle[i]);
+      if ($button.css('display') === 'block') {
+        $button.click();
+        break;
+      }
+    }
+    var $searchField;
+    if (_this.rowSearchObject.$search.is(':visible')) {
+      $searchField = _this.rowSearchObject.$search;
+    } else if (_this.columnSearchObject.$search.is(':visible')) {
+      $searchField = _this.rowSearchObject.$search;
+    } else if (_this.rowDendrogramSearchObject.$search.is(':visible')) {
+      $searchField = _this.rowSearchObject.$search;
+    } else if (_this.columnDendrogramSearchObject.$search.is(':visible')) {
+      $searchField = _this.rowSearchObject.$search;
+    } else if (_this.valueSearchObject.$search.is(':visible')) {
+      $searchField = _this.rowSearchObject.$search;
+    }
+    if ($searchField) {
+      $searchField.trigger($.Event('keyup', {
+        keyCode: 13,
+        which: 13
+      }));
+      // trigger search again
+    }
+
+    var $span = $(this).find('span');
+    if ($span.data('type') === 'toggle') {
+      $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').removeClass('dropdown-checkbox' +
+        ' fa' +
+        ' fa-check');
+      $span.addClass('dropdown-checkbox fa fa-check');
+    }
+    phantasus.Util.trackEvent({
+      eventCategory: 'ToolBar',
+      eventAction: 'searchMatchMode'
+    });
+  });
   this.rowSearchObject = getSearchElements($searchRowsGroup, 'rows', function () {
     _this.search(true);
   });
@@ -689,8 +719,8 @@ phantasus.HeatMapToolBar = function (heatMap) {
         dataset: project
           .getSortedFilteredDataset(),
         text: text,
-        matchAllPredicates: _this.valueSearchObject.matchAllPredicates,
-        defaultMatchMode: _this.valueSearchObject.matchMode
+        matchAllPredicates: _this.matchAllPredicates,
+        defaultMatchMode: _this.matchMode
       });
 
       project.getElementSelectionModel().setViewIndices(viewIndices);
@@ -1025,8 +1055,8 @@ phantasus.HeatMapToolBar.prototype = {
     var matches = phantasus.DendrogramUtil.search({
       rootNode: dendrogram.tree.rootNode,
       text: text,
-      matchAllPredicates: searchObject.matchAllPredicates,
-      defaultMatchMode: searchObject.matchMode
+      matchAllPredicates: this.matchAllPredicates,
+      defaultMatchMode: this.matchMode
     });
     if (matches === -1) {
       $searchResults.html('');
@@ -1089,9 +1119,8 @@ phantasus.HeatMapToolBar.prototype = {
       fullModel: fullModel,
       text: searchText,
       isColumns: !isRows,
-      matchAllPredicates: isRows ? this.rowSearchObject.matchAllPredicates : this.columnSearchObject.matchAllPredicates,
-      defaultMatchMode: isRows ? this.rowSearchObject.matchMode
-        : this.columnSearchObject.matchMode
+      matchAllPredicates: this.matchAllPredicates,
+      defaultMatchMode: this.matchMode
     });
     if (searchText === '') {
       $searchResultsLabel.html('');
