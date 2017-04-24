@@ -109,7 +109,8 @@ phantasus.OpenDatasetTool.prototype = {
       }
       phantasus.FormBuilder.showInModal({
         title: 'Error',
-        html: message.join('')
+        html: message.join(''),
+        focus: document.activeElement
       });
     });
     deferred

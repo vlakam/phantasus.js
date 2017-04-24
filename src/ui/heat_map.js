@@ -283,6 +283,7 @@ phantasus.HeatMap = function (options) {
     phantasus.FormBuilder.showOkCancel({
       title: 'Dataset',
       appendTo: this.getContentEl(),
+      focus: this.getFocusEl(),
       content: datasetFormBuilder.$form,
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
@@ -486,7 +487,8 @@ phantasus.HeatMap = function (options) {
       phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message,
-        appendTo: _this.getContentEl()
+        appendTo: _this.getContentEl(),
+        focus: _this.getFocusEl()
       });
     });
     d
@@ -585,7 +587,8 @@ phantasus.HeatMap = function (options) {
       phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message.join(''),
-        appendTo: _this.getContentEl()
+        appendTo: _this.getContentEl(),
+        focus: _this.getFocusEl()
       });
     });
 
@@ -1966,7 +1969,15 @@ phantasus.HeatMap.prototype = {
       .on(
         'rowFilterChanged columnFilterChanged rowGroupByChanged columnGroupByChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
         function (e) {
-          if (e.type === 'datasetChanged') { // remove
+          if (e.type === 'datasetChanged' || e.type === 'columnFilterChanged') {
+          var dataset = _this.project.getFullDataset();
+          phantasus.Project._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(dataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
+        }
+        if (e.type === 'datasetChanged' || e.type === 'rowFilterChanged') {
+          var dataset = _this.project.getFullDataset();
+          phantasus.Project._recomputeCalculatedColumnFields(dataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
+        }
+        if (e.type === 'datasetChanged') { // remove
             // tracks
             // that are no
             // longer in the
@@ -3323,12 +3334,14 @@ phantasus.HeatMap.prototype = {
       // saveAs(new Blob([s.join('')], {
       // 	type: 'text/plain;charset=utf-8'
       // }), 'canvas.txt', true);
-      canvas.toBlob(function (blob) {
+      var toBlob = canvas.toBlobHD ? ['toBlobHD'] : 'toBlob';
+      canvas[toBlob](function (blob) {
         if (blob == null || blob.size === 0) {
           phantasus.FormBuilder.showInModal({
             title: 'Save Image',
             html: 'Image is too large to save.',
-            appendTo: _this.getContentEl()
+            appendTo: _this.getContentEl(),
+            focus: _this.getFocusEl()
           });
           return;
         }

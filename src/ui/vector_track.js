@@ -1238,60 +1238,61 @@ phantasus.VectorTrack.prototype = {
 
                   }
 
-                  _this.setInvalid(true);
-                  _this.repaint();
-                },
-                content: list.$el
-              });
-          } else if (item === 'Edit Bar Color...') {
-            var formBuilder = new phantasus.FormBuilder();
-            formBuilder.append({
-              name: 'bar_color',
-              type: 'color',
-              value: _this.settings.barColor,
-              required: true,
-              col: 'col-xs-2'
+              _this.setInvalid(true);
+              _this.repaint();
+            },
+            content: list.$el
+          });
+        } else if (item === 'Edit Bar Color...') {
+          var formBuilder = new phantasus.FormBuilder();
+          formBuilder.append({
+            name: 'bar_color',
+            type: 'color',
+            value: _this.settings.barColor,
+            required: true,
+            col: 'col-xs-2'
+          });
+          formBuilder.find('bar_color').on(
+            'change',
+            function () {
+              _this.settings.barColor = $(this)
+              .val();
+              _this.setInvalid(true);
+              _this.repaint();
             });
-            formBuilder.find('bar_color').on(
-              'change',
-              function () {
-                _this.settings.barColor = $(this)
-                  .val();
+          phantasus.FormBuilder.showInModal({
+            title: 'Bar Color',
+            close: 'Close',
+            html: formBuilder.$form,
+          focus: heatmap.getFocusEl()});
+        } else if (item === COLOR_BAR_SIZE) {
+          var formBuilder = new phantasus.FormBuilder();
+          formBuilder.append({
+            name: 'size',
+            type: 'text',
+            value: _this.settings.colorBarSize,
+            required: true,
+            col: 'col-xs-2'
+          });
+          formBuilder.find('size').on(
+            'change',
+            function () {
+              var val = parseFloat($(this)
+              .val());
+              if (val > 0) {
+                _this.settings.colorBarSize = val;
                 _this.setInvalid(true);
                 _this.repaint();
-              });
-            phantasus.FormBuilder.showInModal({
-              title: 'Bar Color',
-              close: 'Close',
-              html: formBuilder.$form
+              }
             });
-          } else if (item === COLOR_BAR_SIZE) {
-            var formBuilder = new phantasus.FormBuilder();
-            formBuilder.append({
-              name: 'size',
-              type: 'text',
-              value: _this.settings.colorBarSize,
-              required: true,
-              col: 'col-xs-2'
-            });
-            formBuilder.find('size').on(
-              'change',
-              function () {
-                var val = parseFloat($(this)
-                  .val());
-                if (val > 0) {
-                  _this.settings.colorBarSize = val;
-                  _this.setInvalid(true);
-                  _this.repaint();
-                }
-              });
-            phantasus.FormBuilder.showInModal({
-              title: 'Color Bar Size',
-              close: 'Close',
-              html: formBuilder.$form
-            });
-          } else if (item === ANNOTATE_SELECTION) {
-            heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
+          phantasus.FormBuilder.showInModal({
+            title: 'Color Bar Size',
+            close: 'Close',
+            html: formBuilder.$form,
+            focus: heatmap.getFocusEl()
+          });
+        } else if (item === ANNOTATE_SELECTION) {
+          heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
             ' Selected Rows');
           } else if (item === DELETE) {
             phantasus.FormBuilder
@@ -1482,105 +1483,105 @@ phantasus.VectorTrack.prototype = {
             legend.setBounds(size);
             legend.repaint();
 
-            phantasus.FormBuilder.showInModal({
-              title: 'Color Key',
-              html: legend.canvas
-            });
-          } else if (item === 'Shape Key') {
-            var legend = new phantasus.HeatMapTrackShapeLegend(
-              [_this], isColumns ? _this.project
-                .getColumnShapeModel()
-                : _this.project
-                .getRowShapeModel());
-            var size = legend.getPreferredSize();
-            legend.setBounds(size);
-            legend.repaint();
+          phantasus.FormBuilder.showInModal({
+            title: 'Color Key',
+            html: legend.canvas,
+          focus: heatmap.getFocusEl()});
+        } else if (item === 'Shape Key') {
+          var legend = new phantasus.HeatMapTrackShapeLegend(
+            [_this], isColumns ? _this.project
+            .getColumnShapeModel()
+              : _this.project
+              .getRowShapeModel());
+          var size = legend.getPreferredSize();
+          legend.setBounds(size);
+          legend.repaint();
 
-            phantasus.FormBuilder.showInModal({
-              title: 'Shape Key',
-              html: legend.canvas
-            });
-          } else if (item === 'Edit Shapes...') {
-            var shapeFormBuilder = new phantasus.FormBuilder();
-            var shapeModel = isColumns ? _this.project
-              .getColumnShapeModel() : _this.project
-              .getRowShapeModel();
-            var chooser = new phantasus.ShapeChooser({
-              map: shapeModel.getMap(_this.name)
-            });
+          phantasus.FormBuilder.showInModal({
+            title: 'Shape Key',
+            html: legend.canvas,
+          focus: heatmap.getFocusEl()});
+        } else if (item === 'Edit Shapes...') {
+          var shapeFormBuilder = new phantasus.FormBuilder();
+          var shapeModel = isColumns ? _this.project
+          .getColumnShapeModel() : _this.project
+          .getRowShapeModel();
+          var chooser = new phantasus.ShapeChooser({
+            map: shapeModel.getMap(_this.name)
+          });
 
-            chooser.on('change', function (event) {
-              shapeModel.setMappedValue(_this
-                  .getFullVector(), event.value,
-                event.shape);
+          chooser.on('change', function (event) {
+            shapeModel.setMappedValue(_this
+              .getFullVector(), event.value,
+              event.shape);
+            _this.setInvalid(true);
+            _this.repaint();
+          });
+          phantasus.FormBuilder.showInModal({
+            title: 'Edit Shapes',
+            html: chooser.$div,
+            close: 'Close',
+          focus: heatmap.getFocusEl()});
+        } else if (item === 'Edit Colors...') {
+          var colorSchemeChooser;
+          var colorModel = isColumns ? _this.project
+          .getColumnColorModel() : _this.project
+          .getRowColorModel();
+          if (_this.settings.discrete) {
+            colorSchemeChooser = new phantasus.DiscreteColorSchemeChooser(
+              {
+                colorScheme: {
+                  scale: colorModel
+                  .getDiscreteColorScheme(_this
+                  .getFullVector())
+                }
+              });
+            colorSchemeChooser.on('change', function (event) {
+              colorModel.setMappedValue(_this
+                .getFullVector(), event.value,
+                event.color);
               _this.setInvalid(true);
               _this.repaint();
             });
-            phantasus.FormBuilder.showInModal({
-              title: 'Edit Shapes',
-              html: chooser.$div,
-              close: 'Close'
+          } else {
+            colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser(
+              {
+                showRelative: false,
+              });
+            colorSchemeChooser
+            .setColorScheme(colorModel
+            .getContinuousColorScheme(_this
+            .getFullVector()));
+            colorSchemeChooser.on('change', function (event) {
+              _this.setInvalid(true);
+              _this.repaint();
             });
-          } else if (item === 'Edit Colors...') {
-            var colorSchemeChooser;
-            var colorModel = isColumns ? _this.project
-              .getColumnColorModel() : _this.project
-              .getRowColorModel();
-            if (_this.settings.discrete) {
-              colorSchemeChooser = new phantasus.DiscreteColorSchemeChooser(
-                {
-                  colorScheme: {
-                    scale: colorModel
-                      .getDiscreteColorScheme(_this
-                        .getFullVector())
-                  }
-                });
-              colorSchemeChooser.on('change', function (event) {
-                colorModel.setMappedValue(_this
-                    .getFullVector(), event.value,
-                  event.color);
-                _this.setInvalid(true);
-                _this.repaint();
-              });
-            } else {
-              colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser(
-                {
-                  showRelative: false,
-                });
-              colorSchemeChooser
-                .setColorScheme(colorModel
-                  .getContinuousColorScheme(_this
-                    .getFullVector()));
-              colorSchemeChooser.on('change', function (event) {
-                _this.setInvalid(true);
-                _this.repaint();
-              });
+          }
+          phantasus.FormBuilder.showInModal({
+            title: 'Edit Colors',
+            html: colorSchemeChooser.$div,
+            close: 'Close',focus: heatmap.getFocusEl(),
+            onClose: function () {
+              colorSchemeChooser.dispose();
             }
-            phantasus.FormBuilder.showInModal({
-              title: 'Edit Colors',
-              html: colorSchemeChooser.$div,
-              close: 'Close',
-              onClose: function () {
-                colorSchemeChooser.dispose();
-              }
-            });
-          } else if (item === TOOLTIP) {
-            _this.settings.inlineTooltip = !_this.settings.inlineTooltip;
-          } else if (item === HIGHLIGHT_MATCHING_VALUES) {
-            _this.settings.highlightMatchingValues = !_this.settings.highlightMatchingValues;
-          } else if ((customItem = _
-              .find(
-                customItems,
-                function (customItem) {
-                  return customItem.name === item
-                    && customItem.columns === isColumns;
-                }))) {
-            if (customItem.task) {
-              // add task
-              var task = {
-                tabId: _this.heatmap.getTabManager()
-                  .getActiveTabId()
-              };
+          });
+        } else if (item === TOOLTIP) {
+          _this.settings.inlineTooltip = !_this.settings.inlineTooltip;
+        } else if (item === HIGHLIGHT_MATCHING_VALUES) {
+          _this.settings.highlightMatchingValues = !_this.settings.highlightMatchingValues;
+        } else if ((customItem = _
+          .find(
+            customItems,
+            function (customItem) {
+              return customItem.name === item
+                && customItem.columns === isColumns;
+            }))) {
+          if (customItem.task) {
+            // add task
+            var task = {
+              tabId: _this.heatmap.getTabManager()
+              .getActiveTabId()
+            };
 
               _this.heatmap.getTabManager().addTask(task);
               setTimeout(function () {

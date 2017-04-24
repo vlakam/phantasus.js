@@ -138,6 +138,7 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                   phantasus.FormBuilder.showOkCancel({
                     title: 'Save Dendrogram',
                     content: formBuilder.$form,
+                    focus: document.activeElement,
                     okCallback: function () {
                       var fileName = formBuilder.getValue('file_name');
                       if (fileName === '') {

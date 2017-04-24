@@ -404,6 +404,7 @@ phantasus.TabManager.prototype = {
     phantasus.FormBuilder.showOkCancel({
       title: 'Rename Tab',
       content: builder.$form,
+      focus: document.activeElement,
       okCallback: function () {
         var name = $.trim(builder.getValue('name'));
         if (name !== '') {
