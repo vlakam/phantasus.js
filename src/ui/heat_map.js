@@ -1965,16 +1965,16 @@ phantasus.HeatMap.prototype = {
     });
     this.setTooltipMode(this.options.tooltipMode);
     this
-      .getProject()
-      .on(
-        'rowFilterChanged columnFilterChanged rowGroupByChanged columnGroupByChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
-        function (e) {
-          if (e.type === 'datasetChanged' || e.type === 'columnFilterChanged') {
-          var dataset = _this.project.getFullDataset();
+    .getProject()
+    .on(
+      'rowFilterChanged columnFilterChanged rowGroupByChanged columnGroupByChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
+      function (e) {
+        if (e.type === 'datasetChanged' || e.type === 'columnFilterChanged') {
+          var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), null, _this.project.getFilteredSortedColumnIndices());
           phantasus.Project._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(dataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
         }
         if (e.type === 'datasetChanged' || e.type === 'rowFilterChanged') {
-          var dataset = _this.project.getFullDataset();
+          var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), _this.project.getFilteredSortedRowIndices(), null);
           phantasus.Project._recomputeCalculatedColumnFields(dataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
         }
         if (e.type === 'datasetChanged') { // remove
