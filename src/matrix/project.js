@@ -44,19 +44,29 @@ phantasus.Project.Events = {
 phantasus.Project._recomputeCalculatedColumnFields = function (dataset, key) {
   var metadata = dataset.getColumnMetadata();
   var view = new phantasus.DatasetColumnView(dataset);
+  var nfound = 0;
+
   for (var metadataIndex = 0,
          count = metadata.getMetadataCount(); metadataIndex < count; metadataIndex++) {
     var vector = metadata.get(metadataIndex);
     if (vector.getProperties().get(phantasus.VectorKeys.FUNCTION) != null
       && vector.getProperties().get(key)) {
+
+      // copy properties
+      var v = metadata.add(name);
+      vector.getProperties().forEach(function (val, key) {
+        v.getProperties().set(key, val);
+      });
+      vector = v;
       var f = phantasus.VectorUtil.jsonToFunction(vector, phantasus.VectorKeys.FUNCTION);
       for (var j = 0, size = vector.size(); j < size; j++) {
         view.setIndex(j);
         vector.setValue(j, f(view, dataset, j));
       }
+      nfound++;
     }
   }
-
+  return nfound;
 };
 phantasus.Project.prototype = {
   isSymmetric: function () {
