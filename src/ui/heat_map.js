@@ -1969,18 +1969,6 @@ phantasus.HeatMap.prototype = {
     .on(
       'rowFilterChanged columnFilterChanged rowGroupByChanged columnGroupByChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
       function (e) {
-        if (e.type === 'datasetChanged' || e.type === 'columnFilterChanged') {
-          var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), null, _this.project.getFilteredSortedColumnIndices());
-          if (phantasus.Project._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(dataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER) > 0) {
-            _this.project.setRowFilter(_this.project.getRowFilter(), true);
-          }
-        }
-        if (e.type === 'datasetChanged' || e.type === 'rowFilterChanged') {
-          var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), _this.project.getFilteredSortedRowIndices(), null);
-          if (phantasus.Project._recomputeCalculatedColumnFields(dataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER) > 0) {
-            _this.project.setColumnFilter(_this.project.getColumnFilter(), true);
-          }
-        }
         if (e.type === 'datasetChanged') { // remove
             // tracks
             // that are no
