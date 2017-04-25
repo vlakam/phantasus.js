@@ -1971,11 +1971,15 @@ phantasus.HeatMap.prototype = {
       function (e) {
         if (e.type === 'datasetChanged' || e.type === 'columnFilterChanged') {
           var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), null, _this.project.getFilteredSortedColumnIndices());
-          phantasus.Project._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(dataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
+          if (phantasus.Project._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(dataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER) > 0) {
+            _this.project.setRowFilter(_this.project.getRowFilter(), true);
+          }
         }
         if (e.type === 'datasetChanged' || e.type === 'rowFilterChanged') {
           var dataset = new phantasus.SlicedDatasetView(_this.project.getFullDataset(), _this.project.getFilteredSortedRowIndices(), null);
-          phantasus.Project._recomputeCalculatedColumnFields(dataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
+          if (phantasus.Project._recomputeCalculatedColumnFields(dataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER) > 0) {
+            _this.project.setColumnFilter(_this.project.getColumnFilter(), true);
+          }
         }
         if (e.type === 'datasetChanged') { // remove
             // tracks
@@ -2231,10 +2235,45 @@ phantasus.HeatMap.prototype = {
     }
     var dragStartScrollTop;
     var dragStartScrollLeft;
+    var panstartMousePosition;
     this.hammer = phantasus.Util
-      .hammer(_this.heatmap.canvas, ['pan', 'pinch', 'tap'])
-      .on('panmove', this.panmove = function (event) {
-        _this.updatingScroll = true;
+    .hammer(_this.heatmap.canvas, ['pan', 'pinch', 'tap'])
+    .on('panend', this.panend = function (event) {
+      _this.panning = false;
+      if (panstartMousePosition) {
+        panstartMousePosition = null;
+        _this.heatmap.setSelectionBox(null);
+        _this.heatmap.repaint();
+      }
+    }).on('panmove', this.panmove = function (event) {
+      if (panstartMousePosition) {
+        var pos = phantasus.CanvasUtil
+        .getMousePosWithScroll(event.target, event,
+          _this.scrollLeft(), _this
+          .scrollTop());
+        var rowIndex = _this.heatmap.getRowPositions()
+        .getIndex(pos.y, false);
+        var columnIndex = _this.heatmap.getColumnPositions().getIndex(pos.x, false);
+        _this.updatingScroll = false;
+        _this.heatmap.setSelectionBox({
+          y: [panstartMousePosition.rowIndex, rowIndex],
+          x: [panstartMousePosition.columnIndex, columnIndex]
+        });
+        var rowIndices = new phantasus.Set();
+        for (var i = Math.min(panstartMousePosition.rowIndex, rowIndex),
+               end = Math.max(panstartMousePosition.rowIndex, rowIndex); i <= end; i++) {
+          rowIndices.add(i);
+        }
+        var columnIndices = new phantasus.Set();
+        for (var i = Math.min(panstartMousePosition.columnIndex, columnIndex),
+               end = Math.max(panstartMousePosition.columnIndex, columnIndex); i <= end; i++) {
+          columnIndices.add(i);
+        }
+        _this.project.getRowSelectionModel().setViewIndices(rowIndices, true);
+        _this.project.getColumnSelectionModel().setViewIndices(columnIndices, true);
+        // _this.heatmap.repaint(); don't need to repaint as setViewIndices triggers repaint
+      } else {
+        _this.updatingScroll = true; // avoid infinite paints
         var rows = false;
         var columns = false;
         if (event.deltaY !== 0) {
@@ -2248,61 +2287,81 @@ phantasus.HeatMap.prototype = {
           columns = true;
         }
         _this.updatingScroll = false;
-        _this.paintAll({
-          paintRows: rows,
-          paintColumns: rows,
-          invalidateRows: rows,
-          invalidateColumns: columns
-        });
-        event.preventDefault();
-      })
-      .on('panstart', this.panstart = function (event) {
+        if (rows || columns) {
+          _this.paintAll({
+            paintRows: rows,
+            paintColumns: rows,
+            invalidateRows: rows,
+            invalidateColumns: columns
+          });
+        }
+      }
+      event.preventDefault();
+    })
+    .on('panstart', this.panstart = function (event) {
+      _this.panning = true; // don't draw inline tooltips when panning
+      _this.project.setHoverRowIndex(-1);
+      _this.project.setHoverColumnIndex(-1);
+
+      if (event.srcEvent.shiftKey) {
+        var pos = phantasus.CanvasUtil
+        .getMousePosWithScroll(event.target, event,
+          _this.scrollLeft(), _this
+          .scrollTop());
+        panstartMousePosition = {
+          rowIndex: _this.heatmap.getRowPositions()
+          .getIndex(pos.y, false),
+          columnIndex: _this.heatmap.getColumnPositions().getIndex(pos.x, false)
+        };
+      } else {
+        panstartMousePosition = null;
         dragStartScrollTop = _this.scrollTop();
         dragStartScrollLeft = _this.scrollLeft();
+      }
+    })
+    .on(
+      'tap',
+      this.tap = function (event) {
+        var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
+          : event.srcEvent.ctrlKey;
+        if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+          // on
+          // Mac
+          return;
+        }
+        var position = phantasus.CanvasUtil
+        .getMousePosWithScroll(event.target, event,
+          _this.scrollLeft(), _this
+          .scrollTop());
+        var rowIndex = _this.heatmap.getRowPositions()
+        .getIndex(position.y, false);
+        var columnIndex = _this.heatmap
+        .getColumnPositions().getIndex(position.x,
+          false);
+        _this.project.getElementSelectionModel().click(
+          rowIndex, columnIndex,
+          event.srcEvent.shiftKey || commandKey);
       })
-      .on(
-        'tap',
-        this.tap = function (event) {
-          var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
-            : event.srcEvent.ctrlKey;
-          if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
-            // on
-            // Mac
-            return;
-          }
-          var position = phantasus.CanvasUtil
-            .getMousePosWithScroll(event.target, event,
-              _this.scrollLeft(), _this
-                .scrollTop());
-          var rowIndex = _this.heatmap.getRowPositions()
-            .getIndex(position.y, false);
-          var columnIndex = _this.heatmap
-            .getColumnPositions().getIndex(position.x,
-              false);
-          _this.project.getElementSelectionModel().click(
-            rowIndex, columnIndex,
-            event.srcEvent.shiftKey || commandKey);
-        })
-      .on(
-        'pinch',
-        this.pinch = function (event) {
-          var scale = event.scale;
-          _this.heatmap.getRowPositions().setSize(13 * scale);
-          _this.heatmap.getColumnPositions().setSize(
-            13 * scale);
-          var reval = {};
-          if (_this.project.getHoverRowIndex() !== -1) {
-            reval.scrollTop = this.heatmap
-              .getRowPositions()
-              .getPosition(
-                this.project.getHoverRowIndex());
-          }
-          if (_this.project.getHoverColumnIndex() !== -1) {
-            reval.scrollLeft = this.heatmap
-              .getColumnPositions().getPosition(
-                this.project
-                  .getHoverColumnIndex());
-          }
+    .on(
+      'pinch',
+      this.pinch = function (event) {
+        var scale = event.scale;
+        _this.heatmap.getRowPositions().setSize(13 * scale);
+        _this.heatmap.getColumnPositions().setSize(
+          13 * scale);
+        var reval = {};
+        if (_this.project.getHoverRowIndex() !== -1) {
+          reval.scrollTop = this.heatmap
+          .getRowPositions()
+          .getPosition(
+            this.project.getHoverRowIndex());
+        }
+        if (_this.project.getHoverColumnIndex() !== -1) {
+          reval.scrollLeft = this.heatmap
+          .getColumnPositions().getPosition(
+            this.project
+            .getHoverColumnIndex());
+        }
 
           _this.revalidate(reval);
           event.preventDefault();
@@ -2366,8 +2425,10 @@ phantasus.HeatMap.prototype = {
     var updateColumns = this.project.getHoverColumnIndex() !== j;
     var updateRows = this.project.getHoverRowIndex() !== i;
     if (updateColumns || updateRows) {
-      this.project.setHoverRowIndex(i);
-      this.project.setHoverColumnIndex(j);
+      if (!this.panning) {
+        this.project.setHoverRowIndex(i);
+        this.project.setHoverColumnIndex(j);
+      }
       this.setToolTip(i, j, options);
       this.paintAll({
         paintRows: updateRows,
@@ -2674,22 +2735,29 @@ phantasus.HeatMap.prototype = {
       options, this.options.tooltipMode === 0 ? '&nbsp;&nbsp;&nbsp;'
         : '<br />', false, tipText);
 
-    var tipFollowText = [];
-    if (this.options.inlineTooltip) {
-      this.tooltipProvider(this, rowIndex, columnIndex,
-        options, '<br />', true, tipFollowText);
-
-      if (this.options.tooltip && rowIndex !== -1 && columnIndex !== -1) {
-        tipFollowText.push('<div data-name="tip"></div>');
-      }
-    }
-
-    var text = tipFollowText.join('');
-    var $tipFollowText = $('<span style="max-width:400px;">' + text + '</span>');
+    var text = [];
     var customToolTip = false;
-    if (this.options.tooltip && rowIndex !== -1 && columnIndex !== -1) {
-      this.options.tooltip(this, rowIndex, columnIndex, $tipFollowText.find('[data-name=tip]'));
-      customToolTip = true;
+    var $tipFollowText;
+    if (!this.panning) {
+      var tipFollowText = [];
+      if (this.options.inlineTooltip) {
+        this.tooltipProvider(this, rowIndex, columnIndex,
+          options, '<br />', true, tipFollowText);
+
+        if (this.options.tooltip && rowIndex !== -1 && columnIndex !== -1) {
+          tipFollowText.push('<div data-name="tip"></div>');
+        }
+      }
+
+      text = tipFollowText.join('');
+      $tipFollowText = $('<span style="max-width:400px;">' + text + '</span>');
+
+      // tooltip callback
+      if (this.options.tooltip && rowIndex !== -1 && columnIndex !== -1) {
+        this.options.tooltip(this, rowIndex, columnIndex, $tipFollowText.find('[data-name=tip]'));
+        customToolTip = true;
+      }
+
     }
     this._setTipText(tipText, text.length > 0 || customToolTip ? $tipFollowText : null, options);
 
@@ -3014,7 +3082,7 @@ phantasus.HeatMap.prototype = {
     this.hscroll.dispose();
     this.vscroll.dispose();
     this.hammer.off('panmove', this.panmove).off('panstart', this.panstart).off('tap',
-      this.tap).off('pinch', this.pinch);
+      this.tap).off('pinch', this.pinch).off('panend', this.panend);
     this.hammer.destroy();
     if (typeof window !== 'undefined') {
       $(window)
