@@ -1009,9 +1009,9 @@ phantasus.HeatMapToolBar.prototype = {
     if (f.getRowCount() !== d.getRowCount()) {
       text.push('<b>');
       text.push(phantasus.Util.intFormat(f.getRowCount()));
-      text.push('</b>');
       text.push('/');
       text.push(phantasus.Util.intFormat(d.getRowCount()));
+      text.push('</b>');
     } else {
       text.push(phantasus.Util.intFormat(f.getRowCount()));
     }
@@ -1020,9 +1020,9 @@ phantasus.HeatMapToolBar.prototype = {
     if (f.getColumnCount() !== d.getColumnCount()) {
       text.push('<b>');
       text.push(phantasus.Util.intFormat(f.getColumnCount()));
-      text.push('</b>');
       text.push('/');
       text.push(phantasus.Util.intFormat(d.getColumnCount()));
+      text.push('</b>');
     } else {
       text.push(phantasus.Util.intFormat(f.getColumnCount()));
     }
