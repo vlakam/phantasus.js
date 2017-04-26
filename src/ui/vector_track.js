@@ -253,9 +253,7 @@ phantasus.VectorTrack.prototype = {
     if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
       || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
       if (this.positions.getSize() >= 6) {
-        var fontSize = phantasus.VectorTrack.MAX_FONT_SIZE;
         var context = this.canvas.getContext('2d');
-
         var textWidth = phantasus.CanvasUtil.getVectorStringWidth(
           context, this.getVector(), this.positions,
           forPrint ? -1 : (this.isColumns ? 120 : 100));
@@ -902,25 +900,16 @@ phantasus.VectorTrack.prototype = {
     sectionToItems.Selection.push({
       name: MOVE_TO_TOP
     });
-
-    if (sectionToItems.Selection.length > 0) {
-      sectionToItems.Selection.push({
-        separator: true
-      });
-    }
-    sectionToItems.Selection.push({
-      name: 'Copy',
-      class: 'copy'
-    });
-    sectionToItems.Selection.push({
-      separator: true
-    });
     if (this.heatmap.options.menu.Edit && this.heatmap.options.menu.Edit.indexOf('Annotate' +
         ' Selected Rows') !== -1) {
       sectionToItems.Selection.push({
         name: ANNOTATE_SELECTION
       });
     }
+    sectionToItems.Selection.push({
+      name: 'Copy',
+      class: 'copy'
+    });
 
     sectionToItems.Selection.push({
       name: INVERT_SELECTION

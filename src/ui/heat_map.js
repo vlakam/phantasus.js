@@ -127,131 +127,126 @@ phantasus.HeatMap = function (options) {
          */
         columnDendrogram: undefined,
 
-        /*
-         * Column metadata field in dataset used to match leaf
-         * node ids in column dendrogram Newick file
-         */
-        columnDendrogramField: 'id',
-        /*
-         * Row metadata field in dataset used to match leaf node
-         * ids in row dendrogram Newick file
-         */
-        rowDendrogramField: 'id',
-        /*
-         * Array of objects describing how to display row
-         * metadata fields. Each object in the array must have
-         * field, and optionally display, order, and renameTo.
-         * Field is the metadata field name. Display is a comma
-         * delimited string that describes how to render a
-         * metadata field. Options are text, color, stacked_bar,
-         * bar, highlight, shape, discrete, and continuous.
-         * Order is a number that indicates the order in which
-         * the field should appear in the heat map. RenameTo
-         * allows you to rename a field.
-         */
-        rows: [],
-        /*
-         * Array of objects describing how to display column
-         * metadata fields. Each object in the array must have
-         * field, and optionally display, order, and renameTo.
-         * Field is the metadata field name. Display is a comma
-         * delimited string that describes how to render a
-         * metadata field. Options are text, color, stacked_bar,
-         * bar, highlight, shape, discrete, and continuous.
-         * Order is a number that indicates the order in which
-         * the field should appear in the heat map. RenameTo
-         * allows you to rename a field.
-         */
-        columns: [],
-        /*
-         * Optional array of tools to run at load time. For
-         * example: <code>tools : [ {
-         * name : 'Marker Selection',
-         * params : {
-         * 		field : [ comparisonVector.getName() ],
-         *      class_a : [ 'A' ], class_b : [ 'B' ] }} ]</code>
-         */
-        tools: undefined,
-        /*
-         * Optional array of {name:string, values:[]}
-         */
-        rowFilter: undefined,
-        columnFilter: undefined,
-        /*
-         * Whether to auto-hide the tab bar when only one tab is visible
-         */
-        autohideTabBar: false,
-        /*
-         * Whether this heat map tab can be closed
-         */
-        closeable: true,
-        /*
-         * Whether heat map tab can be renamed
-         */
-        rename: true,
-        rowSize: undefined,
-        columnSize: undefined,
-        customUrls: undefined, // Custom urls for File>Open.
-        height: 'window', // set the available height for the
-        // heat map. If not
-        // set, it will be determined automatically
-        width: undefined, // set the available width for the
-        // heat map. If not
-        // set, it will be determined automatically
-        /* Whether to focus this tab */
-        focus: true,
-        tooltipMode: 0, // 0=top status bar, 1=dialog, 2=follow
-        inheritFromParent: true,
-        inheritFromParentOptions: {
-          transpose: false
-        },
-        /** Callback function to invoke for customizing inline matrix tooltips. */
-        tooltip: undefined,
-        structureUrlProvider: undefined,
-        promises: undefined, // additional promises to wait
-        // for
-        // not inherited
-        renderReady: undefined,
-        // not inherited
-        datasetReady: undefined,
-        // inherited
-        tabOpened: undefined,
-        loadedCallback: undefined,
-        name: undefined,
-        rowsSortable: true,
-        columnsSortable: true,
-        popupEnabled: true,
-        symmetric: false,
-        keyboard: true,
-        inlineTooltip: true,
-        $loadingImage: phantasus.Util.createLoadingEl(),
-        menu: {
-          File: ['Open', 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename Tab'],
-          Tools: ['New Heat Map', null, 'Hierarchical Clustering', 'Marker Selection', 'Nearest Neighbors',
-            'Adjust', 'Collapse', 'Create Calculated Annotation', 'Similarity Matrix', 'Transpose',
-            't-SNE', null, 'Chart', null, 'Sort', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
-          View: ['Zoom In', 'Zoom Out', 'Fit To Window', 'Reset Zoom', null, 'Options'],
-          Edit: ['Copy Image', 'Copy Selected Dataset', null, 'Move Selected Rows To Top', 'Annotate Selected Rows', 'Invert' +
-          ' Selected Rows', 'Copy Selected Rows', 'Select All Rows', null, 'Move Selected Columns' +
-          ' To Top', 'Annotate Selected Columns', 'Invert Selected Columns', 'Copy Selected' +
-          ' Columns', 'Select' +
-          ' All' +
-          ' Columns'],
-          Help: ['Find Action', null, 'Contact', 'Tutorial', 'Source Code', null, 'Keymap' +
-          ' Reference']
-        },
-        toolbar: {
-          dimensions: true,
-          zoom: true,
-          searchRows: true,
-          searchColumns: true,
-          searchValues: false,
-          options: true,
-          saveImage: true,
-          filter: true,
-          colorKey: true
-        }
-      }, options);
+      /*
+       * Column metadata field in dataset used to match leaf
+       * node ids in column dendrogram Newick file
+       */
+      columnDendrogramField: 'id',
+      /*
+       * Row metadata field in dataset used to match leaf node
+       * ids in row dendrogram Newick file
+       */
+      rowDendrogramField: 'id',
+      /*
+       * Array of objects describing how to display row
+       * metadata fields. Each object in the array must have
+       * field, and optionally display, order, and renameTo.
+       * Field is the metadata field name. Display is a comma
+       * delimited string that describes how to render a
+       * metadata field. Options are text, color, stacked_bar,
+       * bar, highlight, shape, discrete, and continuous.
+       * Order is a number that indicates the order in which
+       * the field should appear in the heat map. RenameTo
+       * allows you to rename a field.
+       */
+      rows: [],
+      /*
+       * Array of objects describing how to display column
+       * metadata fields. Each object in the array must have
+       * field, and optionally display, order, and renameTo.
+       * Field is the metadata field name. Display is a comma
+       * delimited string that describes how to render a
+       * metadata field. Options are text, color, stacked_bar,
+       * bar, highlight, shape, discrete, and continuous.
+       * Order is a number that indicates the order in which
+       * the field should appear in the heat map. RenameTo
+       * allows you to rename a field.
+       */
+      columns: [],
+      /*
+       * Optional array of tools to run at load time. For
+       * example: <code>tools : [ {
+       * name : 'Marker Selection',
+       * params : {
+       * 		field : [ comparisonVector.getName() ],
+       *      class_a : [ 'A' ], class_b : [ 'B' ] }} ]</code>
+       */
+      tools: undefined,
+      /*
+       * Optional array of {name:string, values:[]}
+       */
+      rowFilter: undefined,
+      columnFilter: undefined,
+      /*
+       * Whether to auto-hide the tab bar when only one tab is visible
+       */
+      autohideTabBar: false,
+      /*
+       * Whether this heat map tab can be closed
+       */
+      closeable: true,
+      /*
+       * Whether heat map tab can be renamed
+       */
+      rename: true,
+      rowSize: undefined,
+      columnSize: undefined,
+      customUrls: undefined, // Custom urls for File>Open.
+      height: 'window', // set the available height for the
+      // heat map. If not
+      // set, it will be determined automatically
+      width: undefined, // set the available width for the
+      // heat map. If not
+      // set, it will be determined automatically
+      /* Whether to focus this tab */
+      focus: true,
+      tooltipMode: 0, // 0=top status bar, 1=dialog, 2=follow
+      inheritFromParent: true,
+      inheritFromParentOptions: {
+        transpose: false
+      },
+      /** Callback function to invoke for customizing inline matrix tooltips. */
+      tooltip: undefined,
+      structureUrlProvider: undefined,
+      promises: undefined, // additional promises to wait
+      // for
+      // not inherited
+      renderReady: undefined,
+      // not inherited
+      datasetReady: undefined,
+      // inherited
+      tabOpened: undefined,
+      loadedCallback: undefined,
+      name: undefined,
+      rowsSortable: true,
+      columnsSortable: true,
+      popupEnabled: true,
+      symmetric: false,
+      keyboard: true,
+      inlineTooltip: true,
+      $loadingImage: phantasus.Util.createLoadingEl(),
+      menu: {
+        File: ['Open', 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename Tab'],
+        Tools: ['New Heat Map', null, 'Hierarchical Clustering', 'Marker Selection', 'Nearest Neighbors', 'Adjust', 'Collapse', 'Create Calculated Annotation', 'Similarity Matrix', 'Transpose', 't-SNE', null, 'Chart', null, 'Sort', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
+        View: ['Zoom In', 'Zoom Out', 'Fit To Window', 'Reset Zoom', null, 'Options'],
+        Edit: ['Copy Image', 'Copy Selected Dataset', null, 'Move Selected Rows To Top', 'Annotate Selected Rows', 'Copy Selected Rows', 'Invert' +
+        ' Selected Rows', 'Select All Rows', 'Clear Selected Rows',null, 'Move Selected Columns To Top', 'Annotate Selected Columns', 'Copy SelectedColumns', 'Invert' +
+        ' SelectedColumns', 'Select AllColumns', 'Clear Selected Columns'],
+        Help: ['Find Action', null, 'Contact', 'Tutorial', 'Source Code', null, 'Keymap' +
+        ' Reference']
+      },
+      toolbar: {
+        dimensions: true,
+        zoom: true,
+        searchRows: true,
+        searchColumns: true,
+        searchValues: false,
+        options: true,
+        saveImage: true,
+        filter: true,
+        colorKey: true
+      }
+    }, options);
   options.parent = parent;
   if (options.menu == null) {
     options.menu = {};
@@ -1374,55 +1369,52 @@ phantasus.HeatMap.prototype = {
             .showPopup(
               [
 
-                {
-                  name: 'Copy Image',
-                  class: 'copy'
-                },
-                {
-                  name: 'Save Image (' + phantasus.Util.COMMAND_KEY + 'S)'
-                },
-                {
-                  separator: true
-                },
-                {
-                  name: 'Copy Selection',
-                  disabled: _this.project
-                    .getElementSelectionModel()
-                    .count() === 0,
-                  class: 'copy'
-                },
-                {
-                  separator: true
-                },
-                {
-                  name: 'Show Inline Tooltip',
-                  checked: _this.options.inlineTooltip
-                }],
-              {
-                x: e.pageX,
-                y: e.pageY
-              },
-              e.target,
-              function (event, item) {
-                if (item === 'Show Inline Tooltip') {
-                  _this.options.inlineTooltip = !_this.options.inlineTooltip;
-                } else if (item === ('Save Image (' + phantasus.Util.COMMAND_KEY + 'S)')) {
-                  _this.getActionManager().execute('Save Image');
-                } else if (item === 'Copy Selection') {
-                  var text = _this
-                    .getSelectedElementsText();
-                  if (text !== '') {
-                    event.clipboardData
-                      .setData(
-                        'text/plain',
-                        text);
-                  }
-                } else if (item === 'Copy Image') {
-                  _this.getActionManager().execute('Copy Image', {event: event});
-                } else {
-                  // console.log(item + ' unknown.');
-                }
-              });
+            {
+              name: 'Copy Image',
+              class: 'copy'
+            },
+            {
+              name: 'Save Image (' + phantasus.Util.COMMAND_KEY + 'S)'
+            },
+            //{
+            // name: 'Copy Selection',
+            //  disabled: _this.project
+            //  .getElementSelectionModel()
+            //  .count() === 0,
+            //  class: 'copy'
+            //},
+            {
+              separator: true
+            },
+            {
+              name: 'Show Inline Tooltip',
+              checked: _this.options.inlineTooltip
+            }],
+          {
+            x: e.pageX,
+            y: e.pageY
+          },
+          e.target,
+          function (event, item) {
+            if (item === 'Show Inline Tooltip') {
+              _this.options.inlineTooltip = !_this.options.inlineTooltip;
+            } else if (item === ('Save Image (' + phantasus.Util.COMMAND_KEY + 'S)')) {
+              _this.getActionManager().execute('Save Image');
+            } else if (item === 'Copy Selection') {
+              var text = _this
+              .getSelectedElementsText();
+              if (text !== '') {
+                event.clipboardData
+                .setData(
+                  'text/plain',
+                  text);
+              }
+            } else if (item === 'Copy Image') {
+              _this.getActionManager().execute('Copy Image', {event: event});
+            } else {
+              //console.log(item + ' unknown.');
+            }
+          });
 
           e.preventDefault();
           e.stopPropagation();
@@ -1621,6 +1613,13 @@ phantasus.HeatMap.prototype = {
     this.rowTrackHeaders = [];
     this.columnTracks = [];
     this.columnTrackHeaders = [];
+    if (this.options.rowSize != null && this.options.rowSize !== 'fit') {
+      this.heatmap.getRowPositions().setSize(this.options.rowSize);
+    }
+    if (this.options.columnSize != null && this.options.columnSize !== 'fit') {
+      this.heatmap.getColumnPositions().setSize(
+        this.options.columnSize);
+    }
     var setInitialDisplay = function (isColumns, options) {
       var nameToOption = new phantasus.Map();
       // at
@@ -1795,6 +1794,7 @@ phantasus.HeatMap.prototype = {
 
     reorderTracks(this.options.rows, false);
     reorderTracks(this.options.columns, true);
+
     var colorSchemeSpecified = this.options.colorScheme != null;
     if (this.options.colorScheme == null) {
       var ext = '';
@@ -1883,30 +1883,21 @@ phantasus.HeatMap.prototype = {
       this.updateDataset();
     }
 
-    if (this.options.rowSize != null) {
-      if (this.options.rowSize === 'fit') {
-        this.heatmap.getRowPositions().setSize(this.getFitRowSize());
-      } else {
-        this.heatmap.getRowPositions().setSize(this.options.rowSize);
-      }
+    if (this.options.rowSize === 'fit') {
+      this.heatmap.getRowPositions().setSize(this.getFitRowSize());
+      this.revalidate({
+        paint: false
+      });
+    }
+    if (this.options.columnSize === 'fit') {
+      this.heatmap.getColumnPositions().setSize(
+        this.getFitColumnSize());
       this.revalidate({
         paint: false
       });
 
     }
-    if (this.options.columnSize != null) {
-      if (this.options.columnSize === 'fit') {
-        this.heatmap.getColumnPositions().setSize(
-          this.getFitColumnSize());
-      } else {
-        this.heatmap.getColumnPositions().setSize(
-          this.options.columnSize);
-      }
-      this.revalidate({
-        paint: false
-      });
-    }
-    if (this.options.rowSize != null && this.options.columnSize != null) {
+    if (this.options.rowSize === 'fit' || this.options.columnSize === 'fit') {
       // note that we have to revalidate twice because column sizes are
       // dependent on row sizes and vice versa
       if (this.options.columnSize === 'fit') {
@@ -2310,25 +2301,27 @@ phantasus.HeatMap.prototype = {
     .on(
       'tap',
       this.tap = function (event) {
-        var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
-          : event.srcEvent.ctrlKey;
+        // var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
+        //   : event.srcEvent.ctrlKey;
         if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
           // on
           // Mac
           return;
         }
-        var position = phantasus.CanvasUtil
-        .getMousePosWithScroll(event.target, event,
-          _this.scrollLeft(), _this
-          .scrollTop());
-        var rowIndex = _this.heatmap.getRowPositions()
-        .getIndex(position.y, false);
-        var columnIndex = _this.heatmap
-        .getColumnPositions().getIndex(position.x,
-          false);
-        _this.project.getElementSelectionModel().click(
-          rowIndex, columnIndex,
-          event.srcEvent.shiftKey || commandKey);
+        _this.project.getRowSelectionModel().setViewIndices(new phantasus.Set(), true);
+        _this.project.getColumnSelectionModel().setViewIndices(new phantasus.Set(), true);
+        // var position = phantasus.CanvasUtil
+        // .getMousePosWithScroll(event.target, event,
+        //   _this.scrollLeft(), _this
+        //   .scrollTop());
+        // var rowIndex = _this.heatmap.getRowPositions()
+        // .getIndex(position.y, false);
+        // var columnIndex = _this.heatmap
+        // .getColumnPositions().getIndex(position.x,
+        //   false);
+        // _this.project.getElementSelectionModel().click(
+        //   rowIndex, columnIndex,
+        //   event.srcEvent.shiftKey || commandKey);
       })
     .on(
       'pinch',
