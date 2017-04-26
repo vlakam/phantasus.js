@@ -34,7 +34,7 @@ phantasus.VectorTrack = function (project, name, positions, isColumns, heatmap) 
       var val = vector.getValue(index);
       if (val != null && val !== '') {
         var toString = phantasus.VectorTrack.vectorToString(vector);
-        var fontSize = Math.min(24, _this.positions.getSize() - 2);
+        var fontSize = Math.min(phantasus.VectorTrack.MAX_FONT_SIZE, _this.positions.getSize() - 2);
         var context = _this.canvas.getContext('2d');
         context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
         return context.measureText(toString(val)).width > this.textWidth;
@@ -190,6 +190,10 @@ phantasus.VectorTrack.prototype = {
     } else if (_.isObject(conf)) {
       conf.maxTextWidth = undefined;
       this.settings = $.extend({}, this.settings, conf);
+      if (conf.discrete != null) {
+        this.settings.discreteAutoDetermined = true;
+      }
+
       if (conf.render) {
         for (var method in conf.render) {
           method = method.toUpperCase();
@@ -249,7 +253,9 @@ phantasus.VectorTrack.prototype = {
     if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
       || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
       if (this.positions.getSize() >= 6) {
+        var fontSize = phantasus.VectorTrack.MAX_FONT_SIZE;
         var context = this.canvas.getContext('2d');
+
         var textWidth = phantasus.CanvasUtil.getVectorStringWidth(
           context, this.getVector(), this.positions,
           forPrint ? -1 : (this.isColumns ? 120 : 100));
@@ -699,7 +705,7 @@ phantasus.VectorTrack.prototype = {
     context.textAlign = 'left';
     context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
 
-    var fontSize = Math.min(24, positions.getSize() - 2);
+    var fontSize = Math.min(phantasus.VectorTrack.MAX_FONT_SIZE, positions.getSize() - 2);
     var size = 0;
     context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     context.strokeStyle = phantasus.HeatMapElementCanvas.GRID_COLOR;
@@ -2269,3 +2275,4 @@ phantasus.VectorTrack.prototype = {
   }
 };
 phantasus.Util.extend(phantasus.VectorTrack, phantasus.AbstractCanvas);
+phantasus.VectorTrack.MAX_FONT_SIZE = 18;
