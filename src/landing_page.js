@@ -4,6 +4,7 @@ phantasus.LandingPage = function (pageOptions) {
   }, pageOptions);
   this.pageOptions = pageOptions;
   var _this = this;
+
   var $el = $('<div class="container" style="display: none;"></div>');
   this.$el = $el;
   var html = [];
@@ -64,6 +65,8 @@ phantasus.LandingPage = function (pageOptions) {
     document.title = title;
   });
 
+  this.tabManager.$nav.appendTo($(this.pageOptions.el));
+  this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
   // for (var i = 0; i < brands.length; i++) {
   // 	brands[i].style.color = colorScale(i);
   // }
