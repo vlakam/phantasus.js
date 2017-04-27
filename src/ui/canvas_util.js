@@ -162,6 +162,10 @@ phantasus.CanvasUtil.getHeaderStringWidth = function (context, s) {
   context.font = '14px ' + phantasus.CanvasUtil.FONT_NAME;
   return context.measureText(s).width + 18;
 };
+
+phantasus.CanvasUtil.forceSubPixelRendering = function (context) {
+  context.getImageData(0, 0, 1, 1);
+};
 phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
                                                      end) {
   if (positions.getSize() < 6) {
