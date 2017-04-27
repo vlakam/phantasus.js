@@ -105,15 +105,15 @@ morpheus.createFisherExact = function (groupingValue) {
  */
 morpheus.FisherExact.phyper = function (a, b, c, d) {
   return Math
-  .exp((morpheus.FisherExact.logFactorial(a + b)
-    + morpheus.FisherExact.logFactorial(c + d)
-    + morpheus.FisherExact.logFactorial(a + c) + morpheus.FisherExact
-    .logFactorial(b + d))
-    - (morpheus.FisherExact.logFactorial(a)
-    + morpheus.FisherExact.logFactorial(b)
-    + morpheus.FisherExact.logFactorial(c)
-    + morpheus.FisherExact.logFactorial(d) + morpheus.FisherExact
-    .logFactorial(a + b + c + d)));
+    .exp((morpheus.FisherExact.logFactorial(a + b)
+      + morpheus.FisherExact.logFactorial(c + d)
+      + morpheus.FisherExact.logFactorial(a + c) + morpheus.FisherExact
+        .logFactorial(b + d))
+      - (morpheus.FisherExact.logFactorial(a)
+      + morpheus.FisherExact.logFactorial(b)
+      + morpheus.FisherExact.logFactorial(c)
+      + morpheus.FisherExact.logFactorial(d) + morpheus.FisherExact
+        .logFactorial(a + b + c + d)));
 
 };
 
@@ -203,8 +203,8 @@ morpheus.Spearman = function (list1, list2) {
   var rank1 = morpheus.Ranking(flist1);
   var rank2 = morpheus.Ranking(flist2);
   return morpheus.Pearson(new morpheus.Vector('', rank1.length)
-  .setArray(rank1), new morpheus.Vector('', rank2.length)
-  .setArray(rank2));
+    .setArray(rank1), new morpheus.Vector('', rank2.length)
+    .setArray(rank2));
 };
 morpheus.Spearman.toString = function () {
   return 'Spearman rank correlation';
@@ -215,14 +215,14 @@ morpheus.WeightedMean = function (weights, values) {
   for (var i = 0, size = values.size(); i < size; i++) {
     var value = values.getValue(i);
     if (!isNaN(value)) {
-      var weight = weights.getValue(i);
+      var weight = Math.abs(weights.getValue(i));
       if (!isNaN(weight)) {
         numerator += (weight * value);
         denom += weight;
       }
     }
   }
-  return denom == 0 ? NaN : numerator / denom;
+  return denom === 0 ? NaN : numerator / denom;
 };
 morpheus.WeightedMean.toString = function () {
   return 'Weighted average';

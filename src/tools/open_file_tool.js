@@ -3,7 +3,7 @@ morpheus.OpenFileTool = function (options) {
 };
 morpheus.OpenFileTool.prototype = {
   toString: function () {
-    return 'Open File';
+    return 'Open';
   },
   gui: function () {
     var array = [{
@@ -85,27 +85,28 @@ morpheus.OpenFileTool.prototype = {
       $('<h4>Use your own file</h4>').insertAfter(
         form.$form.find('.form-group:first'));
       var _this = this;
-      var id = _.uniqueId('morpheus');
-      var $sampleDatasets = $('<div class="collapse" id="' + id
-        + '" style="overflow:auto;"></div>');
+      var collapseId = _.uniqueId('morpheus');
       $('<h4><a role="button" data-toggle="collapse" href="#'
-        + id
+        + collapseId
         + '" aria-expanded="false" aria-controls="'
-        + id + '">Or select a preloaded dataset</a></h4>').appendTo($preloaded);
-      $sampleDatasets.append($preloaded);
+        + collapseId + '">Or select a preloaded dataset</a></h4>').appendTo($preloaded);
+      var $sampleDatasets = $('<div data-name="sampleData" id="' + collapseId + '" class="collapse"' +
+        ' id="' + collapseId + '" style="overflow:auto;"></div>');
       $preloaded.appendTo(form.$form);
       var sampleDatasets = new morpheus.SampleDatasets({
         $el: $sampleDatasets,
         callback: function (heatMapOptions) {
-          form.setValue('file', heatMapOptions.dataset);
+          _this.options.file = heatMapOptions.dataset;
           _this.ok();
         }
       });
+      $sampleDatasets.appendTo($preloaded);
     }
     form.on('change', function (e) {
       var value = e.value;
       if (value !== '' && value != null) {
         form.setValue('file', value);
+        _this.options.file = value;
         _this.ok();
       }
     });
@@ -162,8 +163,8 @@ morpheus.OpenFileTool.prototype = {
             throw new Error('Unable to read ' + fileOrUrl);
           }
           var sets = new morpheus.GmtReader()
-          .read(new morpheus.ArrayBufferReader(new Uint8Array(
-            buf)));
+            .read(new morpheus.ArrayBufferReader(new Uint8Array(
+              buf)));
           that.promptSets(dataset, heatMap, isAnnotateColumns,
             sets, morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl)));
         });
@@ -259,29 +260,29 @@ morpheus.OpenFileTool.prototype = {
     var idToIndices = morpheus.VectorUtil.createValueToIndicesMap(vector);
     if (!lines) {
       _
-      .each(
-        sets,
-        function (set) {
-          var name = set.name;
-          var members = set.ids;
+        .each(
+          sets,
+          function (set) {
+            var name = set.name;
+            var members = set.ids;
 
-          var v = dataset.getRowMetadata().add(name);
-          vectors.push(v);
-          _
-          .each(
-            members,
-            function (id) {
-              var indices = idToIndices
-              .get(id);
-              if (indices !== undefined) {
-                for (var i = 0, nIndices = indices.length; i < nIndices; i++) {
-                  v.setValue(
-                    indices[i],
-                    name);
-                }
-              }
-            });
-        });
+            var v = dataset.getRowMetadata().add(name);
+            vectors.push(v);
+            _
+              .each(
+                members,
+                function (id) {
+                  var indices = idToIndices
+                    .get(id);
+                  if (indices !== undefined) {
+                    for (var i = 0, nIndices = indices.length; i < nIndices; i++) {
+                      v.setValue(
+                        indices[i],
+                        name);
+                    }
+                  }
+                });
+          });
     } else {
       var tab = /\t/;
       var header = lines[0].split(tab);
@@ -352,8 +353,8 @@ morpheus.OpenFileTool.prototype = {
       return [{
         name: 'dataset_field_name',
         options: morpheus.MetadataUtil
-        .getMetadataNames(isColumns ? dataset
-        .getColumnMetadata() : dataset.getRowMetadata()),
+          .getMetadataNames(isColumns ? dataset
+            .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
         value: 'id',
         required: true
@@ -401,8 +402,8 @@ morpheus.OpenFileTool.prototype = {
       var items = [{
         name: 'dataset_field_name',
         options: morpheus.MetadataUtil
-        .getMetadataNames(isColumns ? dataset
-        .getColumnMetadata() : dataset.getRowMetadata()),
+          .getMetadataNames(isColumns ? dataset
+            .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
         required: true
       }];
