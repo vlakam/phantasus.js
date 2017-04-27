@@ -1069,19 +1069,19 @@ phantasus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
 phantasus.Util.intFormat = function (n) {
   return phantasus.Util._intFormat(n);
 };
-phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
+phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.2f') : function (d) {
   return '' + d;
 };
 phantasus.Util.nf = function (n) {
-  var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
-    .toPrecision(4) : phantasus.Util._nf(n);
-  return phantasus.Util.removeTrailingZerosInFraction(str);
+  // var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
+  // .toPrecision(4) : phantasus.Util._nf(n);
+  // return phantasus.Util.removeTrailingZerosInFraction(str);
+  return phantasus.Util._nf(n);
 };
-phantasus.Util.createNumberFormat = function (nfractionDigits) {
-  var d3Formatter = d3.format('.' + nfractionDigits + 'f');
-  var f = function (value) {
-    var str = d3Formatter(value);
-    return phantasus.Util.removeTrailingZerosInFraction(str);
+phantasus.Util.createNumberFormat = function (pattern) {
+  var f = d3.format(pattern);
+  f.toJSON = function () {
+    return {pattern: pattern};
   };
   return f;
 };

@@ -28,6 +28,9 @@ phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER = 'phantasus.recompute.funct.filt
 /** Boolean, whether to recompute a function when heat map selection changes */
 phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'phantasus.recompute.funct.selection';
 
+/**Number format spec/function */
+phantasus.VectorKeys.FORMATTER = 'phantasus.formatter';
+
 phantasus.VectorKeys.COPY_IGNORE = new phantasus.Set();
 phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.HEADER_SUMMARY);
 phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.DATA_TYPE);
