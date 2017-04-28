@@ -20,7 +20,7 @@ phantasus.ShapeChooser = function (options) {
   var shapeField = new phantasus.ShapeField();
 
   formBuilder.append({
-    col: 'col-xs-2',
+    style: 'max-width:50px;',
     name: 'selected_shape',
     type: 'custom',
     value: '<div data-name="shape"></div>'

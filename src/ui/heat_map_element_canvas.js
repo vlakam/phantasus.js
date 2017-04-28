@@ -23,6 +23,7 @@ phantasus.HeatMapElementCanvas = function (project) {
   this.gridThickness = 0.1;
   this.elementDrawCallback = null;
   this.drawCallback = null;
+  this.drawValuesFormat = morpheus.Util.createNumberFormat('.2f');
 };
 phantasus.HeatMapElementCanvas.GRID_COLOR = '#808080';
 phantasus.HeatMapElementCanvas.prototype = {
@@ -66,6 +67,15 @@ phantasus.HeatMapElementCanvas.prototype = {
   },
   setDrawGrid: function (drawGrid) {
     this.drawGrid = drawGrid;
+  },
+  getDrawValuesFormat: function () {
+    return this.drawValuesFormat;
+  },
+  setDrawValuesFormat: function (f) {
+    if (typeof f === 'object') { // convert to function
+      f = morpheus.Util.createNumberFormat(f.pattern);
+    }
+    this.drawValuesFormat = f;
   },
   setDrawValues: function (drawValues) {
     this.drawValues = drawValues;
@@ -316,9 +326,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var drawValues = this.drawValues && columnPositions.getSize() > 7 && rowPositions.getSize() > 7;
     var nf;
     if (drawValues) {
-      nf = typeof d3 !== 'undefined' ? d3.format('.1f') : function (d) {
-        return '' + d;
-      };
+      nf = this.drawValuesFormat;
       var fontSize = columnPositions.getSize();
       context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
       var textWidth = context.measureText('-99.9').width;
