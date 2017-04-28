@@ -91,7 +91,7 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
     return false;
   };
   this.selectedBackgroundColor = '#c8c8c8';
-  this.backgroundColor = '#f9f9f9';
+  this.backgroundColor = 'rgb(255,255,255)';
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
     'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
     .on('mouseenter.phantasus', mouseMove);
@@ -112,93 +112,95 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   // }, 100);
   // $(canvas).on('mouseout', throttled).on('mousemove', throttled);
   this.hammer = phantasus.Util
-    .hammer(canvas, ['pan', 'tap', 'longpress'])
-    .on('longpress', this.longpress = function (event) {
-      event.preventDefault();
-      heatMap.setSelectedTrack(_this.name, isColumns);
-      var track = heatMap.getTrack(_this.name, isColumns);
-      track.showPopup(event.srcEvent, true);
+  .hammer(canvas, ['pan', 'tap', 'longpress'])
+  .on('longpress', this.longpress = function (event) {
+    event.preventDefault();
+    heatMap.setSelectedTrack(_this.name, isColumns);
+    var track = heatMap.getTrack(_this.name, isColumns);
+    track.showPopup(event.srcEvent, true);
+  })
+  .on(
+    'panend',
+    this.panend = function (event) {
+      _this.isMouseOver = false;
+      phantasus.CanvasUtil.dragging = false;
+      canvas.style.cursor = 'default';
+      var index = heatMap.getTrackIndex(_this.name,
+        isColumns);
+      var header = heatMap.getTrackHeaderByIndex(index,
+        isColumns);
+      var track = heatMap
+      .getTrackByIndex(index, isColumns);
+      var $canvas = $(track.canvas);
+      $canvas.css('z-index', '0');
+      $(header.canvas).css('z-index', '0');
+      heatMap.revalidate();
     })
-    .on(
-      'panend',
-      this.panend = function (event) {
-        _this.isMouseOver = false;
-        phantasus.CanvasUtil.dragging = false;
-        canvas.style.cursor = 'default';
-        var index = heatMap.getTrackIndex(_this.name,
-          isColumns);
-        var header = heatMap.getTrackHeaderByIndex(index,
-          isColumns);
-        var track = heatMap
-          .getTrackByIndex(index, isColumns);
-        var $canvas = $(track.canvas);
-        $canvas.css('z-index', '0');
-        $(header.canvas).css('z-index', '0');
-        heatMap.revalidate();
-      })
-    .on(
-      'panstart',
-      this.panstart = function (event) {
-        _this.isMouseOver = false;
-        if (phantasus.CanvasUtil.dragging) {
-          return;
-        }
-        resizeCursor = getResizeCursor(phantasus.CanvasUtil
-          .getMousePos(event.target, event, true));
-        if (resizeCursor != null) { // make sure start event was on
-          // hotspot
-          phantasus.CanvasUtil.dragging = true;
-          canvas.style.cursor = resizeCursor.cursor;
-          if (resizeCursor.isPrevious) {
-            var index = heatMap.getTrackIndex(_this.name,
-              isColumns);
-            index--; // FIXME index = -1
-            if (index === -1) {
-              index = 0;
-            }
-            var header = heatMap.getTrackHeaderByIndex(
-              index, isColumns);
-            dragStartWidth = header.getUnscaledWidth();
-            dragStartHeight = header.getUnscaledHeight();
-            resizeTrackName = header.name;
-          } else {
-            resizeTrackName = null;
-            dragStartWidth = _this.getUnscaledWidth();
-            dragStartHeight = _this.getUnscaledHeight();
-          }
-          event.preventDefault();
-          reorderingTrack = false;
-        } else {
+  .on('mousedown', function (event) {
+    resizeCursor = getResizeCursor(phantasus.CanvasUtil
+    .getMousePos(event.target, event, true));
+  })
+  .on(
+    'panstart',
+    this.panstart = function (event) {
+      _this.isMouseOver = false;
+      if (phantasus.CanvasUtil.dragging) {
+        return;
+      }
+      if (resizeCursor != null) { // make sure start event was on
+        // hotspot
+        phantasus.CanvasUtil.dragging = true;
+        canvas.style.cursor = resizeCursor.cursor;
+        if (resizeCursor.isPrevious) {
           var index = heatMap.getTrackIndex(_this.name,
             isColumns);
-          if (index == -1) {
-            throw _this.name + ' not found';
+          index--; // FIXME index = -1
+          if (index === -1) {
+            index = 0;
           }
           var header = heatMap.getTrackHeaderByIndex(
             index, isColumns);
-          var track = heatMap.getTrackByIndex(index,
-            isColumns);
-          heatMap.setSelectedTrack(_this.name, isColumns);
-          var $canvas = $(track.canvas);
-          dragStartPosition = $canvas.position();
-          $canvas.css('z-index', '100');
-          $(header.canvas).css('z-index', '100');
-          phantasus.CanvasUtil.dragging = true;
-          resizeCursor = undefined;
-          reorderingTrack = true;
+          dragStartWidth = header.getUnscaledWidth();
+          dragStartHeight = header.getUnscaledHeight();
+          resizeTrackName = header.name;
+        } else {
+          resizeTrackName = null;
+          dragStartWidth = _this.getUnscaledWidth();
+          dragStartHeight = _this.getUnscaledHeight();
         }
-      })
-    .on(
-      'panmove',
-      this.panmove = function (event) {
-        _this.isMouseOver = false;
-        if (resizeCursor != null) {
-          var width;
-          var height;
-          if (resizeCursor.cursor === 'ew-resize') {
-            var dx = event.deltaX;
-            width = Math.max(8, dragStartWidth + dx);
-          }
+        event.preventDefault();
+        reorderingTrack = false;
+      } else { // move track
+        var index = heatMap.getTrackIndex(_this.name,
+          isColumns);
+        if (index == -1) {
+          throw _this.name + ' not found';
+        }
+        var header = heatMap.getTrackHeaderByIndex(
+          index, isColumns);
+        var track = heatMap.getTrackByIndex(index,
+          isColumns);
+        heatMap.setSelectedTrack(_this.name, isColumns);
+        var $canvas = $(track.canvas);
+        dragStartPosition = $canvas.position();
+        $canvas.css('z-index', '100');
+        $(header.canvas).css('z-index', '100');
+        phantasus.CanvasUtil.dragging = true;
+        resizeCursor = undefined;
+        reorderingTrack = true;
+      }
+    })
+  .on(
+    'panmove',
+    this.panmove = function (event) {
+      _this.isMouseOver = false;
+      if (resizeCursor != null) {
+        var width;
+        var height;
+        if (resizeCursor.cursor === 'ew-resize') {
+          var dx = event.deltaX;
+          width = Math.max(8, dragStartWidth + dx);
+        }
 
           if (resizeCursor.cursor === 'ns-resize') {
             var dy = event.deltaY;
@@ -311,7 +313,6 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
           _this.setSortingStatus(_this.getSortKeys(),
             sortKey, additionalSort, isGroupBy);
         }
-        // }
       });
 };
 phantasus.VectorTrackHeader.FONT_OFFSET = 2;
@@ -364,7 +365,7 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getSortKeys: function () {
     return this.isColumns ? this.project.getColumnSortKeys() : this.project
-      .getRowSortKeys();
+    .getRowSortKeys();
   },
   setOrder: function (sortKeys) {
     if (this.isColumns) {
@@ -483,6 +484,7 @@ phantasus.VectorTrackHeader.prototype = {
       return;
     }
 
+    context.strokeStyle = '#ddd';
     if (this.isColumns) {
       context.beginPath();
       context.moveTo(0, this.getUnscaledHeight());
@@ -497,11 +499,10 @@ phantasus.VectorTrackHeader.prototype = {
       context.textAlign = 'left';
     }
     var fontHeight = Math.min(this.defaultFontHeight, this
-        .getUnscaledHeight()
+      .getUnscaledHeight()
       - phantasus.VectorTrackHeader.FONT_OFFSET);
-    var squished = this.heatMap.getTrack(this.name, this.isColumns).settings.squished;
-    context.font = (squished ? 'Italic ' : '') + fontHeight + 'px '
-      + phantasus.CanvasUtil.FONT_NAME;
+    fontHeight = Math.min(fontHeight, phantasus.VectorTrack.MAX_FONT_SIZE);
+    context.font = fontHeight + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     var textWidth = context.measureText(name).width;
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
@@ -513,11 +514,11 @@ phantasus.VectorTrackHeader.prototype = {
         xpix -= 6;
       }
     }
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     var ypix = this.isColumns ? (this.getUnscaledHeight() / 2)
       : (this.getUnscaledHeight() - (this.defaultFontHeight + phantasus.VectorTrackHeader.FONT_OFFSET) / 2);
     context.textBaseline = 'middle';
     if (this.isMouseOver) {
-      context.fillStyle = 'rgb(0,0,0)';
       var xdot = xpix - (isColumns ? textWidth + 4 : 4);
       var ydot = ypix - 3;
       for (var i = 0; i < 2; i++) {
@@ -526,7 +527,7 @@ phantasus.VectorTrackHeader.prototype = {
         }
       }
     }
-    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+
     context.fillText(name, xpix, ypix);
     // var vector = (this.isColumns ? this.project.getFullDataset()
     // .getColumnMetadata() : this.project.getFullDataset()

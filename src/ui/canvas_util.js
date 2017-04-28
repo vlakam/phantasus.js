@@ -3,7 +3,7 @@ phantasus.CanvasUtil = function () {
 phantasus.CanvasUtil.dragging = false;
 
 phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-phantasus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
+phantasus.CanvasUtil.FONT_COLOR = 'rgb(0, 0, 0)';
 phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
   var prefWidth = c.getPrefWidth();
