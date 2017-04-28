@@ -16949,13 +16949,13 @@ morpheus.PcaPlotTool.prototype = {
           size.push(sizeFunction(sizeByValue));
         }
       }
-      var idVector = getTrueVector(dataset.getColumnMetadata().getByName("id"));
+      /*var idVector = getTrueVector(dataset.getColumnMetadata().getByName("id"));
       for (var j = 0; j < idVector.indices.length; j++) {
         text.push(idVector.getValue(j));
-      }
-      if (textByVector && label !== "id") {
+      }*/
+      if (textByVector) {
         for (var j = 0; j < textByVector.indices.length; j++) {
-          text[j] = text[j] + "<br>" + textByVector.getValue(j);
+          text.push(textByVector.getValue(j));
         }
       }
       var categoriesIndices;
