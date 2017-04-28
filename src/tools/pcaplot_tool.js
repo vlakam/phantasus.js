@@ -305,15 +305,11 @@ morpheus.PcaPlotTool.prototype = {
     this.formBuilder.$form.find('[name="draw"]').on('click', function () {
       _this.$chart.empty();
 
-      var dataset = _this.project.getSelectedDataset({
-        emptyToAll: false
-      });
+      var dataset = _this.project.getSortedFilteredDataset();
 
       console.log("PCAPlot :: dataset:", dataset, "trueIndices:", morpheus.Util.getTrueIndices(dataset));
-      var selectedIndices = morpheus.Util.getTrueIndices(dataset);
 
-      var fullDataset = _this.project.getSortedFilteredDataset();
-      var fullIndices = morpheus.Util.getTrueIndices(fullDataset);
+      var indices = morpheus.Util.getTrueIndices(dataset);
 
       _this.dataset = dataset;
 
@@ -341,7 +337,7 @@ morpheus.PcaPlotTool.prototype = {
       var size = sizeByVector ? [] : 12;
       var text = [];
       var sizeFunction = null;
-      var n = selectedIndices.columns.length > 0 ? selectedIndices.columns.length : fullIndices.columns.length;
+      var n = indices.columns.length;
 
 
       var data = [];
@@ -423,16 +419,15 @@ morpheus.PcaPlotTool.prototype = {
       }
 
       _this.categoriesIndices = categoriesIndices;
-      var columnIndices = selectedIndices.columns.length > 0 ? selectedIndices.columns : fullIndices.columns;
-      var rowIndices = selectedIndices.rows.length > 0 ? selectedIndices.rows : fullIndices.rows;
+      var columnIndices = indices.columns;
+      var rowIndices = indices.rows;
 
       if (columnIndices.length == 1) {
-        alert("Choose at least two columns");
-        console.log("PcaPlot :: Choose at least two columns");
+        new Error("Not enough columns (at least 2 required)");
         return;
       }
 
-      var expressionSetPromise = fullDataset.getESSession();
+      var expressionSetPromise = dataset.getESSession();
 
       //console.log("morpheus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
 
