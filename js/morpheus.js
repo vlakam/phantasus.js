@@ -6789,31 +6789,15 @@ morpheus.DatasetUtil.getContentArray = function (dataset) {
 };
 morpheus.DatasetUtil.getMetadataArray = function (dataset) {
   var pDataArray = [];
-  var participantID = [];
   var labelDescription = [];
   //console.log("morpheus.DatasetUtil.getMetadataArray ::", dataset);
   var columnMeta = dataset.getColumnMetadata();
   var features = columnMeta.getMetadataCount();
   var participants = dataset.getColumnCount();
-  var vecPartID;
 
-  if (columnMeta.getByName("participant_id") != null) {
-    vecPartID = columnMeta.getByName("participant_id");
-  }
-  else {
-    vecPartID = columnMeta.getByName("id");
-  }
-  for (var i = 0; i < participants; i++) {
-    participantID.push({
-      strval: vecPartID ? vecPartID.getValue(i) : i.toString(),
-      isNA: false
-    });
-  }
+
   for (var j = 0; j < features; j++) {
     var vecJ = columnMeta.get(j);
-    if (vecJ.getName() == "participant_id" || vecJ.getName() == "id") {
-      continue;
-    }
     for (var l = 0; l < participants; l++) {
       pDataArray.push({
         strval: vecJ.getValue(l).toString(),
@@ -6827,37 +6811,27 @@ morpheus.DatasetUtil.getMetadataArray = function (dataset) {
   }
 
   var rowMeta = dataset.getRowMetadata();
-  var rowNames = [];
-  var rowNamesVec = rowMeta.getByName("id");
-  if (rowNamesVec) {
-    for (j = 0; j < dataset.getRowCount(); j++) {
-      rowNames.push({
-        strval: rowNamesVec.getValue(j),
+  var fDataArray = [];
+  var varLabels = [];
+  for (var j = 0; j < rowMeta.getMetadataCount(); j++) {
+    var vecJ = rowMeta.get(j);
+    for (var l = 0; l < dataset.getRowCount(); l++){
+      fDataArray.push({
+        strval: vecJ.getValue(l).toString(),
         isNA: false
       });
     }
+    varLabels.push({
+      strval: vecJ.getName(),
+      isNA: false
+    });
   }
-  var symbolNames = rowMeta.getByName("symbol");
-  console.log(symbolNames);
-  var symbol = [];
 
-  if (symbolNames) {
-    for (j = 0; j < dataset.getRowCount(); j++) {
-      symbol.push({
-        strval: symbolNames.getValue(j),
-        isNA: false
-      });
-    }
-  }
-  else {
-    symbol = rowNames;
-  }
   return {
     pdata: pDataArray,
-    participants: participantID,
-    labels: labelDescription,
-    rownames: rowNames,
-    symbol: symbol
+    varLabels: labelDescription,
+    fdata: fDataArray,
+    fvarLabels: varLabels
   };
 };
 
@@ -6901,20 +6875,22 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
         attrName: "dim",
         attrValue: {
           rclass: "INTEGER",
-          intValue: [dataset.getColumnCount(), meta.pdata.length / dataset.getColumnCount()]
+          intValue: [dataset.getColumnCount(), meta.varLabels.length]
         }
       }, {
         rclass: "STRING",
-        stringValue: meta.labels
+        stringValue: meta.varLabels
       }, {
         rclass: "STRING",
-        stringValue: meta.participants
+        stringValue: meta.fdata,
+        attrName: "dim",
+        attrValue: {
+          rclass: "INTEGER",
+          intValue: [dataset.getRowCount(), meta.fvarLabels.length]
+        }
       }, {
         rclass: "STRING",
-        stringValue: meta.rownames
-      }, {
-        rclass: "STRING",
-        stringValue: meta.symbol
+        stringValue: meta.fvarLabels
       }],
       attrName: "names",
       attrValue: {
@@ -6926,16 +6902,13 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
           strval: "pData",
           isNA: false
         }, {
-          strval: "labelDescription",
+          strval: "varLabels",
           isNA: false
         }, {
-          strval: "colNames",
+          strval: "fData",
           isNA: false
         }, {
-          strval: "rowNames",
-          isNA: false
-        }, {
-          strval: "symbol",
+          strval: "fvarLabels",
           isNA: false
         }]
       }
@@ -16897,15 +16870,11 @@ morpheus.PcaPlotTool.prototype = {
     this.formBuilder.$form.find('[name="draw"]').on('click', function () {
       _this.$chart.empty();
 
-      var dataset = _this.project.getSelectedDataset({
-        emptyToAll: false
-      });
+      var dataset = _this.project.getSortedFilteredDataset();
 
       console.log("PCAPlot :: dataset:", dataset, "trueIndices:", morpheus.Util.getTrueIndices(dataset));
-      var selectedIndices = morpheus.Util.getTrueIndices(dataset);
 
-      var fullDataset = _this.project.getSortedFilteredDataset();
-      var fullIndices = morpheus.Util.getTrueIndices(fullDataset);
+      var indices = morpheus.Util.getTrueIndices(dataset);
 
       _this.dataset = dataset;
 
@@ -16933,7 +16902,7 @@ morpheus.PcaPlotTool.prototype = {
       var size = sizeByVector ? [] : 12;
       var text = [];
       var sizeFunction = null;
-      var n = selectedIndices.columns.length > 0 ? selectedIndices.columns.length : fullIndices.columns.length;
+      var n = indices.columns.length;
 
 
       var data = [];
@@ -17015,16 +16984,15 @@ morpheus.PcaPlotTool.prototype = {
       }
 
       _this.categoriesIndices = categoriesIndices;
-      var columnIndices = selectedIndices.columns.length > 0 ? selectedIndices.columns : fullIndices.columns;
-      var rowIndices = selectedIndices.rows.length > 0 ? selectedIndices.rows : fullIndices.rows;
+      var columnIndices = indices.columns;
+      var rowIndices = indices.rows;
 
       if (columnIndices.length == 1) {
-        alert("Choose at least two columns");
-        console.log("PcaPlot :: Choose at least two columns");
+        new Error("Not enough columns (at least 2 required)");
         return;
       }
 
-      var expressionSetPromise = fullDataset.getESSession();
+      var expressionSetPromise = dataset.getESSession();
 
       //console.log("morpheus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
 
