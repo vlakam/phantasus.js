@@ -94,9 +94,7 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.backgroundColor = 'rgb(255,255,255)';
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
     'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
-    .on('mouseenter.phantasus', mouseMove);
-
-  $(this.canvas).on('contextmenu.phantasus', showPopup);
+  .on('mouseenter.phantasus', mouseMove).on('contextmenu.phantasus', showPopup).addClass('phantasus-track-header ' + (isColumns ? 'phantasus-columns' : 'phantasus-rows'));
 
   var resizeCursor;
   var dragStartWidth = 0;
@@ -136,19 +134,15 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
       $(header.canvas).css('z-index', '0');
       heatMap.revalidate();
     })
-  .on('mousedown', function (event) {
-    resizeCursor = getResizeCursor(phantasus.CanvasUtil
-    .getMousePos(event.target, event, true));
-  })
   .on(
     'panstart',
     this.panstart = function (event) {
       _this.isMouseOver = false;
+
       if (phantasus.CanvasUtil.dragging) {
         return;
       }
-      if (resizeCursor != null) { // make sure start event was on
-        // hotspot
+      if (resizeCursor != null) { // resize
         phantasus.CanvasUtil.dragging = true;
         canvas.style.cursor = resizeCursor.cursor;
         if (resizeCursor.isPrevious) {
@@ -303,17 +297,21 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
             // click
           }
 
-        } else {
-          sortKey = new phantasus.SortKey(_this.name,
-            phantasus.SortKey.SortOrder.ASCENDING);
-          sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
-        }
-        if (sortKey != null) {
-          sortKey.setSortOrder(sortOrder);
-          _this.setSortingStatus(_this.getSortKeys(),
-            sortKey, additionalSort, isGroupBy);
-        }
-      });
+      } else {
+        sortKey = new phantasus.SortKey(_this.name,
+          phantasus.SortKey.SortOrder.ASCENDING);
+        sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
+      }
+      if (sortKey != null) {
+        sortKey.setSortOrder(sortOrder);
+        _this.setSortingStatus(_this.getSortKeys(),
+          sortKey, additionalSort, isGroupBy);
+      }
+    });
+  $(this.canvas).on('mousedown', function (event) {
+    resizeCursor = getResizeCursor(phantasus.CanvasUtil
+    .getMousePos(event.target, event, true));
+  });
 };
 phantasus.VectorTrackHeader.FONT_OFFSET = 2;
 phantasus.VectorTrackHeader.prototype = {
@@ -328,7 +326,7 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getPreferredSize: function () {
     var size = this.getPrintSize();
-    size.width += 22;
+    size.width += 22; // leave space for sort, drag icon
 
     if (!this.isColumns) {
       size.height = this.defaultFontHeight

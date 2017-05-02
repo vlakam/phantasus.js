@@ -22,6 +22,7 @@ phantasus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) 
   this.columns = columns;
 };
 phantasus.MatchesOnTopSortKey.prototype = {
+  lockOrder: 0,
   /**
    * Indicates whether this key is sorting rows or columns.
    * @return {*}
@@ -45,6 +46,12 @@ phantasus.MatchesOnTopSortKey.prototype = {
   },
   toString: function (i) {
     return this.name;
+  },
+  getLockOrder: function () {
+    return this.lockOrder;
+  },
+  setLockOrder: function (lockOrder) {
+    this.lockOrder = lockOrder;
   }
 };
 phantasus.SortKey = function (field, sortOrder, columns) {
@@ -60,6 +67,7 @@ phantasus.SortKey = function (field, sortOrder, columns) {
 };
 
 phantasus.SortKey.prototype = {
+  lockOrder: 0,
   isColumns: function () {
     return this.columns;
   },
@@ -173,6 +181,12 @@ phantasus.SortKey.prototype = {
   ,
   toString: function () {
     return this.field;
+  },
+  getLockOrder: function () {
+    return this.lockOrder;
+  },
+  setLockOrder: function (lockOrder) {
+    this.lockOrder = lockOrder;
   }
 }
 ;
@@ -192,6 +206,7 @@ phantasus.SortByValuesKey = function (modelIndices, sortOrder, isColumnSort) {
 
 };
 phantasus.SortByValuesKey.prototype = {
+  lockOrder: 0,
   isColumns: function () {
     return this.isColumnSort;
   },
@@ -294,6 +309,12 @@ phantasus.SortByValuesKey.prototype = {
   },
   toString: function () {
     return 'values';
+  },
+  getLockOrder: function () {
+    return this.lockOrder;
+  },
+  setLockOrder: function (lockOrder) {
+    this.lockOrder = lockOrder;
   }
 };
 /**
@@ -320,6 +341,7 @@ phantasus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, colu
   this.columns = columns;
 };
 phantasus.SpecifiedModelSortOrder.prototype = {
+  lockOrder: 0,
   isColumns: function () {
     return this.columns;
   },
@@ -344,6 +366,12 @@ phantasus.SpecifiedModelSortOrder.prototype = {
   },
   getName: function () {
     return this.name;
+  },
+  getLockOrder: function () {
+    return this.lockOrder;
+  },
+  setLockOrder: function (lockOrder) {
+    this.lockOrder = lockOrder;
   }
 };
 
@@ -653,12 +681,10 @@ phantasus.SortKey.keepExistingSortKeys = function (newSortKeys, existingSortKeys
       && key.name === 'dendrogram') {
       dendrogramSortKey = key;
     }
-  }
-  if (matchesOnTopSortKey) {
-    newSortKeys.splice(0, 0, matchesOnTopSortKey);
-  }
-  if (dendrogramSortKey) {
-    newSortKeys.splice(newSortKeys.length, 0, dendrogramSortKey);
+    if (key.getLockOrder() > 0) {
+      // 1 is beginning, 2 is end
+      newSortKeys.splice(key.getLockOrder() === 1 ? 0 : newSortKeys.length, 0, key);
+    }
   }
   return newSortKeys;
 };
@@ -666,20 +692,27 @@ phantasus.SortKey.keepExistingSortKeys = function (newSortKeys, existingSortKeys
 phantasus.SortKey.fromJSON = function (project, json) {
   var sortKeys = [];
   json.forEach(function (key) {
+    var sortKey = null;
     if (key.type === 'annotation') {
-      sortKeys.push(new phantasus.SortKey(key.field, key.order, key.isColumns));
+      sortKey = new phantasus.SortKey(key.field, key.order, key.isColumns);
     } else if (key.type === 'byValues') {
-      sortKeys.push(new phantasus.SortByValuesKey(key.modelIndices, key.order, key.isColumns));
+      sortKey = new phantasus.SortByValuesKey(key.modelIndices, key.order, key.isColumns);
     } else if (key.type === 'specified') {
-      sortKeys.push(new phantasus.SpecifiedModelSortOrder(key.modelIndices, key.nvisible, key.name, key.isColumns));
+      sortKey = new phantasus.SpecifiedModelSortOrder(key.modelIndices, key.nvisible, key.name, key.isColumns);
     } else if (key.type === 'matchesOnTop') {
-      sortKeys.push(new phantasus.MatchesOnTopSortKey(project, key.modelIndices, key.name, key.isColumns));
+      sortKey = new phantasus.MatchesOnTopSortKey(project, key.modelIndices, key.name, key.isColumns);
     } else {
       if (key.field != null) {
-        sortKeys.push(new phantasus.SortKey(key.field, key.order));
+        sortKey = new phantasus.SortKey(key.field, key.order);
       } else {
         // console.log('Unknown key: ' + key);
       }
+    }
+    if (sortKey != null) {
+      if (key.lockOrder !== 0) {
+        sortKey.setLockOrder(key.lockOrder);
+      }
+      sortKeys.push(sortKey);
     }
   });
   return sortKeys;
@@ -688,37 +721,44 @@ phantasus.SortKey.fromJSON = function (project, json) {
 phantasus.SortKey.toJSON = function (sortKeys) {
   var json = [];
   sortKeys.forEach(function (key) {
+    var sortKey = null;
     if (key instanceof phantasus.SortKey) {
-      json.push({
+      sortKey = {
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'annotation',
         field: '' + key,
-      });
+      };
     } else if (key instanceof phantasus.SortByValuesKey) {
-      json.push({
+      sortKey = {
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'byValues',
         modelIndices: key.modelIndices
-      });
+      };
     } else if (key instanceof phantasus.SpecifiedModelSortOrder) {
-      json.push({
+      sortKey = {
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'specified',
         modelIndices: key.modelIndices,
         name: key.name,
         nvisible: key.nvisible
-      });
+      };
     } else if (key instanceof phantasus.MatchesOnTopSortKey) {
-      json.push({
+      sortKey = {
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'matchesOnTop',
         modelIndices: key.modelIndices,
         name: key.name
-      });
+      };
+    }
+    if (sortKey != null) {
+      if (key.getLockOrder && key.getLockOrder() !== 0) {
+        sortKey.lockOrder = key.getLockOrder();
+      }
+      json.push(sortKey);
     } else {
       // console.log('Unknown sort key type');
     }

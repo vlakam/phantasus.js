@@ -71,8 +71,7 @@ phantasus.SortDialog = function (project) {
           .filter(
             existingSortKeys,
             function (key) {
-              return key instanceof phantasus.MatchesOnTopSortKey
-                || (key instanceof phantasus.SpecifiedModelSortOrder && key.name === 'dendrogram');
+              return key.isLocked()
             });
         if (keysToKeep.length > 0) {
           _.each(keysToKeep, function (key) {
@@ -124,14 +123,10 @@ phantasus.SortDialog.prototype = {
     this.fields = fields;
     var html = [];
     var sortKeys = isColumns ? project.getColumnSortKeys() : project
-      .getRowSortKeys();
+    .getRowSortKeys();
     this.createLevel0(html);
     for (var i = 0; i < sortKeys.length; i++) { // add existing keys
-      // ignoring
-      // MatchesOnTopSortKey and
-      // dendrogram
-      if (!(sortKeys[i] instanceof phantasus.MatchesOnTopSortKey)
-        && !(sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
+      if (!sortKeys[i].isLocked()) {
         this.createLevel(html, sortKeys[i], fields);
       }
     }
@@ -142,7 +137,7 @@ phantasus.SortDialog.prototype = {
     html.push('<div class="col-xs-2"><label>Group by</label></div>');
     html.push('<div class="col-xs-4">');
     var groupByKeys = (isColumns ? project.getGroupColumns() : project
-      .getGroupRows()).map(function (key) {
+    .getGroupRows()).map(function (key) {
       return key.field;
     });
 

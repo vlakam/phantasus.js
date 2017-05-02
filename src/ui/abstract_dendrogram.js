@@ -208,6 +208,7 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       currentOrder[i] = tmp;
                     }
                     var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
+                    key.setLockOrder(2);
                     if (isColumns) {
                       heatMap.getProject().setColumnSortKeys([key], true);
                     } else {

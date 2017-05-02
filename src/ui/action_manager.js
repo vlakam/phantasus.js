@@ -662,6 +662,7 @@ phantasus.ActionManager = function () {
     }
     var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
       ' top', isColumns);
+    sortKey.setLockOrder(1);
     if (isColumns) {
       project
         .setColumnSortKeys(
