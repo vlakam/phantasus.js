@@ -505,6 +505,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   }
   if (!heatMap.options.toolbar.searchValues) {
     this.valueSearchObject.$toggleButton.hide();
+    this.valueSearchObject.$group.css('display', 'none');
   }
   this.rowDendrogramSearchObject.$toggleButton.hide();
   this.rowDendrogramSearchObject.$group.hide();
@@ -515,13 +516,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   this.rowDendrogramSearchObject.$searchResultsWrapper.show();
   this.columnDendrogramSearchObject.$searchResultsWrapper.show();
   this.valueSearchObject.$searchResultsWrapper.show();
-  for (var i = 0; i < $searchToggle.length; i++) {
-    var $button = $($searchToggle[i]);
-    if ($button.css('display') === 'block') {
-      $button.click();
-      break;
-    }
-  }
+
   this.rowSearchObject.$search.css({
     'border-top': '3.8px solid #e6e6e6',
     'border-bottom': '3.8px solid #e6e6e6',
