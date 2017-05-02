@@ -3576,7 +3576,8 @@ morpheus.GseReader.prototype = {
               columns: ncolData,
               array: matrix,
               dataType: 'Float32',
-              esSession: session
+              esSession: session,
+              isGEO: true
             });
 
 
@@ -6800,7 +6801,7 @@ morpheus.DatasetUtil.getMetadataArray = function (dataset) {
     var vecJ = columnMeta.get(j);
     for (var l = 0; l < participants; l++) {
       pDataArray.push({
-        strval: vecJ.getValue(l).toString(),
+        strval: vecJ.getValue(l) ? vecJ.getValue(l).toString() : "",
         isNA: false
       });
     }
@@ -6808,6 +6809,7 @@ morpheus.DatasetUtil.getMetadataArray = function (dataset) {
       strval: vecJ.getName(),
       isNA: false
     });
+
   }
 
   var rowMeta = dataset.getRowMetadata();
@@ -6817,7 +6819,7 @@ morpheus.DatasetUtil.getMetadataArray = function (dataset) {
     var vecJ = rowMeta.get(j);
     for (var l = 0; l < dataset.getRowCount(); l++){
       fDataArray.push({
-        strval: vecJ.getValue(l).toString(),
+        strval: vecJ.getValue(l) ? vecJ.getValue(l).toString() : "",
         isNA: false
       });
     }
@@ -6850,7 +6852,9 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
      //console.log("morpheus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof morpheus.SlicedDatasetView", "go deeper");
      morpheus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
+    console.log("before going further", options);
     if (options.isGEO) {
+      console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;
     }
