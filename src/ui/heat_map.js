@@ -191,6 +191,7 @@ phantasus.HeatMap = function (options) {
       rename: true,
       rowSize: undefined,
       columnSize: undefined,
+      gapSize: 10,
       customUrls: undefined, // Custom urls for File>Open.
       height: 'window', // set the available height for the
       // heat map. If not
@@ -258,6 +259,7 @@ phantasus.HeatMap = function (options) {
   } else {
     this.$el = $(options.el);
   }
+  this.gapSize = options.gapSize;
   this.actionManager = new phantasus.ActionManager();
   this.actionManager.heatMap = this;
   this.$el.addClass('phantasus');
@@ -777,7 +779,6 @@ phantasus.HeatMap.isDendrogramVisible = function (project, isColumns) {
 };
 
 phantasus.HeatMap.prototype = {
-  gapSize: 10,
   updatingScroll: false,
   getWhitespaceEl: function () {
     return this.$whitespace;
@@ -1088,6 +1089,8 @@ phantasus.HeatMap.prototype = {
     // element size, symmetric
     json.symmetric = this.options.symmetric;
     json.rowSize = this.heatmap.getRowPositions().getSize();
+    json.columnSize = this.heatmap.getColumnPositions().getSize();
+    json.gapSize = this.heatmap.gapSize;
     json.drawGrid = this.heatmap.isDrawGrid();
     json.gridColor = this.heatmap.getGridColor();
     json.gridThickness = this.heatmap.getGridThickness();
@@ -1542,6 +1545,7 @@ phantasus.HeatMap.prototype = {
     if (this.options.drawGrid != null) {
       this.heatmap.setDrawGrid(this.options.drawGrid);
     }
+
     if (this.options.gridColor != null) {
       this.heatmap.setGridColor(this.options.gridColor);
     }
@@ -2892,14 +2896,10 @@ phantasus.HeatMap.prototype = {
     var dataset = this.project.getSortedFilteredDataset();
     this.verticalSearchBar.update();
     this.horizontalSearchBar.update();
-
     this.heatmap.setDataset(dataset);
-    this.heatmap.getRowPositions().spaces = phantasus.HeatMap
-      .createGroupBySpaces(dataset, this.project.getGroupRows(),
-        this.gapSize, false);
-    this.heatmap.getColumnPositions().spaces = phantasus.HeatMap
-      .createGroupBySpaces(
-        dataset, this.project.getGroupColumns(), this.gapSize, true);
+    this.heatmap.getRowPositions().setSpaces(phantasus.HeatMap.createGroupBySpaces(dataset, this.project.getGroupRows(),
+      this.gapSize, false));
+    this.heatmap.getColumnPositions().setSpaces(phantasus.HeatMap.createGroupBySpaces(dataset, this.project.getGroupColumns(), this.gapSize, true));
     this.trigger('change', {
       name: 'updateDataset',
       source: this,
