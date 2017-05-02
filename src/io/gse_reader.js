@@ -54,7 +54,8 @@ morpheus.GseReader.prototype = {
               columns: ncolData,
               array: matrix,
               dataType: 'Float32',
-              esSession: session
+              esSession: session,
+              isGEO: true
             });
 
 
