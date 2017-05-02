@@ -19,7 +19,7 @@ phantasus.HelpMenu = function () {
   html.push('</div>');
   this.$el = $(html.join(''));
   this.$el.find('[data-name=contact]').on('click', function (e) {
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Contact',
       html: 'Please email us at daria.zenkova.cs@gmail.com',
       focus: document.activeElement

@@ -197,7 +197,7 @@ phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions
     // maxWidth2 = width;
     // }
   }
-  return maxWidth;
+  return maxWidth === 0 ? maxWidth : (maxWidth + 2);
 };
 phantasus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   var textWidth = context.measureText(string).width;

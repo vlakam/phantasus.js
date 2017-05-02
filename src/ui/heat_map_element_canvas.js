@@ -23,7 +23,7 @@ phantasus.HeatMapElementCanvas = function (project) {
   this.gridThickness = 0.1;
   this.elementDrawCallback = null;
   this.drawCallback = null;
-  this.drawValuesFormat = morpheus.Util.createNumberFormat('.2f');
+  this.drawValuesFormat = phantasus.Util.createNumberFormat('.2f');
 };
 phantasus.HeatMapElementCanvas.GRID_COLOR = '#808080';
 phantasus.HeatMapElementCanvas.prototype = {
@@ -73,7 +73,7 @@ phantasus.HeatMapElementCanvas.prototype = {
   },
   setDrawValuesFormat: function (f) {
     if (typeof f === 'object') { // convert to function
-      f = morpheus.Util.createNumberFormat(f.pattern);
+      f = phantasus.Util.createNumberFormat(f.pattern);
     }
     this.drawValuesFormat = f;
   },
@@ -312,7 +312,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var rowPositions = this.rowPositions;
     //if (rowPositions.getSize() < 1 || columnPositions.getSize() < 1) {
     //force sub-pixel rendering
-    morpheus.CanvasUtil.forceSubPixelRendering(context);
+    phantasus.CanvasUtil.forceSubPixelRendering(context);
     //}
 
     context.textAlign = 'center';

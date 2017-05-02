@@ -158,9 +158,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
         menu.push('<li role="separator" class="divider"></li>');
       } else {
         var action = heatMap.getActionManager().getAction(name);
-        if (action == null) {
-          throw name;
-        }
+        if (action != null) {
         menu.push('<li>');
         menu.push('<a class="phantasus-menu-item" data-action="' + action.name + '" href="#">');
         menu.push(action.name);
@@ -179,8 +177,9 @@ phantasus.HeatMapToolBar = function (heatMap) {
           menu.push('</span>');
         }
 
-        menu.push('</a>');
-        menu.push('</li>');
+          menu.push('</a>');
+          menu.push('</li>');
+        }
       }
     });
 
@@ -445,13 +444,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     } else {
       _this.matchAllPredicates = $this.data('name') === 'matchAll';
     }
-    for (var i = 0; i < $searchToggle.length; i++) {
-      var $button = $($searchToggle[i]);
-      if ($button.css('display') === 'block') {
-        $button.click();
-        break;
-      }
-    }
+
     var $searchField;
     if (_this.rowSearchObject.$search.is(':visible')) {
       $searchField = _this.rowSearchObject.$search;
@@ -522,7 +515,13 @@ phantasus.HeatMapToolBar = function (heatMap) {
   this.rowDendrogramSearchObject.$searchResultsWrapper.show();
   this.columnDendrogramSearchObject.$searchResultsWrapper.show();
   this.valueSearchObject.$searchResultsWrapper.show();
-
+  for (var i = 0; i < $searchToggle.length; i++) {
+    var $button = $($searchToggle[i]);
+    if ($button.css('display') === 'block') {
+      $button.click();
+      break;
+    }
+  }
   this.rowSearchObject.$search.css({
     'border-top': '3.8px solid #e6e6e6',
     'border-bottom': '3.8px solid #e6e6e6',
@@ -562,6 +561,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     }
     $next.click();
   };
+
   for (var i = 0; i < $searchToggle.length; i++) {
     var $button = $($searchToggle[i]);
     if ($button.css('display') === 'block') {
