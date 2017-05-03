@@ -283,8 +283,8 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
           : project.getFullDataset().getRowMetadata()).getByName(name);
         var dataType = phantasus.VectorUtil.getDataType(vector);
-        if (existingSortKeyIndex != -1) {
-          sortKey = _this.getSortKeys()[existingSortKeyIndex];
+        if (existingSortKeyIndex != null) {
+          sortKey = _this.getSortKeys()[existingSortKeyIndex.index];
           if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.UNSORTED) {
             sortOrder = phantasus.SortKey.SortOrder.ASCENDING; // 1st
             // click
@@ -423,10 +423,10 @@ phantasus.VectorTrackHeader.prototype = {
         } else {
           var sortKeyIndex = this.getSortKeyIndexForColumnName(
             sortKeys, sortKey.toString());
-          if (sortKeyIndex === -1) { // new sort column
+          if (sortKeyIndex === null) { // new sort column
             sortKeys.push(sortKey);
           } else { // change sort order of existing sort column
-            sortKeys[sortKeyIndex] = sortKey;
+            sortKeys[sortKeyIndex.index] = sortKey;
           }
         }
         this.setOrder(sortKeys);
@@ -444,13 +444,20 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getSortKeyIndexForColumnName: function (sortKeys, columnName) {
     if (sortKeys != null) {
+      var counter = 0;
       for (var i = 0, size = sortKeys.length; i < size; i++) {
-        if (columnName === sortKeys[i].toString()) {
-          return i;
+        if (sortKeys[i].getLockOrder() === 0) {
+          counter++;
+        }
+        if (sortKeys[i] instanceof phantasus.SortKey && columnName === sortKeys[i].toString()) {
+          return {
+            index: i,
+            number: counter
+          };
         }
       }
     }
-    return -1;
+    return null;
   },
   print: function (clip, context) {
     if (clip.height <= 6) {
@@ -475,6 +482,9 @@ phantasus.VectorTrackHeader.prototype = {
     var name = this.name;
     var existingSortKeyIndex = this.getSortKeyIndexForColumnName(sortKeys,
       name);
+    var unlockedSortKeys = sortKeys.filter(function (key) {
+      return key.getLockOrder() === 0;
+    });
     phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
@@ -506,7 +516,7 @@ phantasus.VectorTrackHeader.prototype = {
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
     if (isColumns) {
-      if (existingSortKeyIndex != -1) {
+      if (existingSortKeyIndex != null) {
         xpix -= 6;
       }
       if (sortKeys.length > 1) {
@@ -657,18 +667,18 @@ phantasus.VectorTrackHeader.prototype = {
     // context.restore();
     // }
     context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
-    if (existingSortKeyIndex !== -1) {
+    if (existingSortKeyIndex !== null) {
       context.beginPath();
       var x = this.isColumns ? xpix + 4 : xpix + textWidth + 6;
       var arrowHeight = Math.min(8, this.getUnscaledHeight() / 2 - 1);
       var arrowWidth = 3;
-      if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
+      if (sortKeys[existingSortKeyIndex.index].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
         // up arrow
         context.translate(x, ypix - arrowHeight);
         context.moveTo(0, 0);
         context.lineTo(arrowWidth, arrowHeight);
         context.lineTo(-arrowWidth, arrowHeight);
-      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
+      } else if (sortKeys[existingSortKeyIndex.index].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
         // arrow
         context.translate(x, ypix);
         context.moveTo(0, arrowHeight);
@@ -684,10 +694,10 @@ phantasus.VectorTrackHeader.prototype = {
       }
       context.fill();
       phantasus.CanvasUtil.resetTransform(context);
-      if (sortKeys.length > 1) {
+      if (unlockedSortKeys.length > 1) {
         context.textAlign = 'left';
         context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
-        context.fillText('' + (existingSortKeyIndex + 1), x + 4,
+        context.fillText('' + (existingSortKeyIndex.number), x + 4,
           ypix - 3);
       }
     }
