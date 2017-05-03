@@ -660,27 +660,30 @@ phantasus.ActionManager = function () {
     for (var i = 0, n = viewIndices.length; i < n; i++) {
       modelIndices.push(converter(viewIndices[i]));
     }
-    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
-      ' top', isColumns);
+    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on top', isColumns);
     sortKey.setLockOrder(1);
     if (isColumns) {
       project
-        .setColumnSortKeys(
-          phantasus.SortKey
-            .keepExistingSortKeys(
-              [sortKey],
-              project
-                .getColumnSortKeys()),
-          true);
+      .setColumnSortKeys(
+        phantasus.SortKey
+        .keepExistingSortKeys(
+          [sortKey],
+          project
+          .getColumnSortKeys().filter(function (key) {
+            return !(key instanceof phantasus.MatchesOnTopSortKey && key.toString() === sortKey.toString());
+          })),
+        true);
     } else {
       project
-        .setRowSortKeys(
-          phantasus.SortKey
-            .keepExistingSortKeys(
-              [sortKey],
-              project
-                .getRowSortKeys()),
-          true);
+      .setRowSortKeys(
+        phantasus.SortKey
+        .keepExistingSortKeys(
+          [sortKey],
+          project
+          .getRowSortKeys().filter(function (key) {
+            return !(key instanceof phantasus.MatchesOnTopSortKey && key.toString() === sortKey.toString());
+          })),
+        true);
     }
   };
   this.add({
