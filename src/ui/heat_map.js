@@ -3753,6 +3753,9 @@ phantasus.HeatMap.prototype = {
   getFitColumnSize: function () {
     var heatmap = this.heatmap;
     var availablePixels = this.getAvailableWidth();
+    if (availablePixels === -1) {
+      return 13;
+    }
     if (this.rowDendrogram) {
       availablePixels -= this.rowDendrogram.getUnscaledWidth();
     }
@@ -3786,7 +3789,9 @@ phantasus.HeatMap.prototype = {
   getFitRowSize: function () {
     var heatmap = this.heatmap;
     var availablePixels = this.getAvailableHeight();
-
+    if (availablePixels === -1) {
+      return 13;
+    }
     if (this.columnDendrogram) {
       availablePixels -= this.columnDendrogram.getUnscaledHeight();
     }
@@ -3878,7 +3883,7 @@ phantasus.HeatMap.prototype = {
             .getPreferredSize(this.rowTracks[i]).width);
       }
     }
-    if ((rowTrackWidthSum + rowDendrogramWidth + heatmapPrefSize.width) > availableWidth) {
+    if (availableWidth !== -1 && (rowTrackWidthSum + rowDendrogramWidth + heatmapPrefSize.width) > availableWidth) {
       // shrink row tracks
       //var over = (rowTrackWidthSum + rowDendrogramWidth + heatmapPrefSize.width) - availableWidth;
       rowTrackWidthSum = 0;
@@ -3911,9 +3916,9 @@ phantasus.HeatMap.prototype = {
     }
     var xpos = Math.max(rowDendrogramWidth, maxHeaderWidth);
     var heatMapWidth = heatmapPrefSize.width;
-    var maxHeatMapWidth = Math.max(50, availableWidth - rowTrackWidthSum
-      - xpos
-      - phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS);
+    var maxHeatMapWidth = Math.max(50, availableWidth === -1 ? Number.MAX_VALUE : (availableWidth - rowTrackWidthSum
+    - xpos
+    - phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS));
     if (maxHeatMapWidth > 0 && heatMapWidth > maxHeatMapWidth) {
       heatMapWidth = maxHeatMapWidth;
       heatMapWidth = Math.min(heatMapWidth, heatmapPrefSize.width); // can't
@@ -3979,7 +3984,7 @@ phantasus.HeatMap.prototype = {
     this.$whitespace[0].style.top = '0px';
     ypos += phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     var heatMapHeight = heatmapPrefSize.height;
-    if (heatMapHeight > (availableHeight - ypos)) {
+    if (availableHeight !== -1 && heatMapHeight > (availableHeight - ypos)) {
       heatMapHeight = Math.max(100, Math.min(heatmapPrefSize.height,
         availableHeight - ypos));
     }
@@ -4108,16 +4113,10 @@ phantasus.HeatMap.prototype = {
         invalidateColumns: true
       });
     }
-
     this.$parent.css({
-      height: Math.ceil(totalHeight) + 'px'
+      height: Math.ceil(totalHeight) + 'px',
+      width: availableWidth === -1 ? (Math.ceil(xpos + 2) + 'px') : ''
     });
-    //
-    // if (this.options.setWidth) {
-    //   this.$parent.css({
-    //     width: Math.ceil(xpos + 2) + 'px'
-    //   });
-    // }
 
     this.updatingScroll = false;
     this.trigger('change', {
