@@ -413,7 +413,7 @@ phantasus.HeatMapKeyListener = function (heatMap) {
 
     html.push('</table>');
     phantasus.FormBuilder.showInModal({
-      title: 'Keymap Reference',
+      title: 'Keymap Shortcuts',
       html: html.join(''),
       focus: document.activeElement
     });

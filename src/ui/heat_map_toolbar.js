@@ -206,7 +206,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
       createMenu('Tools', heatMap.options.menu.Tools);
     }
     if (heatMap.options.menu.Help) {
-      createMenu('Help', heatMap.options.menu.Help, '200px');
+      createMenu('Help', heatMap.options.menu.Help, '220px');
     }
   }
 
@@ -242,14 +242,12 @@ phantasus.HeatMapToolBar = function (heatMap) {
     toolbarHtml.push(' <span style="font-size: .8em;" class="fa fa-caret-down"></span>');
     toolbarHtml.push('</button>');
     toolbarHtml.push('<ul class="dropdown-menu" aria-labelledby="' + dropdownId + '">');
+
     toolbarHtml
-      .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom Out">Zoom' +
-        ' Out<span' +
-        ' class="fa' +
-        ' fa-minus phantasus-menu-item-icon"></span><span class="pull-right">-</span></a></li>');
+    .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom In">Zoom In<span class="pull-right">+</span></a></li>');
     toolbarHtml
-      .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom In">Zoom In<span class="fa' +
-        ' fa-plus phantasus-menu-item-icon"></span><span class="pull-right">+</span></a></li>');
+    .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom Out">Zoom' +
+      ' Out<span class="pull-right">-</span></a></li>');
     toolbarHtml
       .push('<li role="separator" class="divider"></li>');
     toolbarHtml
