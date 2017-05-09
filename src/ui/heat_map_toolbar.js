@@ -162,6 +162,9 @@ phantasus.HeatMapToolBar = function (heatMap) {
         menu.push('<li>');
         menu.push('<a class="phantasus-menu-item" data-action="' + action.name + '" href="#">');
         menu.push(action.name);
+        if (action.ellipsis) {
+          menu.push('...');
+        }
         if (action.icon) {
           menu.push('<span class="' + action.icon + ' phantasus-menu-item-icon"></span> ');
         }
