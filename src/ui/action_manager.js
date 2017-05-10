@@ -8,8 +8,8 @@
  * @param options.accept Additional function to test whether to accept shortcut
  * @param options.icon Optional icon to display
  */
-morpheus.ActionManager = function () {
-  this.actionNameToAction = new morpheus.Map();
+phantasus.ActionManager = function () {
+  this.actionNameToAction = new phantasus.Map();
   this.actions = [];
   // TODO copy all row/column metadata
   // pin/unpin tab,
@@ -17,7 +17,7 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Sort',
     cb: function (options) {
-      new morpheus.SortDialog(options.heatMap.getProject());
+      new phantasus.SortDialog(options.heatMap.getProject());
     },
     icon: 'fa fa-sort-alpha-asc',
   });
@@ -28,7 +28,7 @@ morpheus.ActionManager = function () {
     cb: function (options) {
       if ($filterModal == null) {
         var filterModal = [];
-        var filterLabelId = _.uniqueId('morpheus');
+        var filterLabelId = _.uniqueId('phantasus');
         filterModal
           .push('<div class="modal" tabindex="1" role="dialog" aria-labelledby="'
             + filterLabelId + '">');
@@ -59,14 +59,14 @@ morpheus.ActionManager = function () {
 
         var $filterChooser = $(filterHtml.join(''));
         $filterChooser.appendTo($filter);
-        var columnFilterUI = new morpheus.FilterUI(options.heatMap.getProject(), true);
-        var rowFilterUI = new morpheus.FilterUI(options.heatMap.getProject(), false);
+        var columnFilterUI = new phantasus.FilterUI(options.heatMap.getProject(), true);
+        var rowFilterUI = new phantasus.FilterUI(options.heatMap.getProject(), false);
         // options.heatMap.getProject().getRowFilter().on('focus', function (e) {
         //   $filterChooser.find('[value=rows]').prop('checked', true);
         //   columnFilterUI.$div.hide();
         //   rowFilterUI.$div.show();
         //   $filterModal.modal('show');
-        //   morpheus.Util.trackEvent({
+        //   phantasus.Util.trackEvent({
         //     eventCategory: '',
         //     eventAction: 'rowFilter'
         //   });
@@ -77,7 +77,7 @@ morpheus.ActionManager = function () {
         //   columnFilterUI.$div.show();
         //   rowFilterUI.$div.hide();
         //   $filterModal.modal('show');
-        //   morpheus.Util.trackEvent({
+        //   phantasus.Util.trackEvent({
         //     eventCategory: '',
         //     eventAction: 'columnFilter'
         //   });
@@ -134,13 +134,13 @@ morpheus.ActionManager = function () {
       var height = bounds.height;
       var width = bounds.width;
       var canvas = $('<canvas></canvas>')[0];
-      var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+      var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
       canvas.height = backingScale * height;
       canvas.style.height = height + 'px';
       canvas.width = backingScale * width;
       canvas.style.width = width + 'px';
       var context = canvas.getContext('2d');
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       options.heatMap.snapshot(context);
       var url = canvas.toDataURL();
       // canvas.toBlob(function (blob) {
@@ -151,7 +151,7 @@ morpheus.ActionManager = function () {
       // 		'<img src="' + url + '">');
       // });
 
-      morpheus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([{
         format: 'text/html',
         data: '<img src="' + url + '">'
       }], true);
@@ -181,7 +181,7 @@ morpheus.ActionManager = function () {
     },
 
     cb: function (options) {
-      morpheus.HeatMap.showTool(new morpheus.NewHeatMapTool(),
+      phantasus.HeatMap.showTool(new phantasus.NewHeatMapTool(),
         options.heatMap);
     }
   });
@@ -202,7 +202,7 @@ morpheus.ActionManager = function () {
     global: true,
     name: 'Open',
     cb: function (options) {
-      morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+      phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
         customUrls: options.heatMap._customUrls
       }), options.heatMap);
     },
@@ -214,10 +214,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Image',
     gui: function () {
-      return new morpheus.SaveImageTool();
+      return new phantasus.SaveImageTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(),
+      phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
     which: [83],
@@ -229,10 +229,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Dataset',
     gui: function () {
-      return new morpheus.SaveDatasetTool();
+      return new phantasus.SaveDatasetTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(),
+      phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
     shiftKey: true,
@@ -245,10 +245,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Session',
     gui: function () {
-      return new morpheus.SaveSessionTool();
+      return new phantasus.SaveSessionTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(), options.heatMap);
+      phantasus.HeatMap.showTool(this.gui(), options.heatMap);
     },
     icon: 'fa fa-anchor'
   });
@@ -257,7 +257,7 @@ morpheus.ActionManager = function () {
     this.add({
       name: 'Chart',
       cb: function (options) {
-        new morpheus.ChartTool({
+        new phantasus.ChartTool({
           project: options.heatMap.getProject(),
           getVisibleTrackNames: _.bind(
             options.heatMap.getVisibleTrackNames, options.heatMap)
@@ -268,7 +268,7 @@ morpheus.ActionManager = function () {
     this.add({
       name: 'PCA Plot',
       cb: function (options) {
-        new morpheus.PcaPlotTool({
+        new phantasus.PcaPlotTool({
           project: options.heatMap.getProject()
         });
       },
@@ -447,14 +447,14 @@ morpheus.ActionManager = function () {
     name: 'Tutorial',
     cb: function () {
       window
-        .open('https://clue.io/morpheus/tutorial.html');
+        .open('https://clue.io/phantasus/tutorial.html');
     }
   });
   this.add({
     icon: 'fa fa-code',
     name: 'Source Code',
     cb: function () {
-      window.open('https://github.com/cmap/morpheus.js');
+      window.open('https://github.com/cmap/phantasus.js');
     }
   });
   var $findModal;
@@ -468,7 +468,7 @@ morpheus.ActionManager = function () {
     cb: function (options) {
       if ($findModal == null) {
         var findModal = [];
-        var id = _.uniqueId('morpheus');
+        var id = _.uniqueId('phantasus');
         findModal
           .push('<div class="modal" tabindex="1" role="dialog" aria-labelledby="'
             + id + '">');
@@ -500,7 +500,7 @@ morpheus.ActionManager = function () {
             }
           }
         });
-        morpheus.Util.autosuggest({
+        phantasus.Util.autosuggest({
           $el: $search,
           multi: false,
           suggestWhenEmpty: false,
@@ -508,7 +508,7 @@ morpheus.ActionManager = function () {
           filter: function (tokens, response) {
             var token = tokens[0].trim();
             var matches = [];
-            var replaceRegex = new RegExp('(' + morpheus.Util.escapeRegex(token) + ')', 'i');
+            var replaceRegex = new RegExp('(' + phantasus.Util.escapeRegex(token) + ')', 'i');
             for (var i = 0; i < allActions.length; i++) {
               if (allActions[i].cb) {
                 var name = allActions[i].name;
@@ -550,7 +550,7 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Keymap Reference',
     cb: function () {
-      new morpheus.HeatMapKeyListener({
+      new phantasus.HeatMapKeyListener({
         $tabPanel: $()
       }).showKeyMapReference();
     }
@@ -560,16 +560,16 @@ morpheus.ActionManager = function () {
     name: 'Linking',
     cb: function () {
       window
-        .open('https://clue.io/morpheus/linking.html');
+        .open('https://clue.io/phantasus/linking.html');
     }
   });
   this.add({
     name: 'Contact',
     icon: 'fa fa-envelope-o',
     cb: function (options) {
-      morpheus.FormBuilder.showInModal({
+      phantasus.FormBuilder.showInModal({
         title: 'Contact',
-        html: 'Please email us at morpheus@broadinstitute.org',
+        html: 'Please email us at phantasus@broadinstitute.org',
         focus: options.heatMap.getFocusEl()
       });
     }
@@ -592,7 +592,7 @@ morpheus.ActionManager = function () {
         .getSortedFilteredDataset().getRowCount() : options.heatMap
         .getProject().getSortedFilteredDataset()
         .getColumnCount();
-      var indices = new morpheus.Set();
+      var indices = new phantasus.Set();
       for (var i = 0; i < count; i++) {
         indices.add(i);
       }
@@ -603,7 +603,7 @@ morpheus.ActionManager = function () {
   var invertAction = function (options, isColumns) {
     var model = isColumns ? options.heatMap.getProject().getColumnSelectionModel() : options.heatMap.getProject().getRowSelectionModel();
     var viewIndices = model.getViewIndices();
-    var inverse = new morpheus.Set();
+    var inverse = new phantasus.Set();
     var n = n = isColumns ? options.heatMap.getProject().getSortedFilteredDataset().getColumnCount() : options.heatMap.getProject().getSortedFilteredDataset().getRowCount();
     for (var i = 0; i < n; i++) {
       if (!viewIndices.has(i)) {
@@ -628,7 +628,7 @@ morpheus.ActionManager = function () {
     var model = isColumns ? options.heatMap.getProject()
       .getColumnSelectionModel() : options.heatMap.getProject()
       .getRowSelectionModel();
-    model.setViewIndices(new morpheus.Set(), true);
+    model.setViewIndices(new phantasus.Set(), true);
   };
   this.add({
     name: 'Clear Selected Rows',
@@ -662,12 +662,12 @@ morpheus.ActionManager = function () {
     for (var i = 0, n = viewIndices.length; i < n; i++) {
       modelIndices.push(converter(viewIndices[i]));
     }
-    var sortKey = new morpheus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
+    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
       ' top', isColumns);
     if (isColumns) {
       project
         .setColumnSortKeys(
-          morpheus.SortKey
+          phantasus.SortKey
             .keepExistingSortKeys(
               [sortKey],
               project
@@ -676,7 +676,7 @@ morpheus.ActionManager = function () {
     } else {
       project
         .setRowSortKeys(
-          morpheus.SortKey
+          phantasus.SortKey
             .keepExistingSortKeys(
               [sortKey],
               project
@@ -706,7 +706,7 @@ morpheus.ActionManager = function () {
       .getRowCount() : project
       .getSortedFilteredDataset()
       .getColumnCount();
-    var indices = new morpheus.Set();
+    var indices = new phantasus.Set();
     for (var i = 0; i < count; i++) {
       indices.add(i);
     }
@@ -746,10 +746,10 @@ morpheus.ActionManager = function () {
     var text = [];
     selectionModel.getViewIndices().forEach(
       function (index) {
-        text.push(morpheus.Util.toString(v
+        text.push(phantasus.Util.toString(v
           .getValue(index)));
       });
-    morpheus.Util.setClipboardData([{
+    phantasus.Util.setClipboardData([{
       format: 'text/plain',
       data: text.join('\n')
     }]);
@@ -775,7 +775,7 @@ morpheus.ActionManager = function () {
       : project
       .getRowSelectionModel();
     if (selectionModel.count() === 0) {
-      morpheus.FormBuilder
+      phantasus.FormBuilder
         .showMessageModal({
           title: 'Annotate Selection',
           html: 'No ' + (isColumns ? 'columns' : 'rows') + ' selected.',
@@ -783,7 +783,7 @@ morpheus.ActionManager = function () {
         });
       return;
     }
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -794,7 +794,7 @@ morpheus.ActionManager = function () {
       type: 'text',
       required: true
     });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate',
         content: formBuilder.$form,
@@ -809,9 +809,9 @@ morpheus.ActionManager = function () {
           var fullDataset = project
             .getFullDataset();
           if (isColumns) {
-            dataset = morpheus.DatasetUtil
+            dataset = phantasus.DatasetUtil
               .transposedView(dataset);
-            fullDataset = morpheus.DatasetUtil
+            fullDataset = phantasus.DatasetUtil
               .transposedView(fullDataset);
           }
 
@@ -832,7 +832,7 @@ morpheus.ActionManager = function () {
                     index,
                     value);
               });
-          morpheus.VectorUtil
+          phantasus.VectorUtil
             .maybeConvertStringToNumber(v);
           project
             .trigger(
@@ -840,7 +840,7 @@ morpheus.ActionManager = function () {
               {
                 vectors: [v],
                 render: existingVector != null ? []
-                  : [morpheus.VectorTrack.RENDER.TEXT],
+                  : [phantasus.VectorTrack.RENDER.TEXT],
                 columns: isColumns
               });
         }
@@ -873,13 +873,13 @@ morpheus.ActionManager = function () {
         .getVisibleTrackNames(true);
       var columnFieldIndices = [];
       _.each(visibleColumnFields, function (name) {
-        var index = morpheus.MetadataUtil.indexOf(
+        var index = phantasus.MetadataUtil.indexOf(
           columnMetadata, name);
         if (index !== -1) {
           columnFieldIndices.push(index);
         }
       });
-      columnMetadata = new morpheus.MetadataModelColumnView(
+      columnMetadata = new phantasus.MetadataModelColumnView(
         columnMetadata, columnFieldIndices);
       var rowMetadata = dataset.getRowMetadata();
       // only copy visible tracks
@@ -887,18 +887,18 @@ morpheus.ActionManager = function () {
         .getVisibleTrackNames(false);
       var rowFieldIndices = [];
       _.each(visibleRowFields, function (name) {
-        var index = morpheus.MetadataUtil.indexOf(
+        var index = phantasus.MetadataUtil.indexOf(
           rowMetadata, name);
         if (index !== -1) {
           rowFieldIndices.push(index);
         }
       });
-      rowMetadata = new morpheus.MetadataModelColumnView(
+      rowMetadata = new phantasus.MetadataModelColumnView(
         rowMetadata, rowFieldIndices);
 
-      var text = new morpheus.GctWriter()
+      var text = new phantasus.GctWriter()
         .write(dataset);
-      morpheus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([{
         format: 'text/plain',
         data: text
       }]);
@@ -907,11 +907,11 @@ morpheus.ActionManager = function () {
   });
   var _this = this;
   console.log(_this);
-  [new morpheus.HClusterTool(), new morpheus.MarkerSelection(),
-    new morpheus.NearestNeighbors(), new morpheus.AdjustDataTool(),
-    new morpheus.CollapseDatasetTool(), new morpheus.CreateAnnotation(), new morpheus.SimilarityMatrixTool(),
-    new morpheus.TransposeTool(), new morpheus.TsneTool(), new morpheus.DevAPI(),
-    new morpheus.KmeansTool(), new morpheus.LimmaTool()].forEach(function (tool) {
+  [new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
+    new phantasus.NearestNeighbors(), new phantasus.AdjustDataTool(),
+    new phantasus.CollapseDatasetTool(), new phantasus.CreateAnnotation(), new phantasus.SimilarityMatrixTool(),
+    new phantasus.TransposeTool(), new phantasus.TsneTool(), new phantasus.DevAPI(),
+    new phantasus.KmeansTool(), new phantasus.LimmaTool()].forEach(function (tool) {
     _this.add({
 
       name: tool.toString(),
@@ -919,13 +919,13 @@ morpheus.ActionManager = function () {
         return tool;
       },
       cb: function (options) {
-        morpheus.HeatMap.showTool(tool, options.heatMap);
+        phantasus.HeatMap.showTool(tool, options.heatMap);
       }
     });
   });
 
 };
-morpheus.ActionManager.prototype = {
+phantasus.ActionManager.prototype = {
   getActions: function () {
     return this.actions;
   },
@@ -940,7 +940,7 @@ morpheus.ActionManager.prototype = {
 
     args.heatMap = this.heatMap;
     action.cb(args);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: '',
       eventAction: name
     });

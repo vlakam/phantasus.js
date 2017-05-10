@@ -1,10 +1,10 @@
-morpheus.HeatMapTrackShapeLegend = function (tracks, shapeModel) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.HeatMapTrackShapeLegend = function (tracks, shapeModel) {
+  phantasus.AbstractCanvas.call(this, false);
   this.tracks = tracks;
   this.shapeModel = shapeModel;
   this.canvas.style.position = '';
 };
-morpheus.HeatMapTrackShapeLegend.prototype = {
+phantasus.HeatMapTrackShapeLegend.prototype = {
   getPreferredSize: function () {
     var tracks = this.tracks;
     var shapeModel = this.shapeModel;
@@ -43,8 +43,8 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
     var ypix = 0;
     context.textAlign = 'left';
     context.textBaseline = 'top';
-    context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.strokeStyle = 'black';
     for (var i = 0; i < tracks.length; i++) {
       ypix = 0;
@@ -55,14 +55,14 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
         context.measureText(vector.getName()).width);
       ypix += 14;
       var map = shapeModel.getMap(vector.getName());
-      var values = map.keys().sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+      var values = map.keys().sort(phantasus.SortKey.ASCENDING_COMPARATOR);
       values.forEach(function (key) {
         var shape = shapeModel.getMappedValue(vector, key);
         var width = context.measureText(key).width;
         if (!isNaN(width)) {
           maxWidth = Math.max(maxWidth, width);
         }
-        morpheus.CanvasUtil.drawShape(context, shape, xpix + 8,
+        phantasus.CanvasUtil.drawShape(context, shape, xpix + 8,
           ypix + 6, 6);
         context.fillText(key, xpix + 16, ypix);
         ypix += 14;
@@ -72,4 +72,4 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.HeatMapTrackShapeLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HeatMapTrackShapeLegend, phantasus.AbstractCanvas);

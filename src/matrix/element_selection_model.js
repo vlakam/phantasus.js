@@ -1,10 +1,10 @@
-morpheus.ElementSelectionModel = function (project) {
-  this.viewIndices = new morpheus.Set();
+phantasus.ElementSelectionModel = function (project) {
+  this.viewIndices = new phantasus.Set();
   this.project = project;
 };
-morpheus.ElementSelectionModel.prototype = {
+phantasus.ElementSelectionModel.prototype = {
   click: function (rowIndex, columnIndex, add) {
-    var id = new morpheus.Identifier([rowIndex, columnIndex]);
+    var id = new phantasus.Identifier([rowIndex, columnIndex]);
     var isSelected = this.viewIndices.has(id);
     if (add) {
       isSelected ? this.viewIndices.remove(id) : this.viewIndices.add(id);
@@ -24,11 +24,11 @@ morpheus.ElementSelectionModel.prototype = {
     this.trigger('selectionChanged');
   },
   clear: function () {
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
   },
   /**
    *
-   * @returns {morpheus.Set}
+   * @returns {phantasus.Set}
    */
   getViewIndices: function () {
     return this.viewIndices;
@@ -51,17 +51,17 @@ morpheus.ElementSelectionModel.prototype = {
   },
   restore: function () {
     var project = this.project;
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
     for (var i = 0, length = this.modelIndices.length; i < length; i++) {
       var rowIndex = project
         .convertModelRowIndexToView(this.modelIndices[i][0]);
       var columnIndex = project
         .convertModelColumnIndexToView(this.modelIndices[i][1]);
       if (rowIndex !== -1 && columnIndex !== -1) {
-        this.viewIndices.add(new morpheus.Identifier([rowIndex,
+        this.viewIndices.add(new phantasus.Identifier([rowIndex,
           columnIndex]));
       }
     }
   }
 };
-morpheus.Util.extend(morpheus.ElementSelectionModel, morpheus.Events);
+phantasus.Util.extend(phantasus.ElementSelectionModel, phantasus.Events);

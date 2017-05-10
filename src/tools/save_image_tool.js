@@ -1,7 +1,7 @@
-morpheus.SaveImageTool = function () {
+phantasus.SaveImageTool = function () {
 
 };
-morpheus.SaveImageTool.prototype = {
+phantasus.SaveImageTool.prototype = {
 
   toString: function () {
     return 'Save Image';
@@ -28,7 +28,7 @@ morpheus.SaveImageTool.prototype = {
       fileName = 'image';
     }
     var format = options.input.format;
-    if (!morpheus.Util.endsWith(fileName.toLowerCase(), '.' + format)) {
+    if (!phantasus.Util.endsWith(fileName.toLowerCase(), '.' + format)) {
       fileName += '.' + format;
     }
     var heatMap = options.heatMap;

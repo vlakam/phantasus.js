@@ -12,10 +12,10 @@
  * @param maxIterations The maximum number of iterations
  * @constructor
  */
-morpheus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction) {
+phantasus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction) {
 
   var distance = function (points1, points2) {
-    return distanceFunction(morpheus.VectorUtil.arrayAsVector(points1.getPoint()), morpheus.VectorUtil.arrayAsVector(points2.getPoint()));
+    return distanceFunction(phantasus.VectorUtil.arrayAsVector(points1.getPoint()), phantasus.VectorUtil.arrayAsVector(points2.getPoint()));
   };
 
   function nextInt(upperBound) {
@@ -263,7 +263,7 @@ morpheus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction)
           distances[i] = distance(points[i], center);
         }
 
-        var variance = morpheus.Variance(morpheus.VectorUtil.arrayAsVector(distances));
+        var variance = phantasus.Variance(phantasus.VectorUtil.arrayAsVector(distances));
         // select the cluster with the largest variance
         if (variance > maxVariance) {
           maxVariance = variance;

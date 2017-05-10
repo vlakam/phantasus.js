@@ -1,5 +1,5 @@
-morpheus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
+  phantasus.AbstractCanvas.call(this, true);
   this.colorScheme = colorScheme;
   this.metadataValue = metadataValue;
   this.dataset = dataset;
@@ -13,7 +13,7 @@ morpheus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
   this.canvas.style.border = '1px solid LightGrey';
 };
 
-morpheus.HistogramLegend.prototype = {
+phantasus.HistogramLegend.prototype = {
   binSize: 0,
   maxCount: 0,
   total: 0,
@@ -36,7 +36,7 @@ morpheus.HistogramLegend.prototype = {
     }
     var vector =
       dataset.getRowMetadata().getByName(colorScheme.getSeparateColorSchemeForRowMetadataField());
-    // var numberOfBins = Math.ceil(morpheus.Log2(dataset.getRowCount() * dataset.getColumnCount()) + 1);
+    // var numberOfBins = Math.ceil(phantasus.Log2(dataset.getRowCount() * dataset.getColumnCount()) + 1);
     // var binSize = (max - min) / numberOfBins;
     var numberOfBins = Math.ceil((max - min) / binSize);
     var binNumberToOccurences = new Uint32Array(numberOfBins);
@@ -90,7 +90,7 @@ morpheus.HistogramLegend.prototype = {
     var y0 = countToPosition(0);
 
     if (this.name != null) {
-      context.font = '11px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = '11px ' + phantasus.CanvasUtil.FONT_NAME;
       context.fillStyle = 'black';
       context.lineWidth = 1;
       //  context.textBaseline = 'top';
@@ -141,10 +141,10 @@ morpheus.HistogramLegend.prototype = {
     //
     context.translate(0, histogramHeight + 1);
     context.fillStyle = 'black';
-    morpheus.HeatMapColorSchemeLegend.drawColorScheme(context,
+    phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
       this.colorScheme, canvasWidth, false, false, 6);
   }
 }
 ;
 
-morpheus.Util.extend(morpheus.HistogramLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HistogramLegend, phantasus.AbstractCanvas);

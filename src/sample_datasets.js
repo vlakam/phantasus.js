@@ -1,4 +1,4 @@
-morpheus.SampleDatasets = function (options) {
+phantasus.SampleDatasets = function (options) {
   if (!options.openText) {
     options.openText = 'Open';
   }
@@ -59,7 +59,7 @@ morpheus.SampleDatasets = function (options) {
       });
   $
     .ajax(
-      'https://s3.amazonaws.com/data.clue.io/morpheus/tcga/tcga_index.txt')
+      'https://s3.amazonaws.com/data.clue.io/phantasus/tcga/tcga_index.txt')
     .done(
       function (text) {
         var exampleHtml = [];
@@ -106,7 +106,7 @@ morpheus.SampleDatasets = function (options) {
           var tokens = line.split('\t');
           var type = tokens[0];
           var dataTypes = tokens[1].split(',');
-          var name = morpheus.TcgaUtil.DISEASE_STUDIES[type];
+          var name = phantasus.TcgaUtil.DISEASE_STUDIES[type];
           var disease = {
             mrna: dataTypes
               .indexOf('mRNAseq_RSEM_normalized_log2.txt') !== -1,
@@ -211,8 +211,8 @@ morpheus.SampleDatasets = function (options) {
       });
 };
 
-morpheus.SampleDatasets.getTcgaDataset = function (options) {
-  var baseUrl = 'https://s3.amazonaws.com/data.clue.io/morpheus/tcga/'
+phantasus.SampleDatasets.getTcgaDataset = function (options) {
+  var baseUrl = 'https://s3.amazonaws.com/data.clue.io/phantasus/tcga/'
     + options.type + '/';
   var datasetOptions = {};
   if (options.mrna) {
@@ -244,54 +244,54 @@ morpheus.SampleDatasets.getTcgaDataset = function (options) {
     datasetField: 'participant_id',
     fileField: 'patient_id'
   }];
-  return morpheus.TcgaUtil.getDataset(datasetOptions);
+  return phantasus.TcgaUtil.getDataset(datasetOptions);
 
 };
-morpheus.SampleDatasets.getCCLEDataset = function (options) {
+phantasus.SampleDatasets.getCCLEDataset = function (options) {
   var datasets = [];
   if (options.sig_genes) {
     datasets
-      .push('https://s3.amazonaws.com/data.clue.io/morpheus/CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
+      .push('https://s3.amazonaws.com/data.clue.io/phantasus/CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
     // datasets
     // .push({
     // dataset :
-    // '//s3.amazonaws.com/data.clue.io/morpheus/1650_HC_plus_RD_muts.maf.txt'
+    // '//s3.amazonaws.com/data.clue.io/phantasus/1650_HC_plus_RD_muts.maf.txt'
     // });
   }
   if (options.cn) {
     datasets
-      .push('https://s3.amazonaws.com/data.clue.io/morpheus/CCLE_copynumber_byGene_2013-12-03.gct');
+      .push('https://s3.amazonaws.com/data.clue.io/phantasus/CCLE_copynumber_byGene_2013-12-03.gct');
   }
 
   if (options.mrna) {
     datasets
-      .push('https://s3.amazonaws.com/data.clue.io/morpheus/CCLE_Expression_Entrez_2012-09-29.txt');
+      .push('https://s3.amazonaws.com/data.clue.io/phantasus/CCLE_Expression_Entrez_2012-09-29.txt');
   }
   if (options.ach) {
     datasets
-      .push('https://s3.amazonaws.com/data.clue.io/morpheus/Achilles_QC_v2.4.3.rnai.Gs.gct');
+      .push('https://s3.amazonaws.com/data.clue.io/phantasus/Achilles_QC_v2.4.3.rnai.Gs.gct');
   }
   var columnAnnotations = [];
   if (options.ach) {
     // there are several cell lines that are in Achilles but not CCLE
     columnAnnotations
       .push({
-        file: 'https://s3.amazonaws.com/data.clue.io/morpheus/Achilles_v2.4_SampleInfo_small.txt',
+        file: 'https://s3.amazonaws.com/data.clue.io/phantasus/Achilles_v2.4_SampleInfo_small.txt',
         datasetField: 'id',
         fileField: 'id'
       });
 
   }
   columnAnnotations.push({
-    file: 'https://s3.amazonaws.com/data.clue.io/morpheus/CCLE_Sample_Info.txt',
+    file: 'https://s3.amazonaws.com/data.clue.io/phantasus/CCLE_Sample_Info.txt',
     datasetField: 'id',
     fileField: 'id'
   });
 
   var returnDeferred = $.Deferred();
-  var datasetDef = morpheus.DatasetUtil.readDatasetArray(datasets);
+  var datasetDef = phantasus.DatasetUtil.readDatasetArray(datasets);
 
-  var annotationDef = morpheus.DatasetUtil.annotate({
+  var annotationDef = phantasus.DatasetUtil.annotate({
     annotations: columnAnnotations,
     isColumns: true
   });
@@ -315,13 +315,13 @@ morpheus.SampleDatasets.getCCLEDataset = function (options) {
     annotationCallbacks.forEach(function (f) {
       f(datasetToReturn);
     });
-    morpheus.DatasetUtil.toESSessionPromise(datasetToReturn);
+    phantasus.DatasetUtil.toESSessionPromise(datasetToReturn);
     returnDeferred.resolve(datasetToReturn);
   });
 
   return returnDeferred;
 };
-morpheus.SampleDatasets.prototype = {
+phantasus.SampleDatasets.prototype = {
 
   openTcga: function (options) {
     this
@@ -366,7 +366,7 @@ morpheus.SampleDatasets.prototype = {
           field: 'mRNAseq_cluster',
           display: 'color, highlight'
         }],
-        dataset: morpheus.SampleDatasets.getTcgaDataset(options)
+        dataset: phantasus.SampleDatasets.getTcgaDataset(options)
       });
   },
   openCCLE: function (options) {
@@ -401,7 +401,7 @@ morpheus.SampleDatasets.prototype = {
         field: 'primary_site',
         display: 'color, highlight'
       }],
-      dataset: morpheus.SampleDatasets.getCCLEDataset(options)
+      dataset: phantasus.SampleDatasets.getCCLEDataset(options)
     });
   }
 };

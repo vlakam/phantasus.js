@@ -18,7 +18,7 @@
     overflow-x: hidden;
 }
 
-.morpheus-sep {
+.phantasus-sep {
     border-top: 1px solid #eee;
 }
 
@@ -26,24 +26,24 @@
     margin-left: -16px !important;
 }
 
-.morpheus-button-divider {
+.phantasus-button-divider {
     padding-left: 4px;
     display: inline;
 }
 
-.morpheus-hover-show {
+.phantasus-hover-show {
     display: none !important;
 }
 
-.morpheus-hover:hover > .morpheus-hover-show {
+.phantasus-hover:hover > .phantasus-hover-show {
     display: block !important;
 }
 
-.morpheus-hover:hover {
+.phantasus-hover:hover {
     background-color: #f5f5f5;
 }
 
-.morpheus-tip {
+.phantasus-tip {
     font-size: 12px;
     position: absolute;
     top: 0;
@@ -55,13 +55,13 @@
     color: #777;
 }
 
-.morpheus-sub-modal {
+.phantasus-sub-modal {
     /*modal has z-index: 1050;*/
     /*open dropdown has z-index: 1000;*/
     z-index: 1051;
 }
 
-.morpheus-tip-inline {
+.phantasus-tip-inline {
     font-size: 12px;
     z-index: 999;
     position: absolute;
@@ -75,13 +75,13 @@
     overflow: hidden;
 }
 
-.morpheus-form-control-inline {
+.phantasus-form-control-inline {
     display: inline !important;
     width: auto !important;
     margin-right: 1em !important;
 }
 
-.morpheus-tip-dialog {
+.phantasus-tip-dialog {
     font-size: 12px !important;
     color: #777 ! important;
     padding: 2px !important;
@@ -108,35 +108,35 @@
     border-radius: 3px;
 }
 
-.morpheus-menu {
+.phantasus-menu {
     padding-right: 7px;
     padding-left: 7px;
     display: inline-block;
 }
 
-.morpheus-black-link {
+.phantasus-black-link {
     color: black;
 }
 
-.morpheus-black-link:focus {
-    color: black;
-    text-decoration: none;
-}
-
-.morpheus-black-link:hover {
+.phantasus-black-link:focus {
     color: black;
     text-decoration: none;
 }
 
-.morpheus-black-link-background:hover {
+.phantasus-black-link:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.phantasus-black-link-background:hover {
     background-color: #e6e6e6;
 }
 
-.dropdown-menu > li > a.morpheus-menu-item {
+.dropdown-menu > li > a.phantasus-menu-item {
     padding: 3px 6px 3px 24px;
 }
 
-.morpheus-menu-item-icon {
+.phantasus-menu-item-icon {
     margin-top: 3px;
     margin-left: -21px;
     float: left;

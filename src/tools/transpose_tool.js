@@ -1,18 +1,18 @@
-morpheus.TransposeTool = function () {
+phantasus.TransposeTool = function () {
 };
-morpheus.TransposeTool.prototype = {
+phantasus.TransposeTool.prototype = {
   toString: function () {
     return 'Transpose';
   },
   execute: function (options) {
     var project = options.project;
     var heatMap = options.heatMap;
-    var dataset = new morpheus.TransposedDatasetView(project
+    var dataset = new phantasus.TransposedDatasetView(project
       .getSortedFilteredDataset());
     // make a shallow copy of the dataset, metadata is immutable via the UI
-    var rowMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+    var rowMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
       .getRowMetadata());
-    var columnMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+    var columnMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
       .getColumnMetadata());
     dataset.getRowMetadata = function () {
       return rowMetadataModel;
@@ -26,13 +26,13 @@ morpheus.TransposeTool.prototype = {
     // if (heatMap.columnDendrogram != null) {
     // var indices = project.getColumnSelectionModel().getViewIndices()
     // .toArray();
-    // morpheus.DendrogramUtil.leastCommonAncestor();
+    // phantasus.DendrogramUtil.leastCommonAncestor();
     // }
     // if (heatMap.rowDendrogram != null) {
     //
     // }
     var name = options.input.name || heatMap.getName();
-    new morpheus.HeatMap({
+    new phantasus.HeatMap({
       name: name,
       dataset: dataset,
       inheritFromParentOptions: {

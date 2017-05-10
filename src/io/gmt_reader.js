@@ -1,6 +1,6 @@
-morpheus.GmtReader = function () {
+phantasus.GmtReader = function () {
 };
-morpheus.GmtReader.prototype = {
+phantasus.GmtReader.prototype = {
   read: function (reader) {
     var sets = [];
     var tab = /\t/;

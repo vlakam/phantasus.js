@@ -1,20 +1,20 @@
-morpheus.DiscreteColorSupplier = function () {
-  this.colorMap = new morpheus.Map();
+phantasus.DiscreteColorSupplier = function () {
+  this.colorMap = new phantasus.Map();
   this.hiddenValue = 0;
-  this.hiddenValues = new morpheus.Set();
-  morpheus.AbstractColorSupplier.call(this);
-  this.scalingMode = morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+  this.hiddenValues = new phantasus.Set();
+  phantasus.AbstractColorSupplier.call(this);
+  this.scalingMode = phantasus.HeatMapColorScheme.ScalingMode.FIXED;
 };
 
-morpheus.DiscreteColorSupplier.prototype = {
+phantasus.DiscreteColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.DiscreteColorSupplier();
+    return new phantasus.DiscreteColorSupplier();
   },
   /**
    * @param.array Array of name, value, color pairs
    */
   setColorMap: function (array) {
-    this.colorMap = new morpheus.Map();
+    this.colorMap = new phantasus.Map();
     this.colors = [];
     this.fractions = [];
     this.names = [];
@@ -32,7 +32,7 @@ morpheus.DiscreteColorSupplier.prototype = {
   copy: function () {
     var c = this.createInstance();
     c.names = this.names.slice(0);
-    c.colorMap = new morpheus.Map();
+    c.colorMap = new phantasus.Map();
     this.colorMap.forEach(function (color, value) {
       c.colorMap.set(value, color);
     });
@@ -60,5 +60,5 @@ morpheus.DiscreteColorSupplier.prototype = {
     return this.colorMap.get(value);
   }
 };
-morpheus.Util.extend(morpheus.DiscreteColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.DiscreteColorSupplier,
+  phantasus.AbstractColorSupplier);

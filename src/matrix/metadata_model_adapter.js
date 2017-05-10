@@ -1,11 +1,11 @@
 /**
  *
- *@implements {morpheus.MetadataModelInterface}
+ *@implements {phantasus.MetadataModelInterface}
  */
-morpheus.MetadataModelAdapter = function (model) {
+phantasus.MetadataModelAdapter = function (model) {
   this.model = model;
 };
-morpheus.MetadataModelAdapter.prototype = {
+phantasus.MetadataModelAdapter.prototype = {
   add: function (name) {
     return this.model.add(name);
   },

@@ -5,7 +5,7 @@
  * @return array of nodes. Each node object contains a left, right, and
  *         distance.
  */
-morpheus.AverageLinkage = function (nelements, distmatrix) {
+phantasus.AverageLinkage = function (nelements, distmatrix) {
   var j;
   var n;
   var clusterid;
@@ -34,7 +34,7 @@ morpheus.AverageLinkage = function (nelements, distmatrix) {
   var r = {};
   // result array contains array of int left, int right, float distance;
   for (n = nelements; n > 1; n--) {
-    morpheus.HCluster.findClosestPair(n, distmatrix, r);
+    phantasus.HCluster.findClosestPair(n, distmatrix, r);
     result[nelements - n] = {};
     result[nelements - n].distance = r.distance;
     var is = r.ip;

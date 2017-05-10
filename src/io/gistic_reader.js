@@ -1,19 +1,19 @@
-morpheus.GisticReader = function () {
+phantasus.GisticReader = function () {
 
 };
-morpheus.GisticReader.prototype = {
+phantasus.GisticReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._read(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (x) {
@@ -56,7 +56,7 @@ morpheus.GisticReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: matrix.length,
       columns: ncols,

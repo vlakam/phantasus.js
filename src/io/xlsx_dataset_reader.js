@@ -1,11 +1,11 @@
-morpheus.XlsxDatasetReader = function () {
+phantasus.XlsxDatasetReader = function () {
 };
-morpheus.XlsxDatasetReader.prototype = {
+phantasus.XlsxDatasetReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
@@ -28,11 +28,11 @@ morpheus.XlsxDatasetReader.prototype = {
   },
 
   _read: function (datasetName, bstr, callback) {
-    morpheus.Util.xlsxTo2dArray({data: bstr}, function (err, lines) {
+    phantasus.Util.xlsxTo2dArray({data: bstr}, function (err, lines) {
       var nrows = lines.length - 1;
       var header = lines[0];
       var ncols = header.length - 1;
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         name: datasetName,
         rows: nrows,
         columns: ncols

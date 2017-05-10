@@ -1,4 +1,4 @@
-morpheus.FilterUI = function (project, isColumns) {
+phantasus.FilterUI = function (project, isColumns) {
   var _this = this;
   this.project = project;
   this.isColumns = isColumns;
@@ -18,10 +18,10 @@ morpheus.FilterUI = function (project, isColumns) {
 
   $div.on('click', '[data-name=add]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     // add after
     var index = $row.index();
-    var newFilter = new morpheus.AlwaysTrueFilter();
+    var newFilter = new phantasus.AlwaysTrueFilter();
     (isColumns ? project.getColumnFilter() : project.getRowFilter())
       .insert(index, newFilter);
     $row.after(_this.add(newFilter));
@@ -29,7 +29,7 @@ morpheus.FilterUI = function (project, isColumns) {
   });
   $div.on('click', '[data-name=delete]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     (isColumns ? project.getColumnFilter() : project.getRowFilter())
       .remove(index);
@@ -46,7 +46,7 @@ morpheus.FilterUI = function (project, isColumns) {
   $div.on('change', '[name=by]', function (e) {
     var $this = $(this);
     var fieldName = $this.val();
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     _this.createFilter({
       fieldName: fieldName,
@@ -74,7 +74,7 @@ morpheus.FilterUI = function (project, isColumns) {
     });
     combinedFilter.on('remove', function (e) {
       // offset of 1 for header
-      var $row = $div.find('.morpheus-entry')[1 + e.index].remove();
+      var $row = $div.find('.phantasus-entry')[1 + e.index].remove();
     });
     combinedFilter.on('and', function (e) {
       $filterMode.prop('checked', e.source.isAnd());
@@ -83,7 +83,7 @@ morpheus.FilterUI = function (project, isColumns) {
   }
 };
 
-morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter) {
+phantasus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter) {
   $ui.empty();
   var html = [];
   html.push('<label>Range of values</label><br />');
@@ -99,7 +99,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
       'click',
       function (e) {
         e.preventDefault();
-        var newFilter = morpheus.FilterUI.topFilter(project,
+        var newFilter = phantasus.FilterUI.topFilter(project,
           name, isColumns, $ui);
         var index = -1;
         var filters = isColumns ? project.getColumnFilter()
@@ -123,7 +123,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
   var $min = $ui.find('[name=min]');
   var $max = $ui.find('[name=max]');
   if (!filter) {
-    filter = new morpheus.RangeFilter(-Number.MAX_VALUE, Number.MAX_VALUE,
+    filter = new phantasus.RangeFilter(-Number.MAX_VALUE, Number.MAX_VALUE,
       name, isColumns);
   } else {
     $min.val(filter.min);
@@ -146,7 +146,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
   return filter;
 
 };
-morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
+phantasus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
   $ui.empty();
   var html = [];
   html.push('<label>Top</label><br />');
@@ -164,7 +164,7 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
       'click',
       function (e) {
         e.preventDefault();
-        var newFilter = morpheus.FilterUI.rangeFilter(project,
+        var newFilter = phantasus.FilterUI.rangeFilter(project,
           name, isColumns, $ui);
         var index = -1;
         var filters = isColumns ? project.getColumnFilter()
@@ -186,12 +186,12 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
           .setRowFilter(project.getRowFilter(), true);
       });
   if (!filter) {
-    filter = new morpheus.TopNFilter(NaN, morpheus.TopNFilter.TOP, name, isColumns);
+    filter = new phantasus.TopNFilter(NaN, phantasus.TopNFilter.TOP, name, isColumns);
   } else {
     var dirVal;
-    if (filter.direction === morpheus.TopNFilter.TOP) {
+    if (filter.direction === phantasus.TopNFilter.TOP) {
       dirVal = 'Top';
-    } else if (filter.direction === morpheus.TopNFilter.BOTTOM) {
+    } else if (filter.direction === phantasus.TopNFilter.BOTTOM) {
       dirVal = 'Bottom';
     } else {
       dirVal = 'TopBottom';
@@ -204,11 +204,11 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
     var dir = $(this).val();
     var dirVal;
     if (dir === 'Top') {
-      dirVal = morpheus.TopNFilter.TOP;
+      dirVal = phantasus.TopNFilter.TOP;
     } else if (dir === 'Bottom') {
-      dirVal = morpheus.TopNFilter.BOTTOM;
+      dirVal = phantasus.TopNFilter.BOTTOM;
     } else {
-      dirVal = morpheus.TopNFilter.TOP_BOTTOM;
+      dirVal = phantasus.TopNFilter.TOP_BOTTOM;
     }
     filter.setDirection(dirVal);
 
@@ -224,7 +224,7 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
 
   return filter;
 };
-morpheus.FilterUI.prototype = {
+phantasus.FilterUI.prototype = {
   /**
    *
    * @param options
@@ -246,7 +246,7 @@ morpheus.FilterUI.prototype = {
       $add.appendTo(this.$div);
       $ui = $add.find('[data-name=ui]');
     } else { // existing $div
-      var $row = $div.closest('.morpheus-entry');
+      var $row = $div.closest('.phantasus-entry');
       index = $row.index() - 1;
       $ui = $row.find('[data-name=ui]');
     }
@@ -256,28 +256,28 @@ morpheus.FilterUI.prototype = {
       .getColumnMetadata() : this.project.getFullDataset()
       .getRowMetadata()).getByName(fieldName);
 
-    if (filter instanceof morpheus.RangeFilter) {
-      morpheus.FilterUI.rangeFilter(project, fieldName, isColumns, $ui,
+    if (filter instanceof phantasus.RangeFilter) {
+      phantasus.FilterUI.rangeFilter(project, fieldName, isColumns, $ui,
         filter);
-    } else if (filter instanceof morpheus.TopNFilter) {
-      morpheus.FilterUI.topFilter(project, fieldName, isColumns, $ui,
+    } else if (filter instanceof phantasus.TopNFilter) {
+      phantasus.FilterUI.topFilter(project, fieldName, isColumns, $ui,
         filter);
-    } else if (filter == null && morpheus.VectorUtil.isNumber(vector)
-      && morpheus.VectorUtil.containsMoreThanNValues(vector, 9)) {
-      filter = morpheus.FilterUI.rangeFilter(project, fieldName,
+    } else if (filter == null && phantasus.VectorUtil.isNumber(vector)
+      && phantasus.VectorUtil.containsMoreThanNValues(vector, 9)) {
+      filter = phantasus.FilterUI.rangeFilter(project, fieldName,
         isColumns, $ui, filter);
     } else {
-      var set = morpheus.VectorUtil.getSet(vector);
+      var set = phantasus.VectorUtil.getSet(vector);
       var array = set.values();
-      array.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+      array.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
       if (!filter) {
-        filter = new morpheus.VectorFilter(new morpheus.Set(), set
+        filter = new phantasus.VectorFilter(new phantasus.Set(), set
           .size(), fieldName, isColumns);
       } else {
         filter.maxSetSize = array.length;
       }
 
-      var checkBoxList = new morpheus.CheckBoxList({
+      var checkBoxList = new phantasus.CheckBoxList({
         responsive: false,
         $el: $ui,
         items: array,
@@ -297,7 +297,7 @@ morpheus.FilterUI.prototype = {
           .set(index, filter);
       } else {
         (isColumns ? project.getColumnFilter() : project.getRowFilter())
-          .set(index, new morpheus.AlwaysTrueFilter());
+          .set(index, new phantasus.AlwaysTrueFilter());
       }
     }
     return filter;
@@ -306,7 +306,7 @@ morpheus.FilterUI.prototype = {
   addBase: function () {
     var html = [];
     html
-      .push('<div style="padding-bottom:2px;border-bottom:1px solid #eee" class="morpheus-entry">');
+      .push('<div style="padding-bottom:2px;border-bottom:1px solid #eee" class="phantasus-entry">');
     html.push('<div class="row">');
     html
       .push('<div class="col-xs-12">'
@@ -326,11 +326,11 @@ morpheus.FilterUI.prototype = {
   add: function (filter) {
     var project = this.project;
     var isColumns = this.isColumns;
-    var fields = morpheus.MetadataUtil.getMetadataNames(isColumns ? project
+    var fields = phantasus.MetadataUtil.getMetadataNames(isColumns ? project
       .getFullDataset().getColumnMetadata() : project
       .getFullDataset().getRowMetadata());
     var html = [];
-    html.push('<div class="morpheus-entry">');
+    html.push('<div class="phantasus-entry">');
 
     html.push('<div class="form-group">');
     html.push('<label>Field</label>');
@@ -371,7 +371,7 @@ morpheus.FilterUI.prototype = {
     html.push('</div>');
 
     html.push('</div>'); // row
-    html.push('</div>'); // morpheus-entry
+    html.push('</div>'); // phantasus-entry
     return html.join('');
   }
 };

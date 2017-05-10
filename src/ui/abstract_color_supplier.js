@@ -1,20 +1,20 @@
-morpheus.AbstractColorSupplier = function () {
+phantasus.AbstractColorSupplier = function () {
   this.fractions = [0, 0.5, 1];
   this.colors = ['#0000ff', '#ffffff', '#ff0000'];
   this.names = null; // optional color stop names
   this.min = 0;
   this.max = 1;
   this.missingColor = '#c0c0c0';
-  this.scalingMode = morpheus.HeatMapColorScheme.ScalingMode.RELATIVE;
+  this.scalingMode = phantasus.HeatMapColorScheme.ScalingMode.RELATIVE;
   this.stepped = false;
-  this.sizer = new morpheus.HeatMapSizer();
-  this.conditions = new morpheus.HeatMapConditions();
+  this.sizer = new phantasus.HeatMapSizer();
+  this.conditions = new phantasus.HeatMapConditions();
   this.transformValues = 0;// z-score, robust z-score
 };
-morpheus.AbstractColorSupplier.Z_SCORE = 1;
-morpheus.AbstractColorSupplier.ROBUST_Z_SCORE = 2;
+phantasus.AbstractColorSupplier.Z_SCORE = 1;
+phantasus.AbstractColorSupplier.ROBUST_Z_SCORE = 2;
 
-morpheus.AbstractColorSupplier.toJSON = function (cs) {
+phantasus.AbstractColorSupplier.toJSON = function (cs) {
   var json = {
     fractions: cs.fractions,
     colors: cs.colors,
@@ -38,16 +38,16 @@ morpheus.AbstractColorSupplier.toJSON = function (cs) {
   }
   return json;
 };
-morpheus.AbstractColorSupplier.fromJSON = function (json) {
-  var cs = json.stepped ? new morpheus.SteppedColorSupplier()
-    : new morpheus.GradientColorSupplier();
+phantasus.AbstractColorSupplier.fromJSON = function (json) {
+  var cs = json.stepped ? new phantasus.SteppedColorSupplier()
+    : new phantasus.GradientColorSupplier();
   cs.setScalingMode(json.scalingMode);
   cs.setMin(json.min);
   cs.setMax(json.max);
   if (json.missingColor != null) {
     cs.setMissingColor(json.missingColor);
   }
-  if (morpheus.HeatMapColorScheme.ScalingMode.RELATIVE !== json.scalingMode) {
+  if (phantasus.HeatMapColorScheme.ScalingMode.RELATIVE !== json.scalingMode) {
     cs.setTransformValues(json.transformValues);
   }
 
@@ -117,7 +117,7 @@ morpheus.AbstractColorSupplier.fromJSON = function (json) {
   return cs;
 };
 
-morpheus.AbstractColorSupplier.prototype = {
+phantasus.AbstractColorSupplier.prototype = {
   getTransformValues: function () {
     return this.transformValues;
   },
@@ -153,7 +153,7 @@ morpheus.AbstractColorSupplier.prototype = {
     c.min = this.min;
     c.max = this.max;
     c.missingColor = this.missingColor;
-    if (this.scalingMode !== morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.scalingMode !== phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       c.transformValues = this.transformValues;
     }
 
@@ -170,7 +170,7 @@ morpheus.AbstractColorSupplier.prototype = {
   },
   setScalingMode: function (scalingMode) {
     if (scalingMode !== this.scalingMode) {
-      if (scalingMode === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+      if (scalingMode === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
         this.min = 0;
         this.max = 1;
       }
@@ -215,10 +215,10 @@ morpheus.AbstractColorSupplier.prototype = {
    *            Array of stop names
    */
   setFractions: function (options) {
-    var index = morpheus.Util.indexSort(options.fractions, true);
-    this.fractions = morpheus.Util.reorderArray(options.fractions, index);
-    this.colors = morpheus.Util.reorderArray(options.colors, index);
-    this.names = options.names ? morpheus.Util.reorderArray(options.names,
+    var index = phantasus.Util.indexSort(options.fractions, true);
+    this.fractions = phantasus.Util.reorderArray(options.fractions, index);
+    this.colors = phantasus.Util.reorderArray(options.colors, index);
+    this.names = options.names ? phantasus.Util.reorderArray(options.names,
       index) : null;
   }
 };

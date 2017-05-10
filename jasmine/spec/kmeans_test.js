@@ -6,11 +6,11 @@ describe('k_means_test', function () {
   }
 
   function CloseDistance(a, b) {
-    return morpheus.Euclidean(a, b) * 0.001;
+    return phantasus.Euclidean(a, b) * 0.001;
   }
 
   it('testPerformClusterAnalysisDegenerate', function () {
-    var transformer = new morpheus.KMeansPlusPlusClusterer(1, 1, morpheus.Euclidean);
+    var transformer = new phantasus.KMeansPlusPlusClusterer(1, 1, phantasus.Euclidean);
 
     var points = [new DoublePoint([1959, 325100]), new DoublePoint([1960, 373200])];
     var clusters = transformer.cluster(points);
@@ -35,7 +35,7 @@ describe('k_means_test', function () {
       [200, 200, 200]
     ];
 
-    var clusterer = new morpheus.KMeansPlusPlusClusterer(2, 20, morpheus.Euclidean);
+    var clusterer = new phantasus.KMeansPlusPlusClusterer(2, 20, phantasus.Euclidean);
     var clusters = clusterer.execute(data);
     var expectedAssignments = [0, 0, 0, 0, 0, 1, 1];
     for (var i = 0; i < data.length; i++) {
@@ -54,7 +54,7 @@ describe('k_means_test', function () {
       [200, 200, 200]
     ];
 
-    var clusterer = new morpheus.KMeansPlusPlusClusterer(3, 20, morpheus.Euclidean);
+    var clusterer = new phantasus.KMeansPlusPlusClusterer(3, 20, phantasus.Euclidean);
     var clusters = clusterer.execute(data);
     var expectedAssignments = [0, 0, 0, 0, 1, 2, 2];
     for (var i = 0; i < data.length; i++) {
@@ -90,7 +90,7 @@ describe('k_means_test', function () {
 
     for (var n = 2; n < 27; ++n) {
       var transformer =
-        new morpheus.KMeansPlusPlusClusterer(n, 100, morpheus.Euclidean);
+        new phantasus.KMeansPlusPlusClusterer(n, 100, phantasus.Euclidean);
       var clusters = transformer.cluster(breakingPoints);
       expect(n).toEqual(clusters.length);
 
@@ -121,7 +121,7 @@ describe('k_means_test', function () {
     var NUM_ITERATIONS = 0;
 
     var clusterer =
-      new morpheus.KMeansPlusPlusClusterer(NUM_CLUSTERS, NUM_ITERATIONS, CloseDistance);
+      new phantasus.KMeansPlusPlusClusterer(NUM_CLUSTERS, NUM_ITERATIONS, CloseDistance);
     var clusters = clusterer.cluster(points);
 
     // Check that one of the chosen centers is the unique point.

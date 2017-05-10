@@ -1,7 +1,7 @@
-morpheus.VectorUtil = function () {
+phantasus.VectorUtil = function () {
 };
 
-morpheus.VectorUtil.jsonToFunction = function (vector, key) {
+phantasus.VectorUtil.jsonToFunction = function (vector, key) {
   var f = vector.getProperties().get(key);
   if (typeof f === 'object') {
     var binSize = f.binSize;
@@ -51,9 +51,9 @@ morpheus.VectorUtil.jsonToFunction = function (vector, key) {
   }
   return f;
 };
-morpheus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) {
-  var map = new morpheus.Map();
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
+phantasus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) {
+  var map = new phantasus.Map();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (isArray) {
@@ -69,12 +69,12 @@ morpheus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) 
   return map;
 };
 
-morpheus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues) {
+phantasus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues) {
   if (!vector) {
     throw 'vector is null';
   }
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
-  var map = new morpheus.Map();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
+  var map = new phantasus.Map();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (isArray) {
@@ -100,12 +100,12 @@ morpheus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues
   return map;
 };
 
-morpheus.VectorUtil.createValueToCountMap = function (vector) {
+phantasus.VectorUtil.createValueToCountMap = function (vector) {
   if (!vector) {
     throw 'vector is null';
   }
-  var map = new morpheus.Map();
-  var dataType = morpheus.VectorUtil.getDataType(vector);
+  var map = new phantasus.Map();
+  var dataType = phantasus.VectorUtil.getDataType(vector);
   var isArray = dataType[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
@@ -124,8 +124,8 @@ morpheus.VectorUtil.createValueToCountMap = function (vector) {
   return map;
 };
 
-morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToIndicesMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -137,7 +137,7 @@ morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     var list = map.get(key);
     if (list === undefined) {
       list = [];
@@ -147,8 +147,8 @@ morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
   }
   return map;
 };
-morpheus.VectorUtil.createValuesToIndexMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToIndexMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -160,14 +160,14 @@ morpheus.VectorUtil.createValuesToIndexMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     map.set(key, i);
   }
   return map;
 };
 
-morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToCountMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -179,7 +179,7 @@ morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     var count = map.get(key) || 0;
     map.set(key, count + 1);
   }
@@ -193,8 +193,8 @@ morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
  * @returns A sorted array of unique values contained in the vector. Note that array values are
  * not split.
  */
-morpheus.VectorUtil.getValues = function (vector, excludeNull) {
-  var set = new morpheus.Set();
+phantasus.VectorUtil.getValues = function (vector, excludeNull) {
+  var set = new phantasus.Set();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (excludeNull && val == null) {
@@ -203,13 +203,13 @@ morpheus.VectorUtil.getValues = function (vector, excludeNull) {
     set.add(val);
   }
   var array = set.values();
-  array.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+  array.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
   return array;
 };
 
-morpheus.VectorUtil.getSet = function (vector, splitArrayValues) {
-  var set = new morpheus.Set();
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
+phantasus.VectorUtil.getSet = function (vector, splitArrayValues) {
+  var set = new phantasus.Set();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var value = vector.getValue(j);
     if (isArray) {
@@ -225,7 +225,7 @@ morpheus.VectorUtil.getSet = function (vector, splitArrayValues) {
   }
   return set;
 };
-morpheus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
+phantasus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
   var newValues = [];
   var regex = new RegExp(delim);
   var found = false;
@@ -248,13 +248,13 @@ morpheus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
     for (var i = 0, nrows = newValues.length; i < nrows; i++) {
       vector.setValue(i, newValues[i]);
     }
-    vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[string]');
+    vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[string]');
   }
 
   return found;
 };
 
-morpheus.VectorUtil.maybeConvertStringToNumber = function (vector) {
+phantasus.VectorUtil.maybeConvertStringToNumber = function (vector) {
   var newValues = [];
   var found = false;
   for (var i = 0, nrows = vector.size(); i < nrows; i++) {
@@ -274,14 +274,14 @@ morpheus.VectorUtil.maybeConvertStringToNumber = function (vector) {
   for (var i = 0, nrows = newValues.length; i < nrows; i++) {
     vector.setValue(i, newValues[i]);
   }
-  vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, 'number');
+  vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, 'number');
   return true;
 };
-morpheus.VectorUtil.containsMoreThanOneValue = function (vector) {
-  return morpheus.VectorUtil.containsMoreThanNValues(vector, 1);
+phantasus.VectorUtil.containsMoreThanOneValue = function (vector) {
+  return phantasus.VectorUtil.containsMoreThanNValues(vector, 1);
 };
-morpheus.VectorUtil.containsMoreThanNValues = function (vector, n) {
-  var s = new morpheus.Set();
+phantasus.VectorUtil.containsMoreThanNValues = function (vector, n) {
+  var s = new phantasus.Set();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     s.add(val);
@@ -292,10 +292,10 @@ morpheus.VectorUtil.containsMoreThanNValues = function (vector, n) {
   return false;
 };
 
-morpheus.VectorUtil.createSpanMap = function (vector) {
+phantasus.VectorUtil.createSpanMap = function (vector) {
   var previous = vector.getValue(0);
   // find 1st row with different value
-  var startIndexToEndIndex = new morpheus.Map();
+  var startIndexToEndIndex = new phantasus.Map();
   var start = 0;
   for (var i = 1, nrows = vector.size(); i < nrows; i++) {
     var val = vector.getValue(i);
@@ -309,7 +309,7 @@ morpheus.VectorUtil.createSpanMap = function (vector) {
   startIndexToEndIndex.set(start, vector.size());
   return startIndexToEndIndex;
 };
-morpheus.VectorUtil.toArray = function (vector) {
+phantasus.VectorUtil.toArray = function (vector) {
   var array = [];
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -318,12 +318,12 @@ morpheus.VectorUtil.toArray = function (vector) {
   return array;
 };
 
-morpheus.VectorUtil.arrayAsVector = function (array, name) {
-  var v = new morpheus.Vector(name, array.length);
+phantasus.VectorUtil.arrayAsVector = function (array, name) {
+  var v = new phantasus.Vector(name, array.length);
   v.array = array;
   return v;
 };
-morpheus.VectorUtil.toString = function (vector) {
+phantasus.VectorUtil.toString = function (vector) {
   var array = [];
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -332,22 +332,22 @@ morpheus.VectorUtil.toString = function (vector) {
   return array.join(', ');
 };
 
-morpheus.VectorUtil.getDataType = function (vector) {
-  var dataType = vector.getProperties().get(morpheus.VectorKeys.DATA_TYPE);
+phantasus.VectorUtil.getDataType = function (vector) {
+  var dataType = vector.getProperties().get(phantasus.VectorKeys.DATA_TYPE);
   if (dataType === undefined) {
-    var firstNonNull = morpheus.VectorUtil.getFirstNonNull(vector);
-    dataType = morpheus.Util.getDataType(firstNonNull);
-    vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, dataType);
+    var firstNonNull = phantasus.VectorUtil.getFirstNonNull(vector);
+    dataType = phantasus.Util.getDataType(firstNonNull);
+    vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, dataType);
   }
   return dataType;
 
 };
 
-morpheus.VectorUtil.getMinMax = function (vector) {
+phantasus.VectorUtil.getMinMax = function (vector) {
   var min = Number.MAX_VALUE;
   var max = -Number.MAX_VALUE;
-  var fields = vector.getProperties().get(morpheus.VectorKeys.FIELDS);
-  var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
+  var fields = vector.getProperties().get(phantasus.VectorKeys.FIELDS);
+  var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
   if (fields != null) {
     var nvalues = fields.length;
     for (var i = 0, size = vector.size(); i < size; i++) {
@@ -390,7 +390,7 @@ morpheus.VectorUtil.getMinMax = function (vector) {
   };
 }
 ;
-morpheus.VectorUtil.getFirstNonNull = function (vector) {
+phantasus.VectorUtil.getFirstNonNull = function (vector) {
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
     if (val != null) {
@@ -399,6 +399,6 @@ morpheus.VectorUtil.getFirstNonNull = function (vector) {
   }
   return null;
 };
-morpheus.VectorUtil.isNumber = function (vector) {
-  return morpheus.VectorUtil.getDataType(vector) === 'number';
+phantasus.VectorUtil.isNumber = function (vector) {
+  return phantasus.VectorUtil.getDataType(vector) === 'number';
 };

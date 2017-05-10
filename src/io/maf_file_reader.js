@@ -1,4 +1,4 @@
-morpheus.MafFileReader = function () {
+phantasus.MafFileReader = function () {
   this.geneFilter = null;
 };
 /**
@@ -6,14 +6,14 @@ morpheus.MafFileReader = function () {
  * @param options.dataset
  * @param options.fields
  */
-morpheus.MafFileReader.summarizeMutations = function (options) {
+phantasus.MafFileReader.summarizeMutations = function (options) {
   var dataset = options.dataset;
   var fields = options.fields;
   var count = fields.length;
   var vector = dataset.getRowMetadata().add('mutation_summary');
   vector.getProperties().set(
-    morpheus.VectorKeys.FIELDS, fields);
-  vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[number]');
+    phantasus.VectorKeys.FIELDS, fields);
+  vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[number]');
 
   // computing dynamically screws things up b/c summary is computed for other data types (e.g. CN)
   for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
@@ -28,7 +28,7 @@ morpheus.MafFileReader.summarizeMutations = function (options) {
   }
 };
 
-morpheus.MafFileReader.getField = function (fieldNames, headerToIndex) {
+phantasus.MafFileReader.getField = function (fieldNames, headerToIndex) {
   var name;
   var index;
 
@@ -51,38 +51,38 @@ morpheus.MafFileReader.getField = function (fieldNames, headerToIndex) {
   }
 };
 
-morpheus.MafFileReader.VARIANT_MAP = new morpheus.Map();
+phantasus.MafFileReader.VARIANT_MAP = new phantasus.Map();
 // silent
-morpheus.MafFileReader.VARIANT_MAP.set('Silent', 1);
+phantasus.MafFileReader.VARIANT_MAP.set('Silent', 1);
 // in-frame indel
-morpheus.MafFileReader.VARIANT_MAP.set('In_Frame_Del', 2);
-morpheus.MafFileReader.VARIANT_MAP.set('In_Frame_Ins', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Del', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Ins', 2);
 // other
-morpheus.MafFileReader.VARIANT_MAP.set('Translation_Start_Site', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Nonstop_Mutation', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('3\'UTR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('3\'Flank', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('5\'UTR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('5\'Flank', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('IGR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Intron', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('RNA', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Targeted_Region', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Unknown', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Translation_Start_Site', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Nonstop_Mutation', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('3\'UTR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('3\'Flank', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('5\'UTR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('5\'Flank', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('IGR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Intron', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('RNA', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Targeted_Region', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Unknown', 3);
 // mis-sense
-morpheus.MafFileReader.VARIANT_MAP.set('Missense_Mutation', 4);
+phantasus.MafFileReader.VARIANT_MAP.set('Missense_Mutation', 4);
 // splice site
-morpheus.MafFileReader.VARIANT_MAP.set('Splice_Site', 5);
+phantasus.MafFileReader.VARIANT_MAP.set('Splice_Site', 5);
 // frame shift indel
-morpheus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Del', 6);
-morpheus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Ins', 6);
+phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Del', 6);
+phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Ins', 6);
 // non-sense
-morpheus.MafFileReader.VARIANT_MAP.set('Nonsense_Mutation', 7);
+phantasus.MafFileReader.VARIANT_MAP.set('Nonsense_Mutation', 7);
 
-morpheus.MafFileReader.FIELD_NAMES = ['Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
+phantasus.MafFileReader.FIELD_NAMES = ['Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
   'Missense', 'Splice Site', 'Frame Shift', 'Nonsense'];
 
-morpheus.MafFileReader.prototype = {
+phantasus.MafFileReader.prototype = {
   setGeneFilter: function (geneFilter) {
     this.geneFilter = geneFilter;
   },
@@ -106,10 +106,10 @@ morpheus.MafFileReader.prototype = {
     //   'tumor_f', 'i_tumor_f', 'Tumor_Sample_Barcode', 'tumor_name',
     //   'Tumor_Sample_UUID', 'encoding'];
     //
-    var sampleField = morpheus.MafFileReader.getField([
+    var sampleField = phantasus.MafFileReader.getField([
         'Tumor_Sample_Barcode', 'tumor_name', 'Tumor_Sample_UUID'],
       headerToIndex);
-    var encodingField = morpheus.MafFileReader.getField([
+    var encodingField = phantasus.MafFileReader.getField([
         'encoding'],
       headerToIndex); // gives a numeric value for string
     if (sampleField == null) {
@@ -118,7 +118,7 @@ morpheus.MafFileReader.prototype = {
     var encodingColumnIndex = encodingField == null ? -1 : encodingField.index;
     var sampleColumnName = sampleField.name;
     var sampleIdColumnIndex = sampleField.index;
-    var tumorFractionField = morpheus.MafFileReader.getField(['ccf_hat',
+    var tumorFractionField = phantasus.MafFileReader.getField(['ccf_hat',
       'tumor_f', 'i_tumor_f'], headerToIndex);
     var ccfColumnName;
     var ccfColumnIndex;
@@ -156,12 +156,12 @@ morpheus.MafFileReader.prototype = {
     }
     // keep fields that are in file only
 
-    var geneSymbolToIndex = new morpheus.Map();
-    var sampleIdToIndex = new morpheus.Map();
+    var geneSymbolToIndex = new phantasus.Map();
+    var sampleIdToIndex = new phantasus.Map();
     var variantMatrix = [];
     var ccfMatrix = [];
     var s;
-    var customNumberToValueMap = new morpheus.Map();
+    var customNumberToValueMap = new phantasus.Map();
 
     var hasMutationInfo = chromosomeColumn !== undefined && startPositionColumn !== undefined && refAlleleColumn !== undefined && tumorAllelColumn !== undefined;
     while ((s = reader.readLine()) !== null) {
@@ -186,7 +186,7 @@ morpheus.MafFileReader.prototype = {
         var value = String(tokens[variantColumnIndex]);
         var variantCode;
         if (encodingColumnIndex === -1) {
-          variantCode = morpheus.MafFileReader.VARIANT_MAP.get(value);
+          variantCode = phantasus.MafFileReader.VARIANT_MAP.get(value);
           if (variantCode === undefined) {
             variantCode = 3;
           }
@@ -208,7 +208,7 @@ morpheus.MafFileReader.prototype = {
             + String(tokens[refAlleleColumn]) + ' > '
             + String(tokens[tumorAllelColumn]);
         }
-        var wrappedVariant = morpheus.Util.wrapNumber(variantCode,
+        var wrappedVariant = phantasus.Util.wrapNumber(variantCode,
           variantObject);
         var variantRow = variantMatrix[rowIndex];
         if (variantRow === undefined) {
@@ -238,7 +238,7 @@ morpheus.MafFileReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       array: variantMatrix,
       dataType: 'Number',
@@ -275,14 +275,14 @@ morpheus.MafFileReader.prototype = {
         var order = this.geneFilter.get(gene);
         orderVector.setValue(i, order);
       }
-      var project = new morpheus.Project(dataset);
-      project.setRowSortKeys([new morpheus.SortKey('order',
-        morpheus.SortKey.SortOrder.ASCENDING)], true); // sort
+      var project = new phantasus.Project(dataset);
+      project.setRowSortKeys([new phantasus.SortKey('order',
+        phantasus.SortKey.SortOrder.ASCENDING)], true); // sort
       // collapsed
       // dataset
       var tmp = project.getSortedFilteredDataset();
-      project = new morpheus.Project(tmp);
-      var columnIndices = morpheus.Util.seq(tmp.getColumnCount());
+      project = new phantasus.Project(tmp);
+      var columnIndices = phantasus.Util.seq(tmp.getColumnCount());
       columnIndices
         .sort(function (a, b) {
           for (var i = 0, nrows = tmp.getRowCount(); i < nrows; i++) {
@@ -307,11 +307,11 @@ morpheus.MafFileReader.prototype = {
           }
           return 0;
         });
-      dataset = new morpheus.SlicedDatasetView(dataset, null,
+      dataset = new phantasus.SlicedDatasetView(dataset, null,
         columnIndices);
     }
 
-    var fieldNames = morpheus.MafFileReader.FIELD_NAMES;
+    var fieldNames = phantasus.MafFileReader.FIELD_NAMES;
     if (customNumberToValueMap.size() > 0) {
       var pairs = [];
       customNumberToValueMap.forEach(function (value, key) {
@@ -328,29 +328,29 @@ morpheus.MafFileReader.prototype = {
       });
     }
     var numUniqueValues = fieldNames.length;
-    morpheus.MafFileReader.summarizeMutations({
+    phantasus.MafFileReader.summarizeMutations({
       dataset: dataset,
       fields: fieldNames
     });
-    morpheus.MafFileReader
+    phantasus.MafFileReader
       .summarizeMutations({
-        dataset: new morpheus.TransposedDatasetView(dataset),
+        dataset: new phantasus.TransposedDatasetView(dataset),
         fields: fieldNames
       });
 
     var mutationSummarySelectionVector = dataset.getColumnMetadata().add('mutation_summary_selection');
     mutationSummarySelectionVector.getProperties().set(
-      morpheus.VectorKeys.FIELDS,
+      phantasus.VectorKeys.FIELDS,
       fieldNames);
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[number]');
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION, true);
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[number]');
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION, true);
     var datasetName = dataset.getName();
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.FUNCTION, {
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.FUNCTION, {
       binSize: 1,
       domain: [1, 8],
       cumulative: false
     });
-    // mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.FUNCTION, function (view, selectedDataset, columnIndex) {
+    // mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.FUNCTION, function (view, selectedDataset, columnIndex) {
     //   var sourceVector = selectedDataset.getRowMetadata().getByName('Source');
     //   var bins = new Int32Array(numUniqueValues); // 1-7
     //   for (var i = 0, nrows = selectedDataset.getRowCount(); i < nrows; i++) {
@@ -369,15 +369,15 @@ morpheus.MafFileReader.prototype = {
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._getGeneLevelDataset(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (err) {

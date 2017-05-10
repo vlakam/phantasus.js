@@ -1,54 +1,54 @@
-morpheus.HClusterTool = function () {
+phantasus.HClusterTool = function () {
 };
-morpheus.HClusterTool.PRECOMPUTED_DIST = 'Matrix values (for a precomputed distance matrix)';
-morpheus.HClusterTool.PRECOMPUTED_SIM = 'Matrix values (for a precomputed similarity matrix)';
-morpheus.HClusterTool.Functions = [morpheus.Euclidean, morpheus.Jaccard,
-  new morpheus.OneMinusFunction(morpheus.Cosine),
-  new morpheus.OneMinusFunction(morpheus.KendallsCorrelation),
-  new morpheus.OneMinusFunction(morpheus.Pearson),
-  new morpheus.OneMinusFunction(morpheus.Spearman),
-  morpheus.HClusterTool.PRECOMPUTED_DIST,
-  morpheus.HClusterTool.PRECOMPUTED_SIM];
-morpheus.HClusterTool.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.HClusterTool.Functions.length; i++) {
-    if (morpheus.HClusterTool.Functions[i].toString() === s) {
-      return morpheus.HClusterTool.Functions[i];
+phantasus.HClusterTool.PRECOMPUTED_DIST = 'Matrix values (for a precomputed distance matrix)';
+phantasus.HClusterTool.PRECOMPUTED_SIM = 'Matrix values (for a precomputed similarity matrix)';
+phantasus.HClusterTool.Functions = [phantasus.Euclidean, phantasus.Jaccard,
+  new phantasus.OneMinusFunction(phantasus.Cosine),
+  new phantasus.OneMinusFunction(phantasus.KendallsCorrelation),
+  new phantasus.OneMinusFunction(phantasus.Pearson),
+  new phantasus.OneMinusFunction(phantasus.Spearman),
+  phantasus.HClusterTool.PRECOMPUTED_DIST,
+  phantasus.HClusterTool.PRECOMPUTED_SIM];
+phantasus.HClusterTool.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.HClusterTool.Functions.length; i++) {
+    if (phantasus.HClusterTool.Functions[i].toString() === s) {
+      return phantasus.HClusterTool.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
 
-morpheus.HClusterTool.createLinkageMethod = function (linkageString) {
+phantasus.HClusterTool.createLinkageMethod = function (linkageString) {
   var linkageMethod;
   if (linkageString === 'Average') {
-    linkageMethod = morpheus.AverageLinkage;
+    linkageMethod = phantasus.AverageLinkage;
   } else if (linkageString === 'Complete') {
-    linkageMethod = morpheus.CompleteLinkage;
+    linkageMethod = phantasus.CompleteLinkage;
   } else if (linkageString === 'Single') {
-    linkageMethod = morpheus.SingleLinkage;
+    linkageMethod = phantasus.SingleLinkage;
   } else {
     throw new Error('Unknown linkage method ' + linkageString);
   }
   return linkageMethod;
 };
 
-morpheus.HClusterTool.execute = function (dataset, input) {
+phantasus.HClusterTool.execute = function (dataset, input) {
   // note: in worker here
-  var linkageMethod = morpheus.HClusterTool
+  var linkageMethod = phantasus.HClusterTool
     .createLinkageMethod(input.linkage_method);
-  var f = morpheus.HClusterTool.Functions.fromString(input.metric);
-  if (f === morpheus.HClusterTool.PRECOMPUTED_DIST) {
+  var f = phantasus.HClusterTool.Functions.fromString(input.metric);
+  if (f === phantasus.HClusterTool.PRECOMPUTED_DIST) {
     f = 0;
-  } else if (f === morpheus.HClusterTool.PRECOMPUTED_SIM) {
+  } else if (f === phantasus.HClusterTool.PRECOMPUTED_SIM) {
     f = 1;
   }
   var rows = input.cluster == 'Rows' || input.cluster == 'Rows and columns';
   var columns = input.cluster == 'Columns'
     || input.cluster == 'Rows and columns';
   var doCluster = function (d, groupByFields) {
-    return (groupByFields && groupByFields.length > 0) ? new morpheus.HClusterGroupBy(
+    return (groupByFields && groupByFields.length > 0) ? new phantasus.HClusterGroupBy(
       d, groupByFields, f, linkageMethod)
-      : new morpheus.HCluster(morpheus.HCluster
+      : new phantasus.HCluster(phantasus.HCluster
       .computeDistanceMatrix(d, f), linkageMethod);
   };
 
@@ -57,14 +57,14 @@ morpheus.HClusterTool.execute = function (dataset, input) {
 
   if (rows) {
     rowsHcl = doCluster(
-      input.selectedColumnsToUseForClusteringRows ? new morpheus.SlicedDatasetView(dataset,
+      input.selectedColumnsToUseForClusteringRows ? new phantasus.SlicedDatasetView(dataset,
         null, input.selectedColumnsToUseForClusteringRows) : dataset,
       input.group_rows_by);
   }
   if (columns) {
     columnsHcl = doCluster(
-      morpheus.DatasetUtil
-        .transposedView(input.selectedRowsToUseForClusteringColumns ? new morpheus.SlicedDatasetView(
+      phantasus.DatasetUtil
+        .transposedView(input.selectedRowsToUseForClusteringColumns ? new phantasus.SlicedDatasetView(
           dataset, input.selectedRowsToUseForClusteringColumns, null)
           : dataset), input.group_columns_by);
 
@@ -74,15 +74,15 @@ morpheus.HClusterTool.execute = function (dataset, input) {
     columnsHcl: columnsHcl
   };
 };
-morpheus.HClusterTool.prototype = {
+phantasus.HClusterTool.prototype = {
   toString: function () {
     return 'Hierarchical Clustering';
   },
   init: function (project, form) {
-    form.setOptions('group_rows_by', morpheus.MetadataUtil
+    form.setOptions('group_rows_by', phantasus.MetadataUtil
       .getMetadataNames(project.getFullDataset().getRowMetadata()));
     form
-      .setOptions('group_columns_by', morpheus.MetadataUtil
+      .setOptions('group_columns_by', phantasus.MetadataUtil
         .getMetadataNames(project.getFullDataset()
           .getColumnMetadata()));
     form.setVisible('group_rows_by', false);
@@ -116,8 +116,8 @@ morpheus.HClusterTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.HClusterTool.Functions,
-      value: morpheus.HClusterTool.Functions[4].toString(),
+      options: phantasus.HClusterTool.Functions,
+      value: phantasus.HClusterTool.Functions[4].toString(),
       type: 'select'
     }, {
       name: 'linkage_method',
@@ -188,7 +188,7 @@ morpheus.HClusterTool.prototype = {
       }
     }
     if (options.input.background === false) {
-      var result = morpheus.HClusterTool.execute(dataset, options.input);
+      var result = phantasus.HClusterTool.execute(dataset, options.input);
       if (result.rowsHcl) {
         var modelOrder = [];
         for (var i = 0; i < result.rowsHcl.reorderedIndices.length; i++) {
@@ -208,26 +208,26 @@ morpheus.HClusterTool.prototype = {
       var subtitle = ['clustering '];
       if (rows) {
         subtitle.push(dataset.getRowCount() + ' row'
-          + morpheus.Util.s(dataset.getRowCount()));
+          + phantasus.Util.s(dataset.getRowCount()));
       }
       if (columns) {
         subtitle.push(rows ? ', ' : '');
         subtitle.push(dataset.getColumnCount() + ' column'
-          + morpheus.Util.s(dataset.getColumnCount()));
+          + phantasus.Util.s(dataset.getColumnCount()));
       }
 
       var blob = new Blob(
         ['self.onmessage = function(e) {'
         + 'importScripts(e.data.scripts);'
-        + 'self.postMessage(morpheus.HClusterTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+        + 'self.postMessage(phantasus.HClusterTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
         + '}']);
 
       var url = window.URL.createObjectURL(blob);
       var worker = new Worker(url);
 
       worker.postMessage({
-        scripts: morpheus.Util.getScriptPath(),
-        dataset: morpheus.Dataset.toJSON(dataset, {
+        scripts: phantasus.Util.getScriptPath(),
+        dataset: phantasus.Dataset.toJSON(dataset, {
           columnFields: options.input.group_columns_by || [],
           rowFields: options.input.group_rows_by || [],
           seriesIndices: [0]

@@ -1,11 +1,11 @@
-morpheus.MetadataModelColumnView = function (model, indices) {
+phantasus.MetadataModelColumnView = function (model, indices) {
   this.model = model;
   this.indices = indices;
 };
-morpheus.MetadataModelColumnView.prototype = {
+phantasus.MetadataModelColumnView.prototype = {
   add: function (name) {
     var vector = this.model.add(name);
-    var index = morpheus.MetadataUtil.indexOf(this.model, name);
+    var index = phantasus.MetadataUtil.indexOf(this.model, name);
     this.indices.push(index);
     return vector;
   },
@@ -27,9 +27,9 @@ morpheus.MetadataModelColumnView.prototype = {
     return v;
   },
   getByName: function (name) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     return index !== -1 ? this.get(index) : undefined;
   }
 };
-morpheus.Util.extend(morpheus.MetadataModelColumnView,
-  morpheus.MetadataModelAdapter);
+phantasus.Util.extend(phantasus.MetadataModelColumnView,
+  phantasus.MetadataModelAdapter);

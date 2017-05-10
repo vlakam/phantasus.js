@@ -1,4 +1,4 @@
-morpheus.MolarConcentration = function () {
+phantasus.MolarConcentration = function () {
 
 };
 /*
@@ -12,11 +12,11 @@ morpheus.MolarConcentration = function () {
  zeptomolar 	zM 	10-21 molar 	10-18 mol/m3
  yoctomolar 	yM[3] 	10-24 molar	10-27 mol/m3
  */
-morpheus.MolarConcentration.getMicroMolarConcentration = function (text) {
+phantasus.MolarConcentration.getMicroMolarConcentration = function (text) {
   /** concentration in molar*/
   text = text.toLowerCase();
-  for (var i = 0; i < morpheus.MolarConcentration.CONCENTRATIONS.length; i++) {
-    var pair = morpheus.MolarConcentration.CONCENTRATIONS[i];
+  for (var i = 0; i < phantasus.MolarConcentration.CONCENTRATIONS.length; i++) {
+    var pair = phantasus.MolarConcentration.CONCENTRATIONS[i];
     var key = pair[0];
     var factorToMolar = pair[1];
     var index = text.indexOf(key);
@@ -29,7 +29,7 @@ morpheus.MolarConcentration.getMicroMolarConcentration = function (text) {
     }
   }
 };
-morpheus.MolarConcentration.CONCENTRATIONS = [
+phantasus.MolarConcentration.CONCENTRATIONS = [
   ['mm', 10E3],
   ['um', 10E6],
   ['\u00B5' + 'm', 10E6],

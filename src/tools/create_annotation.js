@@ -1,6 +1,6 @@
-morpheus.CreateAnnotation = function () {
+phantasus.CreateAnnotation = function () {
 };
-morpheus.CreateAnnotation.prototype = {
+phantasus.CreateAnnotation.prototype = {
   toString: function () {
     return 'Create Calculated Annotation';
   },
@@ -38,37 +38,37 @@ morpheus.CreateAnnotation.prototype = {
       .getSelectedDataset()
       : __project.getSortedFilteredDataset();
     if (isColumns) {
-      __dataset = morpheus.DatasetUtil.transposedView(__dataset);
+      __dataset = phantasus.DatasetUtil.transposedView(__dataset);
     }
-    var __rowView = new morpheus.DatasetRowView(__dataset);
+    var __rowView = new phantasus.DatasetRowView(__dataset);
     var __vector = __dataset.getRowMetadata().add(
       options.input.annotation_name);
     var COUNT = function () {
-      return morpheus.CountNonNaN(__rowView);
+      return phantasus.CountNonNaN(__rowView);
     };
     var MAD = function () {
-      return morpheus.MAD(__rowView);
+      return phantasus.MAD(__rowView);
     };
     var MAX = function () {
-      return morpheus.Max(__rowView);
+      return phantasus.Max(__rowView);
     };
     var MEAN = function () {
-      return morpheus.Mean(__rowView);
+      return phantasus.Mean(__rowView);
     };
     var MEDIAN = function (p) {
-      return morpheus.Percentile(__rowView, 50);
+      return phantasus.Percentile(__rowView, 50);
     };
     var MIN = function () {
-      return morpheus.Min(__rowView);
+      return phantasus.Min(__rowView);
     };
     var PERCENTILE = function (p) {
-      return morpheus.Percentile(__rowView, p);
+      return phantasus.Percentile(__rowView, p);
     };
     var SUM = function () {
-      return morpheus.Sum(__rowView);
+      return phantasus.Sum(__rowView);
     };
     var VARIANCE = function () {
-      return morpheus.Variance(__rowView);
+      return phantasus.Variance(__rowView);
     };
     var __index = 0;
     var FIELD = function (field) {

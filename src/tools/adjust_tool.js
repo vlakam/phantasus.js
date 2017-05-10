@@ -1,6 +1,6 @@
-morpheus.AdjustDataTool = function () {
+phantasus.AdjustDataTool = function () {
 };
-morpheus.AdjustDataTool.prototype = {
+phantasus.AdjustDataTool.prototype = {
   toString: function () {
     return 'Adjust';
   },
@@ -35,7 +35,7 @@ morpheus.AdjustDataTool.prototype = {
     if (options.input.log_2 || options.input.inverse_log_2
       || options.input['z-score'] || options.input['robust_z-score'] || options.input.quantile_normalize) {
       // clone the values 1st
-      var sortedFilteredDataset = morpheus.DatasetUtil.copy(project
+      var sortedFilteredDataset = phantasus.DatasetUtil.copy(project
         .getSortedFilteredDataset());
       var rowIndices = project.getRowSelectionModel()
         .getViewIndices().values().sort(
@@ -53,15 +53,15 @@ morpheus.AdjustDataTool.prototype = {
       if (columnIndices.length === 0) {
         columnIndices = null;
       }
-      var dataset = options.input.use_selected_rows_and_columns_only ? new morpheus.Slice
+      var dataset = options.input.use_selected_rows_and_columns_only ? new phantasus.Slice
         : sortedFilteredDataset;
-      var rowView = new morpheus.DatasetRowView(dataset);
+      var rowView = new phantasus.DatasetRowView(dataset);
       var functions = [];
       var changed = false;
       if (options.input.log_2) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
-            dataset.setValue(i, j, morpheus.Log2(dataset.getValue(
+            dataset.setValue(i, j, phantasus.Log2(dataset.getValue(
               i, j)));
           }
         }
@@ -79,14 +79,14 @@ morpheus.AdjustDataTool.prototype = {
         changed = true;
       }
       if (options.input.quantile_normalize) {
-        morpheus.QNorm.execute(dataset);
+        phantasus.QNorm.execute(dataset);
         changed = true;
       }
       if (options.input['z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           rowView.setIndex(i);
-          var mean = morpheus.Mean(rowView);
-          var stdev = Math.sqrt(morpheus.Variance(rowView));
+          var mean = phantasus.Mean(rowView);
+          var stdev = Math.sqrt(phantasus.Variance(rowView));
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
             dataset.setValue(i, j, (dataset.getValue(i, j) - mean)
               / stdev);
@@ -96,8 +96,8 @@ morpheus.AdjustDataTool.prototype = {
       if (options.input['robust_z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           rowView.setIndex(i);
-          var median = morpheus.Median(rowView);
-          var mad = morpheus.MAD(rowView, median);
+          var median = phantasus.Median(rowView);
+          var mad = phantasus.MAD(rowView, median);
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
             dataset.setValue(i, j,
               (dataset.getValue(i, j) - median) / mad);
@@ -107,9 +107,9 @@ morpheus.AdjustDataTool.prototype = {
       }
 
       /* if (changed) {
-       morpheus.DatasetUtil.toESSessionPromise(dataset);
+       phantasus.DatasetUtil.toESSessionPromise(dataset);
        }*/
-      return new morpheus.HeatMap({
+      return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,
         parent: heatMap,

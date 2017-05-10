@@ -1,13 +1,13 @@
-morpheus.HeatMapSizer = function () {
+phantasus.HeatMapSizer = function () {
   this.seriesName = null;
   this.sizeByScale = d3.scale.linear().domain([this.min, this.max])
     .range([0, 1]).clamp(true);
 };
-morpheus.HeatMapSizer.prototype = {
+phantasus.HeatMapSizer.prototype = {
   min: 0,
   max: 1,
   copy: function () {
-    var sizer = new morpheus.HeatMapSizer();
+    var sizer = new phantasus.HeatMapSizer();
     sizer.seriesName = this.seriesName;
     sizer.min = this.min;
     sizer.max = this.max;

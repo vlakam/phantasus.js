@@ -1,5 +1,5 @@
-morpheus.ShapeChooser = function (options) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.ShapeChooser = function (options) {
+  var formBuilder = new phantasus.FormBuilder();
   var map = options.map;
   var html = ['<select name="valuePicker" class="selectpicker" data-live-search="true">'];
   map.forEach(function (val, key) {
@@ -17,7 +17,7 @@ morpheus.ShapeChooser = function (options) {
     value: html.join('')
   });
 
-  var shapeField = new morpheus.ShapeField();
+  var shapeField = new phantasus.ShapeField();
 
   formBuilder.append({
     col: 'col-xs-2',
@@ -47,6 +47,6 @@ morpheus.ShapeChooser = function (options) {
   this.$div = formBuilder.$form;
 };
 
-morpheus.ShapeChooser.prototype = {};
+phantasus.ShapeChooser.prototype = {};
 
-morpheus.Util.extend(morpheus.ShapeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.ShapeChooser, phantasus.Events);

@@ -1,9 +1,9 @@
 /**
- * @param model{morpheus.SelectionModel}
+ * @param model{phantasus.SelectionModel}
  */
-morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
+phantasus.ScentedSearch = function (model, positions, isVertical, scrollbar,
                                    heatMap) {
-  morpheus.AbstractCanvas.call(this, false);
+  phantasus.AbstractCanvas.call(this, false);
   this.model = model;
   this.positions = positions;
   this.isVertical = isVertical;
@@ -45,7 +45,7 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
     if (e.stopImmediatePropagation) {
       e.stopImmediatePropagation();
     }
-    morpheus.Popup
+    phantasus.Popup
       .showPopup(
         [
 
@@ -57,7 +57,7 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
               .count() === 0
           },
           {
-            name: 'New Heat Map (' + morpheus.Util.COMMAND_KEY + 'X)'
+            name: 'New Heat Map (' + phantasus.Util.COMMAND_KEY + 'X)'
           }],
         {
           x: e.pageX,
@@ -72,26 +72,26 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
               updateButtonStatus: true
             });
           } else {
-            morpheus.HeatMap.showTool(new morpheus.NewHeatMapTool(),
+            phantasus.HeatMap.showTool(new phantasus.NewHeatMapTool(),
               heatMap);
           }
         });
     return false;
   };
-  $(scrollbar.canvas).on('mousemove.morpheus', mouseMove).on('mouseout.morpheus', mouseExit).on('contextmenu.morpheus', showPopup);
+  $(scrollbar.canvas).on('mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit).on('contextmenu.phantasus', showPopup);
 
 };
 
-morpheus.ScentedSearch.LINE_HEIGHT = 3.5;
-morpheus.ScentedSearch.prototype = {
+phantasus.ScentedSearch.LINE_HEIGHT = 3.5;
+phantasus.ScentedSearch.prototype = {
   mouseMovedIndex: -1,
   getIndex: function (event) {
-    var pix = morpheus.CanvasUtil.getMousePos(event.target, event);
+    var pix = phantasus.CanvasUtil.getMousePos(event.target, event);
     var val = pix[this.isVertical ? 'y' : 'x'];
     return this.getIndexForPix(val);
   },
   getSearchIndices: function (event) {
-    var pix = morpheus.CanvasUtil.getMousePos(event.target, event);
+    var pix = phantasus.CanvasUtil.getMousePos(event.target, event);
     var val = pix[this.isVertical ? 'y' : 'x'];
     return this.getSearchIndicesForPix(val);
   },
@@ -101,7 +101,7 @@ morpheus.ScentedSearch.prototype = {
       return [];
     }
     var scale = this.scale;
-    var tolerance = morpheus.ScentedSearch.LINE_HEIGHT;
+    var tolerance = phantasus.ScentedSearch.LINE_HEIGHT;
     var matches = [];
     for (var i = 0, length = indices.length; i < length; i++) {
       var midVal = this.positions.getPosition(indices[i]) * scale;
@@ -116,7 +116,7 @@ morpheus.ScentedSearch.prototype = {
     if (indices == null) {
       return -1;
     }
-    var tolerance = morpheus.ScentedSearch.LINE_HEIGHT;
+    var tolerance = phantasus.ScentedSearch.LINE_HEIGHT;
     if (this.mouseMovedIndex > 0) {
       var midVal = this.positions
           .getPosition(indices[this.mouseMovedIndex])
@@ -176,18 +176,18 @@ morpheus.ScentedSearch.prototype = {
     var width = this.scrollbar.getUnscaledWidth();
     var height = this.scrollbar.getUnscaledHeight();
     var availableLength = ((this.isVertical ? height : width))
-      - morpheus.ScentedSearch.LINE_HEIGHT;
+      - phantasus.ScentedSearch.LINE_HEIGHT;
     this.scale = availableLength
       / (this.positions.getPosition(this.positions.getLength() - 1) + this.positions
         .getItemSize(this.positions.getLength() - 1));
-    context.fillStyle = morpheus.ScentedSearch.TICK_COLOR;
+    context.fillStyle = phantasus.ScentedSearch.TICK_COLOR;
     context.lineWidth = 1;
     this.drawIndices(context, this.searchIndices);
     this.drawHoverMatchingValues(context);
   },
   drawHoverMatchingValues: function (context) {
     var heatmap = this.heatMap;
-    context.fillStyle = morpheus.ScentedSearch.MATCHING_VALUES_TICK_COLOR;
+    context.fillStyle = phantasus.ScentedSearch.MATCHING_VALUES_TICK_COLOR;
     if (heatmap.mousePositionOptions
       && heatmap.mousePositionOptions.name != null) {
       var isColumns = !this.isVertical;
@@ -206,13 +206,13 @@ morpheus.ScentedSearch.prototype = {
         var vector = track.getVector();
         var value = vector.getValue(hoverIndex);
         var valueToModelIndices = track.getFullVector().getProperties()
-          .get(morpheus.VectorKeys.VALUE_TO_INDICES);
+          .get(phantasus.VectorKeys.VALUE_TO_INDICES);
         if (!valueToModelIndices) {
           var fullVector = track.getFullVector();
-          valueToModelIndices = morpheus.VectorUtil
+          valueToModelIndices = phantasus.VectorUtil
             .createValueToIndicesMap(fullVector);
           fullVector.getProperties().set(
-            morpheus.VectorKeys.VALUE_TO_INDICES,
+            phantasus.VectorKeys.VALUE_TO_INDICES,
             valueToModelIndices);
 
         }
@@ -239,10 +239,10 @@ morpheus.ScentedSearch.prototype = {
           var pix = positions.getPosition(index) * scale;
           if (isVertical) {
             context.fillRect(0, pix, lineLength,
-              morpheus.ScentedSearch.LINE_HEIGHT);
+              phantasus.ScentedSearch.LINE_HEIGHT);
           } else {
             context.fillRect(pix, 0,
-              morpheus.ScentedSearch.LINE_HEIGHT, lineLength);
+              phantasus.ScentedSearch.LINE_HEIGHT, lineLength);
 
           }
         }
@@ -263,13 +263,13 @@ morpheus.ScentedSearch.prototype = {
       if (isVertical) {
         context.beginPath();
         context.rect(0, pix, lineLength,
-          morpheus.ScentedSearch.LINE_HEIGHT);
+          phantasus.ScentedSearch.LINE_HEIGHT);
         context.fill();
         //  context.stroke();
 
       } else {
         context.beginPath();
-        context.rect(pix, 0, morpheus.ScentedSearch.LINE_HEIGHT,
+        context.rect(pix, 0, phantasus.ScentedSearch.LINE_HEIGHT,
           lineLength);
         context.fill();
         //context.stroke();
@@ -278,6 +278,6 @@ morpheus.ScentedSearch.prototype = {
 
   }
 };
-morpheus.Util.extend(morpheus.ScentedSearch, morpheus.AbstractCanvas);
-morpheus.ScentedSearch.MATCHING_VALUES_TICK_COLOR = 'black';
-morpheus.ScentedSearch.TICK_COLOR = '#3182bd';
+phantasus.Util.extend(phantasus.ScentedSearch, phantasus.AbstractCanvas);
+phantasus.ScentedSearch.MATCHING_VALUES_TICK_COLOR = 'black';
+phantasus.ScentedSearch.TICK_COLOR = '#3182bd';

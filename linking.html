@@ -5,35 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Morpheus - Linking</title>
-    <link rel="stylesheet" href="css/morpheus-latest.min.css">
-    <script type="text/javascript" src="js/morpheus-external-latest.min.js"></script>
-    <script src="js/morpheus-latest.min.js"></script>
+    <title>phantasus - Linking</title>
+    <link rel="stylesheet" href="css/phantasus-latest.min.css">
+    <script type="text/javascript" src="js/phantasus-external-latest.min.js"></script>
+    <script src="js/phantasus-latest.min.js"></script>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
-            <h2>Morpheus Configuration Options</h2>
+            <h2>phantasus Configuration Options</h2>
             <h3>
                 Please note that the correct HTTP <a target="_blank"
                                                      href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
                 headers must be set if any of your resources are hosted on a
                 different domain.
             </h3>
-            <p class="text-muted">Load Morpheus with a pre-configured matrix</p>
+            <p class="text-muted">Load phantasus with a pre-configured matrix</p>
             <p>
-                The Morpheus website accepts the following request parameters <br/>'json':
+                The phantasus website accepts the following request parameters <br/>'json':
                 a URI encoded JSON configuration object. <br/>'url': a URL to a
                 JSON configuration file. <br/> <br/> <b>Example</b><br/>
                 <code>{columnAnnotations : [ { file :
-                    '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_v2.4_SampleInfo_small.txt',
+                    '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_v2.4_SampleInfo_small.txt',
                     datasetField : 'id', fileField : 'id' } ], columns : [ { field :
                     'id', display : 'text' }, { field : 'Site_primary', display :
                     'color' } ], dataset :
-                    '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_QC_v2.4.3.rnai.Gs.gct'}</code>
-                <br/> <a href="#" name="open">Open Example In Morpheus</a>
+                    '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_QC_v2.4.3.rnai.Gs.gct'}</code>
+                <br/> <a href="#" name="open">Open Example In phantasus</a>
         </div>
     </div>
     <!-- 		<div id="header" class="row"> -->
@@ -208,7 +208,7 @@
     function (e) {
       var json = {
         columnAnnotations: [{
-          file: '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_v2.4_SampleInfo_small.txt',
+          file: '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_v2.4_SampleInfo_small.txt',
           datasetField: 'id',
           fileField: 'id'
         }],
@@ -219,9 +219,9 @@
           field: 'Site_primary',
           display: 'color'
         }],
-        dataset: '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_QC_v2.4.3.rnai.Gs.gct'
+        dataset: '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_QC_v2.4.3.rnai.Gs.gct'
       }
-      window.location.href = 'http://www.broadinstitute.org/cancer/software/morpheus?json='
+      window.location.href = 'http://www.broadinstitute.org/cancer/software/phantasus?json='
         + encodeURIComponent(JSON.stringify(json));
 
     });
@@ -230,7 +230,7 @@
   }, 200);
 </script>
 <script>
-  morpheus.Util.loadTrackingCode();
+  phantasus.Util.loadTrackingCode();
 </script>
 </body>
 </html>

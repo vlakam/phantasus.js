@@ -1,7 +1,7 @@
-morpheus.Set = function () {
-  this._map = new morpheus.Map();
+phantasus.Set = function () {
+  this._map = new phantasus.Map();
 };
-morpheus.Set.prototype = {
+phantasus.Set.prototype = {
   toJSON: function () {
     var json = [];
     this.forEach(function (value) {
@@ -51,8 +51,8 @@ morpheus.Set.prototype = {
   }
 };
 
-morpheus.Set.fromJSON = function (json) {
-  var set = new morpheus.Set();
+phantasus.Set.fromJSON = function (json) {
+  var set = new phantasus.Set();
   for (var i = 0, length = json.length; i < length; i++) {
     set.add(json[i]);
   }

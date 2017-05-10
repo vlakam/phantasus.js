@@ -1,7 +1,7 @@
-morpheus.TransposedDatasetView = function (dataset) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.TransposedDatasetView = function (dataset) {
+  phantasus.DatasetAdapter.call(this, dataset);
 };
-morpheus.TransposedDatasetView.prototype = {
+phantasus.TransposedDatasetView.prototype = {
   getRowCount: function () {
     return this.dataset.getColumnCount();
   },
@@ -21,4 +21,4 @@ morpheus.TransposedDatasetView.prototype = {
     return this.dataset.getRowMetadata();
   }
 };
-morpheus.Util.extend(morpheus.TransposedDatasetView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.TransposedDatasetView, phantasus.DatasetAdapter);

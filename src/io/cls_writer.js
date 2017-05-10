@@ -1,18 +1,18 @@
-morpheus.ClsWriter = function () {
+phantasus.ClsWriter = function () {
 
 };
-morpheus.ClsWriter.prototype = {
+phantasus.ClsWriter.prototype = {
   write: function (vector) {
     var pw = [];
     var size = vector.size();
     pw.push(size);
     pw.push(' ');
-    var set = morpheus.VectorUtil.getSet(vector);
+    var set = phantasus.VectorUtil.getSet(vector);
     pw.push(set.size());
     pw.push(' ');
     pw.push('1\n');
     pw.push('#');
-    var valueToIndex = new morpheus.Map();
+    var valueToIndex = new phantasus.Map();
     var index = 0;
     set.forEach(function (name) {
       pw.push(' ');

@@ -1,4 +1,4 @@
-morpheus.WordCloudTool = function () {
+phantasus.WordCloudTool = function () {
 
 };
 
@@ -21,7 +21,7 @@ morpheus.WordCloudTool = function () {
  * @param options.maxSize
  *            max word size
  */
-morpheus.WordCloudTool.draw = function (options) {
+phantasus.WordCloudTool.draw = function (options) {
   var width = options.width;
   var height = options.height;
   var words = options.words;
@@ -82,7 +82,7 @@ morpheus.WordCloudTool.draw = function (options) {
 
   }
 };
-morpheus.WordCloudTool.drawTable = function (options) {
+phantasus.WordCloudTool.drawTable = function (options) {
   var width = options.width;
   var maxSize = options.maxSize;
   var minSize = options.minSize;
@@ -119,28 +119,28 @@ morpheus.WordCloudTool.drawTable = function (options) {
   });
   sub.append('title').text(
     function (d) {
-      return d.text + ' p value: ' + morpheus.Util.nf(d.p)
+      return d.text + ' p value: ' + phantasus.Util.nf(d.p)
         + ', selected count: ' + d.count
         + ' selected, total count: ' + d.fullCount;
     });
 
 };
-morpheus.WordCloudTool.prototype = {
+phantasus.WordCloudTool.prototype = {
   toString: function () {
     return 'Word Cloud';
   },
   init: function (project, form) {
-    form.setOptions('field', morpheus.MetadataUtil.getMetadataNames(project
+    form.setOptions('field', phantasus.MetadataUtil.getMetadataNames(project
       .getFullDataset().getRowMetadata()));
     form.$form.find('[name=generate_word_cloud_for]').on(
       'change',
       function (e) {
         var val = $(this).val();
         form.setOptions('field',
-          val === 'selected rows' ? morpheus.MetadataUtil
+          val === 'selected rows' ? phantasus.MetadataUtil
             .getMetadataNames(project.getFullDataset()
               .getRowMetadata())
-            : morpheus.MetadataUtil
+            : phantasus.MetadataUtil
             .getMetadataNames(project
               .getFullDataset()
               .getColumnMetadata()));
@@ -166,9 +166,9 @@ morpheus.WordCloudTool.prototype = {
     var selectedDataset = project.getSortedFilteredDataset();
     var fullDataset = project.getFullDataset();
     if (isColumns) {
-      selectedDataset = morpheus.DatasetUtil
+      selectedDataset = phantasus.DatasetUtil
         .transposedView(selectedDataset);
-      fullDataset = morpheus.DatasetUtil.transposedView(fullDataset);
+      fullDataset = phantasus.DatasetUtil.transposedView(fullDataset);
     }
     var selectedIndices = (isColumns ? project.getColumnSelectionModel()
       : project.getRowSelectionModel()).getViewIndices().values();
@@ -176,15 +176,15 @@ morpheus.WordCloudTool.prototype = {
       throw new Error('No ' + (isColumns ? 'columns' : 'rows')
         + ' selected');
     }
-    selectedDataset = new morpheus.SlicedDatasetView(selectedDataset,
+    selectedDataset = new phantasus.SlicedDatasetView(selectedDataset,
       selectedIndices, null);
     var vector = selectedDataset.getRowMetadata().getByName(field);
-    var valueToCount = morpheus.VectorUtil.createValueToCountMap(vector);
+    var valueToCount = phantasus.VectorUtil.createValueToCountMap(vector);
     var totalSelected = 0;
     valueToCount.forEach(function (count, value) {
       totalSelected += count;
     });
-    var fullValueToCount = morpheus.VectorUtil
+    var fullValueToCount = phantasus.VectorUtil
       .createValueToCountMap(fullDataset.getRowMetadata().getByName(
         field));
     var fullTotal = 0;
@@ -197,14 +197,14 @@ morpheus.WordCloudTool.prototype = {
     var words = [];
     valueToCount.forEach(function (count, value) {
       var fullCount = fullValueToCount.get(value);
-      var p = morpheus.FisherExact.fisherTest(count, totalSelected,
+      var p = phantasus.FisherExact.fisherTest(count, totalSelected,
         fullCount, fullTotal);
       words.push({
         count: count,
         fullCount: fullCount,
         p: p,
         text: value,
-        size: -morpheus.Log2(p)
+        size: -phantasus.Log2(p)
       });
     });
     var maxSize = -Number.MAX_VALUE;
@@ -225,7 +225,7 @@ morpheus.WordCloudTool.prototype = {
       height: height + 30,
       width: width + 30
     });
-    morpheus.WordCloudTool.draw({
+    phantasus.WordCloudTool.draw({
       minSize: minSize,
       maxSize: maxSize,
       isColumns: isColumns,
@@ -236,7 +236,7 @@ morpheus.WordCloudTool.prototype = {
       words: words,
       fill: fill
     });
-    morpheus.WordCloudTool.drawTable({
+    phantasus.WordCloudTool.drawTable({
       minSize: minSize,
       maxSize: maxSize,
       isColumns: isColumns,

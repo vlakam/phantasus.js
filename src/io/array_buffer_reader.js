@@ -1,4 +1,4 @@
-morpheus.ArrayBufferReader = function (buffer) {
+phantasus.ArrayBufferReader = function (buffer) {
   this.buffer = buffer;
   this.bufferLength = buffer.length;
   this.index = 0;
@@ -19,7 +19,7 @@ morpheus.ArrayBufferReader = function (buffer) {
   }
 };
 
-morpheus.ArrayBufferReader.prototype = {
+phantasus.ArrayBufferReader.prototype = {
   readLine: function () {
     var index = this.index;
     var bufferLength = this.bufferLength;
@@ -52,7 +52,7 @@ morpheus.ArrayBufferReader.prototype = {
   }
 };
 
-morpheus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
+phantasus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
   var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
   if (isString) { // URL
     var oReq = new XMLHttpRequest();

@@ -1,4 +1,4 @@
-morpheus.CompleteLinkage = function (nelements, distmatrix) {
+phantasus.CompleteLinkage = function (nelements, distmatrix) {
   var j;
   var n;
   var clusterid = []; // new var[nelements];
@@ -16,7 +16,7 @@ morpheus.CompleteLinkage = function (nelements, distmatrix) {
   }
   var r = {};
   for (n = nelements; n > 1; n--) {
-    morpheus.HCluster.findClosestPair(n, distmatrix, r);
+    phantasus.HCluster.findClosestPair(n, distmatrix, r);
     result[nelements - n].distance = r.distance;
     var is = r.ip;
     var js = r.jp;

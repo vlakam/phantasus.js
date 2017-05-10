@@ -1,14 +1,14 @@
-morpheus.DendrogramEnrichmentTool = function (isColumns) {
+phantasus.DendrogramEnrichmentTool = function (isColumns) {
   this.isColumns = isColumns;
 };
 
-morpheus.DendrogramEnrichmentTool.prototype = {
+phantasus.DendrogramEnrichmentTool.prototype = {
   toString: function () {
     return 'Dendrogram Enrichment';
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil
+    var fields = phantasus.MetadataUtil
       .getMetadataNames(this.isColumns ? dataset.getColumnMetadata()
         : dataset.getRowMetadata());
     return [{
@@ -43,9 +43,9 @@ morpheus.DendrogramEnrichmentTool.prototype = {
       options.input.field) : dataset.getRowMetadata().getByName(
       options.input.field);
 
-    var valueToIndices = morpheus.VectorUtil
+    var valueToIndices = phantasus.VectorUtil
       .createValueToIndicesMap(vector);
-    var valueToGlobalCount = new morpheus.Map();
+    var valueToGlobalCount = new phantasus.Map();
     var values = [];
     valueToIndices.forEach(function (indices, value) {
       valueToGlobalCount.set(value, indices.length);
@@ -54,10 +54,10 @@ morpheus.DendrogramEnrichmentTool.prototype = {
     var nvalues = values.length;
     var N = vector.size();
 
-    morpheus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
+    phantasus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
       function (node) {
         delete node.info;
-        var valueToCount = new morpheus.Map();
+        var valueToCount = new phantasus.Map();
         for (var i = 0; i < nvalues; i++) {
           valueToCount.set(values[i], 0);
         }
@@ -78,7 +78,7 @@ morpheus.DendrogramEnrichmentTool.prototype = {
               var b = K - k;
               var c = n - k;
               var d = N + k - n - K;
-              var p = morpheus.FisherExact.fisherTest(a, b,
+              var p = phantasus.FisherExact.fisherTest(a, b,
                 c, d);
               if (p <= pValue) {
                 if (!node.info) {

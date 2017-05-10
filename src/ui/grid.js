@@ -1,4 +1,4 @@
-morpheus.Grid = function (options) {
+phantasus.Grid = function (options) {
   this.options = options;
   var _this = this;
   var grid;
@@ -14,7 +14,7 @@ morpheus.Grid = function (options) {
     return column.getter(item);
   }
 
-  this.filter = new morpheus.CombinedGridFilter();
+  this.filter = new phantasus.CombinedGridFilter();
   var model = {
     getLength: function () {
       return _this.viewOrder != null ? _this.viewOrder.length
@@ -40,8 +40,8 @@ morpheus.Grid = function (options) {
     dataItemColumnValueExtractor: getItemColumnValue,
     defaultFormatter: function (row, cell, value, columnDef, dataContext) {
       if (_.isNumber(value)) {
-        return morpheus.Util.nf(value);
-      } else if (morpheus.Util.isArray(value)) {
+        return phantasus.Util.nf(value);
+      } else if (phantasus.Util.isArray(value)) {
         var s = [];
         for (var i = 0, length = value.length; i < length; i++) {
           if (i > 0) {
@@ -59,7 +59,7 @@ morpheus.Grid = function (options) {
 
   grid = new Slick.Grid(options.$el, model, options.columns, gridOptions);
   this.grid = grid;
-  grid.registerPlugin(new morpheus.AutoTooltips2());
+  grid.registerPlugin(new phantasus.AutoTooltips2());
 
   grid.onCellChange.subscribe(function (e, args) {
     _this.trigger('edit', args);
@@ -132,7 +132,7 @@ morpheus.Grid = function (options) {
   this.grid.invalidate();
 
 };
-morpheus.Grid.prototype = {
+phantasus.Grid.prototype = {
   columnsAutosized: false,
   setSortColumns: function (gridSortColumns) {
     this.grid.setSortColumns(gridSortColumns);
@@ -269,7 +269,7 @@ morpheus.Grid.prototype = {
       this.viewOrder.sort(function (index1, index2) {
         for (var i = 0; i < ncols; i++) {
           var getter = cols[i].sortCol.getter;
-          var comparator = cols[i].sortAsc ? morpheus.SortKey.ASCENDING_COMPARATOR : morpheus.SortKey.DESCENDING_COMPARATOR;
+          var comparator = cols[i].sortAsc ? phantasus.SortKey.ASCENDING_COMPARATOR : phantasus.SortKey.DESCENDING_COMPARATOR;
           var value1 = getter(items[index1]);
           var value2 = getter(items[index2]);
           var result = comparator(value1, value2);
@@ -281,7 +281,7 @@ morpheus.Grid.prototype = {
       });
     }
     if (this.viewOrder != null) {
-      this.modelToView = new morpheus.Map();
+      this.modelToView = new phantasus.Map();
       for (var i = 0, length = this.viewOrder.length; i < length; i++) {
         this.modelToView.set(this.viewOrder[i], i);
       }
@@ -388,7 +388,7 @@ morpheus.Grid.prototype = {
   }
 };
 
-morpheus.Util.extend(morpheus.Grid, morpheus.Events);
+phantasus.Util.extend(phantasus.Grid, phantasus.Events);
 
 /**
  * AutoTooltips2 plugin to show/hide tooltips when columns are too narrow to fit
@@ -396,7 +396,7 @@ morpheus.Util.extend(morpheus.Grid, morpheus.Events);
  *
  * @constructor
  */
-morpheus.AutoTooltips2 = function (options) {
+phantasus.AutoTooltips2 = function (options) {
   var _grid;
   var _self = this;
   var tip;
@@ -543,10 +543,10 @@ morpheus.AutoTooltips2 = function (options) {
 
 };
 
-morpheus.CombinedGridFilter = function () {
+phantasus.CombinedGridFilter = function () {
   this.filters = [];
 };
-morpheus.CombinedGridFilter.prototype = {
+phantasus.CombinedGridFilter.prototype = {
   add: function (filter) {
     this.filters.push(filter);
   },

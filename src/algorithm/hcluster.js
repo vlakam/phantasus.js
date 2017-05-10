@@ -4,7 +4,7 @@
  * @param linkageAlgorithm {Function}
  * @constructor
  */
-morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
+phantasus.HCluster = function (distmatrix, linkageAlgorithm) {
   var nelements = distmatrix.length;
   var nNodes = nelements - 1;
   if (nNodes === -1) {
@@ -79,7 +79,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
     nodeorder[i] = (counts1 * order1 + counts2 * order2)
       / (counts1 + counts2);
   }
-  var reorderedIndices = morpheus.HCluster.treeSort(nNodes, order, nodeorder,
+  var reorderedIndices = phantasus.HCluster.treeSort(nNodes, order, nodeorder,
     nodecounts, tree);
   var idToIndex = {};
   for (var i = 0, length = reorderedIndices.length; i < length; i++) {
@@ -135,7 +135,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
     leafNodes.push(leaf);
   }
 
-  morpheus.DendrogramUtil.setNodeDepths(node);
+  phantasus.DendrogramUtil.setNodeDepths(node);
 
   this.tree = {
     maxHeight: node.height,
@@ -156,7 +156,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
  * 
  * @return The first and second indices of the pair with the shortest distance.
  */
-morpheus.HCluster.findClosestPair = function (n, distmatrix, r) {
+phantasus.HCluster.findClosestPair = function (n, distmatrix, r) {
   var i, j;
   var temp;
   var distance = distmatrix[1][0];
@@ -187,7 +187,7 @@ morpheus.HCluster.findClosestPair = function (n, distmatrix, r) {
  *            matrix.
  * @return the distance matrix
  */
-morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
+phantasus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
   /* Set up the ragged array */
   var matrix = [];
   var n = dataset.getRowCount();
@@ -208,8 +208,8 @@ morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
       }
     }
   } else {
-    var list1 = new morpheus.DatasetRowView(dataset);
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list1 = new phantasus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     /* Calculate the distances and save them in the ragged array */
     for (var i = 1; i < n; i++) {
       list1.setIndex(i);
@@ -221,7 +221,7 @@ morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
 
   return matrix;
 };
-morpheus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
+phantasus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
                                        tree) {
   var nElements = nNodes + 1;
   var i;
@@ -274,5 +274,5 @@ morpheus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
       }
     }
   }
-  return morpheus.Util.indexSort(neworder, true);
+  return phantasus.Util.indexSort(neworder, true);
 };

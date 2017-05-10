@@ -1,9 +1,9 @@
-morpheus.SelectionModel = function (project, isColumns) {
-  this.viewIndices = new morpheus.Set();
+phantasus.SelectionModel = function (project, isColumns) {
+  this.viewIndices = new phantasus.Set();
   this.project = project;
   this.isColumns = isColumns;
 };
-morpheus.SelectionModel.prototype = {
+phantasus.SelectionModel.prototype = {
   setViewIndices: function (indices, notify) {
     this.viewIndices = indices;
     if (notify) {
@@ -14,11 +14,11 @@ morpheus.SelectionModel.prototype = {
     return this.viewIndices.has(index);
   },
   clear: function () {
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
   },
   /**
    *
-   * @returns {morpheus.Set}
+   * @returns {phantasus.Set}
    */
   getViewIndices: function () {
     return this.viewIndices;
@@ -43,7 +43,7 @@ morpheus.SelectionModel.prototype = {
   },
   restore: function () {
     var project = this.project;
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
     var f = this.isColumns ? project.convertModelColumnIndexToView
       : project.convertModelRowIndexToView;
     f = _.bind(f, project);
@@ -55,4 +55,4 @@ morpheus.SelectionModel.prototype = {
     }
   },
 };
-morpheus.Util.extend(morpheus.SelectionModel, morpheus.Events);
+phantasus.Util.extend(phantasus.SelectionModel, phantasus.Events);

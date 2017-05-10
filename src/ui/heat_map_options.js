@@ -1,11 +1,11 @@
-morpheus.HeatMapOptions = function (heatMap) {
+phantasus.HeatMapOptions = function (heatMap) {
   var items = [
     {
       name: 'color_by',
       required: true,
       help: 'Use a different color scheme for distinct row annotation values',
       type: 'select',
-      options: ['(None)'].concat(morpheus.MetadataUtil
+      options: ['(None)'].concat(phantasus.MetadataUtil
         .getMetadataNames(heatMap.getProject()
           .getFullDataset().getRowMetadata())),
       value: heatMap.heatmap.getColorScheme()
@@ -38,10 +38,10 @@ morpheus.HeatMapOptions = function (heatMap) {
         name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
         value: 'cn'
       }, {
-        name: 'fixed ' + morpheus.HeatMapColorScheme.Predefined.SUMMLY2().name,
+        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
         value: '100scale2'
       }, {
-        name: 'fixed ' + morpheus.HeatMapColorScheme.Predefined.SUMMLY().name,
+        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
         value: '100scale1'
       }]
     }, {
@@ -56,7 +56,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     name: 'size_by',
     required: true,
     type: 'select',
-    options: ['(None)'].concat(morpheus.DatasetUtil
+    options: ['(None)'].concat(phantasus.DatasetUtil
       .getSeriesNames(heatMap.getProject().getFullDataset()))
   });
   items.push({
@@ -101,7 +101,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap.getGridThickness())
+      value: phantasus.Util.nf(heatMap.heatmap.getGridThickness())
     },
     {
       name: 'grid_color',
@@ -115,7 +115,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap.getRowPositions()
+      value: phantasus.Util.nf(heatMap.heatmap.getRowPositions()
         .getSize())
     },
     {
@@ -123,7 +123,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap
+      value: phantasus.Util.nf(heatMap.heatmap
         .getColumnPositions().getSize())
     }, {
       name: 'show_values',
@@ -138,7 +138,7 @@ morpheus.HeatMapOptions = function (heatMap) {
         required: true,
         type: 'text',
         col: 'col-xs-4',
-        value: morpheus.Util
+        value: phantasus.Util
           .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
             : 1)
       });
@@ -150,7 +150,7 @@ morpheus.HeatMapOptions = function (heatMap) {
         required: true,
         type: 'text',
         col: 'col-xs-4',
-        value: morpheus.Util
+        value: phantasus.Util
           .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
             : 1)
       });
@@ -178,15 +178,15 @@ morpheus.HeatMapOptions = function (heatMap) {
     value: heatMap.options.inlineTooltip
   });
 
-  var colorSchemeFormBuilder = new morpheus.FormBuilder();
+  var colorSchemeFormBuilder = new phantasus.FormBuilder();
   _.each(items, function (item) {
     colorSchemeFormBuilder.append(item);
   });
-  var displayFormBuilder = new morpheus.FormBuilder();
+  var displayFormBuilder = new phantasus.FormBuilder();
   _.each(displayItems, function (item) {
     displayFormBuilder.append(item);
   });
-  var colorSchemeChooser = new morpheus.HeatMapColorSchemeChooser({
+  var colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser({
     showRelative: true,
     colorScheme: heatMap.heatmap
       .getColorScheme()
@@ -227,7 +227,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     _.each(heatMap.getVisibleTrackNames(isColumns), function (name) {
       value[name] = true;
     });
-    _.each(morpheus.MetadataUtil.getMetadataNames(isColumns ? heatMap
+    _.each(phantasus.MetadataUtil.getMetadataNames(isColumns ? heatMap
         .getProject().getFullDataset().getColumnMetadata() : heatMap
         .getProject().getFullDataset().getRowMetadata()),
       function (name) {
@@ -246,7 +246,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     return field;
   }
 
-  var annotationsBuilder = new morpheus.FormBuilder();
+  var annotationsBuilder = new phantasus.FormBuilder();
   annotationsBuilder.append(createMetadataField(false));
   annotationsBuilder.append(createMetadataField(true));
   function annotationsListener($select, isColumns) {
@@ -284,9 +284,9 @@ morpheus.HeatMapOptions = function (heatMap) {
   $ra.on('change', function (e) {
     annotationsListener($(this), false);
   });
-  var annotationOptionsTabId = _.uniqueId('morpheus');
-  var heatMapOptionsTabId = _.uniqueId('morpheus');
-  var displayOptionsTabId = _.uniqueId('morpheus');
+  var annotationOptionsTabId = _.uniqueId('phantasus');
+  var heatMapOptionsTabId = _.uniqueId('phantasus');
+  var displayOptionsTabId = _.uniqueId('phantasus');
 
   var $metadataDiv = $('<div class="tab-pane" id="' + annotationOptionsTabId
     + '"></div>');
@@ -370,7 +370,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   var separateSchemesField = heatMap.heatmap.getColorScheme()
     .getSeparateColorSchemeForRowMetadataField();
   if (separateSchemesField != null) {
-    $colorByValue.html(morpheus.Util.createOptions(morpheus.VectorUtil
+    $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
       .createValueToIndexMap(
         heatMap.project.getFullDataset().getRowMetadata()
           .getByName(separateSchemesField)).keys()));
@@ -421,13 +421,13 @@ morpheus.HeatMapOptions = function (heatMap) {
       'click',
       function (e) {
         e.preventDefault();
-        var conditionalRenderingUI = new morpheus.ConditionalRenderingUI(
+        var conditionalRenderingUI = new phantasus.ConditionalRenderingUI(
           heatMap);
-        morpheus.FormBuilder.showInModal({
+        phantasus.FormBuilder.showInModal({
           title: 'Conditional Rendering',
           html: conditionalRenderingUI.$div,
           close: 'Close',
-          modalClass: 'morpheus-sub-modal'
+          modalClass: 'phantasus-sub-modal'
         });
       });
 
@@ -441,7 +441,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   colorSchemeFormBuilder.on('change', function (e) {
     if (e.name === 'load_color_scheme') {
       if (e.value !== '' && e.value != null) {
-        morpheus.Util.getText(e.value).done(
+        phantasus.Util.getText(e.value).done(
           function (text) {
             var json = JSON.parse($.trim(text));
             heatMap.heatmap.getColorScheme().fromJSON(json);
@@ -452,7 +452,7 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap.repaint();
 
           }).fail(function () {
-          morpheus.FormBuilder.showInModal({
+          phantasus.FormBuilder.showInModal({
             title: 'Error',
             html: 'Unable to read saved color scheme.'
           });
@@ -473,20 +473,20 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .RELATIVE()));
           } else if (val === 'cn') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .CN()));
           } else if (val === 'wtcs') {
             heatMap.heatmap.getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
+                phantasus.HeatMapColorScheme
                   .createColorSupplier({
                     type: 'fixed',
                     map: [{
@@ -507,30 +507,30 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .MAF()));
           } else if (val === 'binary') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .BINARY()));
           } else if (val === '100scale1') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .SUMMLY()));
 
           } else if (val === '100scale2') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .SUMMLY2()));
 
           } else {
@@ -562,8 +562,8 @@ morpheus.HeatMapOptions = function (heatMap) {
             colorByField);
         if (colorByField != null) {
           $colorByValue
-            .html(morpheus.Util
-              .createOptions(morpheus.VectorUtil
+            .html(phantasus.Util
+              .createOptions(phantasus.VectorUtil
                 .createValueToIndexMap(
                   heatMap.project
                     .getFullDataset()
@@ -654,7 +654,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   colorSchemeChooser.setColorScheme(heatMap.heatmap.getColorScheme());
   colorSchemeChooserUpdated();
   $ul.find('[role=tab]:eq(1)').tab('show');
-  morpheus.FormBuilder.showInModal({
+  phantasus.FormBuilder.showInModal({
     title: 'Options',
     html: $div,
     close: 'Close',

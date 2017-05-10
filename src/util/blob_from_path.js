@@ -1,6 +1,6 @@
-morpheus.BlobFromPath = function () {
+phantasus.BlobFromPath = function () {
 };
-morpheus.BlobFromPath.getFileBlob = function (url, cb) {
+phantasus.BlobFromPath.getFileBlob = function (url, cb) {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url);
   xhr.responseType = "blob";
@@ -10,13 +10,13 @@ morpheus.BlobFromPath.getFileBlob = function (url, cb) {
   xhr.send();
 };
 
-morpheus.BlobFromPath.blobToFile = function (blob) {
+phantasus.BlobFromPath.blobToFile = function (blob) {
   blob.lastModifiedDate = new Date();
   return blob;
 };
 
-morpheus.BlobFromPath.getFileObject = function (filePathOrUrl, cb) {
-  morpheus.BlobFromPath.getFileBlob(filePathOrUrl, function (blob) {
-    cb(morpheus.BlobFromPath.blobToFile(blob));
+phantasus.BlobFromPath.getFileObject = function (filePathOrUrl, cb) {
+  phantasus.BlobFromPath.getFileBlob(filePathOrUrl, function (blob) {
+    cb(phantasus.BlobFromPath.blobToFile(blob));
   });
 };

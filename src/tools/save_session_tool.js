@@ -1,6 +1,6 @@
-morpheus.SaveSessionTool = function () {
+phantasus.SaveSessionTool = function () {
 };
-morpheus.SaveSessionTool.prototype = {
+phantasus.SaveSessionTool.prototype = {
   toString: function () {
     return 'Save Session';
   },
@@ -20,7 +20,7 @@ morpheus.SaveSessionTool.prototype = {
     if (fileName === '') {
       fileName = 'session.json';
     }
-    if (!morpheus.Util.endsWith(fileName.toLowerCase(), '.json')) {
+    if (!phantasus.Util.endsWith(fileName.toLowerCase(), '.json')) {
       fileName += '.json';
     }
     var heatMap = options.heatMap;
@@ -33,7 +33,7 @@ morpheus.SaveSessionTool.prototype = {
         normalArray.constructor === Array;
       };
     var blob = new Blob([JSON.stringify(json, function (key, value) {
-      if (morpheus.Util.isArray(value)) {
+      if (phantasus.Util.isArray(value)) {
         return value instanceof Array ? value : nativeArrayToArray(value);
       }
       return value;

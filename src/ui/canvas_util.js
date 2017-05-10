@@ -1,10 +1,10 @@
-morpheus.CanvasUtil = function () {
+phantasus.CanvasUtil = function () {
 };
-morpheus.CanvasUtil.dragging = false;
+phantasus.CanvasUtil.dragging = false;
 
-morpheus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-morpheus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
-morpheus.CanvasUtil.getPreferredSize = function (c) {
+phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+phantasus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
+phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
   var prefWidth = c.getPrefWidth();
   var prefHeight = c.getPrefHeight();
@@ -17,15 +17,15 @@ morpheus.CanvasUtil.getPreferredSize = function (c) {
   }
   return size;
 };
-morpheus.CanvasUtil.BACKING_SCALE = 1;
+phantasus.CanvasUtil.BACKING_SCALE = 1;
 if (typeof window !== 'undefined' && 'devicePixelRatio' in window) {
   if (window.devicePixelRatio > 1) {
-    morpheus.CanvasUtil.BACKING_SCALE = window.devicePixelRatio;
+    phantasus.CanvasUtil.BACKING_SCALE = window.devicePixelRatio;
   }
 }
 
-morpheus.CanvasUtil.setBounds = function (canvas, bounds) {
-  var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+phantasus.CanvasUtil.setBounds = function (canvas, bounds) {
+  var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
 
   if (bounds.height != null) {
     canvas.height = bounds.height * backingScale;
@@ -43,7 +43,7 @@ morpheus.CanvasUtil.setBounds = function (canvas, bounds) {
   }
 };
 
-morpheus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
+phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
   if (size2 < 0) {
     return;
   }
@@ -125,20 +125,20 @@ morpheus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
   context.stroke();
 
 };
-morpheus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {
+phantasus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {
   context.beginPath();
   context.moveTo(x1, y1);
   context.lineTo(x2, y2);
   context.stroke();
 };
-morpheus.CanvasUtil.resetTransform = function (context) {
+phantasus.CanvasUtil.resetTransform = function (context) {
   context.setTransform(1, 0, 0, 1, 0, 0);
-  if (morpheus.CanvasUtil.BACKING_SCALE !== 1) {
-    context.scale(morpheus.CanvasUtil.BACKING_SCALE,
-      morpheus.CanvasUtil.BACKING_SCALE);
+  if (phantasus.CanvasUtil.BACKING_SCALE !== 1) {
+    context.scale(phantasus.CanvasUtil.BACKING_SCALE,
+      phantasus.CanvasUtil.BACKING_SCALE);
   }
 };
-morpheus.CanvasUtil.bezierCurveTo = function (context, start, end) {
+phantasus.CanvasUtil.bezierCurveTo = function (context, start, end) {
   var m1 = (start[1] + end[1]) / 2;
   context.beginPath();
   context.moveTo(start[0], start[1]);
@@ -146,7 +146,7 @@ morpheus.CanvasUtil.bezierCurveTo = function (context, start, end) {
   context.bezierCurveTo(start[0], m1, end[0], m1, end[0], end[1]);
   context.stroke();
 };
-morpheus.CanvasUtil.createCanvas = function () {
+phantasus.CanvasUtil.createCanvas = function () {
   var $c = $('<canvas></canvas>');
   $c.attr('tabindex', '0');
   $c.css({
@@ -158,11 +158,11 @@ morpheus.CanvasUtil.createCanvas = function () {
   });
   return $c[0];
 };
-morpheus.CanvasUtil.getHeaderStringWidth = function (context, s) {
-  context.font = '14px ' + morpheus.CanvasUtil.FONT_NAME;
+phantasus.CanvasUtil.getHeaderStringWidth = function (context, s) {
+  context.font = '14px ' + phantasus.CanvasUtil.FONT_NAME;
   return context.measureText(s).width + 18;
 };
-morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
+phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
                                                      end) {
   if (positions.getSize() < 6) {
     return 0;
@@ -172,9 +172,9 @@ morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
     return 0;
   }
 
-  context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+  context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
 
-  var toString = morpheus.VectorTrack.vectorToString(vector);
+  var toString = phantasus.VectorTrack.vectorToString(vector);
   var maxWidth = 0;
   // var maxWidth2 = 0;
   var n = end <= 0 ? vector.size() : Math.min(end, vector.size());
@@ -195,7 +195,7 @@ morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
   }
   return maxWidth > 0 ? (maxWidth + 2) : maxWidth;
 };
-morpheus.CanvasUtil.clipString = function (context, string, availTextWidth) {
+phantasus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   var textWidth = context.measureText(string).width;
   if (textWidth <= availTextWidth) {
     return string;
@@ -216,7 +216,7 @@ morpheus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   }
   return string + clipString;
 };
-morpheus.CanvasUtil.toSVG = function (drawable, file) {
+phantasus.CanvasUtil.toSVG = function (drawable, file) {
   var totalSize = {
     width: drawable.getWidth(),
     height: drawable.getHeight()
@@ -236,12 +236,12 @@ morpheus.CanvasUtil.toSVG = function (drawable, file) {
   });
   saveAs(blob, file);
 };
-morpheus.CanvasUtil.getMousePos = function (element, event, useDelta) {
-  return morpheus.CanvasUtil.getMousePosWithScroll(element, event, 0, 0,
+phantasus.CanvasUtil.getMousePos = function (element, event, useDelta) {
+  return phantasus.CanvasUtil.getMousePosWithScroll(element, event, 0, 0,
     useDelta);
 };
 
-morpheus.CanvasUtil.getClientXY = function (event, useDelta) {
+phantasus.CanvasUtil.getClientXY = function (event, useDelta) {
   var clientX;
   var clientY;
   if (event.pointers) {
@@ -261,13 +261,13 @@ morpheus.CanvasUtil.getClientXY = function (event, useDelta) {
     y: clientY
   };
 };
-morpheus.CanvasUtil.getMousePosWithScroll = function (element, event, scrollX,
+phantasus.CanvasUtil.getMousePosWithScroll = function (element, event, scrollX,
                                                       scrollY, useDelta) {
-  return morpheus.CanvasUtil._getMousePosWithScroll(element, scrollX,
-    scrollY, morpheus.CanvasUtil.getClientXY(event, useDelta));
+  return phantasus.CanvasUtil._getMousePosWithScroll(element, scrollX,
+    scrollY, phantasus.CanvasUtil.getClientXY(event, useDelta));
 };
 
-morpheus.CanvasUtil._getMousePosWithScroll = function (element, scrollX,
+phantasus.CanvasUtil._getMousePosWithScroll = function (element, scrollX,
                                                        scrollY, clientXY) {
   var rect = element.getBoundingClientRect();
   return {

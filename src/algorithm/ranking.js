@@ -1,4 +1,4 @@
-morpheus.Ranking = function (values) {
+phantasus.Ranking = function (values) {
   var ranks = [];
   for (var i = 0, length = values.length; i < length; i++) {
     ranks.push({
@@ -23,7 +23,7 @@ morpheus.Ranking = function (values) {
       // tie sequence has ended (or had length 1)
       pos = i + 1;
       if (tiesTrace.length > 1) { // if seq is nontrivial, resolve
-        morpheus.Ranking.fillAverage(out, tiesTrace);
+        phantasus.Ranking.fillAverage(out, tiesTrace);
       }
       tiesTrace = [];
       tiesTrace.push(ranks[i].position);
@@ -34,18 +34,18 @@ morpheus.Ranking = function (values) {
     out[ranks[i].position] = pos;
   }
   if (tiesTrace.length > 1) { // handle tie sequence at end
-    morpheus.Ranking.fillAverage(out, tiesTrace);
+    phantasus.Ranking.fillAverage(out, tiesTrace);
   }
   return out;
 };
-morpheus.Ranking.fill = function (data, tiesTrace, value) {
+phantasus.Ranking.fill = function (data, tiesTrace, value) {
   for (var i = 0, length = tiesTrace.length; i < length; i++) {
     data[tiesTrace[i]] = value;
   }
 };
-morpheus.Ranking.fillAverage = function (ranks, tiesTrace) {
+phantasus.Ranking.fillAverage = function (ranks, tiesTrace) {
   var c = ranks[tiesTrace[0]];
   // length of sequence of tied ranks
   var length = tiesTrace.length;
-  morpheus.Ranking.fill(ranks, tiesTrace, (2 * c + length - 1) / 2);
+  phantasus.Ranking.fill(ranks, tiesTrace, (2 * c + length - 1) / 2);
 };

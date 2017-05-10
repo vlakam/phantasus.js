@@ -1,4 +1,4 @@
-morpheus.KeyboardCharMap = [
+phantasus.KeyboardCharMap = [
   '', // [0]
   '', // [1]
   '', // [2]
@@ -256,7 +256,7 @@ morpheus.KeyboardCharMap = [
   'WIN_OEM_CLEAR', // [254]
   '' // [255]
 ];
-morpheus.HeatMapKeyListener = function (heatMap) {
+phantasus.HeatMapKeyListener = function (heatMap) {
   var allActions = heatMap.getActionManager().getActions();
   var actions = allActions.filter(function (a) {
     return a.cb != null && a.which != null;
@@ -269,7 +269,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
   var keydown = function (e) {
     var tagName = e.target.tagName;
     var found = false;
-    var commandKey = morpheus.Util.IS_MAC ? e.metaKey : e.ctrlKey;
+    var commandKey = phantasus.Util.IS_MAC ? e.metaKey : e.ctrlKey;
     var altKey = e.altKey;
     var shiftKey = e.shiftKey;
     var which = e.which;
@@ -313,23 +313,23 @@ morpheus.HeatMapKeyListener = function (heatMap) {
   var $keyelement = heatMap.$tabPanel;
   $keyelement.on('keydown', keydown);
 
-  $keyelement.on('dragover.morpheus dragenter.morpheus', function (e) {
+  $keyelement.on('dragover.phantasus dragenter.phantasus', function (e) {
     e.preventDefault();
     e.stopPropagation();
   }).on(
-    'drop.morpheus',
+    'drop.phantasus',
     function (e) {
       if (heatMap.options.menu.File && heatMap.options.menu.File.indexOf('Open') !== -1 && e.originalEvent.dataTransfer
         && e.originalEvent.dataTransfer.files.length) {
         e.preventDefault();
         e.stopPropagation();
         var files = e.originalEvent.dataTransfer.files;
-        morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+        phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
           file: files[0]
         }), heatMap);
       }
     });
-  $keyelement.on('paste.morpheus',
+  $keyelement.on('paste.phantasus',
     function (e) {
       if (heatMap.options.toolbar.openFile) {
         var tagName = e.target.tagName;
@@ -343,7 +343,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
           e.stopPropagation();
           var blob = new Blob([text]);
           var url = window.URL.createObjectURL(blob);
-          morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+          phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
             file: url
           }), heatMap);
         }
@@ -384,12 +384,12 @@ morpheus.HeatMapKeyListener = function (heatMap) {
     var s = ['<b>'];
 
     if (sc.commandKey) {
-      s.push(morpheus.Util.COMMAND_KEY);
+      s.push(phantasus.Util.COMMAND_KEY);
     }
     if (sc.shiftKey) {
       s.push('Shift+');
     }
-    s.push(morpheus.KeyboardCharMap[sc.which[0]]);
+    s.push(phantasus.KeyboardCharMap[sc.which[0]]);
 
     s.push('</b>');
     return s.join('');
@@ -411,7 +411,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
     });
 
     html.push('</table>');
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Keymap Reference',
       html: html.join(''),
       focus: document.activeElement

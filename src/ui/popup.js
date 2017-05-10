@@ -1,51 +1,51 @@
-morpheus.Popup = {};
-morpheus.Popup.initted = false;
-morpheus.Popup.init = function () {
-  if (morpheus.Popup.initted) {
+phantasus.Popup = {};
+phantasus.Popup.initted = false;
+phantasus.Popup.init = function () {
+  if (phantasus.Popup.initted) {
     return;
   }
 
-  morpheus.Popup.initted = true;
-  morpheus.Popup.$popupDiv = $(document.createElement('div'));
-  morpheus.Popup.$popupDiv.css('position', 'absolute').css('zIndex', 1050).css('overflow', 'auto').addClass('dropdown clearfix');
-  morpheus.Popup.$contextMenu = $(document.createElement('ul'));
-  morpheus.Popup.$contextMenu.addClass('dropdown-menu').css('display',
+  phantasus.Popup.initted = true;
+  phantasus.Popup.$popupDiv = $(document.createElement('div'));
+  phantasus.Popup.$popupDiv.css('position', 'absolute').css('zIndex', 1050).css('overflow', 'auto').addClass('dropdown clearfix');
+  phantasus.Popup.$contextMenu = $(document.createElement('ul'));
+  phantasus.Popup.$contextMenu.addClass('dropdown-menu').css('display',
     'block').css('position', 'static').css('margin-bottom', '5px');
-  morpheus.Popup.$contextMenu.appendTo(morpheus.Popup.$popupDiv);
-  morpheus.Popup.$contextMenu.on('click', 'a', function (e) {
+  phantasus.Popup.$contextMenu.appendTo(phantasus.Popup.$popupDiv);
+  phantasus.Popup.$contextMenu.on('click', 'a', function (e) {
     e.preventDefault();
     var $this = $(this);
     // if (!$this.hasClass('copy')) {
-    morpheus.Popup.popupCallback(e, $this.data('name'));
-    morpheus.Popup.hide();
+    phantasus.Popup.popupCallback(e, $this.data('name'));
+    phantasus.Popup.hide();
     // }
 
   });
 };
 
-morpheus.Popup.popupInDom = false;
-morpheus.Popup.hidePopupMenu = function (e) {
-  if (morpheus.Popup.component == e.target) {
+phantasus.Popup.popupInDom = false;
+phantasus.Popup.hidePopupMenu = function (e) {
+  if (phantasus.Popup.component == e.target) {
     e.preventDefault();
     e.stopPropagation();
   }
-  morpheus.Popup.hide();
+  phantasus.Popup.hide();
 };
-morpheus.Popup.hide = function () {
-  morpheus.Popup.$popupDiv.hide();
-  $(document.body).off('mousedown', morpheus.Popup.hidePopupMenu);
-  morpheus.Popup.popupCallback = null;
-  morpheus.Popup.component = null;
+phantasus.Popup.hide = function () {
+  phantasus.Popup.$popupDiv.hide();
+  $(document.body).off('mousedown', phantasus.Popup.hidePopupMenu);
+  phantasus.Popup.popupCallback = null;
+  phantasus.Popup.component = null;
 };
 
-morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
-  morpheus.Popup.init();
-  if (morpheus.Popup.component == component) {
-    morpheus.Popup.hide();
+phantasus.Popup.showPopup = function (menuItems, position, component, callback) {
+  phantasus.Popup.init();
+  if (phantasus.Popup.component == component) {
+    phantasus.Popup.hide();
     return;
   }
-  morpheus.Popup.popupCallback = callback;
-  morpheus.Popup.component = component;
+  phantasus.Popup.popupCallback = callback;
+  phantasus.Popup.component = component;
   var html = [];
   for (var i = 0, length = menuItems.length; i < length; i++) {
     var item = menuItems[i];
@@ -79,17 +79,17 @@ morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
       html.push('</li>');
     }
   }
-  morpheus.Popup.$contextMenu.html(html.join(''));
-  if (!morpheus.Popup.popupInDom) {
-    morpheus.Popup.popupInDom = true;
-    morpheus.Popup.$popupDiv.appendTo($(document.body));
+  phantasus.Popup.$contextMenu.html(html.join(''));
+  if (!phantasus.Popup.popupInDom) {
+    phantasus.Popup.popupInDom = true;
+    phantasus.Popup.$popupDiv.appendTo($(document.body));
   }
   var $body = $(document.body);
   var $window = $(window);
   var windowWidth = $window.width();
   var windowHeight = $window.height();
-  var popupWidth = morpheus.Popup.$popupDiv.width();
-  var popupHeight = morpheus.Popup.$popupDiv.height();
+  var popupWidth = phantasus.Popup.$popupDiv.width();
+  var popupHeight = phantasus.Popup.$popupDiv.height();
   var left = position.x;
   var top = position.y;
   // default is bottom-right
@@ -102,21 +102,21 @@ morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
     top = Math.max(4, top);
   }
 
-  morpheus.Popup.$popupDiv.css({
+  phantasus.Popup.$popupDiv.css({
     height: popupHeight + 'px',
     display: 'block',
     left: left,
     top: top
   });
 
-  morpheus.Popup.$popupDiv.show();
+  phantasus.Popup.$popupDiv.show();
 
-  $body.off('mousedown', morpheus.Popup.hidePopupMenu);
+  $body.off('mousedown', phantasus.Popup.hidePopupMenu);
   window.setTimeout(function () {
     $body.on('mousedown', function (e) {
       var $target = $(e.target);
-      if ($target[0] !== morpheus.Popup.$popupDiv[0] && $target.data('type') !== 'popup-item') {
-        morpheus.Popup.hidePopupMenu(e);
+      if ($target[0] !== phantasus.Popup.$popupDiv[0] && $target.data('type') !== 'popup-item') {
+        phantasus.Popup.hidePopupMenu(e);
       }
     });
   }, 1);

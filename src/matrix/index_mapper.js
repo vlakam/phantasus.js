@@ -1,9 +1,9 @@
-morpheus.IndexMapper = function (project, isRows) {
+phantasus.IndexMapper = function (project, isRows) {
   this.project = project;
   this.isRows = isRows;
   this.sortKeys = [];
   /**
-   * {morpheus.Map} Maps from model index to view index. Note that not all
+   * {phantasus.Map} Maps from model index to view index. Note that not all
    * model indices are contained in the map because they might have been
    * filtered from the view.
    */
@@ -12,12 +12,12 @@ morpheus.IndexMapper = function (project, isRows) {
   this.filteredModelIndices = null;
   /** {Array} sorted and filtered model indices */
   this.filteredSortedModelIndices = null;
-  this.filter = new morpheus.CombinedFilter(true);
+  this.filter = new phantasus.CombinedFilter(true);
   this._filter();
   this._sort();
 };
 
-morpheus.IndexMapper.prototype = {
+phantasus.IndexMapper.prototype = {
   convertModelIndexToView: function (modelIndex) {
     var index = this.modelToView.get(modelIndex);
     return index !== undefined ? index : -1;
@@ -54,7 +54,7 @@ morpheus.IndexMapper.prototype = {
     }
 
     this.filteredModelIndices = filteredModelIndices != null ? filteredModelIndices
-      : morpheus.Util.seq(count);
+      : phantasus.Util.seq(count);
   },
   _sort: function () {
     var sortKeys = this.sortKeys;
@@ -63,7 +63,7 @@ morpheus.IndexMapper.prototype = {
 
       var nkeys = sortKeys.length;
       for (var i = 0; i < nkeys; i++) {
-        sortKeys[i].init(sortKeys[i].isColumns() ? new morpheus.TransposedDatasetView(dataset) : dataset, this.filteredSortedModelIndices);
+        sortKeys[i].init(sortKeys[i].isColumns() ? new phantasus.TransposedDatasetView(dataset) : dataset, this.filteredSortedModelIndices);
       }
       this.filteredSortedModelIndices = this.filteredModelIndices
         .slice(0);
@@ -84,7 +84,7 @@ morpheus.IndexMapper.prototype = {
       this.filteredSortedModelIndices = this.filteredModelIndices;
     }
 
-    var modelToView = new morpheus.Map();
+    var modelToView = new phantasus.Map();
     for (var i = 0, length = this.filteredSortedModelIndices.length; i < length; i++) {
       modelToView.set(this.filteredSortedModelIndices[i], i);
     }

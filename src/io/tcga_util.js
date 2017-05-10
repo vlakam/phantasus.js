@@ -1,8 +1,8 @@
-morpheus.TcgaUtil = function () {
+phantasus.TcgaUtil = function () {
 
 };
 
-morpheus.TcgaUtil.DISEASE_STUDIES = {
+phantasus.TcgaUtil.DISEASE_STUDIES = {
   'ACC': 'Adrenocortical carcinoma',
   'BLCA': 'Bladder Urothelial Carcinoma',
   'BRCA': 'Breast invasive carcinoma',
@@ -46,7 +46,7 @@ morpheus.TcgaUtil.DISEASE_STUDIES = {
   'UVM': 'Uveal Melanoma'
 };
 
-morpheus.TcgaUtil.SAMPLE_TYPES = {
+phantasus.TcgaUtil.SAMPLE_TYPES = {
   '01': 'Primary solid Tumor',
   '02': 'Recurrent Solid Tumor',
   '03': 'Primary Blood Derived Cancer - Peripheral Blood',
@@ -68,7 +68,7 @@ morpheus.TcgaUtil.SAMPLE_TYPES = {
   '61': 'Cell Line Derived Xenograft Tissue'
 };
 
-morpheus.TcgaUtil.barcode = function (s) {
+phantasus.TcgaUtil.barcode = function (s) {
   var tokens = s.split('-');
   var id = tokens[2];
   var sampleType;
@@ -78,9 +78,9 @@ morpheus.TcgaUtil.barcode = function (s) {
     if (sampleType.length > 2) {
       sampleType = sampleType.substring(0, 2);
     }
-    sampleType = morpheus.TcgaUtil.SAMPLE_TYPES[sampleType];
+    sampleType = phantasus.TcgaUtil.SAMPLE_TYPES[sampleType];
   } else {
-    sampleType = morpheus.TcgaUtil.SAMPLE_TYPES['01'];
+    sampleType = phantasus.TcgaUtil.SAMPLE_TYPES['01'];
   }
   return {
     id: id.toLowerCase(),
@@ -88,19 +88,19 @@ morpheus.TcgaUtil.barcode = function (s) {
   };
 };
 
-morpheus.TcgaUtil.setIdAndSampleType = function (dataset) {
+phantasus.TcgaUtil.setIdAndSampleType = function (dataset) {
   var idVector = dataset.getColumnMetadata().get(0);
   var participantId = dataset.getColumnMetadata().add('participant_id');
   var sampleType = dataset.getColumnMetadata().add('sample_type');
   for (var i = 0, size = idVector.size(); i < size; i++) {
-    var barcode = morpheus.TcgaUtil.barcode(idVector.getValue(i));
+    var barcode = phantasus.TcgaUtil.barcode(idVector.getValue(i));
     idVector.setValue(i, barcode.id + '-' + barcode.sampleType);
     sampleType.setValue(i, barcode.sampleType);
     participantId.setValue(i, barcode.id);
   }
 };
 
-morpheus.TcgaUtil.getDataset = function (options) {
+phantasus.TcgaUtil.getDataset = function (options) {
   var promises = [];
   var datasets = [];
   var returnDeferred = $.Deferred();
@@ -109,12 +109,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
     // id + type
     var mrna = $.Deferred();
     promises.push(mrna);
-    new morpheus.TxtReader().read(options.mrna, function (err, dataset) {
+    new phantasus.TxtReader().read(options.mrna, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       mrna.resolve();
     });
@@ -123,16 +123,16 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.mutation) {
     var mutation = $.Deferred();
     promises.push(mutation);
-    new morpheus.MafFileReader().read(options.mutation, function (err, dataset) {
+    new phantasus.MafFileReader().read(options.mutation, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       mutation.resolve();
     });
-    var sigGenesAnnotation = morpheus.Util.readLines(options.sigGenes);
+    var sigGenesAnnotation = phantasus.Util.readLines(options.sigGenes);
     sigGenesAnnotation.done(function (lines) {
       sigGenesLines = lines;
     });
@@ -141,13 +141,13 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.gistic) {
     var gistic = $.Deferred();
     promises.push(gistic);
-    new morpheus.GisticReader().read(options.gistic,
+    new phantasus.GisticReader().read(options.gistic,
       function (err, dataset) {
         if (err) {
           console.log('Error reading file:' + err);
         } else {
           datasets.push(dataset);
-          morpheus.TcgaUtil.setIdAndSampleType(dataset);
+          phantasus.TcgaUtil.setIdAndSampleType(dataset);
         }
         gistic.resolve();
       });
@@ -157,7 +157,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var gisticGene = $.Deferred();
     promises.push(gisticGene);
 
-    new morpheus.TxtReader({
+    new phantasus.TxtReader({
       dataColumnStart: 3
 
     }).read(options.gisticGene, function (err, dataset) {
@@ -165,7 +165,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       gisticGene.resolve();
     });
@@ -174,12 +174,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.seg) {
     var seg = $.Deferred();
     promises.push(seg);
-    new morpheus.SegTabReader().read(options.seg, function (err, dataset) {
+    new phantasus.SegTabReader().read(options.seg, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       seg.resolve();
     });
@@ -189,12 +189,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var rppa = $.Deferred();
     promises.push(rppa);
 
-    new morpheus.TxtReader().read(options.rppa, function (err, dataset) {
+    new phantasus.TxtReader().read(options.rppa, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
 
       rppa.resolve();
@@ -205,26 +205,26 @@ morpheus.TcgaUtil.getDataset = function (options) {
     // id + type
     var methylation = $.Deferred();
     promises.push(methylation);
-    new morpheus.TxtReader({}).read(options.methylation, function (err,
+    new phantasus.TxtReader({}).read(options.methylation, function (err,
                                                                    dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       methylation.resolve();
     });
   }
 
-  var mrnaClustPromise = morpheus.Util.readLines(options.mrnaClust);
+  var mrnaClustPromise = phantasus.Util.readLines(options.mrnaClust);
   promises.push(mrnaClustPromise);
   var sampleIdToClusterId;
   mrnaClustPromise.done(function (lines) {
     // SampleName cluster silhouetteValue
     // SampleName cluster silhouetteValue
     // TCGA-OR-A5J1-01 1 0.00648776228925048
-    sampleIdToClusterId = new morpheus.Map();
+    sampleIdToClusterId = new phantasus.Map();
     var lineNumber = 0;
     while (lines[lineNumber].indexOf('SampleName') !== -1) {
       lineNumber++;
@@ -232,14 +232,14 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var tab = /\t/;
     for (; lineNumber < lines.length; lineNumber++) {
       var tokens = lines[lineNumber].split(tab);
-      var barcode = morpheus.TcgaUtil.barcode(tokens[0]);
+      var barcode = phantasus.TcgaUtil.barcode(tokens[0]);
       sampleIdToClusterId.set(barcode.id + '-' + barcode.sampleType, tokens[1]);
     }
   });
   var annotationCallbacks = [];
   var annotationDef = null;
   if (options.columnAnnotations) {
-    annotationDef = morpheus.DatasetUtil.annotate({
+    annotationDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
       isColumns: true
     });
@@ -283,11 +283,11 @@ morpheus.TcgaUtil.getDataset = function (options) {
           }
         }
 
-        var joined = new morpheus.JoinedDataset(
+        var joined = new phantasus.JoinedDataset(
           datasets[datasetIndices[0]],
           datasets[datasetIndices[1]], 'id', 'id');
         for (var i = 2; i < datasetIndices.length; i++) {
-          joined = new morpheus.JoinedDataset(joined,
+          joined = new phantasus.JoinedDataset(joined,
             datasets[datasetIndices[i]], 'id', 'id');
         }
         datasetToReturn = joined;
@@ -303,13 +303,13 @@ morpheus.TcgaUtil.getDataset = function (options) {
       }
       // view in space of mutation sample ids only
       if (options.mutation) {
-        var sourceToIndices = morpheus.VectorUtil
+        var sourceToIndices = phantasus.VectorUtil
           .createValueToIndicesMap(datasetToReturn
             .getRowMetadata().getByName('Source'));
-        var mutationDataset = new morpheus.SlicedDatasetView(
+        var mutationDataset = new phantasus.SlicedDatasetView(
           datasetToReturn, sourceToIndices
             .get('mutations_merged.maf'));
-        new morpheus.OpenFileTool()
+        new phantasus.OpenFileTool()
           .annotate(sigGenesLines, mutationDataset, false,
             null, 'id', 'gene', ['q']);
         var qVector = mutationDataset.getRowMetadata().getByName(
@@ -325,7 +325,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
         }
 
         mutationDataset.getRowMetadata().remove(
-          morpheus.MetadataUtil.indexOf(mutationDataset
+          phantasus.MetadataUtil.indexOf(mutationDataset
             .getRowMetadata(), 'q'));
       }
       if (annotationDef) {
@@ -333,8 +333,8 @@ morpheus.TcgaUtil.getDataset = function (options) {
           f(datasetToReturn);
         });
       }
-      console.log("morpheus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
-      morpheus.DatasetUtil.toESSessionPromise(datasetToReturn);
+      console.log("phantasus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
+      phantasus.DatasetUtil.toESSessionPromise(datasetToReturn);
       returnDeferred.resolve(datasetToReturn);
     });
   return returnDeferred;

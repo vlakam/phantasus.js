@@ -1,4 +1,4 @@
-morpheus.DualList = function (leftOptions, rightOptions) {
+phantasus.DualList = function (leftOptions, rightOptions) {
   var html = [];
   html.push('<div class="container-fluid">');
   html.push('<div class="row">');
@@ -44,7 +44,7 @@ morpheus.DualList = function (leftOptions, rightOptions) {
   }
 };
 
-morpheus.DualList.prototype = {
+phantasus.DualList.prototype = {
   addSelected: function () {
     var left = this.left;
     var right = this.right;
@@ -106,7 +106,7 @@ morpheus.DualList.prototype = {
     for (var i = 0; i < selectedOptions.length; i++) {
       indices.push(selectedOptions[i].index);
     }
-    var index = morpheus.Util.indexSort(indices, false);
+    var index = phantasus.Util.indexSort(indices, false);
     for (var i = 0; i < selectedOptions.length; i++) {
       var sel = selectedOptions[index[i]].index;
       var optHTML = right.options[sel].innerHTML;
@@ -126,7 +126,7 @@ morpheus.DualList.prototype = {
     for (var i = 0; i < selectedOptions.length; i++) {
       indices.push(selectedOptions[i].index);
     }
-    var index = morpheus.Util.indexSort(indices, false);
+    var index = phantasus.Util.indexSort(indices, false);
     for (var i = 0; i < selectedOptions.length; i++) {
       var sel = selectedOptions[index[i]].index;
       var optHTML = right.options[sel].innerHTML;

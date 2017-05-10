@@ -1,4 +1,4 @@
-morpheus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
+phantasus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
   if (dataset == null) {
     throw 'dataset is null';
   }
@@ -7,7 +7,7 @@ morpheus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
   this.columnMetadata = columnMetadata || dataset.getColumnMetadata();
 
 };
-morpheus.DatasetAdapter.prototype = {
+phantasus.DatasetAdapter.prototype = {
   getDataset: function () {
     return this.dataset;
   },

@@ -1,36 +1,36 @@
-morpheus.VectorKeys = {};
+phantasus.VectorKeys = {};
 /** [string] of field names in array */
-morpheus.VectorKeys.FIELDS = 'morpheus.fields';
-morpheus.VectorKeys.VALUE_TO_INDICES = 'morpheus.valueToIndices';
-/** [int] of visible field indices in morpheus.VectorKeys.FIELDS */
-morpheus.VectorKeys.VISIBLE_FIELDS = 'morpheus.visibleFields';
-morpheus.VectorKeys.DATA_TYPE = 'morpheus.dataType';
+phantasus.VectorKeys.FIELDS = 'phantasus.fields';
+phantasus.VectorKeys.VALUE_TO_INDICES = 'phantasus.valueToIndices';
+/** [int] of visible field indices in phantasus.VectorKeys.FIELDS */
+phantasus.VectorKeys.VISIBLE_FIELDS = 'phantasus.visibleFields';
+phantasus.VectorKeys.DATA_TYPE = 'phantasus.dataType';
 /** Function to map an array to a single value for sorting */
-morpheus.VectorKeys.ARRAY_SUMMARY_FUNCTION = 'morpheus.arraySummaryFunct';
+phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION = 'phantasus.arraySummaryFunct';
 /** Key for object (e.g. box plot) that summarizes data values */
-morpheus.VectorKeys.HEADER_SUMMARY = 'morpheus.headerSummary';
+phantasus.VectorKeys.HEADER_SUMMARY = 'phantasus.headerSummary';
 /** Key indicating to show header summary */
-morpheus.VectorKeys.SHOW_HEADER_SUMMARY = 'morpheus.showHeaderSummary';
+phantasus.VectorKeys.SHOW_HEADER_SUMMARY = 'phantasus.showHeaderSummary';
 
-morpheus.VectorKeys.TITLE = 'morpheus.title';
+phantasus.VectorKeys.TITLE = 'phantasus.title';
 /** Function to compute vector value */
-morpheus.VectorKeys.FUNCTION = 'morpheus.funct';
+phantasus.VectorKeys.FUNCTION = 'phantasus.funct';
 
 /** Indicates that vector values are dynamically computed based on selection */
-morpheus.VectorKeys.SELECTION = 'morpheus.selection';
+phantasus.VectorKeys.SELECTION = 'phantasus.selection';
 
 /** Whether to recompute a function when creating a new heat map */
-morpheus.VectorKeys.RECOMPUTE_FUNCTION = 'morpheus.recompute.funct';
+phantasus.VectorKeys.RECOMPUTE_FUNCTION = 'phantasus.recompute.funct';
 
 /** Boolean, whether to recompute a function when heat map selection changes */
-morpheus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'morpheus.recompute.funct.selection';
+phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'phantasus.recompute.funct.selection';
 
-morpheus.VectorKeys.COPY_IGNORE = new morpheus.Set();
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.HEADER_SUMMARY);
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.DATA_TYPE);
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.VALUE_TO_INDICES);
+phantasus.VectorKeys.COPY_IGNORE = new phantasus.Set();
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.HEADER_SUMMARY);
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.DATA_TYPE);
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.VALUE_TO_INDICES);
 
-morpheus.VectorKeys.JSON_WHITELIST = new morpheus.Set();
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.FIELDS);
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.DATA_TYPE);
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.TITLE);
+phantasus.VectorKeys.JSON_WHITELIST = new phantasus.Set();
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.FIELDS);
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.DATA_TYPE);
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.TITLE);

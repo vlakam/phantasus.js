@@ -1,4 +1,4 @@
-morpheus.SingleLinkage = function (nelements, distmatrix) {
+phantasus.SingleLinkage = function (nelements, distmatrix) {
   var i, j, k;
   var nnodes = nelements - 1;
   var temp = []; // var[nnodes];

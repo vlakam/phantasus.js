@@ -1,8 +1,8 @@
-morpheus.RowDendrogram = function (heatMap, tree, positions, project) {
-  morpheus.AbstractDendrogram.call(this, heatMap, tree, positions,
-    project, morpheus.AbstractDendrogram.Type.ROW);
+phantasus.RowDendrogram = function (heatMap, tree, positions, project) {
+  phantasus.AbstractDendrogram.call(this, heatMap, tree, positions,
+    project, phantasus.AbstractDendrogram.Type.ROW);
 };
-morpheus.RowDendrogram.prototype = {
+phantasus.RowDendrogram.prototype = {
   drawNode: function (context, node) {
     var radius = this.getNodeRadius(node);
     var pix = this.toPix(node);
@@ -38,7 +38,7 @@ morpheus.RowDendrogram.prototype = {
   },
   paintMouseOver: function (clip, context) {
     if (this.project.getHoverRowIndex() !== -1) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(0, -clip.y);
       this.drawRowBorder(context, this.positions, this.project
         .getHoverRowIndex(), this.getUnscaledWidth());
@@ -62,10 +62,10 @@ morpheus.RowDendrogram.prototype = {
       [this.getUnscaledWidth(), 0]);
   },
   getMaxIndex: function (clip) {
-    return morpheus.Positions.getBottom(clip, this.positions);
+    return phantasus.Positions.getBottom(clip, this.positions);
   },
   getMinIndex: function (clip) {
-    return morpheus.Positions.getTop(clip, this.positions);
+    return phantasus.Positions.getTop(clip, this.positions);
   },
   toPix: function (node) {
     var min = this.positions.getPosition(node.minIndex)
@@ -118,4 +118,4 @@ morpheus.RowDendrogram.prototype = {
     context.stroke();
   }
 };
-morpheus.Util.extend(morpheus.RowDendrogram, morpheus.AbstractDendrogram);
+phantasus.Util.extend(phantasus.RowDendrogram, phantasus.AbstractDendrogram);

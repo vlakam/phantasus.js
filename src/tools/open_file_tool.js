@@ -1,7 +1,7 @@
-morpheus.OpenFileTool = function (options) {
+phantasus.OpenFileTool = function (options) {
   this.options = options || {};
 };
-morpheus.OpenFileTool.prototype = {
+phantasus.OpenFileTool.prototype = {
   toString: function () {
     return 'Open';
   },
@@ -48,7 +48,7 @@ morpheus.OpenFileTool.prototype = {
         value: '',
         type: 'file',
         required: true,
-        help: morpheus.DatasetUtil.DATASET_FILE_FORMATS
+        help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
       });
     }
     array.options = {
@@ -66,18 +66,18 @@ morpheus.OpenFileTool.prototype = {
         if (action === 'append columns' || action === 'append'
           || action === 'open' || action === 'overlay') {
           form.setHelpText('file',
-            morpheus.DatasetUtil.DATASET_FILE_FORMATS);
+            phantasus.DatasetUtil.DATASET_FILE_FORMATS);
           $preloaded.show();
         } else if (action === 'Open dendrogram') {
           form.setHelpText('file',
-            morpheus.DatasetUtil.DENDROGRAM_FILE_FORMATS);
+            phantasus.DatasetUtil.DENDROGRAM_FILE_FORMATS);
           $preloaded.hide();
         } else if (action === 'Open session') {
-          form.setHelpText('file', morpheus.DatasetUtil.SESSION_FILE_FORMAT);
+          form.setHelpText('file', phantasus.DatasetUtil.SESSION_FILE_FORMAT);
           $preloaded.hide();
         } else {
           form.setHelpText('file',
-            morpheus.DatasetUtil.ANNOTATION_FILE_FORMATS);
+            phantasus.DatasetUtil.ANNOTATION_FILE_FORMATS);
           $preloaded.hide();
         }
       });
@@ -85,7 +85,7 @@ morpheus.OpenFileTool.prototype = {
       $('<h4>Use your own file</h4>').insertAfter(
         form.$form.find('.form-group:first'));
       var _this = this;
-      var collapseId = _.uniqueId('morpheus');
+      var collapseId = _.uniqueId('phantasus');
       $('<h4><a role="button" data-toggle="collapse" href="#'
         + collapseId
         + '" aria-expanded="false" aria-controls="'
@@ -93,7 +93,7 @@ morpheus.OpenFileTool.prototype = {
       var $sampleDatasets = $('<div data-name="sampleData" id="' + collapseId + '" class="collapse"' +
         ' id="' + collapseId + '" style="overflow:auto;"></div>');
       $preloaded.appendTo(form.$form);
-      var sampleDatasets = new morpheus.SampleDatasets({
+      var sampleDatasets = new phantasus.SampleDatasets({
         $el: $sampleDatasets,
         callback: function (heatMapOptions) {
           _this.options.file = heatMapOptions.dataset;
@@ -123,15 +123,15 @@ morpheus.OpenFileTool.prototype = {
 
     var project = options.project;
     if (options.input.open_file_action === 'Open session') {
-      morpheus.Util.getText(options.input.file).done(function (text) {
+      phantasus.Util.getText(options.input.file).done(function (text) {
         var options = JSON.parse(text);
         options.tabManager = heatMap.getTabManager();
         options.focus = true;
         options.inheritFromParent = false;
         options.landingPage = heatMap.options.landingPage;
-        new morpheus.HeatMap(options);
+        new phantasus.HeatMap(options);
       }).fail(function (err) {
-        morpheus.FormBuilder.showMessageModal({
+        phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session'
         });
@@ -140,37 +140,37 @@ morpheus.OpenFileTool.prototype = {
       || options.input.open_file_action === 'append'
       || options.input.open_file_action === 'open'
       || options.input.open_file_action === 'overlay') {
-      new morpheus.OpenDatasetTool().execute(options);
+      new phantasus.OpenDatasetTool().execute(options);
     } else if (options.input.open_file_action === 'Open dendrogram') {
-      morpheus.HeatMap.showTool(new morpheus.OpenDendrogramTool(
+      phantasus.HeatMap.showTool(new phantasus.OpenDendrogramTool(
         options.input.file), options.heatMap);
     } else { // annotate rows or columns
 
       var isAnnotateColumns = options.input.open_file_action == 'Annotate Columns';
       var fileOrUrl = options.input.file;
       var dataset = project.getFullDataset();
-      var fileName = morpheus.Util.getFileName(fileOrUrl);
-      if (morpheus.Util.endsWith(fileName, '.cls')) {
-        var result = morpheus.Util.readLines(fileOrUrl);
+      var fileName = phantasus.Util.getFileName(fileOrUrl);
+      if (phantasus.Util.endsWith(fileName, '.cls')) {
+        var result = phantasus.Util.readLines(fileOrUrl);
         result.done(function (lines) {
           that.annotateCls(heatMap, dataset, fileName,
             isAnnotateColumns, lines);
         });
-      } else if (morpheus.Util.endsWith(fileName, '.gmt')) {
-        morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+      } else if (phantasus.Util.endsWith(fileName, '.gmt')) {
+        phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                        buf) {
           if (err) {
             throw new Error('Unable to read ' + fileOrUrl);
           }
-          var sets = new morpheus.GmtReader()
-            .read(new morpheus.ArrayBufferReader(new Uint8Array(
+          var sets = new phantasus.GmtReader()
+            .read(new phantasus.ArrayBufferReader(new Uint8Array(
               buf)));
           that.promptSets(dataset, heatMap, isAnnotateColumns,
-            sets, morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl)));
+            sets, phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl)));
         });
 
       } else {
-        var result = morpheus.Util.readLines(fileOrUrl);
+        var result = phantasus.Util.readLines(fileOrUrl);
         result.done(function (lines) {
           that.prompt(lines, dataset, heatMap, isAnnotateColumns);
         });
@@ -181,15 +181,15 @@ morpheus.OpenFileTool.prototype = {
   },
   annotateCls: function (heatMap, dataset, fileName, isColumns, lines) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
-    var assignments = new morpheus.ClsReader().read(lines);
+    var assignments = new phantasus.ClsReader().read(lines);
     if (assignments.length !== dataset.getRowCount()) {
       throw new Error(
         'Number of samples in cls file does not match dataset.');
     }
     var vector = dataset.getRowMetadata().add(
-      morpheus.Util.getBaseFileName(fileName));
+      phantasus.Util.getBaseFileName(fileName));
     for (var i = 0; i < assignments.length; i++) {
       vector.setValue(i, assignments[i]);
     }
@@ -205,10 +205,10 @@ morpheus.OpenFileTool.prototype = {
   annotateSets: function (dataset, isColumns, sets,
                           datasetMetadataName, setSourceFileName) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var vector = dataset.getRowMetadata().getByName(datasetMetadataName);
-    var idToIndices = morpheus.VectorUtil.createValueToIndicesMap(vector);
+    var idToIndices = phantasus.VectorUtil.createValueToIndicesMap(vector);
     var setVector = dataset.getRowMetadata().add(setSourceFileName);
     sets.forEach(function (set) {
       var name = set.name;
@@ -250,14 +250,14 @@ morpheus.OpenFileTool.prototype = {
   annotate: function (lines, dataset, isColumns, sets, metadataName,
                       fileColumnName, fileColumnNamesToInclude) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var vector = dataset.getRowMetadata().getByName(metadataName);
     if (!vector) {
       throw new Error('vector ' + metadataName + ' not found.');
     }
     var vectors = [];
-    var idToIndices = morpheus.VectorUtil.createValueToIndicesMap(vector);
+    var idToIndices = phantasus.VectorUtil.createValueToIndicesMap(vector);
     if (!lines) {
       _
         .each(
@@ -327,7 +327,7 @@ morpheus.OpenFileTool.prototype = {
       }
     }
     for (var i = 0; i < vectors.length; i++) {
-      morpheus.VectorUtil.maybeConvertStringToNumber(vectors[i]);
+      phantasus.VectorUtil.maybeConvertStringToNumber(vectors[i]);
     }
     return vectors;
   },
@@ -352,7 +352,7 @@ morpheus.OpenFileTool.prototype = {
     promptTool.gui = function () {
       return [{
         name: 'dataset_field_name',
-        options: morpheus.MetadataUtil
+        options: phantasus.MetadataUtil
           .getMetadataNames(isColumns ? dataset
             .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
@@ -361,7 +361,7 @@ morpheus.OpenFileTool.prototype = {
       }];
 
     };
-    morpheus.HeatMap.showTool(promptTool, heatMap);
+    phantasus.HeatMap.showTool(promptTool, heatMap);
 
   },
   prompt: function (lines, dataset, heatMap, isColumns) {
@@ -374,7 +374,7 @@ morpheus.OpenFileTool.prototype = {
       var vectors = _this.annotate(lines, dataset, isColumns, null,
         metadataName, fileColumnName);
 
-      var nameToIndex = new morpheus.Map();
+      var nameToIndex = new phantasus.Map();
       var render = [];
       for (var i = 0; i < vectors.length; i++) {
         render.push(isColumns ? 'color' : 'text');
@@ -401,7 +401,7 @@ morpheus.OpenFileTool.prototype = {
     promptTool.gui = function () {
       var items = [{
         name: 'dataset_field_name',
-        options: morpheus.MetadataUtil
+        options: phantasus.MetadataUtil
           .getMetadataNames(isColumns ? dataset
             .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
@@ -422,6 +422,6 @@ morpheus.OpenFileTool.prototype = {
       }
       return items;
     };
-    morpheus.HeatMap.showTool(promptTool, heatMap);
+    phantasus.HeatMap.showTool(promptTool, heatMap);
   }
 };

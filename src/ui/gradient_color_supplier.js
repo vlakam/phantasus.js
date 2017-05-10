@@ -1,10 +1,10 @@
-morpheus.GradientColorSupplier = function () {
-  morpheus.AbstractColorSupplier.call(this);
+phantasus.GradientColorSupplier = function () {
+  phantasus.AbstractColorSupplier.call(this);
   this._updateScale();
 };
-morpheus.GradientColorSupplier.prototype = {
+phantasus.GradientColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.GradientColorSupplier();
+    return new phantasus.GradientColorSupplier();
   },
   getColor: function (row, column, value) {
     if (isNaN(value)) {
@@ -18,12 +18,12 @@ morpheus.GradientColorSupplier.prototype = {
     } else if (value >= max) {
       return colors[colors.length - 1];
     }
-    var fraction = morpheus.SteppedColorSupplier.linearScale(value, min,
+    var fraction = phantasus.SteppedColorSupplier.linearScale(value, min,
         max, 0, 100) / 100;
     return this.colorScale(fraction);
   },
   setFractions: function (options) {
-    morpheus.AbstractColorSupplier.prototype.setFractions.call(this,
+    phantasus.AbstractColorSupplier.prototype.setFractions.call(this,
       options);
     this._updateScale();
   },
@@ -32,5 +32,5 @@ morpheus.GradientColorSupplier.prototype = {
       this.colors).clamp(true);
   }
 };
-morpheus.Util.extend(morpheus.GradientColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.GradientColorSupplier,
+  phantasus.AbstractColorSupplier);

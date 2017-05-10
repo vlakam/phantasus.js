@@ -1,24 +1,24 @@
-morpheus.SimilarityMatrixTool = function () {
+phantasus.SimilarityMatrixTool = function () {
 };
 
-morpheus.SimilarityMatrixTool.Functions = [morpheus.Euclidean,
-  morpheus.Jaccard, morpheus.Cosine, morpheus.KendallsCorrelation, morpheus.Pearson, morpheus.Spearman];
-morpheus.SimilarityMatrixTool.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.SimilarityMatrixTool.Functions.length; i++) {
-    if (morpheus.SimilarityMatrixTool.Functions[i].toString() === s) {
-      return morpheus.SimilarityMatrixTool.Functions[i];
+phantasus.SimilarityMatrixTool.Functions = [phantasus.Euclidean,
+  phantasus.Jaccard, phantasus.Cosine, phantasus.KendallsCorrelation, phantasus.Pearson, phantasus.Spearman];
+phantasus.SimilarityMatrixTool.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.SimilarityMatrixTool.Functions.length; i++) {
+    if (phantasus.SimilarityMatrixTool.Functions[i].toString() === s) {
+      return phantasus.SimilarityMatrixTool.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
-morpheus.SimilarityMatrixTool.execute = function (dataset, input) {
+phantasus.SimilarityMatrixTool.execute = function (dataset, input) {
   var isColumnMatrix = input.compute_matrix_for == 'Columns';
-  var f = morpheus.SimilarityMatrixTool.Functions.fromString(input.metric);
-  return morpheus.HCluster.computeDistanceMatrix(
-    isColumnMatrix ? new morpheus.TransposedDatasetView(dataset)
+  var f = phantasus.SimilarityMatrixTool.Functions.fromString(input.metric);
+  return phantasus.HCluster.computeDistanceMatrix(
+    isColumnMatrix ? new phantasus.TransposedDatasetView(dataset)
       : dataset, f);
 };
-morpheus.SimilarityMatrixTool.prototype = {
+phantasus.SimilarityMatrixTool.prototype = {
   toString: function () {
     return 'Similarity Matrix';
   },
@@ -28,8 +28,8 @@ morpheus.SimilarityMatrixTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.SimilarityMatrixTool.Functions,
-      value: morpheus.SimilarityMatrixTool.Functions[4].toString(),
+      options: phantasus.SimilarityMatrixTool.Functions,
+      value: phantasus.SimilarityMatrixTool.Functions[4].toString(),
       type: 'select'
     }, {
       name: 'compute_matrix_for',
@@ -42,21 +42,21 @@ morpheus.SimilarityMatrixTool.prototype = {
     var project = options.project;
     var heatMap = options.heatMap;
     var isColumnMatrix = options.input.compute_matrix_for == 'Columns';
-    var f = morpheus.SimilarityMatrixTool.Functions
+    var f = phantasus.SimilarityMatrixTool.Functions
       .fromString(options.input.metric);
     var dataset = project.getSortedFilteredDataset();
     var blob = new Blob(
       ['self.onmessage = function(e) {'
       + 'importScripts(e.data.scripts);'
-      + 'self.postMessage(morpheus.SimilarityMatrixTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+      + 'self.postMessage(phantasus.SimilarityMatrixTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
       + '}']);
 
     var url = window.URL.createObjectURL(blob);
     var worker = new Worker(url);
 
     worker.postMessage({
-      scripts: morpheus.Util.getScriptPath(),
-      dataset: morpheus.Dataset.toJSON(dataset, {
+      scripts: phantasus.Util.getScriptPath(),
+      dataset: phantasus.Dataset.toJSON(dataset, {
         columnFields: [],
         rowFields: [],
         seriesIndices: [0]
@@ -69,14 +69,14 @@ morpheus.SimilarityMatrixTool.prototype = {
       var matrix = e.data;
       var n = isColumnMatrix ? dataset.getColumnCount() : dataset
         .getRowCount();
-      var d = new morpheus.Dataset({
+      var d = new phantasus.Dataset({
         name: name,
         rows: n,
         columns: n
       });
       // set the diagonal
-      var isDistance = f.toString() === morpheus.Euclidean.toString()
-        || f.toString() === morpheus.Jaccard.toString();
+      var isDistance = f.toString() === phantasus.Euclidean.toString()
+        || f.toString() === phantasus.Jaccard.toString();
       for (var i = 1; i < n; i++) {
         for (var j = 0; j < i; j++) {
           var value = matrix[i][j];
@@ -93,8 +93,8 @@ morpheus.SimilarityMatrixTool.prototype = {
       }
       var metadata = isColumnMatrix ? dataset.getColumnMetadata()
         : dataset.getRowMetadata();
-      d.rowMetadataModel = morpheus.MetadataUtil.shallowCopy(metadata);
-      d.columnMetadataModel = morpheus.MetadataUtil.shallowCopy(metadata);
+      d.rowMetadataModel = phantasus.MetadataUtil.shallowCopy(metadata);
+      d.columnMetadataModel = phantasus.MetadataUtil.shallowCopy(metadata);
       var colorScheme;
       if (!isDistance) {
         colorScheme = {
@@ -117,12 +117,12 @@ morpheus.SimilarityMatrixTool.prototype = {
             value: 0,
             color: 'white'
           }, {
-            value: morpheus.DatasetUtil.max(d),
+            value: phantasus.DatasetUtil.max(d),
             color: 'red'
           }]
         };
       }
-      new morpheus.HeatMap({
+      new phantasus.HeatMap({
         colorScheme: colorScheme,
         name: name,
         dataset: d,

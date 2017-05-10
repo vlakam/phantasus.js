@@ -1,6 +1,6 @@
-morpheus.LimmaTool = function () {
+phantasus.LimmaTool = function () {
 };
-morpheus.LimmaTool.prototype = {
+phantasus.LimmaTool.prototype = {
   toString: function () {
     return 'limma';
   },
@@ -9,9 +9,9 @@ morpheus.LimmaTool.prototype = {
     var updateAB = function (fieldNames) {
       var ids = [];
       if (fieldNames != null) {
-        var vectors = morpheus.MetadataUtil.getVectors(project
+        var vectors = phantasus.MetadataUtil.getVectors(project
           .getFullDataset().getColumnMetadata(), fieldNames);
-        var idToIndices = morpheus.VectorUtil
+        var idToIndices = phantasus.VectorUtil
           .createValuesToIndicesMap(vectors);
         idToIndices.forEach(function (indices, id) {
           ids.push(id);
@@ -34,7 +34,7 @@ morpheus.LimmaTool.prototype = {
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil.getMetadataNames(dataset
+    var fields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getColumnMetadata());
     return [{
       name: 'field',
@@ -130,7 +130,7 @@ morpheus.LimmaTool.prototype = {
 
     console.log(values);
 
-    var trueIndices = morpheus.Util.getTrueIndices(dataset);
+    var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
     es.then(function (essession) {
       var args = {
@@ -148,7 +148,7 @@ morpheus.LimmaTool.prototype = {
         session.getObject(function (success) {
           console.log(success);
           var r = new FileReader();
-          var filePath = morpheus.Util.getFilePath(session, success);
+          var filePath = phantasus.Util.getFilePath(session, success);
 
           r.onload = function (e) {
             var contents = e.target.result;
@@ -163,8 +163,8 @@ morpheus.LimmaTool.prototype = {
                 REXP = rexp.REXP,
                 rclass = REXP.RClass;
               var res = REXP.decode(contents);
-              var data = morpheus.Util.getRexpData(res, rclass);
-              var names = morpheus.Util.getFieldNames(res, rclass);
+              var data = phantasus.Util.getRexpData(res, rclass);
+              var names = phantasus.Util.getFieldNames(res, rclass);
               var vs = [];
               var rows = trueIndices.rows.length > 0 ? trueIndices.rows : dataset.rowIndices;
               console.log(trueIndices.rows);
@@ -194,7 +194,7 @@ morpheus.LimmaTool.prototype = {
               });
             })
           };
-          morpheus.BlobFromPath.getFileObject(filePath, function (file) {
+          phantasus.BlobFromPath.getFileObject(filePath, function (file) {
             r.readAsArrayBuffer(file);
           });
         })

@@ -1,4 +1,4 @@
-morpheus.AbstractComponent = function () {
+phantasus.AbstractComponent = function () {
   this.lastClip = null;
   var c = document.createElement('div');
   c.setAttribute('tabindex', '0');
@@ -8,7 +8,7 @@ morpheus.AbstractComponent = function () {
   this.el = c;
   this.$el = $(c);
 };
-morpheus.AbstractComponent.prototype = {
+phantasus.AbstractComponent.prototype = {
   visible: true,
   invalid: true,
   prefWidth: undefined,

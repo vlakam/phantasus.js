@@ -1,9 +1,9 @@
-morpheus.HeatMapColorSchemeChooser = function (options) {
+phantasus.HeatMapColorSchemeChooser = function (options) {
   var _this = this;
   this.$div = $('<div></div>');
   this.currentValue = null;
-  this.legend = new morpheus.LegendWithStops();
-  this.colorScheme = options.colorScheme || new morpheus.HeatMapColorScheme(new morpheus.Project(new morpheus.Dataset({
+  this.legend = new phantasus.LegendWithStops();
+  this.colorScheme = options.colorScheme || new phantasus.HeatMapColorScheme(new phantasus.Project(new phantasus.Dataset({
       rows: 0,
       columns: 0
     })));
@@ -50,7 +50,7 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
   $row.appendTo(this.$div);
 
   $(this.legend.canvas).appendTo($row);
-  var formBuilder = new morpheus.FormBuilder();
+  var formBuilder = new phantasus.FormBuilder();
   var items = [];
   items = items.concat({
     name: 'selected_color',
@@ -93,10 +93,10 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
         value: 0
       }, {
         name: 'Subtract row mean, divide by row standard deviation',
-        value: morpheus.AbstractColorSupplier.Z_SCORE
+        value: phantasus.AbstractColorSupplier.Z_SCORE
       }, {
         name: 'Subtract row median, divide by row median absolute deviation',
-        value: morpheus.AbstractColorSupplier.ROBUST_Z_SCORE
+        value: phantasus.AbstractColorSupplier.ROBUST_Z_SCORE
       }]
     });
   }
@@ -205,8 +205,8 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
           function (e) {
             _this.legend.selectedIndex = -1;
             // FIXME set fixed min and max
-            var scalingMode = $(this).prop('checked') ? morpheus.HeatMapColorScheme.ScalingMode.RELATIVE
-              : morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+            var scalingMode = $(this).prop('checked') ? phantasus.HeatMapColorScheme.ScalingMode.RELATIVE
+              : phantasus.HeatMapColorScheme.ScalingMode.FIXED;
             _this.colorScheme
               .setScalingMode(scalingMode);
             _this.setColorScheme(_this.colorScheme);
@@ -216,7 +216,7 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
   // selection: delete, color, value
   // general: add, min, max, relative or global
 };
-morpheus.HeatMapColorSchemeChooser.prototype = {
+phantasus.HeatMapColorSchemeChooser.prototype = {
   deleteSelectedStop: function () {
     var fractions = this.colorScheme.getFractions();
     fractions.splice(this.legend.selectedIndex, 1);
@@ -270,7 +270,7 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
     this.draw();
   },
   setMinMax: function () {
-    if (this.colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       this.colorScheme.setMin(0);
       this.colorScheme.setMax(1);
     }
@@ -302,16 +302,16 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
     this.formBuilder
       .setValue(
         'relative_color_scheme',
-        colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE ? true
+        colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE ? true
           : false);
     this.formBuilder.setValue('transform_values', colorScheme.getTransformValues());
-    this.formBuilder.setEnabled('transform_values', colorScheme.getScalingMode() !== morpheus.HeatMapColorScheme.ScalingMode.RELATIVE);
+    this.formBuilder.setEnabled('transform_values', colorScheme.getScalingMode() !== phantasus.HeatMapColorScheme.ScalingMode.RELATIVE);
 
     this.formBuilder.$form
       .find('[name=minimum],[name=maximum]')
       .prop(
         'disabled',
-        colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE);
+        colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE);
     this.formBuilder.setValue('minimum', this.colorScheme.getMin());
     this.formBuilder.setValue('maximum', this.colorScheme.getMax());
     this.formBuilder.setValue('stepped_colors', this.colorScheme
@@ -333,7 +333,7 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
   },
   draw: function () {
     var colorScheme = this.colorScheme;
-    if (colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       colorScheme.setMin(0);
       colorScheme.setMax(1);
     }
@@ -344,4 +344,4 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
       fractionToStopPix);
   }
 };
-morpheus.Util.extend(morpheus.HeatMapColorSchemeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.HeatMapColorSchemeChooser, phantasus.Events);

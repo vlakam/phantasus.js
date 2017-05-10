@@ -1,22 +1,22 @@
 /**
- * @name morpheus
+ * @name phantasus
  * @namespace
  */
-var morpheus = (typeof morpheus !== 'undefined') ? morpheus : {};
+var phantasus = (typeof phantasus !== 'undefined') ? phantasus : {};
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = morpheus; // Node
+  module.exports = phantasus; // Node
 } else if (typeof define === 'function' && define.amd) {
   define(function () { // AMD module
-    return morpheus;
+    return phantasus;
   });
 } else {
-  global.morpheus = morpheus; // browser global
+  global.phantasus = phantasus; // browser global
 }
-morpheus.Util = function () {
+phantasus.Util = function () {
 };
 
-morpheus.Util.URL = 'https://clue.io/morpheus/';
-morpheus.Util.RIGHT_ARROW = String.fromCharCode(8594);
+phantasus.Util.URL = 'https://clue.io/phantasus/';
+phantasus.Util.RIGHT_ARROW = String.fromCharCode(8594);
 /**
  * Add properties in c2 to c1
  *
@@ -25,29 +25,29 @@ morpheus.Util.RIGHT_ARROW = String.fromCharCode(8594);
  * @param {Object}
  *            c2 The object that obj1 inherits from
  */
-morpheus.Util.extend = function (c1, c2) {
+phantasus.Util.extend = function (c1, c2) {
   for (var key in c2.prototype) {
     if (!(key in c1.prototype)) {
       c1.prototype[key] = c2.prototype[key];
     }
   }
 };
-morpheus.Util.isFetchSupported = function () {
+phantasus.Util.isFetchSupported = function () {
   return navigator.userAgent.indexOf('Chrome') !== -1;
 };
 
-morpheus.Util.viewPortSize = function () {
+phantasus.Util.viewPortSize = function () {
   return window.getComputedStyle(document.body, ':before').content.replace(
     /"/g, '');
 };
 
-morpheus.Util.TRACKING_CODE_LOADED = false;
-morpheus.Util.loadTrackingCode = function () {
+phantasus.Util.TRACKING_CODE_LOADED = false;
+phantasus.Util.loadTrackingCode = function () {
   if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
-    if (morpheus.Util.TRACKING_CODE_LOADED) {
+    if (phantasus.Util.TRACKING_CODE_LOADED) {
       return;
     } else if (typeof ga === 'undefined') {
-      morpheus.Util.TRACKING_CODE_LOADED = true;
+      phantasus.Util.TRACKING_CODE_LOADED = true;
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
@@ -61,14 +61,14 @@ morpheus.Util.loadTrackingCode = function () {
       })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
     }
     if (typeof ga !== 'undefined') {
-      ga('create', 'UA-53973555-1', 'auto', 'morpheus');
-      ga('morpheus.send', 'pageview');
+      ga('create', 'UA-53973555-1', 'auto', 'phantasus');
+      ga('phantasus.send', 'pageview');
     }
-    morpheus.Util.TRACKING_CODE_LOADED = true;
+    phantasus.Util.TRACKING_CODE_LOADED = true;
   }
 };
 
-morpheus.Util.measureScrollbar = function () {
+phantasus.Util.measureScrollbar = function () {
   var $c = $(
     '<div style=\'position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;\'></div>')
     .appendTo('body');
@@ -79,13 +79,13 @@ morpheus.Util.measureScrollbar = function () {
   $c.remove();
   return dim;
 };
-morpheus.Util.trackEvent = function (options) {
+phantasus.Util.trackEvent = function (options) {
   if (typeof window !== 'undefined') {
-    if (!morpheus.Util.TRACKING_CODE_LOADED) {
-      morpheus.Util.loadTrackingCode();
+    if (!phantasus.Util.TRACKING_CODE_LOADED) {
+      phantasus.Util.loadTrackingCode();
     }
-    if (morpheus.Util.TRACKING_CODE_LOADED && typeof ga !== 'undefined') {
-      ga('morpheus.send', {
+    if (phantasus.Util.TRACKING_CODE_LOADED && typeof ga !== 'undefined') {
+      ga('phantasus.send', {
         hitType: 'event',
         eventCategory: options.eventCategory,
         eventAction: options.eventAction,
@@ -96,7 +96,7 @@ morpheus.Util.trackEvent = function (options) {
 
 };
 
-morpheus.Util.isString = function (value) {
+phantasus.Util.isString = function (value) {
   return typeof value === 'string' || value instanceof String;
 };
 /**
@@ -104,13 +104,13 @@ morpheus.Util.isString = function (value) {
  * @param val The value to determine the data type for.
  * @return {String} One of string, number, object, [string], [number], [object]
  */
-morpheus.Util.getDataType = function (val) {
+phantasus.Util.getDataType = function (val) {
   var dataType;
-  var isArray = morpheus.Util.isArray(val);
+  var isArray = phantasus.Util.isArray(val);
   if (isArray && val.length > 0) {
     val = val[0];
   }
-  if (morpheus.Util.isString(val)) {
+  if (phantasus.Util.isString(val)) {
     dataType = 'string';
   } else if (_.isNumber(val)) {
     dataType = 'number';
@@ -126,7 +126,7 @@ morpheus.Util.getDataType = function (val) {
 /**
  * Checks whether supplied argument is an array
  */
-morpheus.Util.isArray = function (array) {
+phantasus.Util.isArray = function (array) {
   var types = [Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
     Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array,];
   // handle native arrays
@@ -137,21 +137,21 @@ morpheus.Util.isArray = function (array) {
   }
   return false;
 };
-morpheus.Util.getWindowSearchObject = function () {
+phantasus.Util.getWindowSearchObject = function () {
   var searchObject = {};
   var hashObject = {};
   if (window.location.search.length > 0) {
-    searchObject = morpheus.Util.getQueryParams(window.location.search
+    searchObject = phantasus.Util.getQueryParams(window.location.search
       .substring(1));
   }
   if (window.location.hash.length > 0) {
-    hashObject = morpheus.Util.getQueryParams(window.location.hash
+    hashObject = phantasus.Util.getQueryParams(window.location.hash
       .substring(1));
   }
   return _.extend(hashObject, searchObject);
 };
 
-morpheus.Util.copyString = function (s) {
+phantasus.Util.copyString = function (s) {
   return (' ' + s).substr(1);
   //return (' ' + s).slice(1);
   // var copy = [];
@@ -160,7 +160,7 @@ morpheus.Util.copyString = function (s) {
   // }
   // return copy.join('');
 };
-morpheus.Util.getQueryParams = function (s) {
+phantasus.Util.getQueryParams = function (s) {
   var params = {};
   if (!s) {
     return params;
@@ -180,9 +180,9 @@ morpheus.Util.getQueryParams = function (s) {
   }
   return params;
 };
-morpheus.Util.getScriptPath = function (name) {
+phantasus.Util.getScriptPath = function (name) {
   if (!name) {
-    name = 'morpheus-latest.min.js';
+    name = 'phantasus-latest.min.js';
   }
   var scripts = document.getElementsByTagName('script');
   for (var i = scripts.length - 1; i >= 0; i--) {
@@ -197,14 +197,14 @@ morpheus.Util.getScriptPath = function (name) {
   }
 
   // not found
-  if (name === 'morpheus-latest.min.js') {
-    return morpheus.Util.getScriptPath('morpheus.js');
+  if (name === 'phantasus-latest.min.js') {
+    return phantasus.Util.getScriptPath('phantasus.js');
   }
   // return 1st script
   return scripts.length > 0 ? scripts[0].src : '';
 };
 
-morpheus.Util.forceDelete = function (obj) {
+phantasus.Util.forceDelete = function (obj) {
   try {
     var _garbageCollector = (function () {
       var ef = URL.createObjectURL(new Blob([''], {
@@ -221,7 +221,7 @@ morpheus.Util.forceDelete = function (obj) {
     console.log('Unable to delete');
   }
 };
-morpheus.Util.getFileName = function (fileOrUrl) {
+phantasus.Util.getFileName = function (fileOrUrl) {
   if (fileOrUrl instanceof File) {
     return fileOrUrl.name;
   }
@@ -253,10 +253,10 @@ morpheus.Util.getFileName = function (fileOrUrl) {
   }
   return name;
 };
-morpheus.Util.prefixWithZero = function (value) {
+phantasus.Util.prefixWithZero = function (value) {
   return value < 10 ? '0' + value : value;
 };
-morpheus.Util.getExtension = function (name) {
+phantasus.Util.getExtension = function (name) {
   name = '' + name;
   var dotIndex = name.lastIndexOf('.');
   if (dotIndex > 0) {
@@ -289,18 +289,18 @@ morpheus.Util.getExtension = function (name) {
  *            The file name.
  * @return The base file name.
  */
-morpheus.Util.getBaseFileName = function (name) {
+phantasus.Util.getBaseFileName = function (name) {
   var dotIndex = name.lastIndexOf('.');
   if (dotIndex > 0) {
     var suffix = name.substring(dotIndex + 1, name.length);
     if (suffix === 'gz' || suffix === 'zip' || suffix === 'bz2') {
-      return morpheus.Util.getBaseFileName(name.substring(0, dotIndex));
+      return phantasus.Util.getBaseFileName(name.substring(0, dotIndex));
     }
     return name.substring(0, dotIndex);
   }
   return name;
 };
-morpheus.Util.seq = function (length) {
+phantasus.Util.seq = function (length) {
   var array = [];
   for (var i = 0; i < length; i++) {
     array.push(i);
@@ -308,7 +308,7 @@ morpheus.Util.seq = function (length) {
   return array;
 };
 
-morpheus.Util.sequ32 = function (length) {
+phantasus.Util.sequ32 = function (length) {
   var array = new Uint32Array(length);
   for (var i = 0; i < length; i++) {
     array[i] = i;
@@ -320,7 +320,7 @@ morpheus.Util.sequ32 = function (length) {
  * Converts window hash or search to an object that maps keys to an array of
  * values. For example ?foo=bar returns {foo:[bar]}
  */
-morpheus.Util.paramsToObject = function (hash) {
+phantasus.Util.paramsToObject = function (hash) {
   var search = hash ? window.location.hash : window.location.search;
   if (search.length <= 1) {
     return {};
@@ -339,11 +339,11 @@ morpheus.Util.paramsToObject = function (hash) {
   }
   return result;
 };
-morpheus.Util.endsWith = function (string, suffix) {
+phantasus.Util.endsWith = function (string, suffix) {
   return string.length >= suffix.length
     && string.substr(string.length - suffix.length) === suffix;
 };
-morpheus.Util.measureSvgText = function (text, classname) {
+phantasus.Util.measureSvgText = function (text, classname) {
   if (!text || text.length === 0)
     return {
       height: 0,
@@ -364,14 +364,14 @@ morpheus.Util.measureSvgText = function (text, classname) {
     width: bbox.width
   };
 };
-morpheus.Util.IS_MAC = false;
+phantasus.Util.IS_MAC = false;
 if (typeof navigator !== 'undefined') {
-  morpheus.Util.IS_MAC = navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) ? true
+  phantasus.Util.IS_MAC = navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) ? true
     : false;
 }
-morpheus.Util.COMMAND_KEY = morpheus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
+phantasus.Util.COMMAND_KEY = phantasus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
 
-morpheus.Util.hammer = function (el, recognizers) {
+phantasus.Util.hammer = function (el, recognizers) {
   var hammer = new Hammer(el, {
     recognizers: []
   });
@@ -421,10 +421,10 @@ morpheus.Util.hammer = function (el, recognizers) {
 
   return hammer;
 };
-morpheus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
-  var filteredSet = new morpheus.Set();
-  var regex = new RegExp(morpheus.Util.escapeRegex(token), 'i');
-  var regexMatch = new RegExp('(' + morpheus.Util.escapeRegex(token) + ')', 'i');
+phantasus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
+  var filteredSet = new phantasus.Set();
+  var regex = new RegExp(phantasus.Util.escapeRegex(token), 'i');
+  var regexMatch = new RegExp('(' + phantasus.Util.escapeRegex(token) + ')', 'i');
   // iterate through the pool of strings and for any string that
   // contains the substring `q`, add it to the `matches` array
   if (fields) {
@@ -476,7 +476,7 @@ morpheus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max
  *
  * @param array. Array of format,data
  */
-morpheus.Util.setClipboardData = function (clipboardData, delay) {
+phantasus.Util.setClipboardData = function (clipboardData, delay) {
   var isRTL = document.documentElement.getAttribute('dir') == 'rtl';
   var fakeElem = document.createElement('div');
   fakeElem.contentEditable = true;
@@ -549,7 +549,7 @@ morpheus.Util.setClipboardData = function (clipboardData, delay) {
  *            when text field is empty.
  *
  */
-morpheus.Util.autosuggest = function (options) {
+phantasus.Util.autosuggest = function (options) {
   options = $.extend({}, {
     multi: true,
     delay: 500,
@@ -564,7 +564,7 @@ morpheus.Util.autosuggest = function (options) {
       return false;
     }
     if (options.multi) {
-      var terms = morpheus.Util
+      var terms = phantasus.Util
         .getAutocompleteTokens(
           options.$el[0].value,
           {
@@ -636,7 +636,7 @@ morpheus.Util.autosuggest = function (options) {
           }
           // delegate back to autocomplete, but extract the
           // autocomplete term
-          var terms = morpheus.Util
+          var terms = phantasus.Util
             .getAutocompleteTokens(
               request.term,
               {
@@ -711,7 +711,7 @@ morpheus.Util.autosuggest = function (options) {
 
 };
 
-morpheus.Util.getAutocompleteTokens = function (text, options) {
+phantasus.Util.getAutocompleteTokens = function (text, options) {
   options = $.extend({}, {
     trim: true
   }, options);
@@ -783,7 +783,7 @@ morpheus.Util.getAutocompleteTokens = function (text, options) {
   return filteredTokens;
 };
 
-morpheus.Util.showDialog = function ($el, title, options) {
+phantasus.Util.showDialog = function ($el, title, options) {
   var $dialog = $('<div></div>');
   $el.appendTo($dialog);
   $dialog.appendTo($(document.body));
@@ -817,7 +817,7 @@ morpheus.Util.showDialog = function ($el, title, options) {
  *            If a delim is specified each row, will contain a string separated
  *            by delim. Otherwise each row will contain an array.
  */
-morpheus.Util.sheetToArray = function (sheet, delim) {
+phantasus.Util.sheetToArray = function (sheet, delim) {
   var r = XLSX.utils.decode_range(sheet['!ref']);
   var rows = [];
   var colors = [];
@@ -859,7 +859,7 @@ morpheus.Util.sheetToArray = function (sheet, delim) {
   rows.colors = colors;
   return rows;
 };
-morpheus.Util.linesToObjects = function (lines) {
+phantasus.Util.linesToObjects = function (lines) {
   var header = lines[0];
   var array = [];
   var nfields = header.length;
@@ -881,7 +881,7 @@ morpheus.Util.linesToObjects = function (lines) {
  * @param options.prompt Prompt for sheet name
  * @param callback {Function} Callback
  */
-morpheus.Util.xlsxTo2dArray = function (options, callback) {
+phantasus.Util.xlsxTo2dArray = function (options, callback) {
   var workbook = XLSX.read(options.data, {
     type: 'binary',
     cellFormula: false,
@@ -890,7 +890,7 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
   });
   var sheetNames = workbook.SheetNames;
   if (options.prompt && sheetNames.length > 1) {
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'sheet',
       type: 'bootstrap-select',
@@ -898,19 +898,19 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
       required: true,
       col: 'col-xs-2'
     });
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Choose Sheet',
       html: formBuilder.$form,
       onClose: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
-        var lines = morpheus.Util.sheetToArray(worksheet);
+        var lines = phantasus.Util.sheetToArray(worksheet);
         callback(null, lines);
       }
     });
 
   } else {
     var worksheet = workbook.Sheets[sheetNames[0]];
-    var lines = morpheus.Util.sheetToArray(worksheet);
+    var lines = phantasus.Util.sheetToArray(worksheet);
     callback(null, lines);
   }
 
@@ -921,7 +921,7 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
  * @param options.prompt Prompt for sheet name
  * @param callback {Function} Callback
  */
-morpheus.Util.xlsxTo1dArray = function (options, callback) {
+phantasus.Util.xlsxTo1dArray = function (options, callback) {
   var workbook = XLSX.read(options.data, {
     type: 'binary',
     cellFormula: false,
@@ -930,7 +930,7 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
   });
   var sheetNames = workbook.SheetNames;
   if (options.prompt && sheetNames.length > 1) {
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'sheet',
       type: 'bootstrap-select',
@@ -939,19 +939,19 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
       col: 'col-xs-2'
     });
 
-    morpheus.FormBuilder.showOkCancel({
+    phantasus.FormBuilder.showOkCancel({
       title: 'Choose Sheet',
       cancel: false,
       content: formBuilder.$form,
       okCallback: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
-        callback(null, morpheus.Util.sheetToArray(worksheet, '\t'));
+        callback(null, phantasus.Util.sheetToArray(worksheet, '\t'));
       }
     });
 
   } else {
     var worksheet = workbook.Sheets[sheetNames[0]];
-    callback(null, morpheus.Util.sheetToArray(worksheet, '\t'));
+    callback(null, phantasus.Util.sheetToArray(worksheet, '\t'));
   }
 
 };
@@ -959,9 +959,9 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
 /**
  * Returns a promise that resolves to a string
  */
-morpheus.Util.getText = function (urlOrFile) {
+phantasus.Util.getText = function (urlOrFile) {
   var deferred = $.Deferred();
-  if (morpheus.Util.isString(urlOrFile)) {
+  if (phantasus.Util.isString(urlOrFile)) {
     $.ajax({
       contentType: 'text/plain',
       url: urlOrFile,
@@ -981,7 +981,7 @@ morpheus.Util.getText = function (urlOrFile) {
   }
   return deferred.promise();
 };
-morpheus.Util.createOptions = function (values, none) {
+phantasus.Util.createOptions = function (values, none) {
   var html = [];
   if (none) {
     html.push('<option value="">(None)</option>');
@@ -998,12 +998,12 @@ morpheus.Util.createOptions = function (values, none) {
 
 /**
  * Computes the rank using the given index array. The index array can be
- * obtained from the morpheus.Util.indexSort method. Does not handle ties.
+ * obtained from the phantasus.Util.indexSort method. Does not handle ties.
  *
  * @param index
  * @return The ranks.
  */
-morpheus.Util.rankIndexArray = function (index) {
+phantasus.Util.rankIndexArray = function (index) {
   var rank = [];
   var n = index.length;
   for (var j = 0; j < n; j++) {
@@ -1012,7 +1012,7 @@ morpheus.Util.rankIndexArray = function (index) {
   return rank;
 };
 
-morpheus.Util.indexSort = function (array, ascending) {
+phantasus.Util.indexSort = function (array, ascending) {
   var pairs = [];
   array.forEach(function (value, index) {
     pairs.push({
@@ -1020,9 +1020,9 @@ morpheus.Util.indexSort = function (array, ascending) {
       index: index
     });
   });
-  return morpheus.Util.indexSortPairs(pairs, ascending);
+  return phantasus.Util.indexSortPairs(pairs, ascending);
 };
-morpheus.Util.indexSortPairs = function (array, ascending) {
+phantasus.Util.indexSortPairs = function (array, ascending) {
   if (ascending) {
     array.sort(function (a, b) {
       return (a.value < b.value ? -1 : (a.value === b.value ? (a.index < b.index ? -1 : 1) : 1));
@@ -1038,7 +1038,7 @@ morpheus.Util.indexSortPairs = function (array, ascending) {
   });
   return indices;
 };
-morpheus.Util.arrayEquals = function (array1, array2, comparator) {
+phantasus.Util.arrayEquals = function (array1, array2, comparator) {
   if (array1 == array2)
     return true;
   if (array1 == null || array2 == null) {
@@ -1060,54 +1060,54 @@ morpheus.Util.arrayEquals = function (array1, array2, comparator) {
   }
   return true;
 };
-morpheus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
+phantasus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
   : function (d) {
   return '' + Math.round(d);
 };
-morpheus.Util.intFormat = function (n) {
-  return morpheus.Util._intFormat(n);
+phantasus.Util.intFormat = function (n) {
+  return phantasus.Util._intFormat(n);
 };
-morpheus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
+phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
   return '' + d;
 };
-morpheus.Util.nf = function (n) {
+phantasus.Util.nf = function (n) {
   var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
-    .toPrecision(4) : morpheus.Util._nf(n);
-  return morpheus.Util.removeTrailingZerosInFraction(str);
+    .toPrecision(4) : phantasus.Util._nf(n);
+  return phantasus.Util.removeTrailingZerosInFraction(str);
 };
-morpheus.Util.createNumberFormat = function (nfractionDigits) {
+phantasus.Util.createNumberFormat = function (nfractionDigits) {
   var d3Formatter = d3.format('.' + nfractionDigits + 'f');
   var f = function (value) {
     var str = d3Formatter(value);
-    return morpheus.Util.removeTrailingZerosInFraction(str);
+    return phantasus.Util.removeTrailingZerosInFraction(str);
   };
   return f;
 };
 
-morpheus.Util.wrapNumber = function (value, object) {
+phantasus.Util.wrapNumber = function (value, object) {
   var n = new Number(value);
   n.toObject = function () {
     return object;
   };
   return n;
 };
-morpheus.Util.toString = function (value) {
+phantasus.Util.toString = function (value) {
   if (value == null) {
     return '';
   } else if (_.isNumber(value)) {
-    return morpheus.Util.nf(value);
-  } else if (morpheus.Util.isArray(value)) {
-    return morpheus.Util.arrayToString(value, ', ');
+    return phantasus.Util.nf(value);
+  } else if (phantasus.Util.isArray(value)) {
+    return phantasus.Util.arrayToString(value, ', ');
   }
   return '' + value;
 };
 
-morpheus.Util.arrayToString = function (value, sep) {
+phantasus.Util.arrayToString = function (value, sep) {
   var s = [];
   for (var i = 0, length = value.length; i < length; i++) {
     var val_i = value[i];
     if (_.isNumber(val_i)) {
-      s.push(morpheus.Util.nf(val_i));
+      s.push(phantasus.Util.nf(val_i));
     } else {
       s.push('' + val_i);
     }
@@ -1116,7 +1116,7 @@ morpheus.Util.arrayToString = function (value, sep) {
   return s.join(sep);
 
 };
-morpheus.Util.removeTrailingZerosInFraction = function (str) {
+phantasus.Util.removeTrailingZerosInFraction = function (str) {
   var index = str.lastIndexOf('.');
   if (str.lastIndexOf('e') !== -1) {
     return str;
@@ -1138,10 +1138,10 @@ morpheus.Util.removeTrailingZerosInFraction = function (str) {
   }
   return str;
 };
-morpheus.Util.s = function (n) {
+phantasus.Util.s = function (n) {
   return n === 1 ? '' : 's';
 };
-morpheus.Util.create2dArray = function (rows, columns) {
+phantasus.Util.create2dArray = function (rows, columns) {
   var array2d = [];
   for (var i = 0; i < rows; i++) {
     var array = [];
@@ -1152,12 +1152,12 @@ morpheus.Util.create2dArray = function (rows, columns) {
   }
   return array2d;
 };
-morpheus.Util.escapeRegex = function (value) {
+phantasus.Util.escapeRegex = function (value) {
   return value.replace(/[*]/g, '.*')
     .replace(/[-[\]{}()+?,\\^$|#\s]/g, '\\$&');
 };
 
-morpheus.Util.createSearchPredicates = function (options) {
+phantasus.Util.createSearchPredicates = function (options) {
   options = $.extend({}, {
     validateFieldNames: true,
     caseSensitive: true
@@ -1239,50 +1239,50 @@ morpheus.Util.createSearchPredicates = function (options) {
           var start = parseFloat(token.substring(0, rangeIndex));
           var end = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(start) && !isNaN(end)) {
-            predicate = new morpheus.Util.NumberRangePredicate(
+            predicate = new phantasus.Util.NumberRangePredicate(
               field, start, end);
           }
         } else if (rangeToken === '>') {
           var val = parseFloat(token.substring(rangeIndex + 1));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.GreaterThanPredicate(
+            predicate = new phantasus.Util.GreaterThanPredicate(
               field, val);
           }
         } else if (rangeToken === '>=') {
           var val = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.GreaterThanOrEqualPredicate(
+            predicate = new phantasus.Util.GreaterThanOrEqualPredicate(
               field, val);
           }
         } else if (rangeToken === '<') {
           var val = parseFloat(token.substring(rangeIndex + 1));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.LessThanPredicate(
+            predicate = new phantasus.Util.LessThanPredicate(
               field, val);
           }
         } else if (rangeToken === '<=') {
           var val = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.LessThanOrEqualPredicate(
+            predicate = new phantasus.Util.LessThanOrEqualPredicate(
               field, val);
           }
         } else if (rangeToken === '=') {
           var val = parseFloat(token.substring(rangeIndex + 1));
-          predicate = new morpheus.Util.EqualsPredicate(
+          predicate = new phantasus.Util.EqualsPredicate(
             field, val);
         } else {
           console.log('Unknown range token:' + rangeToken);
         }
       } else if (token[0] === '"' && token[token.length - 1] === '"') { // exact
         token = token.substring(1, token.length - 1);
-        predicate = new morpheus.Util.ExactTermPredicate(field,
+        predicate = new phantasus.Util.ExactTermPredicate(field,
           token);
       } else if (token[0] === '(' && token[token.length - 1] === ')') { // exact terms
         token = token.substring(1, token.length - 1);
-        var values = morpheus.Util.getAutocompleteTokens(token);
+        var values = phantasus.Util.getAutocompleteTokens(token);
 
         if (values.length > 0) {
-          predicate = new morpheus.Util.ExactTermsPredicate(field,
+          predicate = new phantasus.Util.ExactTermsPredicate(field,
             values.map(function (val) {
               if (val[0] === '"' && val[val.length - 1] === '"') {
                 val = val.substring(1, val.length - 1);
@@ -1291,15 +1291,15 @@ morpheus.Util.createSearchPredicates = function (options) {
             }));
         }
       } else if (token.indexOf('*') !== -1) { // contains
-        predicate = new morpheus.Util.RegexPredicate(field, token);
+        predicate = new phantasus.Util.RegexPredicate(field, token);
       } else {
-        predicate = defaultIsExactMatch ? new morpheus.Util.ExactTermPredicate(
+        predicate = defaultIsExactMatch ? new phantasus.Util.ExactTermPredicate(
           field, token)
-          : new morpheus.Util.RegexPredicate(field, token);
+          : new phantasus.Util.RegexPredicate(field, token);
 
       }
       if (predicate != null) {
-        predicates.push(isNot ? new morpheus.Util.NotPredicate(
+        predicates.push(isNot ? new phantasus.Util.NotPredicate(
           predicate) : predicate);
       }
 
@@ -1308,8 +1308,8 @@ morpheus.Util.createSearchPredicates = function (options) {
 }
 ;
 
-morpheus.Util.createRegExpStringToMatchText = function (text) {
-  var tokens = morpheus.Util.getAutocompleteTokens(text);
+phantasus.Util.createRegExpStringToMatchText = function (text) {
+  var tokens = phantasus.Util.getAutocompleteTokens(text);
   if (tokens.length === 0) {
     return null;
   }
@@ -1317,26 +1317,26 @@ morpheus.Util.createRegExpStringToMatchText = function (text) {
   _.each(tokens, function (token) {
     if (token[0] === '"' && token[token.length - 1] === '"') {
       token = token.substring(1, token.length - 1);
-      regex.push('^' + morpheus.Util.escapeRegex(token) + '$'); // exact
+      regex.push('^' + phantasus.Util.escapeRegex(token) + '$'); // exact
       // match
     } else {
-      regex.push(morpheus.Util.escapeRegex(token));
+      regex.push(phantasus.Util.escapeRegex(token));
     }
   });
   return '(' + regex.join('|') + ')';
 };
-morpheus.Util.createRegExpToMatchText = function (text) {
-  var s = morpheus.Util.createRegExpStringToMatchText(text);
+phantasus.Util.createRegExpToMatchText = function (text) {
+  var s = phantasus.Util.createRegExpStringToMatchText(text);
   return s == null ? null : new RegExp(s, 'i');
 };
-morpheus.Util.reorderArray = function (array, index) {
+phantasus.Util.reorderArray = function (array, index) {
   var newArray = [];
   for (var i = 0; i < index.length; i++) {
     newArray.push(array[index[i]]);
   }
   return newArray;
 };
-morpheus.Util.getSearchString = function () {
+phantasus.Util.getSearchString = function () {
   var s = window.location.search;
   return s.length > 1 ? s.substring(1) : '';
 };
@@ -1345,7 +1345,7 @@ morpheus.Util.getSearchString = function () {
  *
  * @return An array of arrays
  */
-morpheus.Util.splitLines = function (lines) {
+phantasus.Util.splitLines = function (lines) {
   var tab = /\t/;
   var tokens = [];
   for (var i = 0, nlines = lines.length; i < nlines; i++) {
@@ -1363,11 +1363,11 @@ morpheus.Util.splitLines = function (lines) {
  *            a File or url
  * @return A deferred object that resolves to an array of strings
  */
-morpheus.Util.readLines = function (fileOrUrl, interactive) {
+phantasus.Util.readLines = function (fileOrUrl, interactive) {
   var isFile = fileOrUrl instanceof File;
-  var isString = morpheus.Util.isString(fileOrUrl);
-  var name = morpheus.Util.getFileName(fileOrUrl);
-  var ext = morpheus.Util.getExtension(name);
+  var isString = phantasus.Util.isString(fileOrUrl);
+  var name = phantasus.Util.getFileName(fileOrUrl);
+  var ext = phantasus.Util.getExtension(name);
   var deferred = $.Deferred();
   if (isString) { // URL
     if (ext === 'xlsx') {
@@ -1384,7 +1384,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
             arr[i] = String.fromCharCode(data[i]);
           }
           var bstr = arr.join('');
-          morpheus.Util.xlsxTo1dArray({
+          phantasus.Util.xlsxTo1dArray({
             data: bstr,
             prompt: interactive
           }, function (err, lines) {
@@ -1400,7 +1400,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
       $.ajax({
         url: fileOrUrl,
       }).done(function (text, status, xhr) {
-        deferred.resolve(morpheus.Util.splitOnNewLine(text));
+        deferred.resolve(phantasus.Util.splitOnNewLine(text));
       });
     }
   } else if (isFile) {
@@ -1413,7 +1413,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
           arr[i] = String.fromCharCode(data[i]);
         }
         var bstr = arr.join('');
-        morpheus.Util
+        phantasus.Util
           .xlsxTo1dArray({
             data: bstr,
             prompt: interactive
@@ -1421,7 +1421,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
             deferred.resolve(lines);
           });
       } else {
-        deferred.resolve(morpheus.Util.splitOnNewLine(event.target.result));
+        deferred.resolve(phantasus.Util.splitOnNewLine(event.target.result));
       }
 
     };
@@ -1435,8 +1435,8 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
   }
   return deferred;
 };
-morpheus.Util.createValueToIndices = function (array, field) {
-  var map = new morpheus.Map();
+phantasus.Util.createValueToIndices = function (array, field) {
+  var map = new phantasus.Map();
   _.each(array, function (item) {
     var key = item[field];
     var values = map.get(key);
@@ -1449,13 +1449,13 @@ morpheus.Util.createValueToIndices = function (array, field) {
   return map;
 };
 
-morpheus.Util.createLoadingEl = function () {
+phantasus.Util.createLoadingEl = function () {
   return $('<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
 };
 /**
  * Splits a string by the new line character, trimming whitespace
  */
-morpheus.Util.splitOnNewLine = function (text, commentChar) {
+phantasus.Util.splitOnNewLine = function (text, commentChar) {
   var commentCharCode = commentChar !== undefined ? commentChar.charCodeAt(0)
     : undefined;
 
@@ -1483,12 +1483,12 @@ morpheus.Util.splitOnNewLine = function (text, commentChar) {
   return rows;
 };
 
-morpheus.Util.ContainsPredicate = function (field, text) {
+phantasus.Util.ContainsPredicate = function (field, text) {
   this.field = field;
   text = text.toLowerCase();
   this.text = text;
 };
-morpheus.Util.ContainsPredicate.prototype = {
+phantasus.Util.ContainsPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1509,14 +1509,14 @@ morpheus.Util.ContainsPredicate.prototype = {
     return 'ContainsPredicate ' + this.field + ':' + this.text;
   }
 };
-morpheus.Util.ExactTermsPredicate = function (field, values) {
+phantasus.Util.ExactTermsPredicate = function (field, values) {
   this.field = field;
-  this.values = new morpheus.Set();
+  this.values = new phantasus.Set();
   for (var i = 0, nvalues = values.length; i < nvalues; i++) {
     this.values.add(values[i]);
   }
 };
-morpheus.Util.ExactTermsPredicate.prototype = {
+phantasus.Util.ExactTermsPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1538,12 +1538,12 @@ morpheus.Util.ExactTermsPredicate.prototype = {
   }
 };
 
-morpheus.Util.ExactTermPredicate = function (field, term) {
+phantasus.Util.ExactTermPredicate = function (field, term) {
   this.field = field;
   term = term.toLowerCase();
   this.text = term;
 };
-morpheus.Util.ExactTermPredicate.prototype = {
+phantasus.Util.ExactTermPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1564,12 +1564,12 @@ morpheus.Util.ExactTermPredicate.prototype = {
     return 'ExactTermPredicate ' + this.field + ':' + this.text;
   }
 };
-morpheus.Util.RegexPredicate = function (field, text) {
+phantasus.Util.RegexPredicate = function (field, text) {
   this.field = field;
   this.text = text;
-  this.regex = new RegExp(morpheus.Util.escapeRegex(text), 'i');
+  this.regex = new RegExp(phantasus.Util.escapeRegex(text), 'i');
 };
-morpheus.Util.RegexPredicate.prototype = {
+phantasus.Util.RegexPredicate.prototype = {
   accept: function (value) {
     return this.regex.test('' + value);
   },
@@ -1586,12 +1586,12 @@ morpheus.Util.RegexPredicate.prototype = {
     return 'RegexPredicate ' + this.field + ':' + this.regex;
   }
 };
-morpheus.Util.NumberRangePredicate = function (field, min, max) {
+phantasus.Util.NumberRangePredicate = function (field, min, max) {
   this.field = field;
   this.min = min;
   this.max = max;
 };
-morpheus.Util.NumberRangePredicate.prototype = {
+phantasus.Util.NumberRangePredicate.prototype = {
   accept: function (value) {
     return value >= this.min && value <= this.max;
   },
@@ -1607,11 +1607,11 @@ morpheus.Util.NumberRangePredicate.prototype = {
   }
 };
 
-morpheus.Util.GreaterThanPredicate = function (field, val) {
+phantasus.Util.GreaterThanPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.GreaterThanPredicate.prototype = {
+phantasus.Util.GreaterThanPredicate.prototype = {
   accept: function (value) {
     return value > this.val;
   },
@@ -1623,11 +1623,11 @@ morpheus.Util.GreaterThanPredicate.prototype = {
   }
 };
 
-morpheus.Util.GreaterThanOrEqualPredicate = function (field, val) {
+phantasus.Util.GreaterThanOrEqualPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.GreaterThanOrEqualPredicate.prototype = {
+phantasus.Util.GreaterThanOrEqualPredicate.prototype = {
   accept: function (value) {
     return value >= this.val;
   },
@@ -1638,11 +1638,11 @@ morpheus.Util.GreaterThanOrEqualPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.LessThanPredicate = function (field, val) {
+phantasus.Util.LessThanPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.LessThanPredicate.prototype = {
+phantasus.Util.LessThanPredicate.prototype = {
   accept: function (value) {
     return value < this.val;
   },
@@ -1653,11 +1653,11 @@ morpheus.Util.LessThanPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.LessThanOrEqualPredicate = function (field, val) {
+phantasus.Util.LessThanOrEqualPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.LessThanOrEqualPredicate.prototype = {
+phantasus.Util.LessThanOrEqualPredicate.prototype = {
   accept: function (value) {
     return value <= this.val;
   },
@@ -1668,11 +1668,11 @@ morpheus.Util.LessThanOrEqualPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.EqualsPredicate = function (field, val) {
+phantasus.Util.EqualsPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.EqualsPredicate.prototype = {
+phantasus.Util.EqualsPredicate.prototype = {
   accept: function (value) {
     return value === this.val;
   },
@@ -1683,10 +1683,10 @@ morpheus.Util.EqualsPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.NotPredicate = function (p) {
+phantasus.Util.NotPredicate = function (p) {
   this.p = p;
 };
-morpheus.Util.NotPredicate.prototype = {
+phantasus.Util.NotPredicate.prototype = {
   accept: function (value) {
     return !this.p.accept(value);
   },
@@ -1702,7 +1702,7 @@ morpheus.Util.NotPredicate.prototype = {
 };
 
 
-morpheus.Util.getFieldNames = function (rexp) {
+phantasus.Util.getFieldNames = function (rexp) {
   var strValues = rexp.attrValue[0].stringValue;
   var res = [];
   strValues.forEach(function (v) {
@@ -1710,8 +1710,8 @@ morpheus.Util.getFieldNames = function (rexp) {
   });
   return res;
 };
-morpheus.Util.getRexpData = function (rexp, rclass) {
-  var names = morpheus.Util.getFieldNames(rexp);
+phantasus.Util.getRexpData = function (rexp, rclass) {
+  var names = phantasus.Util.getFieldNames(rexp);
   var data = {};
   for (var i = 0; i < names.length; i++) {
     var rexpV = rexp.rexpValue[i];
@@ -1743,18 +1743,18 @@ morpheus.Util.getRexpData = function (rexp, rclass) {
   return data;
 };
 
-morpheus.Util.getFilePath = function (session, str) {
+phantasus.Util.getFilePath = function (session, str) {
   var splitted = str.split("/");
   var fileName = splitted[splitted.length - 1].substring(0, splitted[splitted.length - 1].length - 2);
   return session.getLoc() + "files/" + fileName;
 };
 
-morpheus.Util.getTrueIndices = function (dataset) {
+phantasus.Util.getTrueIndices = function (dataset) {
   console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
   var rowIndices = dataset.rowIndices ? dataset.rowIndices : [];
-  var rows = morpheus.Util.getConsNumbers(rowIndices.length);
+  var rows = phantasus.Util.getConsNumbers(rowIndices.length);
   var columnIndices = dataset.columnIndices ? dataset.columnIndices : [];
-  var columns = morpheus.Util.getConsNumbers(columnIndices.length);
+  var columns = phantasus.Util.getConsNumbers(columnIndices.length);
   var iter = 0;
   var savedDataset = dataset;
   console.log("rows processing");
@@ -1795,19 +1795,19 @@ morpheus.Util.getTrueIndices = function (dataset) {
   }
 
   console.log("res", rows, columns);
-  var conseqRows = morpheus.Util.getConsNumbers(dataset.rows);
-  var conseqCols = morpheus.Util.getConsNumbers(dataset.columns);
+  var conseqRows = phantasus.Util.getConsNumbers(dataset.rows);
+  var conseqCols = phantasus.Util.getConsNumbers(dataset.columns);
   console.log(conseqCols);
   var ans = {};
-  console.log(morpheus.Util.equalArrays(rows, conseqRows));
-  if (morpheus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && morpheus.Util.equalArrays(conseqRows, rowIndices)) {
+  console.log(phantasus.Util.equalArrays(rows, conseqRows));
+  if (phantasus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && phantasus.Util.equalArrays(conseqRows, rowIndices)) {
     ans.rows = [];
   }
   else {
     ans.rows = rows.length > 0 ? rows : rowIndices;
   }
-  console.log(morpheus.Util.equalArrays(columns, conseqCols));
-  if (morpheus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && morpheus.Util.equalArrays(conseqCols, columnIndices)) {
+  console.log(phantasus.Util.equalArrays(columns, conseqCols));
+  if (phantasus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && phantasus.Util.equalArrays(conseqCols, columnIndices)) {
     ans.columns = [];
   }
   else {
@@ -1817,7 +1817,7 @@ morpheus.Util.getTrueIndices = function (dataset) {
   return ans;
 };
 
-morpheus.Util.getConsNumbers = function (n) {
+phantasus.Util.getConsNumbers = function (n) {
   var ar = [];
   for (var i = 0; i < n; i++) {
     ar.push(i);
@@ -1825,7 +1825,7 @@ morpheus.Util.getConsNumbers = function (n) {
   return ar;
 };
 
-morpheus.Util.equalArrays = function (a, b) {
+phantasus.Util.equalArrays = function (a, b) {
   if (a.length != b.length || a == null || b == null) {
     return false;
   }

@@ -3,29 +3,29 @@
  * @param dataset
  * @constructor
  */
-morpheus.Project = function (dataset) {
+phantasus.Project = function (dataset) {
   this.originalDataset = dataset;
-  this.rowIndexMapper = new morpheus.IndexMapper(this, true);
-  this.columnIndexMapper = new morpheus.IndexMapper(this, false);
+  this.rowIndexMapper = new phantasus.IndexMapper(this, true);
+  this.columnIndexMapper = new phantasus.IndexMapper(this, false);
   this.groupRows = [];
   this.groupColumns = [];
-  this.rowColorModel = new morpheus.VectorColorModel();
-  this.columnColorModel = new morpheus.VectorColorModel();
-  this.rowShapeModel = new morpheus.VectorShapeModel();
-  this.columnShapeModel = new morpheus.VectorShapeModel();
+  this.rowColorModel = new phantasus.VectorColorModel();
+  this.columnColorModel = new phantasus.VectorColorModel();
+  this.rowShapeModel = new phantasus.VectorShapeModel();
+  this.columnShapeModel = new phantasus.VectorShapeModel();
   this.hoverColumnIndex = -1;
   this.hoverRowIndex = -1;
-  this.columnSelectionModel = new morpheus.SelectionModel(this, true);
-  this.rowSelectionModel = new morpheus.SelectionModel(this, false);
-  this.elementSelectionModel = new morpheus.ElementSelectionModel(this);
+  this.columnSelectionModel = new phantasus.SelectionModel(this, true);
+  this.rowSelectionModel = new phantasus.SelectionModel(this, false);
+  this.elementSelectionModel = new phantasus.ElementSelectionModel(this);
   this.symmetricProjectListener = null;
-  morpheus.Project._recomputeCalculatedFields(this.originalDataset);
-  morpheus.Project
-    ._recomputeCalculatedFields(new morpheus.TransposedDatasetView(
+  phantasus.Project._recomputeCalculatedFields(this.originalDataset);
+  phantasus.Project
+    ._recomputeCalculatedFields(new phantasus.TransposedDatasetView(
       this.originalDataset));
   this.history = [];
 };
-morpheus.Project.Events = {
+phantasus.Project.Events = {
   DATASET_CHANGED: 'datasetChanged',
   ROW_GROUP_BY_CHANGED: 'rowGroupByChanged',
   COLUMN_GROUP_BY_CHANGED: 'columnGroupByChanged',
@@ -37,15 +37,15 @@ morpheus.Project.Events = {
   COLUMN_TRACK_REMOVED: 'columnTrackRemoved'
 };
 
-morpheus.Project._recomputeCalculatedFields = function (dataset) {
+phantasus.Project._recomputeCalculatedFields = function (dataset) {
   var metadata = dataset.getColumnMetadata();
-  var view = new morpheus.DatasetColumnView(dataset);
+  var view = new phantasus.DatasetColumnView(dataset);
   for (var metadataIndex = 0,
          count = metadata.getMetadataCount(); metadataIndex < count; metadataIndex++) {
     var vector = metadata.get(metadataIndex);
-    if (vector.getProperties().get(morpheus.VectorKeys.FUNCTION) != null
-      && vector.getProperties().get(morpheus.VectorKeys.RECOMPUTE_FUNCTION)) {
-      var f = morpheus.VectorUtil.jsonToFunction(vector, morpheus.VectorKeys.FUNCTION);
+    if (vector.getProperties().get(phantasus.VectorKeys.FUNCTION) != null
+      && vector.getProperties().get(phantasus.VectorKeys.RECOMPUTE_FUNCTION)) {
+      var f = phantasus.VectorUtil.jsonToFunction(vector, phantasus.VectorKeys.FUNCTION);
       for (var j = 0, size = vector.size(); j < size; j++) {
         view.setIndex(j);
         vector.setValue(j, f(view, dataset, j));
@@ -54,14 +54,14 @@ morpheus.Project._recomputeCalculatedFields = function (dataset) {
   }
 
 };
-morpheus.Project.prototype = {
+phantasus.Project.prototype = {
   isSymmetric: function () {
     return this.symmetricProjectListener != null;
   },
   setSymmetric: function (heatMap) {
     if (heatMap != null) {
       if (this.symmetricProjectListener == null) {
-        this.symmetricProjectListener = new morpheus.SymmetricProjectListener(heatMap.getProject(), heatMap.vscroll, heatMap.hscroll);
+        this.symmetricProjectListener = new phantasus.SymmetricProjectListener(heatMap.getProject(), heatMap.vscroll, heatMap.hscroll);
       }
     } else {
       if (this.symmetricProjectListener != null) {
@@ -123,7 +123,7 @@ morpheus.Project.prototype = {
     this.rowSelectionModel.clear();
     this.elementSelectionModel.clear();
     if (notify) {
-      this.trigger(morpheus.Project.Events.DATASET_CHANGED);
+      this.trigger(phantasus.Project.Events.DATASET_CHANGED);
     }
   },
   setGroupRows: function (keys, notify) {
@@ -134,7 +134,7 @@ morpheus.Project.prototype = {
       }
     }
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_GROUP_BY_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_GROUP_BY_CHANGED);
     }
   },
   setGroupColumns: function (keys, notify) {
@@ -145,7 +145,7 @@ morpheus.Project.prototype = {
       }
     }
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED);
     }
   },
   setRowFilter: function (filter, notify) {
@@ -153,7 +153,7 @@ morpheus.Project.prototype = {
     this.rowIndexMapper.setFilter(filter);
     this._restoreSelection(false);
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_FILTER_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_FILTER_CHANGED);
     }
   },
   getRowFilter: function () {
@@ -167,14 +167,14 @@ morpheus.Project.prototype = {
     this.columnIndexMapper.setFilter(filter);
     this._restoreSelection(true);
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_FILTER_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_FILTER_CHANGED);
     }
   },
   getColumnColorModel: function () {
     return this.columnColorModel;
   },
   getSortedFilteredDataset: function () {
-    return morpheus.DatasetUtil.slicedView(this.getFullDataset(),
+    return phantasus.DatasetUtil.slicedView(this.getFullDataset(),
       this.rowIndexMapper.convertToView(), this.columnIndexMapper
         .convertToView());
   },
@@ -205,7 +205,7 @@ morpheus.Project.prototype = {
         columns = null;
       }
     }
-    return rows == null && columns == null ? dataset : new morpheus.SlicedDatasetView(dataset, rows, columns);
+    return rows == null && columns == null ? dataset : new phantasus.SlicedDatasetView(dataset, rows, columns);
   },
   _saveSelection: function (isColumns) {
     this.elementSelectionModel.save();
@@ -233,7 +233,7 @@ morpheus.Project.prototype = {
     this.rowIndexMapper.setSortKeys(keys);
     this._restoreSelection(false);
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED);
     }
   },
   setColumnSortKeys: function (keys, notify) {
@@ -246,7 +246,7 @@ morpheus.Project.prototype = {
     this.columnIndexMapper.setSortKeys(keys);
     this._restoreSelection(true);
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED);
     }
   },
   getRowSortKeys: function () {
@@ -274,4 +274,4 @@ morpheus.Project.prototype = {
     return this.rowSelectionModel.isViewIndexSelected(index);
   }
 };
-morpheus.Util.extend(morpheus.Project, morpheus.Events);
+phantasus.Util.extend(phantasus.Project, phantasus.Events);

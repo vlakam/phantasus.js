@@ -1,15 +1,15 @@
-morpheus.GseReader = function (options) {
+phantasus.GseReader = function (options) {
   this.type = options.type;
 };
-morpheus.GseReader.prototype = {
+phantasus.GseReader.prototype = {
   read: function (name, callback) {
     var req = ocpu.call('loadGEO', {name: name, type: this.type}, function (session) {
-      //console.log('morpheus.GseReader.prototype.read ::', session);
+      //console.log('phantasus.GseReader.prototype.read ::', session);
       session.getObject(function (success) {
-        //console.log('morpheus.GseReader.prototype.read ::', success);
+        //console.log('phantasus.GseReader.prototype.read ::', success);
         var r = new FileReader();
-        var filePath = morpheus.Util.getFilePath(session, success);
-        //console.log('morpheus.GseReader.prototype.read ::', filePath);
+        var filePath = phantasus.Util.getFilePath(session, success);
+        //console.log('phantasus.GseReader.prototype.read ::', filePath);
         r.onload = function (e) {
           var contents = e.target.result;
           var ProtoBuf = dcodeIO.ProtoBuf;
@@ -27,7 +27,7 @@ morpheus.GseReader.prototype = {
 
             var res = REXP.decode(contents);
 
-            var jsondata = morpheus.Util.getRexpData(res, rclass);
+            var jsondata = phantasus.Util.getRexpData(res, rclass);
 
             var flatData = jsondata.data.values;
             var nrowData = jsondata.data.dim[0];
@@ -48,7 +48,7 @@ morpheus.GseReader.prototype = {
               }
               matrix.push(curArray);
             }
-            var dataset = new morpheus.Dataset({
+            var dataset = new phantasus.Dataset({
               name: name,
               rows: nrowData,
               columns: ncolData,
@@ -59,12 +59,12 @@ morpheus.GseReader.prototype = {
             });
 
 
-            /*console.log("morpheus.GseReader.prototype.read ::", "input list", res);
-             console.log("morpheus.GseReader.prototype.read ::", "metaNames", metaNames);
-             console.log("morpheus.GseReader.prototype.read ::", dataset);*/
+            /*console.log("phantasus.GseReader.prototype.read ::", "input list", res);
+             console.log("phantasus.GseReader.prototype.read ::", "metaNames", metaNames);
+             console.log("phantasus.GseReader.prototype.read ::", dataset);*/
             /*var columnsIds = dataset.getColumnMetadata().add('id');
             for (var i = 0; i < ncolData; i++) {
-              columnsIds.setValue(i, morpheus.Util.copyString(participants[i]));
+              columnsIds.setValue(i, phantasus.Util.copyString(participants[i]));
             }*/
             //console.log(flatPdata);
             for (var i = 0; i < metaNames.length; i++) {
@@ -86,16 +86,16 @@ morpheus.GseReader.prototype = {
                 rowIds.setValue(j, id[j])
               }
             }
-            morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-            morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+            phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+            phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
               1);
             callback(null, dataset);
 
           });
         };
 
-        morpheus.BlobFromPath.getFileObject(filePath, function (file) {
-          //console.log('morpheus.GseReader.prototype.read ::', file);
+        phantasus.BlobFromPath.getFileObject(filePath, function (file) {
+          //console.log('phantasus.GseReader.prototype.read ::', file);
           r.readAsArrayBuffer(file);
         });
 
@@ -103,7 +103,7 @@ morpheus.GseReader.prototype = {
     });
     req.fail(function () {
       callback(req.responseText);
-      //console.log('morpheus.GseReader.prototype.read ::', req.responseText);
+      //console.log('phantasus.GseReader.prototype.read ::', req.responseText);
     });
 
   },

@@ -1,11 +1,11 @@
 /**
- * @param {morpheus.Set} [] -
+ * @param {phantasus.Set} [] -
  *            options.set set of selected items
- * @see morpheus.Table
+ * @see phantasus.Table
  */
-morpheus.CheckBoxList = function (options) {
+phantasus.CheckBoxList = function (options) {
   var _this = this;
-  var set = options.set || new morpheus.Set();
+  var set = options.set || new phantasus.Set();
   options = $.extend(true, {}, {
     height: '150px',
     showHeader: false,
@@ -16,14 +16,14 @@ morpheus.CheckBoxList = function (options) {
       var header = [];
       // header
       // .push('<div style="overflow: hidden;text-overflow: ellipsis;"
-      // class="morpheus-hover">');
+      // class="phantasus-hover">');
       header.push('<span><input name="toggle" type="checkbox" '
         + (set.has(_this.getter(item)) ? ' checked' : '') + '/> ');
       header.push('</span>');
       // header
       // .push('<button
       // style="background-color:inherit;position:absolute;top:0;right:0;line-height:inherit;padding:0px;margin-top:4px;"
-      // class="btn btn-link morpheus-hover-show">only</button>');
+      // class="btn btn-link phantasus-hover-show">only</button>');
       // header.push('</div>');
       return header.join('');
       // return '<span><input name="toggle"
@@ -32,7 +32,7 @@ morpheus.CheckBoxList = function (options) {
       // + '/> </span>'
     }
   }, options);
-  options = morpheus.Table.createOptions(options);
+  options = phantasus.Table.createOptions(options);
   if (options.columns.length === 1) {
     options.maxWidth = 583;
   }
@@ -47,7 +47,7 @@ morpheus.CheckBoxList = function (options) {
   this.getter = idColumn.getter;
   var html = [];
 
-  var table = new morpheus.Table(options);
+  var table = new phantasus.Table(options);
   if (options.columns.length === 1) {
     options.$el.find('.slick-table-header').find('[name=right]').remove();
   }
@@ -145,7 +145,7 @@ morpheus.CheckBoxList = function (options) {
 
   this.set = set;
   this.table = table;
-  $selection.html(morpheus.Util.intFormat(set.size()) + '/' + morpheus.Util.intFormat(table.getAllItemCount()));
+  $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
 
   var priorCount = 0;
   this.table.on('checkBoxSelectionChanged', function () {
@@ -179,7 +179,7 @@ morpheus.CheckBoxList = function (options) {
       }
     }
 
-    $selection.html(morpheus.Util.intFormat(set.size()) + '/' + morpheus.Util.intFormat(table.getAllItemCount()));
+    $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
 
     _this.table.redraw();
   });
@@ -189,7 +189,7 @@ morpheus.CheckBoxList = function (options) {
       var $target = $(e.target);
       var item = table.getItems()[e.row];
       var value = _this.getter(item);
-      if ($target.is('.morpheus-hover-show')) { // only
+      if ($target.is('.phantasus-hover-show')) { // only
         set.clear();
         set.add(value);
         _this.table.trigger('checkBoxSelectionChanged', {
@@ -213,7 +213,7 @@ morpheus.CheckBoxList = function (options) {
     });
 
 };
-morpheus.CheckBoxList.prototype = {
+phantasus.CheckBoxList.prototype = {
   searchWithPredicates: function (predicates) {
     this.table.searchWithPredicates(predicates);
   },
@@ -267,7 +267,7 @@ morpheus.CheckBoxList.prototype = {
   setSelectedValues: function (values) {
     this.set.clear();
 
-    if (morpheus.Util.isArray(values)) {
+    if (phantasus.Util.isArray(values)) {
       for (var i = 0; i < values.length; i++) {
         this.set.add(values[i]);
       }
@@ -288,7 +288,7 @@ morpheus.CheckBoxList.prototype = {
   },
   setItems: function (items) {
     // remove items in selection that are not in new items
-    var newItems = new morpheus.Set();
+    var newItems = new phantasus.Set();
     var getter = this.getter;
     for (var i = 0; i < items.length; i++) {
       newItems.add(getter(items[i]));

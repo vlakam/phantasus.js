@@ -1,5 +1,5 @@
-morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
-  morpheus.AbstractCanvas.call(this);
+phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
+  phantasus.AbstractCanvas.call(this);
   this.project = project;
   this.name = name;
   this.isColumns = isColumns;
@@ -7,9 +7,9 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.heatMap = heatMap;
   var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
     : project.getFullDataset().getRowMetadata()).getByName(name);
-  if (vector && vector.getProperties().has(morpheus.VectorKeys.TITLE)) {
+  if (vector && vector.getProperties().has(phantasus.VectorKeys.TITLE)) {
     this.canvas.setAttribute('title', vector.getProperties().get(
-      morpheus.VectorKeys.TITLE));
+      phantasus.VectorKeys.TITLE));
     $(this.canvas).tooltip();
   }
 
@@ -17,7 +17,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
 
   this.setBounds({
     height: this.defaultFontHeight
-    + morpheus.VectorTrackHeader.FONT_OFFSET
+    + phantasus.VectorTrackHeader.FONT_OFFSET
   });
 
   function getResizeCursor(pos) {
@@ -57,8 +57,8 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   }
 
   var mouseMove = function (event) {
-    if (!morpheus.CanvasUtil.dragging) {
-      var pos = morpheus.CanvasUtil.getMousePos(event.target, event);
+    if (!phantasus.CanvasUtil.dragging) {
+      var pos = phantasus.CanvasUtil.getMousePos(event.target, event);
       var resizeCursor = getResizeCursor(pos);
       canvas.style.cursor = resizeCursor == null ? 'default' : resizeCursor.cursor;
       //document.body.style.cursor = !cursor ? 'default' : cursor;
@@ -68,7 +68,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
 
   };
   var mouseExit = function (e) {
-    if (!morpheus.CanvasUtil.dragging) {
+    if (!phantasus.CanvasUtil.dragging) {
       canvas.style.cursor = 'default';
     }
     _this.isMouseOver = false;
@@ -93,10 +93,10 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.selectedBackgroundColor = '#c8c8c8';
   this.backgroundColor = '#f9f9f9';
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
-    'mousemove.morpheus', mouseMove).on('mouseout.morpheus', mouseExit)
-    .on('mouseenter.morpheus', mouseMove);
+    'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
+    .on('mouseenter.phantasus', mouseMove);
 
-  $(this.canvas).on('contextmenu.morpheus', showPopup);
+  $(this.canvas).on('contextmenu.phantasus', showPopup);
 
   var resizeCursor;
   var dragStartWidth = 0;
@@ -111,7 +111,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   // }
   // }, 100);
   // $(canvas).on('mouseout', throttled).on('mousemove', throttled);
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(canvas, ['pan', 'tap', 'longpress'])
     .on('longpress', this.longpress = function (event) {
       event.preventDefault();
@@ -123,7 +123,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
       'panend',
       this.panend = function (event) {
         _this.isMouseOver = false;
-        morpheus.CanvasUtil.dragging = false;
+        phantasus.CanvasUtil.dragging = false;
         canvas.style.cursor = 'default';
         var index = heatMap.getTrackIndex(_this.name,
           isColumns);
@@ -140,14 +140,14 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
       'panstart',
       this.panstart = function (event) {
         _this.isMouseOver = false;
-        if (morpheus.CanvasUtil.dragging) {
+        if (phantasus.CanvasUtil.dragging) {
           return;
         }
-        resizeCursor = getResizeCursor(morpheus.CanvasUtil
+        resizeCursor = getResizeCursor(phantasus.CanvasUtil
           .getMousePos(event.target, event, true));
         if (resizeCursor != null) { // make sure start event was on
           // hotspot
-          morpheus.CanvasUtil.dragging = true;
+          phantasus.CanvasUtil.dragging = true;
           canvas.style.cursor = resizeCursor.cursor;
           if (resizeCursor.isPrevious) {
             var index = heatMap.getTrackIndex(_this.name,
@@ -183,7 +183,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
           dragStartPosition = $canvas.position();
           $canvas.css('z-index', '100');
           $(header.canvas).css('z-index', '100');
-          morpheus.CanvasUtil.dragging = true;
+          phantasus.CanvasUtil.dragging = true;
           resizeCursor = undefined;
           reorderingTrack = true;
         }
@@ -263,7 +263,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
     .on(
       'tap',
       this.tap = function (event) {
-        if (morpheus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+        if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
           return;
         }
         _this.isMouseOver = false;
@@ -285,26 +285,26 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         var sortKey;
         var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
           : project.getFullDataset().getRowMetadata()).getByName(name);
-        var dataType = morpheus.VectorUtil.getDataType(vector);
+        var dataType = phantasus.VectorUtil.getDataType(vector);
         if (existingSortKeyIndex != -1) {
           sortKey = _this.getSortKeys()[existingSortKeyIndex];
-          if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.UNSORTED) {
-            sortOrder = morpheus.SortKey.SortOrder.ASCENDING; // 1st
+          if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.UNSORTED) {
+            sortOrder = phantasus.SortKey.SortOrder.ASCENDING; // 1st
             // click
-          } else if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
-            sortOrder = morpheus.SortKey.SortOrder.DESCENDING; // 2nd
+          } else if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
+            sortOrder = phantasus.SortKey.SortOrder.DESCENDING; // 2nd
             // click
-          } else if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.TOP_N) {
-            sortOrder = morpheus.SortKey.SortOrder.UNSORTED;
+          } else if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.TOP_N) {
+            sortOrder = phantasus.SortKey.SortOrder.UNSORTED;
           } else {
-            sortOrder = dataType === 'number' || dataType === '[number]' ? morpheus.SortKey.SortOrder.TOP_N : morpheus.SortKey.SortOrder.UNSORTED; // 3rd
+            sortOrder = dataType === 'number' || dataType === '[number]' ? phantasus.SortKey.SortOrder.TOP_N : phantasus.SortKey.SortOrder.UNSORTED; // 3rd
             // click
           }
 
         } else {
-          sortKey = new morpheus.SortKey(_this.name,
-            morpheus.SortKey.SortOrder.ASCENDING);
-          sortOrder = morpheus.SortKey.SortOrder.ASCENDING;
+          sortKey = new phantasus.SortKey(_this.name,
+            phantasus.SortKey.SortOrder.ASCENDING);
+          sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
         }
         if (sortKey != null) {
           sortKey.setSortOrder(sortOrder);
@@ -314,13 +314,13 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         // }
       });
 };
-morpheus.VectorTrackHeader.FONT_OFFSET = 2;
-morpheus.VectorTrackHeader.prototype = {
+phantasus.VectorTrackHeader.FONT_OFFSET = 2;
+phantasus.VectorTrackHeader.prototype = {
   selected: false,
   isMouseOver: false,
   defaultFontHeight: 11,
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('longpress', this.longpress).off('panend', this.panend).off('panstart',
       this.panstart).off('panmove', this.panmove).off('tap', this.tap);
     this.hammer.destroy();
@@ -331,14 +331,14 @@ morpheus.VectorTrackHeader.prototype = {
 
     if (!this.isColumns) {
       size.height = this.defaultFontHeight
-        + morpheus.VectorTrackHeader.FONT_OFFSET;
+        + phantasus.VectorTrackHeader.FONT_OFFSET;
     }
     // var vector = (this.isColumns ? this.project.getFullDataset()
     // .getColumnMetadata() : this.project.getFullDataset()
     // .getRowMetadata()).getByName(this.name);
     // if (vector
     // && vector.getProperties().get(
-    // morpheus.VectorKeys.SHOW_HEADER_SUMMARY)) {
+    // phantasus.VectorKeys.SHOW_HEADER_SUMMARY)) {
     // if (isNaN(size.height)) {
     // size.height = 0;
     // }
@@ -354,12 +354,12 @@ morpheus.VectorTrackHeader.prototype = {
   getPrintSize: function () {
     var context = this.canvas.getContext('2d');
     context.font = this.defaultFontHeight + 'px '
-      + morpheus.CanvasUtil.FONT_NAME;
+      + phantasus.CanvasUtil.FONT_NAME;
     var textWidth = 4 + context.measureText(this.name).width;
     return {
       width: textWidth,
       height: this.defaultFontHeight
-      + morpheus.VectorTrackHeader.FONT_OFFSET
+      + phantasus.VectorTrackHeader.FONT_OFFSET
     };
   },
   getSortKeys: function () {
@@ -368,11 +368,11 @@ morpheus.VectorTrackHeader.prototype = {
   },
   setOrder: function (sortKeys) {
     if (this.isColumns) {
-      this.project.setColumnSortKeys(morpheus.SortKey
+      this.project.setColumnSortKeys(phantasus.SortKey
         .keepExistingSortKeys(sortKeys, this.project
           .getColumnSortKeys()), false);
     } else {
-      this.project.setRowSortKeys(morpheus.SortKey.keepExistingSortKeys(
+      this.project.setRowSortKeys(phantasus.SortKey.keepExistingSortKeys(
         sortKeys, this.project.getRowSortKeys()), false);
     }
   },
@@ -411,7 +411,7 @@ morpheus.VectorTrackHeader.prototype = {
   },
   setSortingStatus: function (sortKeys, sortKey, additionalSort, isGroupBy) {
     if (!isGroupBy) {
-      if (sortKey.getSortOrder() == morpheus.SortKey.SortOrder.UNSORTED
+      if (sortKey.getSortOrder() == phantasus.SortKey.SortOrder.UNSORTED
         && !additionalSort) {
         this.setOrder([]);
       } else {
@@ -460,14 +460,14 @@ morpheus.VectorTrackHeader.prototype = {
     if (this.isColumns) {
       context.textAlign = 'right';
       context.font = Math.min(this.defaultFontHeight, clip.height
-          - morpheus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+          - phantasus.VectorTrackHeader.FONT_OFFSET)
+        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     } else {
       context.textAlign = 'left';
-      context.font = (clip.height - morpheus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = (clip.height - phantasus.VectorTrackHeader.FONT_OFFSET)
+        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(this.name, 0, 0);
   },
   draw: function (clip, context) {
@@ -475,7 +475,7 @@ morpheus.VectorTrackHeader.prototype = {
     var name = this.name;
     var existingSortKeyIndex = this.getSortKeyIndexForColumnName(sortKeys,
       name);
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
 
@@ -498,10 +498,10 @@ morpheus.VectorTrackHeader.prototype = {
     }
     var fontHeight = Math.min(this.defaultFontHeight, this
         .getUnscaledHeight()
-      - morpheus.VectorTrackHeader.FONT_OFFSET);
+      - phantasus.VectorTrackHeader.FONT_OFFSET);
     var squished = this.heatMap.getTrack(this.name, this.isColumns).settings.squished;
     context.font = (squished ? 'Italic ' : '') + fontHeight + 'px '
-      + morpheus.CanvasUtil.FONT_NAME;
+      + phantasus.CanvasUtil.FONT_NAME;
     var textWidth = context.measureText(name).width;
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
@@ -514,7 +514,7 @@ morpheus.VectorTrackHeader.prototype = {
       }
     }
     var ypix = this.isColumns ? (this.getUnscaledHeight() / 2)
-      : (this.getUnscaledHeight() - (this.defaultFontHeight + morpheus.VectorTrackHeader.FONT_OFFSET) / 2);
+      : (this.getUnscaledHeight() - (this.defaultFontHeight + phantasus.VectorTrackHeader.FONT_OFFSET) / 2);
     context.textBaseline = 'middle';
     if (this.isMouseOver) {
       context.fillStyle = 'rgb(0,0,0)';
@@ -526,25 +526,25 @@ morpheus.VectorTrackHeader.prototype = {
         }
       }
     }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(name, xpix, ypix);
     // var vector = (this.isColumns ? this.project.getFullDataset()
     // .getColumnMetadata() : this.project.getFullDataset()
     // .getRowMetadata()).getByName(this.name);
     // if (vector
     // && vector.getProperties().get(
-    // morpheus.VectorKeys.SHOW_HEADER_SUMMARY)) {
+    // phantasus.VectorKeys.SHOW_HEADER_SUMMARY)) {
     // var summary = vector.getProperties().get(
-    // morpheus.VectorKeys.HEADER_SUMMARY);
+    // phantasus.VectorKeys.HEADER_SUMMARY);
     // var track = this.heatMap.getTrack(this.name, this.isColumns);
     // if (summary == null) {
     // var visibleFieldIndices = vector.getProperties().get(
-    // morpheus.VectorKeys.VISIBLE_FIELDS);
+    // phantasus.VectorKeys.VISIBLE_FIELDS);
     //
     // if (visibleFieldIndices == null) {
-    // visibleFieldIndices = morpheus.Util
+    // visibleFieldIndices = phantasus.Util
     // .seq(vector.getProperties().get(
-    // morpheus.VectorKeys.FIELDS).length);
+    // phantasus.VectorKeys.FIELDS).length);
     // }
     // var bigArray = [];
     // var min = Number.MAX_VALUE;
@@ -563,7 +563,7 @@ morpheus.VectorTrackHeader.prototype = {
     // }
     // }
     // }
-    // var nbins = Math.ceil(morpheus.Log2(bigArray.length) + 1);
+    // var nbins = Math.ceil(phantasus.Log2(bigArray.length) + 1);
     // var binSize = (max - min) / nbins;
     // var binNumberToOccurences = new Uint32Array(nbins);
     // var maxOccurences = 0;
@@ -580,7 +580,7 @@ morpheus.VectorTrackHeader.prototype = {
     // binNumberToOccurences[bin]);
     // }
     // summary = {
-    // box : morpheus.BoxPlotItem(morpheus.VectorUtil
+    // box : phantasus.BoxPlotItem(phantasus.VectorUtil
     // .arrayAsVector(bigArray)),
     // histogram : {
     // binSize : binSize,
@@ -593,7 +593,7 @@ morpheus.VectorTrackHeader.prototype = {
     //
     // };
     //
-    // vector.getProperties().set(morpheus.VectorKeys.HEADER_SUMMARY,
+    // vector.getProperties().set(phantasus.VectorKeys.HEADER_SUMMARY,
     // summary);
     // }
     // var box = summary.box;
@@ -656,19 +656,19 @@ morpheus.VectorTrackHeader.prototype = {
     //
     // context.restore();
     // }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     if (existingSortKeyIndex !== -1) {
       context.beginPath();
       var x = this.isColumns ? xpix + 4 : xpix + textWidth + 6;
       var arrowHeight = Math.min(8, this.getUnscaledHeight() / 2 - 1);
       var arrowWidth = 3;
-      if (sortKeys[existingSortKeyIndex].getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
+      if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
         // up arrow
         context.translate(x, ypix - arrowHeight);
         context.moveTo(0, 0);
         context.lineTo(arrowWidth, arrowHeight);
         context.lineTo(-arrowWidth, arrowHeight);
-      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === morpheus.SortKey.SortOrder.DESCENDING) { // down
+      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
         // arrow
         context.translate(x, ypix);
         context.moveTo(0, arrowHeight);
@@ -683,14 +683,14 @@ morpheus.VectorTrackHeader.prototype = {
 
       }
       context.fill();
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       if (sortKeys.length > 1) {
         context.textAlign = 'left';
-        context.font = '8px ' + morpheus.CanvasUtil.FONT_NAME;
+        context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
         context.fillText('' + (existingSortKeyIndex + 1), x + 4,
           ypix - 3);
       }
     }
   }
 };
-morpheus.Util.extend(morpheus.VectorTrackHeader, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.VectorTrackHeader, phantasus.AbstractCanvas);

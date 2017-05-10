@@ -1,5 +1,5 @@
-morpheus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
+  phantasus.DatasetAdapter.call(this, dataset);
   if (rowIndices == null) {
     rowIndices = null;
   }
@@ -8,15 +8,15 @@ morpheus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
   }
   this.rowIndices = rowIndices;
   this.columnIndices = columnIndices;
-  //morpheus.DatasetUtil.toESSessionPromise(this);
+  //phantasus.DatasetUtil.toESSessionPromise(this);
 };
-morpheus.SlicedDatasetView.prototype = {
+phantasus.SlicedDatasetView.prototype = {
   setESSession: function (session) {
-    //console.log("morpheus.SlicedDatasetView.prototype.setESSession ::", this, session);
+    //console.log("phantasus.SlicedDatasetView.prototype.setESSession ::", this, session);
     this.dataset.setESSession(session);
   },
   getESSession: function () {
-    //console.log("morpheus.SlicedDatasetView.prototype.getESSession ::", this);
+    //console.log("phantasus.SlicedDatasetView.prototype.getESSession ::", this);
     return this.dataset.getESSession();
   },
   getRowCount: function () {
@@ -40,12 +40,12 @@ morpheus.SlicedDatasetView.prototype = {
       seriesIndex);
   },
   getRowMetadata: function () {
-    return this.rowIndices !== null ? new morpheus.MetadataModelItemView(
+    return this.rowIndices !== null ? new phantasus.MetadataModelItemView(
       this.dataset.getRowMetadata(), this.rowIndices) : this.dataset
       .getRowMetadata();
   },
   getColumnMetadata: function () {
-    return this.columnIndices !== null ? new morpheus.MetadataModelItemView(
+    return this.columnIndices !== null ? new phantasus.MetadataModelItemView(
       this.dataset.getColumnMetadata(), this.columnIndices)
       : this.dataset.getColumnMetadata();
   },
@@ -53,4 +53,4 @@ morpheus.SlicedDatasetView.prototype = {
     return this.getName();
   }
 };
-morpheus.Util.extend(morpheus.SlicedDatasetView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.SlicedDatasetView, phantasus.DatasetAdapter);

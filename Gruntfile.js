@@ -9,14 +9,14 @@ module.exports = function (grunt) {
       + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */'
     },
     uglify: {
-      morpheus: {
+      phantasus: {
         options: {
           mangle: false,
           compress: false,
           preserveComments: false
         },
         files: {
-          'js/morpheus-latest.min.js': ['js/morpheus.js']
+          'js/phantasus-latest.min.js': ['js/phantasus.js']
         }
       },
       extJs: {
@@ -26,14 +26,14 @@ module.exports = function (grunt) {
           preserveComments: false
         },
         files: {
-          'js/morpheus-external.min.js': ['js/morpheus-external.js']
+          'js/phantasus-external.min.js': ['js/phantasus-external.js']
         }
       }
     },
     cssmin: {
       css: {
-        src: 'css/morpheus.all.css',
-        dest: 'css/morpheus-latest.min.css'
+        src: 'css/phantasus.all.css',
+        dest: 'css/phantasus-latest.min.css'
       }
     },
     concat: {
@@ -42,17 +42,17 @@ module.exports = function (grunt) {
           'css/bootstrap-select.min.css',
           'css/jquery-ui.min.css',
           'css/font-awesome.min.css',
-          'css/slick.grid.css', 'css/morpheus.grid.css',
-          'css/animate.css', 'css/morpheus.css'],
-        dest: 'css/morpheus.all.css'
+          'css/slick.grid.css', 'css/phantasus.grid.css',
+          'css/animate.css', 'css/phantasus.css'],
+        dest: 'css/phantasus.all.css'
       },
       extJsAll: {
-        src: ['js/morpheus-external.min.js',
+        src: ['js/phantasus-external.min.js',
           'js/plotly-latest.min.js', 'js/papaparse.min.js'],
-        dest: 'js/morpheus-external-latest.min.js'
+        dest: 'js/phantasus-external-latest.min.js'
       },
       extJs: {
-        dest: 'js/morpheus-external.js',
+        dest: 'js/phantasus-external.js',
         src: ['js/d3.min.js', 'js/jquery-2.2.4.min.js',
           'js/bootstrap.min.js', 'js/underscore-min.js',
           'js/newick.js', 'js/hammer.min.js',
@@ -67,12 +67,12 @@ module.exports = function (grunt) {
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js']
       },
-      morpheus: {
+      phantasus: {
         options: {
           banner: '(function(global){\n\'use strict\';\n',
           footer: '\n})(typeof window !== \'undefined\' ? window : this);\n'
         },
-        dest: 'js/morpheus.js',
+        dest: 'js/phantasus.js',
         src: ['src/util/util.js', 'src/util/*.js',
           'src/io/*.js', 'src/matrix/vector_adapter.js',
           'src/matrix/*.js', 'src/*.js',
@@ -81,12 +81,12 @@ module.exports = function (grunt) {
     },
     watch: {
       files: ['src/*.js', 'src/**/*.js'],
-      tasks: ['concat:morpheus']
+      tasks: ['concat:phantasus']
     }
   });
 
   // rebuild js and css:
-  // grunt concat:morpheus concat:extJs uglify concat:extJsAll
+  // grunt concat:phantasus concat:extJs uglify concat:extJsAll
   grunt.registerTask('default', 'watch');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');

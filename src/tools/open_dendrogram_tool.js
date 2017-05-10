@@ -1,14 +1,14 @@
-morpheus.OpenDendrogramTool = function (file) {
+phantasus.OpenDendrogramTool = function (file) {
   this._file = file;
 };
-morpheus.OpenDendrogramTool.prototype = {
+phantasus.OpenDendrogramTool.prototype = {
   toString: function () {
     return 'Open Dendrogram';
   },
   init: function (project, form) {
     var setValue = function (val) {
       var isRows = val === 'Rows';
-      var names = morpheus.MetadataUtil.getMetadataNames(isRows ? project
+      var names = phantasus.MetadataUtil.getMetadataNames(isRows ? project
         .getFullDataset().getRowMetadata() : project
         .getFullDataset().getColumnMetadata());
       names.unshift('Newick file does not contain node ids');
@@ -39,14 +39,14 @@ morpheus.OpenDendrogramTool.prototype = {
       dendrogramField = null;
     }
     var heatMap = options.heatMap;
-    var dendrogramDeferred = morpheus.Util.getText(fileOrUrl);
+    var dendrogramDeferred = phantasus.Util.getText(fileOrUrl);
     dendrogramDeferred
       .done(function (text) {
         var dataset = options.project.getSortedFilteredDataset();
         if (isColumns) {
-          dataset = morpheus.DatasetUtil.transposedView(dataset);
+          dataset = phantasus.DatasetUtil.transposedView(dataset);
         }
-        var tree = morpheus.DendrogramUtil.parseNewick(text);
+        var tree = phantasus.DendrogramUtil.parseNewick(text);
         if (tree.leafNodes.length !== dataset.getRowCount()) {
           throw new Error('# leaf nodes in dendrogram '
             + tree.leafNodes.length + ' != '
@@ -56,7 +56,7 @@ morpheus.OpenDendrogramTool.prototype = {
         if (dendrogramField != null) {
           var vector = dataset.getRowMetadata().getByName(
             dendrogramField);
-          var valueToIndex = morpheus.VectorUtil.createValueToIndexMap(vector);
+          var valueToIndex = phantasus.VectorUtil.createValueToIndexMap(vector);
           for (var i = 0, length = tree.leafNodes.length; i < length; i++) {
             var newickId = tree.leafNodes[i].name;
             var index = valueToIndex.get(newickId);

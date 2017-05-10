@@ -1,10 +1,10 @@
-morpheus.ConditionalRenderingUI = function (heatmap) {
+phantasus.ConditionalRenderingUI = function (heatmap) {
   var _this = this;
   this.heatmap = heatmap;
   var $div = $('<div class="container-fluid" style="min-width:180px;"></div>');
   $div.on('click', '[data-name=add]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     // add after
     var index = $row.index();
     var condition = {
@@ -26,7 +26,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
   });
   $div.on('click', '[data-name=delete]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     heatmap.heatmap.getColorScheme().getConditions().remove(index);
     heatmap.revalidate();
@@ -35,7 +35,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
   });
   var html = [];
   html
-    .push('<div class="morpheus-entry">');
+    .push('<div class="phantasus-entry">');
   html.push('<div class="row">');
   html
     .push('<div style="padding-bottom:20px;" class="col-xs-8"><a class="btn btn-default btn-xs"' +
@@ -54,7 +54,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
 
 };
 
-morpheus.ConditionalRenderingUI.prototype = {
+phantasus.ConditionalRenderingUI.prototype = {
   add: function (condition) {
     var _this = this;
     // shape: shapes and line
@@ -64,7 +64,7 @@ morpheus.ConditionalRenderingUI.prototype = {
     // value >= x and <= x
     var html = [];
     html.push('<div style="border-top:1px solid LightGrey;padding-bottom:6px;padding-top:6px;"' +
-      ' class="morpheus-entry">');
+      ' class="phantasus-entry">');
     html.push('<form class="form-horizontal">');
     // series
     html.push('<div class="form-group">');
@@ -72,8 +72,8 @@ morpheus.ConditionalRenderingUI.prototype = {
       .push('<label class="col-xs-2">Series</label>');
     html.push('<div class="col-xs-6">');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="cond_series">');
-    html.push(morpheus.Util.createOptions(morpheus.DatasetUtil
+      .push('<select class="form-control phantasus-form-control-inline" name="cond_series">');
+    html.push(phantasus.Util.createOptions(phantasus.DatasetUtil
       .getSeriesNames(this.heatmap.getProject().getFullDataset())));
     html.push('</select>');
     html.push('</div>');
@@ -84,21 +84,21 @@ morpheus.ConditionalRenderingUI.prototype = {
     html.push('<label class="col-xs-2">Condition</label>');
     html.push('<div class="col-xs-6">');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="lower"><option value="gte">&gt;=</option><option value="gt">&gt;</option></select>');
+      .push('<select class="form-control phantasus-form-control-inline" name="lower"><option value="gte">&gt;=</option><option value="gt">&gt;</option></select>');
     html
-      .push('<input class="form-control morpheus-form-control-inline" name="v1" size="5" type="text">');
+      .push('<input class="form-control phantasus-form-control-inline" name="v1" size="5" type="text">');
     html.push('<span style="margin-right:1em;">and</span>');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="upper"><option value="lte">&lt;=</option><option value="lt">&lt;</option></select>');
+      .push('<select class="form-control phantasus-form-control-inline" name="upper"><option value="lte">&lt;=</option><option value="lt">&lt;</option></select>');
     html
-      .push('<input class="form-control morpheus-form-control-inline" name="v2" size="5" type="text">');
+      .push('<input class="form-control phantasus-form-control-inline" name="v2" size="5" type="text">');
     html.push('</div>');
     html.push('</div>');
 
     // shape
     html.push('<div class="form-group">');
     html.push('<label class="col-xs-2">Shape</label>');
-    var shapeField = new morpheus.ShapeField(['circle', 'square',
+    var shapeField = new phantasus.ShapeField(['circle', 'square',
       'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
       'triangle-right']);
     html.push('<div class="col-xs-4">');
@@ -127,7 +127,7 @@ morpheus.ConditionalRenderingUI.prototype = {
       .push('<a class="btn btn-default btn-xs" role="button" data-name="delete"' +
         ' href="#">Delete Condition</a>');
     html.push('</div></div>');
-    html.push('</div>'); // morpheus-entry
+    html.push('</div>'); // phantasus-entry
     var $el = $(html.join(''));
     shapeField.$el.appendTo($el.find('[data-name=shapeHolder]'));
     var $color = $el.find('[name=color]');

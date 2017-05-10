@@ -1,8 +1,8 @@
-morpheus.Spacer = function (width, height) {
+phantasus.Spacer = function (width, height) {
   this.width = width;
   this.height = height;
 };
-morpheus.Spacer.prototype = {
+phantasus.Spacer.prototype = {
   prefWidth: undefined,
   prefHeight: undefined,
   visible: true,

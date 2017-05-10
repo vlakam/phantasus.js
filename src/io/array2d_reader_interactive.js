@@ -1,11 +1,11 @@
-morpheus.Array2dReaderInteractive = function () {
+phantasus.Array2dReaderInteractive = function () {
 
 };
 
-morpheus.Array2dReaderInteractive.prototype = {
+phantasus.Array2dReaderInteractive.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl));
+    var name = phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl));
     var html = [];
     html.push('<div>');
     html.push('<label>Click the table cell containing the first data row and column.</label>');
@@ -27,7 +27,7 @@ morpheus.Array2dReaderInteractive.prototype = {
     html.push('</div>');
     var $el = $(html.join(''));
 
-    morpheus.Util.readLines(fileOrUrl, true).done(function (lines) {
+    phantasus.Util.readLines(fileOrUrl, true).done(function (lines) {
       // show in table
       var tab = /\t/;
       for (var i = 0, nrows = lines.length; i < nrows; i++) {
@@ -66,8 +66,8 @@ morpheus.Array2dReaderInteractive.prototype = {
           }
           var html = ['<div style="width:100%;height:100%;background-color:' + color + '">'];
           if (_.isNumber(value)) {
-            html.push(morpheus.Util.nf(value));
-          } else if (morpheus.Util.isArray(value)) {
+            html.push(phantasus.Util.nf(value));
+          } else if (phantasus.Util.isArray(value)) {
             var s = [];
             for (var i = 0, length = value.length; i < length; i++) {
               if (i > 0) {
@@ -133,7 +133,7 @@ morpheus.Array2dReaderInteractive.prototype = {
       footer
         .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
       var $footer = $(footer.join(''));
-      morpheus.FormBuilder.showOkCancel({
+      phantasus.FormBuilder.showOkCancel({
         title: 'Open',
         content: $el,
         close: false,
@@ -155,7 +155,7 @@ morpheus.Array2dReaderInteractive.prototype = {
     var columnCount = lines[0].length;
     var columns = columnCount - dataColumnStart;
     var rows = lines.length - dataRowStart;
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: rows,
       columns: columns,
@@ -185,7 +185,7 @@ morpheus.Array2dReaderInteractive.prototype = {
           }
         }
         if (!nonEmpty) {
-          dataset.getColumnMetadata().remove(morpheus.MetadataUtil.indexOf(dataset.getColumnMetadata(), v.getName()));
+          dataset.getColumnMetadata().remove(phantasus.MetadataUtil.indexOf(dataset.getColumnMetadata(), v.getName()));
         }
 
       }
@@ -221,8 +221,8 @@ morpheus.Array2dReaderInteractive.prototype = {
       }
     }
 
-    morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-    morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+    phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+    phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
       1);
     cb(null, dataset);
   }

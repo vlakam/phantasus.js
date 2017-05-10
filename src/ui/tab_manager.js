@@ -3,7 +3,7 @@
  *            Whether to autohide the tab bar when only 1 tab showing
  * @param options.landingPage Landing page to show when all tabs are closed
  */
-morpheus.TabManager = function (options) {
+phantasus.TabManager = function (options) {
   this.options = $.extend({}, {
     autohideTabBar: false,
     rename: true
@@ -11,14 +11,14 @@ morpheus.TabManager = function (options) {
   var _this = this;
   this.activeTabObject = null;
   this.activeTabId = null;
-  this.idToTabObject = new morpheus.Map();
-  this.$nav = $('<ul class="nav nav-tabs compact morpheus-nav"></ul>');
+  this.idToTabObject = new phantasus.Map();
+  this.$nav = $('<ul class="nav nav-tabs compact phantasus-nav"></ul>');
   this.$nav.sortable({
     containment: 'parent',
     axis: 'x',
     helper: 'clone',
-    cancel: 'li:not(.morpheus-sortable)',
-    items: 'li.morpheus-sortable'
+    cancel: 'li:not(.phantasus-sortable)',
+    items: 'li.phantasus-sortable'
   });
   this.$nav.sortable('disable');
   this.$nav.on('click', 'li > a', function (e) {
@@ -35,9 +35,9 @@ morpheus.TabManager = function (options) {
   }
   if (options.dropTab) {
     var html = [];
-    html.push('<li class="morpheus-tab-addon dropdown pull-right tabdrop">');
+    html.push('<li class="phantasus-tab-addon dropdown pull-right tabdrop">');
     html.push('<div class="btn-group">');
-    html.push('<button type="button" class="morpheus-drop-tab-toggle btn btn-link' +
+    html.push('<button type="button" class="phantasus-drop-tab-toggle btn btn-link' +
       ' dropdown-toggle"' +
       ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
     html.push(' <span class="fa fa-angle-double-down"></span>');
@@ -58,7 +58,7 @@ morpheus.TabManager = function (options) {
       _this.$nav.find('> li').each(function () {
         var $li = $(this);
         var $a = $li.find('a');
-        if (!$li.hasClass('morpheus-tab-addon')) {
+        if (!$li.hasClass('phantasus-tab-addon')) {
           var title = $a.contents().first().text();
           var isActive = $li.hasClass('active');
           var href = $a.attr('href');
@@ -93,51 +93,51 @@ morpheus.TabManager = function (options) {
     e.preventDefault();
     var $a = $(this);
     var $li = $a.parent('li');
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
     _this.rename($a.data('link'));
 
   });
-  this.$nav.on('contextmenu.morpheus', 'li > a', function (e) {
+  this.$nav.on('contextmenu.phantasus', 'li > a', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
     var $a = $(this);
     var $li = $a.parent('li');
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
     var menuItems = [];
-    if ($a.data('morpheus-rename') && _this.options.rename) {
+    if ($a.data('phantasus-rename') && _this.options.rename) {
       menuItems.push({name: 'Rename'});
     }
-    if ($a.data('morpheus-pin')) { // pinned
+    if ($a.data('phantasus-pin')) { // pinned
       menuItems.push({name: 'Unpin tab'});
     } else {
       menuItems.push({name: 'Pin tab'});
     }
 
     if (menuItems.length > 0) {
-      morpheus.Popup.showPopup(menuItems, {
+      phantasus.Popup.showPopup(menuItems, {
         x: e.pageX,
         y: e.pageY
       }, e.target, function (event, item) {
         if (item === 'Rename') {
           _this.rename($a.data('link'));
         } else if (item === 'Pin tab') {
-          $a.data('morpheus-pin', true);
-          $li.removeClass('morpheus-sortable');
+          $a.data('phantasus-pin', true);
+          $li.removeClass('phantasus-sortable');
           $li.detach();
           _this.$nav.prepend($li);
           $a.find('.close').hide();    // hide close button
-          _this.$nav.sortable('option', 'items', 'li.morpheus-sortable');
+          _this.$nav.sortable('option', 'items', 'li.phantasus-sortable');
           _this.$nav.sortable('refresh');
         } else if (item === 'Unpin tab') {
-          $a.data('morpheus-pin', false);
-          $li.addClass('morpheus-sortable');
+          $a.data('phantasus-pin', false);
+          $li.addClass('phantasus-sortable');
           $a.find('.close').show(); // show close button
-          _this.$nav.sortable('option', 'items', 'li.morpheus-sortable');
+          _this.$nav.sortable('option', 'items', 'li.phantasus-sortable');
           _this.$nav.sortable('refresh');
 
         }
@@ -180,7 +180,7 @@ morpheus.TabManager = function (options) {
   });
 
 };
-morpheus.TabManager.prototype = {
+phantasus.TabManager.prototype = {
   getTabText: function (id) {
     return this.$nav.find('> li > a').filter('a[data-link=' + id + ']').contents().first().text();
   },
@@ -239,11 +239,11 @@ morpheus.TabManager.prototype = {
    */
   add: function (options) {
     this.adding = true;
-    var id = _.uniqueId('morpheus-tab');
+    var id = _.uniqueId('phantasus-tab');
     this.idToTabObject.set(id, options.object);
     var li = [];
-    li.push('<li class="morpheus-sortable" role="presentation">');
-    li.push('<a data-morpheus-rename="' + options.rename
+    li.push('<li class="phantasus-sortable" role="presentation">');
+    li.push('<a data-phantasus-rename="' + options.rename
       + '" data-toggle="tab" data-link="' + id + '" href="#' + id + '">');
     li.push(options.title);
     li.push('&nbsp;<i style="color:black;"></i>');
@@ -388,20 +388,20 @@ morpheus.TabManager.prototype = {
   rename: function (id) {
     var $a = this._getA(id);
     var $li = $a.parent();
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
-    if (!$a.data('morpheus-rename') || !this.options.rename) {
+    if (!$a.data('phantasus-rename') || !this.options.rename) {
       return;
     }
     var _this = this;
-    var builder = new morpheus.FormBuilder();
+    var builder = new phantasus.FormBuilder();
     builder.append({
       name: 'name',
       type: 'text',
       value: $.trim($a.contents().first().text())
     });
-    morpheus.FormBuilder.showOkCancel({
+    phantasus.FormBuilder.showOkCancel({
       title: 'Rename Tab',
       content: builder.$form,
       okCallback: function () {
@@ -418,4 +418,4 @@ morpheus.TabManager.prototype = {
     // edit tab name
   }
 };
-morpheus.Util.extend(morpheus.TabManager, morpheus.Events);
+phantasus.Util.extend(phantasus.TabManager, phantasus.Events);

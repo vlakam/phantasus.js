@@ -1,8 +1,8 @@
-morpheus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunction, linkageMethod) {
+phantasus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunction, linkageMethod) {
   var model = dataset.getRowMetadata();
-  var vectors = morpheus.MetadataUtil.getVectors(dataset.getRowMetadata(),
+  var vectors = phantasus.MetadataUtil.getVectors(dataset.getRowMetadata(),
     groupByFieldNames);
-  var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
+  var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
   var reorderedIndices = [];
   var offset = 0;
   var root = {
@@ -19,19 +19,19 @@ morpheus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunctio
   idToIndices
     .forEach(function (rowIndices, id) {
       var originalIndicesForGroup = idToIndices.get(id);
-      var subset = morpheus.DatasetUtil.slicedView(dataset,
+      var subset = phantasus.DatasetUtil.slicedView(dataset,
         originalIndicesForGroup, null);
       var hcl;
-      var distanceMatrix = morpheus.HCluster.computeDistanceMatrix(
+      var distanceMatrix = phantasus.HCluster.computeDistanceMatrix(
         subset, distanceFunction);
-      hcl = new morpheus.HCluster(distanceMatrix, linkageMethod);
+      hcl = new phantasus.HCluster(distanceMatrix, linkageMethod);
       var reorderedGroupIndices = hcl.reorderedIndices;
       for (var i = 0, rows = subset.getRowCount(); i < rows; i++) {
         var originalIndex = originalIndicesForGroup[reorderedGroupIndices[i]];
         reorderedIndices.push(originalIndex);
       }
 
-      morpheus.DendrogramUtil.dfs(hcl.tree.rootNode, function (node) {
+      phantasus.DendrogramUtil.dfs(hcl.tree.rootNode, function (node) {
         node.index += offset;
         node.minIndex += offset;
         node.maxIndex += offset;

@@ -1,4 +1,4 @@
-morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, options, separator, quick, tipText) {
+phantasus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, options, separator, quick, tipText) {
   var dataset = heatMap.project.getSortedFilteredDataset();
   if (!quick) {
     if (options.value) { // key value pairs for custom tooltip
@@ -23,13 +23,13 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
     }
   }
   if (rowIndex !== -1 && columnIndex !== -1) {
-    var tooltipSeriesIndices = options.tooltipSeriesIndices ? options.tooltipSeriesIndices : morpheus.Util.sequ32(dataset.getSeriesCount());
+    var tooltipSeriesIndices = options.tooltipSeriesIndices ? options.tooltipSeriesIndices : phantasus.Util.sequ32(dataset.getSeriesCount());
     for (var i = 0, nseries = tooltipSeriesIndices.length; i < nseries; i++) {
-      morpheus.HeatMapTooltipProvider._matrixValueToString(dataset,
+      phantasus.HeatMapTooltipProvider._matrixValueToString(dataset,
         rowIndex, columnIndex, tooltipSeriesIndices[i], tipText, separator,
         options.showSeriesNameInTooltip || i > 0);
       if (heatMap.options.symmetric && dataset.getValue(rowIndex, columnIndex, tooltipSeriesIndices[i]) !== dataset.getValue(columnIndex, rowIndex, tooltipSeriesIndices[i])) {
-        morpheus.HeatMapTooltipProvider._matrixValueToString(dataset,
+        phantasus.HeatMapTooltipProvider._matrixValueToString(dataset,
           columnIndex, rowIndex, tooltipSeriesIndices[i], tipText, separator, false);
       }
     }
@@ -38,20 +38,20 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
       var quickRowTracks = heatMap.rowTracks.filter(function (t) {
         return t.settings.inlineTooltip;
       });
-      morpheus.HeatMapTooltipProvider._tracksToString(quickRowTracks, dataset.getRowMetadata(), rowIndex, tipText, separator);
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(quickRowTracks, dataset.getRowMetadata(), rowIndex, tipText, separator);
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
         return t.settings.inlineTooltip;
       }), dataset.getColumnMetadata(), columnIndex, tipText, separator);
 
     }
   } else if (quick) {
     if (rowIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.rowTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.rowTracks.filter(function (t) {
         return t.settings.inlineTooltip && options.name !== t.getName();
       }), dataset.getRowMetadata(), rowIndex, tipText, separator);
     }
     if (columnIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
         return t.settings.inlineTooltip && options.name !== t.getName();
       }), dataset.getColumnMetadata(), columnIndex, tipText, separator);
     }
@@ -59,12 +59,12 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
 
   if (!quick) {
     if (rowIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._metadataToString(options,
+      phantasus.HeatMapTooltipProvider._metadataToString(options,
         heatMap.rowTracks, dataset.getRowMetadata(), rowIndex,
         tipText, separator);
     }
     if (columnIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._metadataToString(options,
+      phantasus.HeatMapTooltipProvider._metadataToString(options,
         heatMap.columnTracks, dataset.getColumnMetadata(),
         columnIndex, tipText, separator);
     }
@@ -75,7 +75,7 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
     var colorByName = track != null ? track.settings.colorByField : null;
     var additionalVector = colorByName != null ? metadata
       .getByName(colorByName) : null;
-    morpheus.HeatMapTooltipProvider.vectorToString(vector,
+    phantasus.HeatMapTooltipProvider.vectorToString(vector,
       rowIndex !== -1 ? rowIndex : columnIndex, tipText, separator,
       additionalVector);
 
@@ -119,16 +119,16 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
       });
     }
   }
-  morpheus.HeatMapTooltipProvider._nodesToString(tipText, rowNodes, null, separator);
-  morpheus.HeatMapTooltipProvider._nodesToString(tipText, columnNodes, null, separator);
+  phantasus.HeatMapTooltipProvider._nodesToString(tipText, rowNodes, null, separator);
+  phantasus.HeatMapTooltipProvider._nodesToString(tipText, columnNodes, null, separator);
   if (!quick) {
     if (selectedRowNodes.length > 0) {
-      morpheus.HeatMapTooltipProvider._nodesToString(tipText,
+      phantasus.HeatMapTooltipProvider._nodesToString(tipText,
         selectedRowNodes, heatMap.rowDendrogram._selectedNodeColor,
         separator);
     }
     if (selectedColumnNodes.length > 0) {
-      morpheus.HeatMapTooltipProvider._nodesToString(tipText,
+      phantasus.HeatMapTooltipProvider._nodesToString(tipText,
         selectedColumnNodes,
         heatMap.columnDendrogram._selectedNodeColor, separator);
     }
@@ -136,14 +136,14 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
 
 };
 
-morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowIndex, columnIndex, seriesIndex, tipText, separator, showSeriesNameInTooltip) {
+phantasus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowIndex, columnIndex, seriesIndex, tipText, separator, showSeriesNameInTooltip) {
   var val = dataset.getValue(rowIndex, columnIndex, seriesIndex);
   if (val != null) {
 
     if (val.toObject || !_.isNumber(val)) {
       var obj = val.toObject ? val.toObject() : val;
-      if (morpheus.Util.isArray(obj)) {
-        var v = morpheus.Util.toString(obj);
+      if (phantasus.Util.isArray(obj)) {
+        var v = phantasus.Util.toString(obj);
         if (tipText.length > 0) {
           tipText.push(separator);
         }
@@ -157,7 +157,7 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
       } else {
         var keys = _.keys(obj);
         if (keys.length === 0) {
-          var v = morpheus.Util.toString(obj);
+          var v = phantasus.Util.toString(obj);
           if (tipText.length > 0) {
             tipText.push(separator);
           }
@@ -174,10 +174,10 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
             if (key !== '__v') { // special value key
               var objVal = obj[key];
               var v;
-              if (morpheus.Util.isArray(objVal)) {
-                v = morpheus.Util.arrayToString(objVal, ', ');
+              if (phantasus.Util.isArray(objVal)) {
+                v = phantasus.Util.arrayToString(objVal, ', ');
               } else {
-                v = morpheus.Util.toString(objVal);
+                v = phantasus.Util.toString(objVal);
               }
               if (tipText.length > 0) {
                 tipText.push(separator);
@@ -191,7 +191,7 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
           if (_.isNumber(val)) {
             tipText.push(separator);
             tipText.push('Value: <b>');
-            tipText.push(morpheus.Util.nf(val));
+            tipText.push(phantasus.Util.nf(val));
             tipText.push('</b>');
           }
         }
@@ -206,13 +206,13 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
         tipText.push(': ');
       }
       tipText.push('<b>');
-      tipText.push(morpheus.Util.nf(val));
+      tipText.push(phantasus.Util.nf(val));
       tipText.push('</b>');
     }
   }
 };
 
-morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipText, separator, additionalVector) {
+phantasus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipText, separator, additionalVector) {
   var arrayValueToString = function (arrayFieldName, arrayVal) {
     if (arrayVal != null) {
       if (arrayFieldName != null) {
@@ -233,13 +233,13 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
             }
             tipText.push(key);
             tipText.push(': <b>');
-            tipText.push(morpheus.Util.toString(subVal));
+            tipText.push(phantasus.Util.toString(subVal));
             tipText.push('</b>');
           }
         });
       } else {
         tipText.push(': <b>');
-        tipText.push(morpheus.Util.toString(arrayVal));
+        tipText.push(phantasus.Util.toString(arrayVal));
         tipText.push('</b>');
       }
 
@@ -249,16 +249,16 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
     var primaryVal = vector.getValue(index);
     if (primaryVal != null && primaryVal != '') {
       var primaryFields = vector.getProperties().get(
-        morpheus.VectorKeys.FIELDS);
+        phantasus.VectorKeys.FIELDS);
       if (primaryFields != null) {
         var visibleFieldIndices = vector.getProperties().get(
-          morpheus.VectorKeys.VISIBLE_FIELDS);
+          phantasus.VectorKeys.VISIBLE_FIELDS);
         if (visibleFieldIndices === undefined) {
-          visibleFieldIndices = morpheus.Util
+          visibleFieldIndices = phantasus.Util
             .seq(primaryFields.length);
         }
         var additionalFieldNames = additionalVector != null ? additionalVector
-          .getProperties().get(morpheus.VectorKeys.FIELDS)
+          .getProperties().get(phantasus.VectorKeys.FIELDS)
           : null;
         var additionalVal = additionalFieldNames != null ? additionalVector
           .getValue(index)
@@ -297,10 +297,10 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
           if (key !== '__v') { // special value key
             var objVal = obj[key];
             var v;
-            if (morpheus.Util.isArray(objVal)) {
-              v = morpheus.Util.arrayToString(objVal, ', ');
+            if (phantasus.Util.isArray(objVal)) {
+              v = phantasus.Util.arrayToString(objVal, ', ');
             } else {
-              v = morpheus.Util.toString(objVal);
+              v = phantasus.Util.toString(objVal);
             }
             if (tipText.length > 0) {
               tipText.push(separator);
@@ -318,21 +318,21 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
         }
         tipText.push(vector.getName());
         tipText.push(': <b>');
-        tipText.push(morpheus.Util.toString(primaryVal));
+        tipText.push(phantasus.Util.toString(primaryVal));
         tipText.push('</b>');
       }
 
     }
   }
 };
-morpheus.HeatMapTooltipProvider._tracksToString = function (tracks, metadata, index, tipText, separator) {
+phantasus.HeatMapTooltipProvider._tracksToString = function (tracks, metadata, index, tipText, separator) {
   for (var i = 0; i < tracks.length; i++) {
-    morpheus.HeatMapTooltipProvider.vectorToString(metadata.getByName(tracks[i].name), index, tipText,
+    phantasus.HeatMapTooltipProvider.vectorToString(metadata.getByName(tracks[i].name), index, tipText,
       separator);
 
   }
 };
-morpheus.HeatMapTooltipProvider._metadataToString = function (options, tracks, metadata, index,
+phantasus.HeatMapTooltipProvider._metadataToString = function (options, tracks, metadata, index,
                                                               tipText, separator) {
   var filtered = [];
   for (var i = 0, ntracks = tracks.length; i < ntracks; i++) {
@@ -346,10 +346,10 @@ morpheus.HeatMapTooltipProvider._metadataToString = function (options, tracks, m
     }
   }
 
-  morpheus.HeatMapTooltipProvider._tracksToString(filtered, metadata, index, tipText, separator);
+  phantasus.HeatMapTooltipProvider._tracksToString(filtered, metadata, index, tipText, separator);
 
 };
-morpheus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color, separator) {
+phantasus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color, separator) {
   var renderField = function (name, value) {
     if (value != null) {
       if (tipText.length > 0) {
@@ -365,10 +365,10 @@ morpheus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color
           if (i > 0) {
             tipText.push(', ');
           }
-          tipText.push(morpheus.Util.toString(value[i]));
+          tipText.push(phantasus.Util.toString(value[i]));
         }
       } else {
-        tipText.push(morpheus.Util.toString(value));
+        tipText.push(phantasus.Util.toString(value));
       }
       tipText.push('</b>');
       if (color) {

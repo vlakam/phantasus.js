@@ -1,20 +1,20 @@
-morpheus.GmtDatasetReader = function () {
+phantasus.GmtDatasetReader = function () {
 };
-morpheus.GmtDatasetReader.prototype = {
+phantasus.GmtDatasetReader.prototype = {
   getFormatName: function () {
     return 'gmt';
   },
   read: function (fileOrUrl, callback) {
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
-          callback(null, morpheus.DatasetUtil.geneSetsToDataset(name,
-            new morpheus.GmtReader()
-              .read(new morpheus.ArrayBufferReader(
+          callback(null, phantasus.DatasetUtil.geneSetsToDataset(name,
+            new phantasus.GmtReader()
+              .read(new phantasus.ArrayBufferReader(
                 new Uint8Array(arrayBuffer)))));
         }
         catch (x) {

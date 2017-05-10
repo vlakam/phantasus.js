@@ -1,24 +1,24 @@
-morpheus.PermutationPValues = function (dataset, aIndices, bIndices,
+phantasus.PermutationPValues = function (dataset, aIndices, bIndices,
                                         numPermutations, f) {
   var numRows = dataset.getRowCount();
   /** unpermuted scores */
   var scores = new Float32Array(numRows);
   /** Whether to smooth p values */
   var smoothPValues = true;
-  var list1 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+  var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
     dataset, null, aIndices));
-  var list2 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+  var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
     dataset, null, bIndices));
 
   for (var i = 0; i < numRows; i++) {
     scores[i] = f(list1.setIndex(i), list2.setIndex(i));
   }
-  dataset = new morpheus.SlicedDatasetView(dataset, null, aIndices
+  dataset = new phantasus.SlicedDatasetView(dataset, null, aIndices
     .concat(bIndices));
   var rowSpecificPValues = new Float32Array(numRows);
-  var permuter = new morpheus.UnbalancedPermuter(aIndices.length,
+  var permuter = new phantasus.UnbalancedPermuter(aIndices.length,
     bIndices.length);
-  var permutationScore = new morpheus.TwoClassPermutationScore();
+  var permutationScore = new phantasus.TwoClassPermutationScore();
   permutationScore.init(dataset, f);
   for (var permutationIndex = 0; permutationIndex < numPermutations; permutationIndex++) {
     permutationScore.setPermutation(permuter.next());
@@ -71,16 +71,16 @@ morpheus.PermutationPValues = function (dataset, aIndices, bIndices,
   }
   this.rowSpecificPValues = rowSpecificPValues;
   this.k = kArray;
-  this.fdr = morpheus.FDR_BH(rowSpecificPValues);
+  this.fdr = phantasus.FDR_BH(rowSpecificPValues);
   this.scores = scores;
 };
-morpheus.PermutationPValues.prototype = {
+phantasus.PermutationPValues.prototype = {
   getBonferroni: function (index) {
     return Math.min(this.rowSpecificPValues[index] * this.numRows, 1);
   }
 };
 
-morpheus.UnbalancedPermuter = function (numClassZero, numClassOne) {
+phantasus.UnbalancedPermuter = function (numClassZero, numClassOne) {
   var assignments = new Uint32Array(numClassZero + numClassOne);
   var indices = new Uint32Array(numClassZero + numClassOne);
   for (var i = 0; i < indices.length; i++) {
@@ -116,12 +116,12 @@ morpheus.UnbalancedPermuter = function (numClassZero, numClassOne) {
   };
 };
 
-morpheus.TwoClassPermutationScore = function () {
+phantasus.TwoClassPermutationScore = function () {
   this.classZeroView = null;
   this.classOneView = null;
 
 };
-morpheus.TwoClassPermutationScore.prototype = {
+phantasus.TwoClassPermutationScore.prototype = {
   getScore: function (index) {
     this.classZeroView.setIndex(index);
     this.classOneView.setIndex(index);
@@ -129,8 +129,8 @@ morpheus.TwoClassPermutationScore.prototype = {
   },
   init: function (dataset, f) {
     this.dataset = dataset;
-    this.classZeroView = new morpheus.DatasetRowView(dataset);
-    this.classOneView = new morpheus.DatasetRowView(dataset);
+    this.classZeroView = new phantasus.DatasetRowView(dataset);
+    this.classOneView = new phantasus.DatasetRowView(dataset);
     this.f = f;
   },
   setPermutation: function (permutedAssignments) {
@@ -144,9 +144,9 @@ morpheus.TwoClassPermutationScore.prototype = {
       }
     }
 
-    this.classZeroView.setDataset(new morpheus.SlicedDatasetView(
+    this.classZeroView.setDataset(new phantasus.SlicedDatasetView(
       this.dataset, null, zeroIndices));
-    this.classOneView.setDataset(new morpheus.SlicedDatasetView(
+    this.classOneView.setDataset(new phantasus.SlicedDatasetView(
       this.dataset, null, oneIndices));
 
   }

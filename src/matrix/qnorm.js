@@ -1,10 +1,10 @@
-morpheus.QNorm = function () {
+phantasus.QNorm = function () {
 
 };
 /**
  * Performs quantile normalization.
  */
-morpheus.QNorm.execute = function (data) {
+phantasus.QNorm.execute = function (data) {
   var rows = data.getRowCount();
   var cols = data.getColumnCount();
   var i, j, ind;
@@ -12,7 +12,7 @@ morpheus.QNorm.execute = function (data) {
   var row_mean = new Float32Array(rows);
   var ranks = new Float32Array(rows);
   /* # sort original columns */
-  dimat = morpheus.QNorm.get_di_matrix(data);
+  dimat = phantasus.QNorm.get_di_matrix(data);
   for (j = 0; j < cols; j++) {
     dimat[j].sort(function (s1, s2) {
       if (s1.data < s2.data) {
@@ -41,7 +41,7 @@ morpheus.QNorm.execute = function (data) {
 
   /* # unsort mean columns */
   for (j = 0; j < cols; j++) {
-    morpheus.QNorm.get_ranks(ranks, dimat[j], rows);
+    phantasus.QNorm.get_ranks(ranks, dimat[j], rows);
     for (i = 0; i < rows; i++) {
       ind = dimat[j][i].rank;
       if (ranks[i] - Math.floor(ranks[i]) > 0.4) {
@@ -62,7 +62,7 @@ morpheus.QNorm.execute = function (data) {
  * ************************************************************************
  */
 
-morpheus.QNorm.get_di_matrix = function (data) {
+phantasus.QNorm.get_di_matrix = function (data) {
   var i, j;
   var rows = data.getRowCount();
   var cols = data.getColumnCount();
@@ -85,7 +85,7 @@ morpheus.QNorm.get_di_matrix = function (data) {
  * ************************************************************************
  */
 
-morpheus.QNorm.get_ranks = function (rank, x, n) {
+phantasus.QNorm.get_ranks = function (rank, x, n) {
   var i, j, k;
   i = 0;
   while (i < n) {

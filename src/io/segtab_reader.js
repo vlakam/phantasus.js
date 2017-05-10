@@ -1,19 +1,19 @@
-morpheus.SegTabReader = function () {
+phantasus.SegTabReader = function () {
   this.regions = null;
 };
-morpheus.SegTabReader.binByRegion = function (dataset, regions) {
+phantasus.SegTabReader.binByRegion = function (dataset, regions) {
 
   var chromosomeVector = dataset.getRowMetadata().getByName('Chromosome');
   var startVector = dataset.getRowMetadata().getByName('Start_bp');
   var endVector = dataset.getRowMetadata().getByName('End_bp');
 
-  var collapsedDataset = new morpheus.Dataset({
+  var collapsedDataset = new phantasus.Dataset({
     name: dataset.getName(),
     rows: regions.length,
     columns: dataset.getColumnCount(),
     dataType: 'Float32'
   });
-  morpheus.DatasetUtil.fill(collapsedDataset, NaN);
+  phantasus.DatasetUtil.fill(collapsedDataset, NaN);
   var regionIdVector = collapsedDataset.getRowMetadata().add('id');
   var newChromosomeVector = collapsedDataset.getRowMetadata().add(
     'chromosome');
@@ -30,7 +30,7 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
 
   }
 
-  var summarizeFunction = morpheus.Mean;
+  var summarizeFunction = phantasus.Mean;
   collapsedDataset.setColumnMetadata(dataset.getColumnMetadata());
   for (var regionIndex = 0; regionIndex < regions.length; regionIndex++) {
     var region = regions[regionIndex];
@@ -45,9 +45,9 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
       }
     }
     if (rowIndices.length > 0) {
-      var slice = morpheus.DatasetUtil.slicedView(dataset, rowIndices,
+      var slice = phantasus.DatasetUtil.slicedView(dataset, rowIndices,
         null);
-      var columnView = new morpheus.DatasetColumnView(slice);
+      var columnView = new phantasus.DatasetColumnView(slice);
       for (var j = 0; j < dataset.getColumnCount(); j++) {
         columnView.setIndex(j);
         for (var series = 0; series < nseries; series++) {
@@ -67,7 +67,7 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
   return collapsedDataset;
 };
 
-morpheus.SegTabReader.prototype = {
+phantasus.SegTabReader.prototype = {
   getFormatName: function () {
     return 'seg';
   },
@@ -83,12 +83,12 @@ morpheus.SegTabReader.prototype = {
       fieldNameToIndex[name] = i;
     }
 
-    var sampleField = morpheus.MafFileReader.getField(['pair_id',
+    var sampleField = phantasus.MafFileReader.getField(['pair_id',
       'Tumor_Sample_Barcode', 'tumor_name', 'Tumor_Sample_UUID',
       'Sample'], fieldNameToIndex);
     var sampleColumnName = sampleField.name;
     var sampleIdColumnIndex = sampleField.index;
-    var tumorFractionField = morpheus.MafFileReader.getField(['ccf_hat',
+    var tumorFractionField = phantasus.MafFileReader.getField(['ccf_hat',
       'tumor_f', 'i_tumor_f'], fieldNameToIndex);
     var ccfColumnName;
     var ccfColumnIndex;
@@ -97,20 +97,20 @@ morpheus.SegTabReader.prototype = {
       ccfColumnIndex = tumorFractionField.index;
     }
     var chromosomeColumn = fieldNameToIndex.Chromosome;
-    var startPositionColumn = morpheus.MafFileReader.getField(['Start_bp',
+    var startPositionColumn = phantasus.MafFileReader.getField(['Start_bp',
       'Start'], fieldNameToIndex).index;
-    var endPositionColumn = morpheus.MafFileReader.getField(['End_bp',
+    var endPositionColumn = phantasus.MafFileReader.getField(['End_bp',
       'End'], fieldNameToIndex, {
       remove: false,
       lc: true
     }).index;
-    var valueField = morpheus.MafFileReader.getField(['tau',
+    var valueField = phantasus.MafFileReader.getField(['tau',
       'Segment_Mean']).index;
     var s;
     var matrix = [];
     var ccfMatrix = [];
-    var sampleIdToIndex = new morpheus.Map();
-    var chromosomeStartEndToIndex = new morpheus.Map();
+    var sampleIdToIndex = new phantasus.Map();
+    var chromosomeStartEndToIndex = new phantasus.Map();
     while ((s = reader.readLine()) !== null) {
       if (s === '') {
         continue;
@@ -122,7 +122,7 @@ morpheus.SegTabReader.prototype = {
         columnIndex = sampleIdToIndex.size();
         sampleIdToIndex.set(sample, columnIndex);
       }
-      var rowId = new morpheus.Identifier([
+      var rowId = new phantasus.Identifier([
         String(tokens[chromosomeColumn]),
         String(tokens[startPositionColumn]),
         String(tokens[endPositionColumn])]);
@@ -133,7 +133,7 @@ morpheus.SegTabReader.prototype = {
         chromosomeStartEndToIndex.set(rowId, rowIndex);
       }
       var value = parseFloat(String(tokens[valueField]));
-      value = isNaN(value) ? value : (morpheus.Log2(value) - 1);
+      value = isNaN(value) ? value : (phantasus.Log2(value) - 1);
       var matrixRow = matrix[rowIndex];
       if (matrixRow === undefined) {
         matrixRow = [];
@@ -147,7 +147,7 @@ morpheus.SegTabReader.prototype = {
         ccfMatrix[rowIndex][columnIndex] = parseFloat(tokens[ccfColumnIndex]);
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       array: matrix,
       dataType: 'number',
@@ -178,21 +178,21 @@ morpheus.SegTabReader.prototype = {
     }
 
     if (this.regions != null && this.regions.length > 0) {
-      dataset = morpheus.SegTabReader.binByRegion(dataset, this.regions);
+      dataset = phantasus.SegTabReader.binByRegion(dataset, this.regions);
     }
     return dataset;
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         // try {
-        callback(null, _this._read(name, new morpheus.ArrayBufferReader(
+        callback(null, _this._read(name, new phantasus.ArrayBufferReader(
           new Uint8Array(arrayBuffer))));
         // } catch (err) {
         // callback(err);
