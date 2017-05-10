@@ -45,7 +45,7 @@ phantasus.DatasetUtil.getDatasetReader = function (ext, options) {
   if (options == null) {
     options = {};
   }
-  var datasetReader;
+  var datasetReader = null;
   if (ext === 'maf') {
     datasetReader = new phantasus.MafFileReader();
     if (options && options.mafGeneFilter) {
@@ -67,12 +67,11 @@ phantasus.DatasetUtil.getDatasetReader = function (ext, options) {
     datasetReader = options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.TxtReader();
   } else if (ext === 'json') {
     datasetReader = new phantasus.JsonDatasetReader();
-  } else {
+  } else if (ext === 'gct') {
     datasetReader = new phantasus.GctReader();
   }
   return datasetReader;
-}
-;
+};
 
 phantasus.DatasetUtil.readDatasetArray = function (datasets) {
   var retDef = $.Deferred();
@@ -207,6 +206,9 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     datasetReader = new phantasus.TxtReader(); // copy from clipboard
   } else {
     datasetReader = phantasus.DatasetUtil.getDatasetReader(ext, options);
+    if (datasetReader == null) {
+      datasetReader = isFile ? (options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.TxtReader()) : new phantasus.GctReader();
+    }
   }
 
   console.log(typeof datasetReader);
