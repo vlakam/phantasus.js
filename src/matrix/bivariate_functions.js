@@ -1,23 +1,23 @@
-morpheus.SignalToNoise = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
-  var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-  var s2 = Math.sqrt(morpheus.Variance(list2, m2));
+phantasus.SignalToNoise = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+  var s2 = Math.sqrt(phantasus.Variance(list2, m2));
   return (m1 - m2) / (s1 + s2);
 };
-morpheus.SignalToNoise.toString = function () {
+phantasus.SignalToNoise.toString = function () {
   return 'Signal to noise';
 };
 
-morpheus.createSignalToNoiseAdjust = function (percent) {
+phantasus.createSignalToNoiseAdjust = function (percent) {
   percent = percent || 0.2;
   var f = function (list1, list2) {
-    var m1 = morpheus.Mean(list1);
-    var m2 = morpheus.Mean(list2);
-    var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-    var s2 = Math.sqrt(morpheus.Variance(list2, m2));
-    s1 = morpheus.SignalToNoise.thresholdStandardDeviation(m1, s1, percent);
-    s2 = morpheus.SignalToNoise.thresholdStandardDeviation(m2, s2, percent);
+    var m1 = phantasus.Mean(list1);
+    var m2 = phantasus.Mean(list2);
+    var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+    var s2 = Math.sqrt(phantasus.Variance(list2, m2));
+    s1 = phantasus.SignalToNoise.thresholdStandardDeviation(m1, s1, percent);
+    s2 = phantasus.SignalToNoise.thresholdStandardDeviation(m2, s2, percent);
     // ensure variance is at least 20% of mean
     return (m1 - m2) / (s1 + s2);
   };
@@ -27,7 +27,7 @@ morpheus.createSignalToNoiseAdjust = function (percent) {
   return f;
 };
 
-morpheus.SignalToNoise.thresholdStandardDeviation = function (mean,
+phantasus.SignalToNoise.thresholdStandardDeviation = function (mean,
                                                               standardDeviation, percent) {
   var returnValue = standardDeviation;
   var absMean = Math.abs(mean);
@@ -42,7 +42,7 @@ morpheus.SignalToNoise.thresholdStandardDeviation = function (mean,
   return returnValue;
 };
 
-morpheus.createContingencyTable = function (listOne, listTwo, groupingValue) {
+phantasus.createContingencyTable = function (listOne, listTwo, groupingValue) {
   if (groupingValue == null || isNaN(groupingValue)) {
     groupingValue = 1;
   }
@@ -84,16 +84,16 @@ morpheus.createContingencyTable = function (listOne, listTwo, groupingValue) {
   var d = N + k - n - K;
   return [a, b, c, d];
 };
-morpheus.FisherExact = function (listOne, listTwo) {
-  var abcd = morpheus.createContingencyTable(listOne, listTwo, 1);
-  return morpheus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2], abcd[3]);
+phantasus.FisherExact = function (listOne, listTwo) {
+  var abcd = phantasus.createContingencyTable(listOne, listTwo, 1);
+  return phantasus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2], abcd[3]);
 };
 
-morpheus.createFisherExact = function (groupingValue) {
+phantasus.createFisherExact = function (groupingValue) {
   var f = function (listOne, listTwo) {
-    var abcd = morpheus.createContingencyTable(listOne, listTwo,
+    var abcd = phantasus.createContingencyTable(listOne, listTwo,
       groupingValue);
-    return morpheus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2],
+    return phantasus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2],
       abcd[3]);
   };
   return f;
@@ -103,21 +103,21 @@ morpheus.createFisherExact = function (groupingValue) {
 /**
  * Computes the hypergeometric probability.
  */
-morpheus.FisherExact.phyper = function (a, b, c, d) {
+phantasus.FisherExact.phyper = function (a, b, c, d) {
   return Math
-    .exp((morpheus.FisherExact.logFactorial(a + b)
-      + morpheus.FisherExact.logFactorial(c + d)
-      + morpheus.FisherExact.logFactorial(a + c) + morpheus.FisherExact
+    .exp((phantasus.FisherExact.logFactorial(a + b)
+      + phantasus.FisherExact.logFactorial(c + d)
+      + phantasus.FisherExact.logFactorial(a + c) + phantasus.FisherExact
         .logFactorial(b + d))
-      - (morpheus.FisherExact.logFactorial(a)
-      + morpheus.FisherExact.logFactorial(b)
-      + morpheus.FisherExact.logFactorial(c)
-      + morpheus.FisherExact.logFactorial(d) + morpheus.FisherExact
+      - (phantasus.FisherExact.logFactorial(a)
+      + phantasus.FisherExact.logFactorial(b)
+      + phantasus.FisherExact.logFactorial(c)
+      + phantasus.FisherExact.logFactorial(d) + phantasus.FisherExact
         .logFactorial(a + b + c + d)));
 
 };
 
-morpheus.FisherExact.logFactorials = [0.00000000000000000,
+phantasus.FisherExact.logFactorials = [0.00000000000000000,
   0.00000000000000000, 0.69314718055994531, 1.79175946922805500,
   3.17805383034794562, 4.78749174278204599, 6.57925121201010100,
   8.52516136106541430, 10.60460290274525023, 12.80182748008146961,
@@ -128,7 +128,7 @@ morpheus.FisherExact.logFactorials = [0.00000000000000000,
   48.47118135183522388, 51.60667556776437357, 54.78472939811231919,
   58.00360522298051994, 61.26170176100200198, 64.55753862700633106,
   67.88974313718153498, 71.25703896716800901];
-morpheus.FisherExact.logFactorial = function (k) {
+phantasus.FisherExact.logFactorial = function (k) {
   if (k >= 30) { // stirlings approximation
     var C0 = 9.18938533204672742e-01;
     var C1 = 8.33333333333333333e-02;
@@ -141,19 +141,19 @@ morpheus.FisherExact.logFactorial = function (k) {
       * (C1 + rr * (C3 + rr * (C5 + rr * C7)));
     // log k! = (k + 1/2)log(k) - k + (1/2)log(2Pi) + stirlingCorrection(k)
   }
-  return morpheus.FisherExact.logFactorials[k];
+  return phantasus.FisherExact.logFactorials[k];
 };
 
-morpheus.FisherExact.fisherTest = function (a, b, c, d) {
+phantasus.FisherExact.fisherTest = function (a, b, c, d) {
   // match R 2-sided fisher.test
-  var p = morpheus.FisherExact.phyper(a, b, c, d);
+  var p = phantasus.FisherExact.phyper(a, b, c, d);
   var sum = p;
   for (var _a = 0, n = a + b + c + d; _a <= n; _a++) {
     var _b = a + b - _a;
     var _c = a + c - _a;
     var _d = b + d - _b;
     if (_a !== a && _b >= 0 && _c >= 0 && _d >= 0) {
-      var _p = morpheus.FisherExact.phyper(_a, _b, _c, _d);
+      var _p = phantasus.FisherExact.phyper(_a, _b, _c, _d);
       if (_p <= p) {
         sum += _p;
       }
@@ -164,31 +164,31 @@ morpheus.FisherExact.fisherTest = function (a, b, c, d) {
   // var gt = jStat.hypgeom.cdf(b, a + b + c + d, a + b, b + d);
   // return Math.min(1, 2 * Math.min(lt, gt));
 };
-morpheus.FisherExact.toString = function () {
+phantasus.FisherExact.toString = function () {
   return 'Fisher Exact Test';
 };
 
-morpheus.FoldChange = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
+phantasus.FoldChange = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
   return (m1 / m2);
 };
-morpheus.FoldChange.toString = function () {
+phantasus.FoldChange.toString = function () {
   return 'Fold Change';
 };
-morpheus.TTest = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
-  var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-  var s2 = Math.sqrt(morpheus.Variance(list2, m2));
-  var n1 = morpheus.CountNonNaN(list1);
-  var n2 = morpheus.CountNonNaN(list2);
+phantasus.TTest = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+  var s2 = Math.sqrt(phantasus.Variance(list2, m2));
+  var n1 = phantasus.CountNonNaN(list1);
+  var n2 = phantasus.CountNonNaN(list2);
   return ((m1 - m2) / Math.sqrt((s1 * s1 / n1) + (s2 * s2 / n2)));
 };
-morpheus.TTest.toString = function () {
+phantasus.TTest.toString = function () {
   return 'T-Test';
 };
-morpheus.Spearman = function (list1, list2) {
+phantasus.Spearman = function (list1, list2) {
   var flist1 = [];
   var flist2 = [];
   for (var i = 0, n = list1.size(); i < n; i++) {
@@ -200,16 +200,16 @@ morpheus.Spearman = function (list1, list2) {
     flist1.push(v1);
     flist2.push(v2);
   }
-  var rank1 = morpheus.Ranking(flist1);
-  var rank2 = morpheus.Ranking(flist2);
-  return morpheus.Pearson(new morpheus.Vector('', rank1.length)
-    .setArray(rank1), new morpheus.Vector('', rank2.length)
+  var rank1 = phantasus.Ranking(flist1);
+  var rank2 = phantasus.Ranking(flist2);
+  return phantasus.Pearson(new phantasus.Vector('', rank1.length)
+    .setArray(rank1), new phantasus.Vector('', rank2.length)
     .setArray(rank2));
 };
-morpheus.Spearman.toString = function () {
+phantasus.Spearman.toString = function () {
   return 'Spearman rank correlation';
 };
-morpheus.WeightedMean = function (weights, values) {
+phantasus.WeightedMean = function (weights, values) {
   var numerator = 0;
   var denom = 0;
   for (var i = 0, size = values.size(); i < size; i++) {
@@ -224,11 +224,11 @@ morpheus.WeightedMean = function (weights, values) {
   }
   return denom === 0 ? NaN : numerator / denom;
 };
-morpheus.WeightedMean.toString = function () {
+phantasus.WeightedMean.toString = function () {
   return 'Weighted average';
 };
 
-morpheus.createOneMinusMatrixValues = function (dataset) {
+phantasus.createOneMinusMatrixValues = function (dataset) {
   var f = function (listOne, listTwo) {
     return 1 - dataset.getValue(listOne.getIndex(), listTwo.getIndex());
   };
@@ -238,7 +238,7 @@ morpheus.createOneMinusMatrixValues = function (dataset) {
   return f;
 };
 
-morpheus.Pearson = function (listOne, listTwo) {
+phantasus.Pearson = function (listOne, listTwo) {
   var sumx = 0;
   var sumxx = 0;
   var sumy = 0;
@@ -263,11 +263,11 @@ morpheus.Pearson = function (listOne, listTwo) {
     * (sumyy - (sumy * sumy / N)));
   return denr == 0 ? 1 : numr / denr;
 };
-morpheus.Pearson.toString = function () {
+phantasus.Pearson.toString = function () {
   return 'Pearson correlation';
 };
 
-morpheus.Jaccard = function (listOne, listTwo) {
+phantasus.Jaccard = function (listOne, listTwo) {
 
   var orCount = 0;
   var andCount = 0;
@@ -291,11 +291,11 @@ morpheus.Jaccard = function (listOne, listTwo) {
   return 1 - (andCount / orCount);
 };
 
-morpheus.Jaccard.toString = function () {
+phantasus.Jaccard.toString = function () {
   return 'Jaccard distance';
 };
 
-morpheus.Cosine = function (listOne, listTwo) {
+phantasus.Cosine = function (listOne, listTwo) {
   var sumX2 = 0;
   var sumY2 = 0;
   var sumXY = 0;
@@ -312,11 +312,11 @@ morpheus.Cosine = function (listOne, listTwo) {
   return (sumXY / Math.sqrt(sumX2 * sumY2));
 };
 
-morpheus.Cosine.toString = function () {
+phantasus.Cosine.toString = function () {
   return 'Cosine similarity';
 };
 
-morpheus.Euclidean = function (x, y) {
+phantasus.Euclidean = function (x, y) {
   var dist = 0;
   for (var i = 0, size = x.size(); i < size; ++i) {
     var x_i = x.getValue(i);
@@ -328,10 +328,10 @@ morpheus.Euclidean = function (x, y) {
   }
   return Math.sqrt(dist);
 };
-morpheus.Euclidean.toString = function () {
+phantasus.Euclidean.toString = function () {
   return 'Euclidean distance';
 };
-morpheus.OneMinusFunction = function (f) {
+phantasus.OneMinusFunction = function (f) {
   var dist = function (x, y) {
     return 1 - f(x, y);
   };
@@ -342,7 +342,7 @@ morpheus.OneMinusFunction = function (f) {
   return dist;
 };
 
-morpheus.LinearRegression = function (xVector, yVector) {
+phantasus.LinearRegression = function (xVector, yVector) {
   var sumX = 0;
   var sumY = 0;
   var sumXX = 0;
@@ -369,7 +369,7 @@ morpheus.LinearRegression = function (xVector, yVector) {
   };
 };
 
-morpheus.KendallsCorrelation = function (x, y) {
+phantasus.KendallsCorrelation = function (x, y) {
 
   /**
    * Returns the sum of the number from 1 .. n according to Gauss' summation formula:
@@ -492,6 +492,6 @@ morpheus.KendallsCorrelation = function (x, y) {
   var nonTiedPairsMultiplied = (numPairs - tiedXPairs) * (numPairs - tiedYPairs);
   return concordantMinusDiscordant / Math.sqrt(nonTiedPairsMultiplied);
 };
-morpheus.KendallsCorrelation.toString = function () {
+phantasus.KendallsCorrelation.toString = function () {
   return 'Kendall\'s correlation';
 };

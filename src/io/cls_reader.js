@@ -33,9 +33,9 @@
  * <p/>
  * </UL>
  */
-morpheus.ClsReader = function () {
+phantasus.ClsReader = function () {
 };
-morpheus.ClsReader.prototype = {
+phantasus.ClsReader.prototype = {
   /**
    * Parses the cls file.
    *

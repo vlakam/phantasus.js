@@ -1,4 +1,4 @@
-morpheus.SortDialog = function (project) {
+phantasus.SortDialog = function (project) {
   var _this = this;
   // choose rows or columns
   var $chooserDiv = $('<div class="container-fluid"></div>');
@@ -31,8 +31,8 @@ morpheus.SortDialog = function (project) {
       var $this = $(this);
       var level = [];
       var $sibling = $this.closest('div.row');
-      _this.createLevel(level, new morpheus.SortKey('',
-        morpheus.SortKey.SortOrder.ASCENDING), _this.fields);
+      _this.createLevel(level, new phantasus.SortKey('',
+        phantasus.SortKey.SortOrder.ASCENDING), _this.fields);
       $sibling.after($(level.join('')));
       e.preventDefault();
     });
@@ -46,7 +46,7 @@ morpheus.SortDialog = function (project) {
   var $outer = $('<div></div>');
   $chooserDiv.appendTo($outer);
   $div.appendTo($outer);
-  morpheus.FormBuilder
+  phantasus.FormBuilder
     .showOkCancel({
       title: 'Sort',
       content: $outer,
@@ -71,24 +71,24 @@ morpheus.SortDialog = function (project) {
           .filter(
             existingSortKeys,
             function (key) {
-              return key instanceof morpheus.MatchesOnTopSortKey
-                || (key instanceof morpheus.SpecifiedModelSortOrder && key.name === 'dendrogram');
+              return key instanceof phantasus.MatchesOnTopSortKey
+                || (key instanceof phantasus.SpecifiedModelSortOrder && key.name === 'dendrogram');
             });
         if (keysToKeep.length > 0) {
           _.each(keysToKeep, function (key) {
             newSortKeys.push(key);
           });
         }
-        var newSortKeyFields = new morpheus.Set();
+        var newSortKeyFields = new phantasus.Set();
         for (var i = 0; i < sortBy.length; i++) {
           if (!newSortKeyFields.has(sortBy[i])) {
             newSortKeyFields.add(sortBy[i]);
             if (sortBy[i] === 'selection') {
-              newSortKeys.push(new morpheus.SortByValuesKey(
+              newSortKeys.push(new phantasus.SortByValuesKey(
                 modelIndices, sortOrder[i],
                 _this.isColumns));
             } else if (sortBy[i] !== '') {
-              newSortKeys.push(new morpheus.SortKey(
+              newSortKeys.push(new phantasus.SortKey(
                 sortBy[i], sortOrder[i]));
             }
           }
@@ -96,29 +96,29 @@ morpheus.SortDialog = function (project) {
         var newGroupKeys = [];
         if (groupBy != null) {
           for (var i = 0; i < groupBy.length; i++) {
-            newGroupKeys.push(new morpheus.SortKey(groupBy[i],
-              morpheus.SortKey.SortOrder.UNSORTED));
+            newGroupKeys.push(new phantasus.SortKey(groupBy[i],
+              phantasus.SortKey.SortOrder.UNSORTED));
           }
         }
 
         if (_this.isColumns) {
           project.setGroupColumns(newGroupKeys, true);
-          project.setColumnSortKeys(morpheus.SortKey
+          project.setColumnSortKeys(phantasus.SortKey
             .keepExistingSortKeys(newSortKeys, project
               .getColumnSortKeys()), true);
         } else {
           project.setGroupRows(newGroupKeys, true);
-          project.setRowSortKeys(morpheus.SortKey
+          project.setRowSortKeys(phantasus.SortKey
             .keepExistingSortKeys(newSortKeys, project
               .getRowSortKeys()), true);
         }
       }
     });
 };
-morpheus.SortDialog.prototype = {
+phantasus.SortDialog.prototype = {
   isColumns: false,
   build: function (project, isColumns) {
-    var fields = morpheus.MetadataUtil.getMetadataNames(isColumns ? project
+    var fields = phantasus.MetadataUtil.getMetadataNames(isColumns ? project
       .getFullDataset().getColumnMetadata() : project
       .getFullDataset().getRowMetadata());
     this.fields = fields;
@@ -130,8 +130,8 @@ morpheus.SortDialog.prototype = {
       // ignoring
       // MatchesOnTopSortKey and
       // dendrogram
-      if (!(sortKeys[i] instanceof morpheus.MatchesOnTopSortKey)
-        && !(sortKeys[i] instanceof morpheus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
+      if (!(sortKeys[i] instanceof phantasus.MatchesOnTopSortKey)
+        && !(sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
         this.createLevel(html, sortKeys[i], fields);
       }
     }
@@ -187,7 +187,7 @@ morpheus.SortDialog.prototype = {
     html.push('<select name="sortBy" class="form-control">');
     html.push('<option value=""></option>');
     html.push('<option value="selection"'
-      + (key instanceof morpheus.SortByValuesKey ? ' selected' : '')
+      + (key instanceof phantasus.SortByValuesKey ? ' selected' : '')
       + '>selection</option>');
     _.each(fields, function (field) {
       html.push('<option value="' + field + '"');
@@ -203,12 +203,12 @@ morpheus.SortDialog.prototype = {
     html.push('<div class="col-xs-5">');
     html
       .push('<div class="radio"><label><input type="radio" name="sortOrder" value="ascending"'
-        + (morpheus.SortKey.SortOrder.ASCENDING == key
+        + (phantasus.SortKey.SortOrder.ASCENDING == key
           .getSortOrder() ? ' checked' : '')
         + '>Ascending</label></div>');
     html
       .push('<div class="radio"><label><input type="radio" name="sortOrder" value="descending"'
-        + (morpheus.SortKey.SortOrder.DESCENDING == key
+        + (phantasus.SortKey.SortOrder.DESCENDING == key
           .getSortOrder() ? ' checked' : '')
         + '>Descending</label></div>');
     html.push('</div>');

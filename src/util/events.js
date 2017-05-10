@@ -1,7 +1,7 @@
 // code taken from KineticJS
-morpheus.Events = function () {
+phantasus.Events = function () {
 };
-morpheus.Events.prototype = {
+phantasus.Events.prototype = {
   /**
    * Pass in a string of events delimmited by a space to bind multiple events
    * at once such as 'mousedown mouseup mousemove'. Include a namespace to

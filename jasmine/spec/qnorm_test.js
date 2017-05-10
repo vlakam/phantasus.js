@@ -4,15 +4,15 @@ describe('qnorm_test', function () {
     var dataset;
     var normalizedUsingRFunctionNormalizeQuantiles;
     var promises = [];
-    promises.push(morpheus.DatasetUtil.read('test_files/all_aml_train.gct').done(function (d) {
+    promises.push(phantasus.DatasetUtil.read('test_files/all_aml_train.gct').done(function (d) {
       dataset = d;
     }));
 
-    promises.push(morpheus.DatasetUtil.read('test_files/qnorm.gct').done(function (d) {
+    promises.push(phantasus.DatasetUtil.read('test_files/qnorm.gct').done(function (d) {
       normalizedUsingRFunctionNormalizeQuantiles = d;
     }));
     $.when.apply($, promises).done(function () {
-      morpheus.QNorm.execute(dataset);
+      phantasus.QNorm.execute(dataset);
       expect(dataset).toBeDatasetValues(normalizedUsingRFunctionNormalizeQuantiles, 0.001);
       done();
     });

@@ -1,5 +1,5 @@
-morpheus.SortByValuesIndicator = function (project, isVertical, positions) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.SortByValuesIndicator = function (project, isVertical, positions) {
+  phantasus.AbstractCanvas.call(this, true);
   this.project = project;
   this.isVertical = isVertical;
   this.positions = positions;
@@ -8,17 +8,17 @@ morpheus.SortByValuesIndicator = function (project, isVertical, positions) {
     end: -1
   };
 };
-morpheus.SortByValuesIndicator.prototype = {
+phantasus.SortByValuesIndicator.prototype = {
   prePaint: function (clip, context) {
     var positions = this.positions;
     var start = 0;
     var end = positions.getLength();
     if (!this.isVertical) {
-      start = morpheus.Positions.getLeft(clip, positions);
-      end = morpheus.Positions.getRight(clip, positions);
+      start = phantasus.Positions.getLeft(clip, positions);
+      end = phantasus.Positions.getRight(clip, positions);
     } else {
-      start = morpheus.Positions.getTop(clip, positions);
-      end = morpheus.Positions.getBottom(clip, positions);
+      start = phantasus.Positions.getTop(clip, positions);
+      end = phantasus.Positions.getBottom(clip, positions);
     }
     if (this.invalid || start !== this.lastPosition.start
       || end !== this.lastPosition.end) {
@@ -37,21 +37,21 @@ morpheus.SortByValuesIndicator.prototype = {
     context.fillStyle = 'black';
     context.textBaseline = 'top';
     context.textAlign = 'left';
-    context.font = '8px ' + morpheus.CanvasUtil.FONT_NAME;
+    context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
     var start = 0;
     var end = positions.getLength();
     if (!isVertical) {
-      start = morpheus.Positions.getLeft(clip, positions);
-      end = morpheus.Positions.getRight(clip, positions);
+      start = phantasus.Positions.getLeft(clip, positions);
+      end = phantasus.Positions.getRight(clip, positions);
     } else {
-      start = morpheus.Positions.getTop(clip, positions);
-      end = morpheus.Positions.getBottom(clip, positions);
+      start = phantasus.Positions.getTop(clip, positions);
+      end = phantasus.Positions.getBottom(clip, positions);
     }
     var arrowWidth = 3;
     var arrowHeight = 4;
     for (var i = 0; i < sortKeys.length; i++) {
       var key = sortKeys[i];
-      if (key instanceof morpheus.SortByValuesKey) { // are we sorting
+      if (key instanceof phantasus.SortByValuesKey) { // are we sorting
         // columns by the
         // values in a row?
 
@@ -72,12 +72,12 @@ morpheus.SortByValuesIndicator.prototype = {
             }
             context.beginPath();
             // if (!isVertical) {
-            if (key.getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
+            if (key.getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
               // up arrow
               context.moveTo(0, 0);
               context.lineTo(arrowWidth, arrowHeight);
               context.lineTo(-arrowWidth, arrowHeight);
-            } else if (key.getSortOrder() === morpheus.SortKey.SortOrder.DESCENDING) { // down
+            } else if (key.getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
               // arrow
               context.moveTo(0, arrowHeight);
               context.lineTo(arrowWidth, 0);
@@ -113,4 +113,4 @@ morpheus.SortByValuesIndicator.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.SortByValuesIndicator, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.SortByValuesIndicator, phantasus.AbstractCanvas);

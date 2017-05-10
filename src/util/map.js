@@ -1,9 +1,9 @@
-morpheus.Map = function () {
+phantasus.Map = function () {
   this.map = {}; // object string -> key, value
   // the key field is stored to get the original key object back
   this.n = 0;
 };
-morpheus.Map.prototype = {
+phantasus.Map.prototype = {
   toJSON: function () {
     var json = {};
     this.forEach(function (value, key) {
@@ -118,8 +118,8 @@ morpheus.Map.prototype = {
   }
 };
 
-morpheus.Map.fromJSON = function (json) {
-  var map = new morpheus.Map();
+phantasus.Map.fromJSON = function (json) {
+  var map = new phantasus.Map();
   for (var key in json) {
     map.set(key, json[key]);
   }

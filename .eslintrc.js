@@ -29,7 +29,7 @@ module.exports = {
     "tsnejs": true,
     "JSApplet": true,
     "Dropbox": true,
-    "morpheus": true,
+    "phantasus": true,
     "_": true,
     "d3": true,
     "Plotly": true,

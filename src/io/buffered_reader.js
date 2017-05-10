@@ -1,4 +1,4 @@
-morpheus.BufferedReader = function (reader, callback, doneCallback) {
+phantasus.BufferedReader = function (reader, callback, doneCallback) {
   var textDecoder = new TextDecoder();
   var skipLF = false;
   var text = '';
@@ -14,7 +14,7 @@ morpheus.BufferedReader = function (reader, callback, doneCallback) {
         skipLF = false;
       } else if (c === '\n' || c === '\r') {
         skipLF = c === '\r'; // \r\n windows line ending
-        var s = morpheus.Util.copyString(text.substring(start, i));
+        var s = phantasus.Util.copyString(text.substring(start, i));
         callback(s);
         start = i + 1;
       } else {
@@ -33,7 +33,7 @@ morpheus.BufferedReader = function (reader, callback, doneCallback) {
   });
 };
 
-morpheus.BufferedReader.parse = function (url, options) {
+phantasus.BufferedReader.parse = function (url, options) {
   var delim = options.delimiter;
   var regex = new RegExp(delim);
   var handleTokens = options.handleTokens;
@@ -41,7 +41,7 @@ morpheus.BufferedReader.parse = function (url, options) {
   fetch(url).then(function (response) {
     if (response.ok) {
       var reader = response.body.getReader();
-      new morpheus.BufferedReader(reader, function (line) {
+      new phantasus.BufferedReader(reader, function (line) {
         handleTokens(line.split(regex));
       }, function () {
         complete();

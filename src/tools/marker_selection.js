@@ -1,23 +1,23 @@
-morpheus.MarkerSelection = function () {
+phantasus.MarkerSelection = function () {
 
 };
 
 /**
  * @private
  */
-morpheus.MarkerSelection.Functions = [morpheus.FisherExact,
-  morpheus.FoldChange, morpheus.SignalToNoise,
-  morpheus.createSignalToNoiseAdjust(), morpheus.TTest];
+phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
+  phantasus.FoldChange, phantasus.SignalToNoise,
+  phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
-morpheus.MarkerSelection.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.MarkerSelection.Functions.length; i++) {
-    if (morpheus.MarkerSelection.Functions[i].toString() === s) {
-      return morpheus.MarkerSelection.Functions[i];
+phantasus.MarkerSelection.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.MarkerSelection.Functions.length; i++) {
+    if (phantasus.MarkerSelection.Functions[i].toString() === s) {
+      return phantasus.MarkerSelection.Functions[i];
     }
   }
   throw s + ' not found';
 };
-morpheus.MarkerSelection.execute = function (dataset, input) {
+phantasus.MarkerSelection.execute = function (dataset, input) {
   var aIndices = [];
   var bIndices = [];
   for (var i = 0; i < input.numClassA; i++) {
@@ -27,8 +27,8 @@ morpheus.MarkerSelection.execute = function (dataset, input) {
     bIndices[i] = i;
   }
 
-  var f = morpheus.MarkerSelection.Functions.fromString(input.metric);
-  var permutations = new morpheus.PermutationPValues(dataset, aIndices,
+  var f = phantasus.MarkerSelection.Functions.fromString(input.metric);
+  var permutations = new phantasus.PermutationPValues(dataset, aIndices,
     bIndices, input.npermutations, f);
   return {
     rowSpecificPValues: permutations.rowSpecificPValues,
@@ -37,7 +37,7 @@ morpheus.MarkerSelection.execute = function (dataset, input) {
     scores: permutations.scores
   };
 };
-morpheus.MarkerSelection.prototype = {
+phantasus.MarkerSelection.prototype = {
   toString: function () {
     return 'Marker Selection';
   },
@@ -46,9 +46,9 @@ morpheus.MarkerSelection.prototype = {
     var updateAB = function (fieldNames) {
       var ids = [];
       if (fieldNames != null) {
-        var vectors = morpheus.MetadataUtil.getVectors(project
+        var vectors = phantasus.MetadataUtil.getVectors(project
           .getFullDataset().getColumnMetadata(), fieldNames);
-        var idToIndices = morpheus.VectorUtil
+        var idToIndices = phantasus.VectorUtil
           .createValuesToIndicesMap(vectors);
         idToIndices.forEach(function (indices, id) {
           ids.push(id);
@@ -81,13 +81,13 @@ morpheus.MarkerSelection.prototype = {
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil.getMetadataNames(dataset
+    var fields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getColumnMetadata());
     return [
       {
         name: 'metric',
-        options: morpheus.MarkerSelection.Functions,
-        value: morpheus.SignalToNoise.toString(),
+        options: phantasus.MarkerSelection.Functions,
+        value: phantasus.SignalToNoise.toString(),
         type: 'select',
         help: ''
       },
@@ -138,30 +138,30 @@ morpheus.MarkerSelection.prototype = {
 
     for (var i = 0; i < classA.length; i++) {
       var val = classA[i];
-      if (!(val instanceof morpheus.Identifier)) {
-        classA[i] = new morpheus.Identifier(
-          morpheus.Util.isArray(val) ? val : [val]);
+      if (!(val instanceof phantasus.Identifier)) {
+        classA[i] = new phantasus.Identifier(
+          phantasus.Util.isArray(val) ? val : [val]);
       }
     }
     var classB = options.input.class_b;
     for (var i = 0; i < classB.length; i++) {
       var val = classB[i];
-      if (!(val instanceof morpheus.Identifier)) {
-        classB[i] = new morpheus.Identifier(
-          morpheus.Util.isArray(val) ? val : [val]);
+      if (!(val instanceof phantasus.Identifier)) {
+        classB[i] = new phantasus.Identifier(
+          phantasus.Util.isArray(val) ? val : [val]);
       }
     }
     var npermutations = parseInt(options.input.permutations);
     var fieldNames = options.input.field;
-    if (!morpheus.Util.isArray(fieldNames)) {
+    if (!phantasus.Util.isArray(fieldNames)) {
       fieldNames = [fieldNames];
     }
     var dataset = project.getSortedFilteredDataset();
-    var vectors = morpheus.MetadataUtil.getVectors(dataset
+    var vectors = phantasus.MetadataUtil.getVectors(dataset
       .getColumnMetadata(), fieldNames);
 
-    var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
-    var f = morpheus.MarkerSelection.Functions
+    var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
+    var f = phantasus.MarkerSelection.Functions
       .fromString(options.input.metric);
 
     var aIndices = [];
@@ -201,26 +201,26 @@ morpheus.MarkerSelection.prototype = {
         throw 'The sample was found in class A and class B';
       }
     }
-    var isFishy = f.toString() === morpheus.FisherExact.toString();
+    var isFishy = f.toString() === phantasus.FisherExact.toString();
     if (aIndices.length === 1 || bIndices.length === 1
-      && !(f instanceof morpheus.FisherExact)) {
-      f = morpheus.FoldChange;
+      && !(f instanceof phantasus.FisherExact)) {
+      f = phantasus.FoldChange;
     }
-    var list1 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+    var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
       dataset, null, aIndices));
-    var list2 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+    var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
       dataset, null, bIndices));
     // remove
     // other
     // marker
     // selection
     // fields
-    var markerSelectionFields = morpheus.MarkerSelection.Functions.map(
+    var markerSelectionFields = phantasus.MarkerSelection.Functions.map(
       function (f) {
         return f.toString();
       }).concat(['odds_ratio', 'FDR(BH)', 'p_value']);
     markerSelectionFields.forEach(function (name) {
-      var index = morpheus.MetadataUtil.indexOf(dataset.getRowMetadata(),
+      var index = phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(),
         name);
       if (index !== -1) {
         dataset.getRowMetadata().remove(index);
@@ -245,25 +245,25 @@ morpheus.MarkerSelection.prototype = {
       var rowFilters = project.getRowFilter().getFilters();
       // remove existing top n filters
       for (var i = 0; i < rowFilters.length; i++) {
-        if (rowFilters[i] instanceof morpheus.TopNFilter) {
+        if (rowFilters[i] instanceof phantasus.TopNFilter) {
           project.getRowFilter().remove(i, true);
           i--;
         }
       }
       if (!isFishy) {
         project.getRowFilter().add(
-          new morpheus.TopNFilter(
+          new phantasus.TopNFilter(
             parseInt(options.input.number_of_markers),
-            morpheus.TopNFilter.TOP_BOTTOM, vectors[0]
+            phantasus.TopNFilter.TOP_BOTTOM, vectors[0]
               .getName()), true);
       }
 
       project.setRowFilter(project.getRowFilter(), true);
-      project.setRowSortKeys([new morpheus.SortKey(vectors[0].getName(),
-        isFishy ? morpheus.SortKey.SortOrder.ASCENDING
-          : morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([new phantasus.SortKey(vectors[0].getName(),
+        isFishy ? phantasus.SortKey.SortOrder.ASCENDING
+          : phantasus.SortKey.SortOrder.DESCENDING)], true);
       // select samples used in comparison
-      var selectedColumnIndices = new morpheus.Set();
+      var selectedColumnIndices = new phantasus.Set();
       aIndices.forEach(function (index) {
         selectedColumnIndices.add(index);
       });
@@ -272,8 +272,8 @@ morpheus.MarkerSelection.prototype = {
       });
       project.getColumnSelectionModel().setViewIndices(selectedColumnIndices, true);
 
-      project.setColumnSortKeys([new morpheus.SortKey(comparisonVector
-        .getName(), morpheus.SortKey.SortOrder.ASCENDING)], true);
+      project.setColumnSortKeys([new phantasus.SortKey(comparisonVector
+        .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
 
       project.trigger('trackChanged', {
         vectors: vectors,
@@ -297,7 +297,7 @@ morpheus.MarkerSelection.prototype = {
         'contingency_table');
       var pvalues = [];
       for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
-        var abcd = morpheus.createContingencyTable(list1.setIndex(i),
+        var abcd = phantasus.createContingencyTable(list1.setIndex(i),
           list2.setIndex(i), groupingValue);
         contingencyTableVector.setValue(i, '[[' + abcd[0] + ', '
           + abcd[1] + '], [' + abcd[2] + ', ' + abcd[3] + ']]');
@@ -306,11 +306,11 @@ morpheus.MarkerSelection.prototype = {
           ratio = 0;
         }
         oddsRatioVector.setValue(i, ratio);
-        v.setValue(i, morpheus.FisherExact.fisherTest(abcd[0], abcd[1],
+        v.setValue(i, phantasus.FisherExact.fisherTest(abcd[0], abcd[1],
           abcd[2], abcd[3]));
         pvalues.push(v.getValue(i));
       }
-      var fdr = morpheus.FDR_BH(pvalues);
+      var fdr = phantasus.FDR_BH(pvalues);
       for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
         fdrVector.setValue(i, fdr[i]);
       }
@@ -326,17 +326,17 @@ morpheus.MarkerSelection.prototype = {
         var blob = new Blob(
           ['self.onmessage = function(e) {'
           + 'importScripts(e.data.scripts);'
-          + 'self.postMessage(morpheus.MarkerSelection.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+          + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
           + '}']);
 
         var url = window.URL.createObjectURL(blob);
         var worker = new Worker(url);
-        var subset = new morpheus.SlicedDatasetView(dataset, null,
+        var subset = new phantasus.SlicedDatasetView(dataset, null,
           aIndices.concat(bIndices));
 
         worker.postMessage({
-          scripts: morpheus.Util.getScriptPath(),
-          dataset: morpheus.Dataset.toJSON(subset, {
+          scripts: phantasus.Util.getScriptPath(),
+          dataset: phantasus.Dataset.toJSON(subset, {
             columnFields: [],
             rowFields: [],
             seriesIndices: [0]

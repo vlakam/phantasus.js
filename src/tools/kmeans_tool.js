@@ -1,9 +1,9 @@
 /**
  * Created by dzenkova on 11/18/16.
  */
-morpheus.KmeansTool = function () {
+phantasus.KmeansTool = function () {
 };
-morpheus.KmeansTool.prototype = {
+phantasus.KmeansTool.prototype = {
   toString: function () {
     return 'k-means';
   },
@@ -26,15 +26,15 @@ morpheus.KmeansTool.prototype = {
   },
   execute: function (options) {
     var project = options.project;
-    //console.log("morpheus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
+    //console.log("phantasus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
     var dataset = project.getSortedFilteredDataset();
-    var trueIndices = morpheus.Util.getTrueIndices(dataset);
+    var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
     var columnIndices = [];
     var rowIndices = [];
     if (options.input.use_selected_only) {
       var selectedDataset = project.getSelectedDataset();
-      var selectedIndices = morpheus.Util.getTrueIndices(selectedDataset);
+      var selectedIndices = phantasus.Util.getTrueIndices(selectedDataset);
       columnIndices = selectedIndices.columns.length > 0 ? selectedIndices.columns : trueIndices.columns;
       rowIndices = selectedIndices.rows.length > 0 ? selectedIndices.rows : trueIndices.rows;
     }
@@ -75,14 +75,14 @@ morpheus.KmeansTool.prototype = {
             v.setValue(i, clusters[i]);
           }
           //console.log(dataset.getRowMetadata().getByName("clusters"));
-          /*while (v instanceof morpheus.VectorAdapter || v instanceof morpheus.SlicedVector) {
+          /*while (v instanceof phantasus.VectorAdapter || v instanceof phantasus.SlicedVector) {
            v = v.v
            }*/
           //console.log(v);
           //v.setArray(clusters);
-          v.getProperties().set("morpheus.dataType", "string");
-          //console.log("morpheus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
-          //console.log("morpheus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(morpheus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
+          v.getProperties().set("phantasus.dataType", "string");
+          //console.log("phantasus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
+          //console.log("phantasus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
           project.trigger('trackChanged', {
             vectors: [v],
             render: ['color']

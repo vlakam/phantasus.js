@@ -1,7 +1,7 @@
 /**
  * Adds rows in dataset2 to dataset1
  */
-morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
+phantasus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
                                    dataset2Field, sourceFieldName) {
   sourceFieldName = sourceFieldName || 'Source';
   this.dataset1Field = dataset1Field;
@@ -14,7 +14,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
   }
   if (dataset1Field) { // reorder dataset 2 to match dataset 1
     var v1 = dataset1.getColumnMetadata().getByName(dataset1Field);
-    var dataset2ValueToIndex = morpheus.VectorUtil
+    var dataset2ValueToIndex = phantasus.VectorUtil
       .createValueToIndexMap(dataset2.getColumnMetadata().getByName(
         dataset2Field));
     var dataset2ColumnIndices = [];
@@ -22,7 +22,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
       dataset2ColumnIndices[i] = dataset2ValueToIndex.get(v1.getValue(i));
       // undefined indices are handles in SlicedDatasetWithNulls
     }
-    dataset2 = new morpheus.SlicedDatasetWithNulls(dataset2,
+    dataset2 = new phantasus.SlicedDatasetWithNulls(dataset2,
       dataset2ColumnIndices, dataset1.getColumnCount(), dataset1
         .getColumnMetadata());
   }
@@ -63,7 +63,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
   var metadataInDifferentOrder = false;
   for (var i = 0, count = dataset1.getRowMetadata().getMetadataCount(); i < count; i++) {
     var name = dataset1.getRowMetadata().get(i).getName();
-    var index = morpheus.MetadataUtil.indexOf(dataset2.getRowMetadata(),
+    var index = phantasus.MetadataUtil.indexOf(dataset2.getRowMetadata(),
       name);
     dataset2RowMetadataOrder.push(index);
     if (index !== i) {
@@ -86,12 +86,12 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
     });
   }
 
-  this.rowMetadata = new morpheus.JoinedMetadataModel(this.dataset1
+  this.rowMetadata = new phantasus.JoinedMetadataModel(this.dataset1
     .getRowMetadata(), !metadataInDifferentOrder ? this.dataset2
-    .getRowMetadata() : new morpheus.MetadataModelColumnView(
+    .getRowMetadata() : new phantasus.MetadataModelColumnView(
     this.dataset2.getRowMetadata(), dataset2RowMetadataOrder));
 };
-morpheus.JoinedDataset.prototype = {
+phantasus.JoinedDataset.prototype = {
   getName: function (seriesIndex) {
     return this.dataset1.getName(seriesIndex);
   },
@@ -144,14 +144,14 @@ morpheus.JoinedDataset.prototype = {
     return this.getName();
   }
 };
-morpheus.SlicedDatasetWithNulls = function (dataset, columnIndices, columnCount,
+phantasus.SlicedDatasetWithNulls = function (dataset, columnIndices, columnCount,
                                             columnMetadata) {
-  morpheus.DatasetAdapter.call(this, dataset);
+  phantasus.DatasetAdapter.call(this, dataset);
   this.columnIndices = columnIndices;
   this.columnCount = columnCount;
   this.columnMetadata = columnMetadata;
 };
-morpheus.SlicedDatasetWithNulls.prototype = {
+phantasus.SlicedDatasetWithNulls.prototype = {
   getColumnMetadata: function () {
     return this.columnMetadata;
   },
@@ -172,14 +172,14 @@ morpheus.SlicedDatasetWithNulls.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.SlicedDatasetWithNulls, morpheus.DatasetAdapter);
-morpheus.JoinedVector = function (v1, v2) {
+phantasus.Util.extend(phantasus.SlicedDatasetWithNulls, phantasus.DatasetAdapter);
+phantasus.JoinedVector = function (v1, v2) {
   this.v1 = v1;
   this.v2 = v2;
-  morpheus.VectorAdapter.call(this, v1);
-  this.properties = new morpheus.Map();
+  phantasus.VectorAdapter.call(this, v1);
+  this.properties = new phantasus.Map();
 };
-morpheus.JoinedVector.prototype = {
+phantasus.JoinedVector.prototype = {
   setValue: function (i, value) {
     i < this.v1.size() ? this.v1.setValue(i, value) : this.v2.setValue(i
       - this.v1.size(), value);
@@ -195,23 +195,23 @@ morpheus.JoinedVector.prototype = {
     return this.properties;
   }
 };
-morpheus.Util.extend(morpheus.JoinedVector, morpheus.VectorAdapter);
-morpheus.JoinedMetadataModel = function (m1, m2) {
+phantasus.Util.extend(phantasus.JoinedVector, phantasus.VectorAdapter);
+phantasus.JoinedMetadataModel = function (m1, m2) {
   this.m1 = m1;
   this.m2 = m2;
   this.vectors = [];
   for (var i = 0, count = m1.getMetadataCount(); i < count; i++) {
     var v1 = this.m1.get(i);
     var v2 = this.m2.get(i);
-    var v = new morpheus.JoinedVector(v1, v2);
+    var v = new phantasus.JoinedVector(v1, v2);
     // copy properties
     v1.getProperties().forEach(function (val, key) {
-      if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
         v.properties.set(key, val);
       }
     });
     v2.getProperties().forEach(function (val, key) {
-      if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
         v.properties.set(key, val);
       }
     });
@@ -219,14 +219,14 @@ morpheus.JoinedMetadataModel = function (m1, m2) {
     this.vectors.push(v);
   }
 };
-morpheus.JoinedMetadataModel.prototype = {
+phantasus.JoinedMetadataModel.prototype = {
   add: function (name) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     var oldVector;
     if (index !== -1) {
       oldVector = this.remove(index);
     }
-    var v = new morpheus.Vector(name, this.getItemCount());
+    var v = new phantasus.Vector(name, this.getItemCount());
     if (oldVector != null) {
       // copy properties
       oldVector.getProperties().forEach(function (val, key) {

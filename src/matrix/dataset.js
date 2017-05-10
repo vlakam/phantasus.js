@@ -1,7 +1,7 @@
 /**
  * Default implementation of a dataset.
  *
- * @extends {morpheus.AbstractDataset}
+ * @extends {phantasus.AbstractDataset}
  * @param options.rows {number} Number of rows
  * @param options.columns {number} Number of columns
  * @param options.name {string} Dataset name
@@ -9,8 +9,8 @@
  * @param options.esSession {Promise} openCPU session, which contains ExpressionSet version of the dataset
  * @constructor
  */
-morpheus.Dataset = function (options) {
-  morpheus.AbstractDataset.call(this, options.rows,
+phantasus.Dataset = function (options) {
+  phantasus.AbstractDataset.call(this, options.rows,
     options.columns);
 
   if (options.dataType == null) {
@@ -21,7 +21,7 @@ morpheus.Dataset = function (options) {
     this.esSession = options.esSession;
   }
   this.seriesNames.push(options.name);
-  this.seriesArrays.push(options.array ? options.array : morpheus.Dataset
+  this.seriesArrays.push(options.array ? options.array : phantasus.Dataset
     .createArray(options));
   this.seriesDataTypes.push(options.dataType);
   //console.log(this);
@@ -34,14 +34,14 @@ morpheus.Dataset = function (options) {
  * @param options.seriesIndices
  * @return JSON representation of a dataset
  */
-morpheus.Dataset.toJSON = function (dataset, options) {
+phantasus.Dataset.toJSON = function (dataset, options) {
   options = options || {};
   var seriesArrays = [];
   var seriesDataTypes = [];
   var seriesNames = [];
   var seriesIndices = options.seriesIndices;
   if (seriesIndices == null) {
-    seriesIndices = morpheus.Util.sequ32(dataset.getSeriesCount());
+    seriesIndices = phantasus.Util.sequ32(dataset.getSeriesCount());
   }
   for (var series = 0; series < seriesIndices.length; series++) {
     var seriesIndex = seriesIndices[series];
@@ -62,9 +62,9 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     for (var i = 0, size = vector.size(); i < size; i++) {
       array[i] = vector.getValue(i);
     }
-    var properties = new morpheus.Map();
+    var properties = new phantasus.Map();
     vector.getProperties().forEach(function (value, key) {
-      if (morpheus.VectorKeys.JSON_WHITELIST.has(key)) {
+      if (phantasus.VectorKeys.JSON_WHITELIST.has(key)) {
         properties.set(key, value);
       }
     });
@@ -78,7 +78,7 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     var vectors = [];
     var filter;
     if (fields) {
-      filter = new morpheus.Set();
+      filter = new phantasus.Set();
       fields.forEach(function (field) {
         filter.add(field);
       });
@@ -111,7 +111,7 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     }
   };
 };
-morpheus.Dataset.fromJSON = function (options) {
+phantasus.Dataset.fromJSON = function (options) {
   // Object {seriesNames:
   // Array[1], seriesArrays:
   // Array[1], rows:
@@ -129,7 +129,7 @@ morpheus.Dataset.fromJSON = function (options) {
   // rows: 6238
   // seriesArrays: Array[1]
   // seriesNames: Array[1]
-  // var array = morpheus.Dataset.createArray(options);
+  // var array = phantasus.Dataset.createArray(options);
   // for (var i = 0; i < options.rows; i++) {
   // var row = array[i];
   // var jsonRow = options.array[i];
@@ -144,10 +144,10 @@ morpheus.Dataset.fromJSON = function (options) {
       if (options.seriesMappings[seriesIndex]) {
 
         var map = options.seriesMappings[seriesIndex]; // e.g. foo:1, bar:3
-        var valueMap = new morpheus.Map();
+        var valueMap = new phantasus.Map();
         for (var key in map) {
           var value = map[key];
-          valueMap.set(value, morpheus.Util.wrapNumber(value, key));
+          valueMap.set(value, phantasus.Util.wrapNumber(value, key));
         }
 
         var array = options.seriesArrays[seriesIndex];
@@ -161,7 +161,7 @@ morpheus.Dataset.fromJSON = function (options) {
       }
     }
   }
-  var dataset = new morpheus.Dataset({
+  var dataset = new phantasus.Dataset({
     name: options.seriesNames[0],
     dataType: options.seriesDataTypes[0],
     array: options.seriesArrays[0],
@@ -171,17 +171,17 @@ morpheus.Dataset.fromJSON = function (options) {
 
   if (options.rowMetadataModel) {
     options.rowMetadataModel.vectors.forEach(function (v) {
-      var vector = new morpheus.Vector(v.name, dataset.getRowCount());
+      var vector = new phantasus.Vector(v.name, dataset.getRowCount());
       vector.array = v.array;
-      vector.properties = morpheus.Map.fromJSON(v.properties);
+      vector.properties = phantasus.Map.fromJSON(v.properties);
       dataset.rowMetadataModel.vectors.push(vector);
     });
   }
   if (options.columnMetadataModel) {
     options.columnMetadataModel.vectors.forEach(function (v) {
-      var vector = new morpheus.Vector(v.name, dataset.getColumnCount());
+      var vector = new phantasus.Vector(v.name, dataset.getColumnCount());
       vector.array = v.array;
-      vector.properties = morpheus.Map.fromJSON(v.properties);
+      vector.properties = phantasus.Map.fromJSON(v.properties);
       dataset.columnMetadataModel.vectors.push(vector);
 
     });
@@ -195,7 +195,7 @@ morpheus.Dataset.fromJSON = function (options) {
   }
   return dataset;
 };
-morpheus.Dataset.createArray = function (options) {
+phantasus.Dataset.createArray = function (options) {
   var array = [];
   if (options.dataType == null || options.dataType === 'Float32') {
     for (var i = 0; i < options.rows; i++) {
@@ -216,7 +216,7 @@ morpheus.Dataset.createArray = function (options) {
   }
   return array;
 };
-morpheus.Dataset.prototype = {
+phantasus.Dataset.prototype = {
   getValue: function (i, j, seriesIndex) {
     seriesIndex = seriesIndex || 0;
     return this.seriesArrays[seriesIndex][i][j];
@@ -237,17 +237,17 @@ morpheus.Dataset.prototype = {
     this.seriesDataTypes.push(options.dataType);
     this.seriesNames.push(options.name);
     this.seriesArrays.push(options.array != null ? options.array
-      : morpheus.Dataset.createArray(options));
+      : phantasus.Dataset.createArray(options));
     return this.seriesNames.length - 1;
   },
   setESSession: function (session) {
-    //console.log("morpheus.Dataset.prototype.setESSession ::", this, session);
+    //console.log("phantasus.Dataset.prototype.setESSession ::", this, session);
     this.esSession = session;
   },
   getESSession: function () {
-    //console.log("morpheus.Dataset.prototype.getESSession ::", this);
+    //console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
   }
 
 };
-morpheus.Util.extend(morpheus.Dataset, morpheus.AbstractDataset);
+phantasus.Util.extend(phantasus.Dataset, phantasus.AbstractDataset);

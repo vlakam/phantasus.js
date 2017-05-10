@@ -1,10 +1,10 @@
-morpheus.VectorAdapter = function (v) {
+phantasus.VectorAdapter = function (v) {
   if (v == null) {
     throw 'vector is null';
   }
   this.v = v;
 };
-morpheus.VectorAdapter.prototype = {
+phantasus.VectorAdapter.prototype = {
   setValue: function (i, value) {
     this.v.setValue(i, value);
   },

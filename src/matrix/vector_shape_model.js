@@ -1,12 +1,12 @@
-morpheus.VectorShapeModel = function () {
-  this.shapes = morpheus.VectorShapeModel.SHAPES;
-  this.vectorNameToShapeMap = new morpheus.Map();
+phantasus.VectorShapeModel = function () {
+  this.shapes = phantasus.VectorShapeModel.SHAPES;
+  this.vectorNameToShapeMap = new phantasus.Map();
 };
 
-morpheus.VectorShapeModel.SHAPES = ['circle', 'square', 'plus', 'x',
+phantasus.VectorShapeModel.SHAPES = ['circle', 'square', 'plus', 'x',
   'asterisk', 'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
   'triangle-right', 'minus'];
-morpheus.VectorShapeModel.STANDARD_SHAPES = {
+phantasus.VectorShapeModel.STANDARD_SHAPES = {
   cp: 'diamond',
   oe: 'plus',
   pcl: 'asterisk',
@@ -14,15 +14,15 @@ morpheus.VectorShapeModel.STANDARD_SHAPES = {
   ctrl: 'circle'
 };
 
-morpheus.VectorShapeModel.prototype = {
+phantasus.VectorShapeModel.prototype = {
   clear: function (vector) {
     this.vectorNameToShapeMap.remove(vector.getName());
   },
   copy: function () {
-    var c = new morpheus.VectorShapeModel();
+    var c = new phantasus.VectorShapeModel();
     c.shapes = this.shapes.slice(0);
     this.vectorNameToShapeMap.forEach(function (shapeMap, name) {
-      var newShapeMap = new morpheus.Map();
+      var newShapeMap = new phantasus.Map();
       newShapeMap.setAll(shapeMap); // copy existing values
       c.vectorNameToShapeMap.set(name, newShapeMap);
     });
@@ -30,14 +30,14 @@ morpheus.VectorShapeModel.prototype = {
     return c;
   },
   clearAll: function () {
-    this.vectorNameToShapeMap = new morpheus.Map();
+    this.vectorNameToShapeMap = new phantasus.Map();
   },
   _getShapeForValue: function (value) {
     if (value == null) {
       return 'none';
     }
     var str = value.toString().toLowerCase();
-    var mapped = morpheus.VectorShapeModel.STANDARD_SHAPES[str];
+    var mapped = phantasus.VectorShapeModel.STANDARD_SHAPES[str];
     if (mapped !== undefined) {
       return mapped;
     }
@@ -60,11 +60,11 @@ morpheus.VectorShapeModel.prototype = {
     var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
-      metadataValueToShapeMap = new morpheus.Map();
+      metadataValueToShapeMap = new phantasus.Map();
       this.vectorNameToShapeMap.set(vector.getName(),
         metadataValueToShapeMap);
       // set all possible shapes
-      var values = morpheus.VectorUtil.getValues(vector);
+      var values = phantasus.VectorUtil.getValues(vector);
       for (var i = 0, nvalues = values.length; i < nvalues; i++) {
         var shape = this._getShapeForValue(values[i]);
         if (shape == null) {
@@ -88,7 +88,7 @@ morpheus.VectorShapeModel.prototype = {
     var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
-      metadataValueToShapeMap = new morpheus.Map();
+      metadataValueToShapeMap = new phantasus.Map();
       this.vectorNameToShapeMap.set(vector.getName(),
         metadataValueToShapeMap);
     }

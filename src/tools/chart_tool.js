@@ -1,10 +1,10 @@
 /**
  * @param chartOptions.project
- *            morpheus.Project
+ *            phantasus.Project
  * @param chartOptions.getVisibleTrackNames
  *            {Function}
  */
-morpheus.ChartTool = function (chartOptions) {
+phantasus.ChartTool = function (chartOptions) {
   var _this = this;
   this.getVisibleTrackNames = chartOptions.getVisibleTrackNames;
   this.project = chartOptions.project;
@@ -15,7 +15,7 @@ morpheus.ChartTool = function (chartOptions) {
     + '<div class="col-xs-10"><div style="position:relative;" data-name="chartDiv"></div></div>'
     + '</div></div>');
 
-  var formBuilder = new morpheus.FormBuilder({
+  var formBuilder = new phantasus.FormBuilder({
     vertical: true
   });
   this.formBuilder = formBuilder;
@@ -59,10 +59,10 @@ morpheus.ChartTool = function (chartOptions) {
       value: ''
     }];
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getRowMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -78,10 +78,10 @@ morpheus.ChartTool = function (chartOptions) {
           });
         });
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getColumnMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -169,7 +169,7 @@ morpheus.ChartTool = function (chartOptions) {
   formBuilder.append({
     name: 'series',
     type: 'bootstrap-select',
-    options: ['(None)'].concat(morpheus.DatasetUtil
+    options: ['(None)'].concat(phantasus.DatasetUtil
       .getSeriesNames(project.getFullDataset()))
   });
   formBuilder.append({
@@ -250,7 +250,7 @@ morpheus.ChartTool = function (chartOptions) {
       _this.tooltip.length = 0; // clear array
       if (tooltipVal != null) {
         tooltipVal.forEach(function (tip) {
-          _this.tooltip.push(morpheus.ChartTool.getVectorInfo(tip));
+          _this.tooltip.push(phantasus.ChartTool.getVectorInfo(tip));
         });
       }
     } else {
@@ -288,7 +288,7 @@ morpheus.ChartTool = function (chartOptions) {
   formBuilder.$form.appendTo($configPane);
   this.$el.appendTo($dialog);
   $dialog.dialog({
-    dialogClass: 'morpheus',
+    dialogClass: 'phantasus',
     close: function (event, ui) {
       project.off('trackChanged.chart', trackChanged);
       project.getRowSelectionModel().off('selectionChanged.chart', draw);
@@ -305,8 +305,8 @@ morpheus.ChartTool = function (chartOptions) {
   this.draw();
 };
 
-morpheus.ChartTool.getPlotlyDefaults2 = function () {
-  var plotly = morpheus.ChartTool.getPlotlyDefaults();
+phantasus.ChartTool.getPlotlyDefaults2 = function () {
+  var plotly = phantasus.ChartTool.getPlotlyDefaults();
   plotly.layout.width = 600;
   plotly.layout.height = 600;
   plotly.layout.margin = {
@@ -320,8 +320,8 @@ morpheus.ChartTool.getPlotlyDefaults2 = function () {
   return plotly;
 };
 
-morpheus.ChartTool.BUTTONS_TO_REMOVE_FOR_STATIC_CHART = ['select2d', 'lasso2d']; // ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
-morpheus.ChartTool.getPlotlyDefaults = function () {
+phantasus.ChartTool.BUTTONS_TO_REMOVE_FOR_STATIC_CHART = ['select2d', 'lasso2d']; // ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
+phantasus.ChartTool.getPlotlyDefaults = function () {
   var layout = {
     hovermode: 'closest',
     autosize: true,
@@ -395,7 +395,7 @@ morpheus.ChartTool.getPlotlyDefaults = function () {
   };
 };
 
-morpheus.ChartTool.getVectorInfo = function (value) {
+phantasus.ChartTool.getVectorInfo = function (value) {
   var field = value.substring(0, value.length - 2);
   var isColumns = value.substring(value.length - 2) === '_c';
   return {
@@ -403,7 +403,7 @@ morpheus.ChartTool.getVectorInfo = function (value) {
     isColumns: isColumns
   };
 };
-morpheus.ChartTool.prototype = {
+phantasus.ChartTool.prototype = {
   _addListeners: function (div) {
     var _this = this;
     div.on('plotly_beforeexport', function () {
@@ -421,7 +421,7 @@ morpheus.ChartTool.prototype = {
   },
   annotate: function (options) {
     var _this = this;
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -439,7 +439,7 @@ morpheus.ChartTool.prototype = {
     // options : [ 'Rows', 'Columns', 'Rows And Columns' ],
     // value : 'Rows'
     // });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate Selection',
         content: formBuilder.$form,
@@ -488,22 +488,22 @@ morpheus.ChartTool.prototype = {
             }
           }
           if (isRows) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(rowVector);
             _this.project.trigger('trackChanged', {
               vectors: [rowVector],
               render: existingRowVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: false
             });
           }
           if (isColumns) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(columnVector);
             _this.project.trigger('trackChanged', {
               vectors: [columnVector],
               render: existingColumnVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: true
             });
           }
@@ -558,7 +558,7 @@ morpheus.ChartTool.prototype = {
           for (var i = 0; i < indices.length; i++) {
             var index = indices[i];
             if (index === 0 || v.getValue(index) !== v.getValue(0)) {
-              morpheus.HeatMapTooltipProvider.vectorToString(v,
+              phantasus.HeatMapTooltipProvider.vectorToString(v,
                 index, s, '<br>');
             }
           }
@@ -587,7 +587,7 @@ morpheus.ChartTool.prototype = {
     };
     var selection = null;
     var _this = this;
-    morpheus.ChartTool.newPlot(myPlot, [trace], options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, [trace], options.layout, options.config);
     this._addListeners(myPlot);
 
   },
@@ -636,10 +636,10 @@ morpheus.ChartTool.prototype = {
           for (var tipIndex = 0; tipIndex < _this.tooltip.length; tipIndex++) {
             var tip = _this.tooltip[tipIndex];
             if (tip.isColumns) {
-              morpheus.HeatMapTooltipProvider.vectorToString(dataset.getColumnMetadata().getByName(tip.field),
+              phantasus.HeatMapTooltipProvider.vectorToString(dataset.getColumnMetadata().getByName(tip.field),
                 this.j, s, '<br>');
             } else {
-              morpheus.HeatMapTooltipProvider.vectorToString(dataset.getRowMetadata().getByName(tip.field),
+              phantasus.HeatMapTooltipProvider.vectorToString(dataset.getRowMetadata().getByName(tip.field),
                 this.i, s, '<br>');
             }
           }
@@ -693,7 +693,7 @@ morpheus.ChartTool.prototype = {
     //       },
     //       click: function () {
     //         if (!selection) {
-    //           morpheus.FormBuilder
+    //           phantasus.FormBuilder
     //           .showInModal({
     //             title: 'Annotate Selection',
     //             html: 'Please select points in the chart',
@@ -711,7 +711,7 @@ morpheus.ChartTool.prototype = {
     var $parent = $(myPlot).parent();
     options.layout.width = $parent.width();
     options.layout.height = this.$dialog.height() - 30;
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     //   selection = eventData;
     // });
@@ -755,7 +755,7 @@ morpheus.ChartTool.prototype = {
     var selection = null;
     var _this = this;
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     // 	selection = eventData;
     // });
@@ -770,7 +770,7 @@ morpheus.ChartTool.prototype = {
     var traces = [];
     // split by color by value
 
-    var colorByValueToArray = new morpheus.Map();
+    var colorByValueToArray = new phantasus.Map();
     for (var k = 0, nitems = array.length; k < nitems; k++) {
       var item = array[k];
       var val = dataset.getValue(item.row, item.column);
@@ -799,7 +799,7 @@ morpheus.ChartTool.prototype = {
     var selection = null;
     var _this = this;
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     // 	selection = eventData;
     // });
@@ -860,7 +860,7 @@ morpheus.ChartTool.prototype = {
             }
 
             var v = metadata.getByName(tip.field);
-            morpheus.HeatMapTooltipProvider.vectorToString(v,
+            phantasus.HeatMapTooltipProvider.vectorToString(v,
               index, s, '<br>');
 
           }
@@ -920,7 +920,7 @@ morpheus.ChartTool.prototype = {
     //       },
     //       click: function () {
     //         if (!selection) {
-    //           morpheus.FormBuilder
+    //           phantasus.FormBuilder
     //           .showInModal({
     //             title: 'Annotate Selection',
     //             html: 'Please select points in the chart',
@@ -937,10 +937,10 @@ morpheus.ChartTool.prototype = {
     //     }]]
     //   });
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     var $span = $('<div' +
       ' style="display:none;position:absolute;font-size:10px;left:2px;top:4px;">#' +
-      ' points:' + morpheus.Util.intFormat(array.length) + '</div>');
+      ' points:' + phantasus.Util.intFormat(array.length) + '</div>');
 
     $span.appendTo($(myPlot));
     // myPlot.on('plotly_selected', function (eventData) {
@@ -961,7 +961,7 @@ morpheus.ChartTool.prototype = {
   draw: function () {
     var _this = this;
     this.$chart.empty();
-    var plotlyDefaults = morpheus.ChartTool.getPlotlyDefaults();
+    var plotlyDefaults = phantasus.ChartTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
     // 140 to 800
@@ -1006,7 +1006,7 @@ morpheus.ChartTool.prototype = {
       emptyToAll: false
     });
 
-    var seriesIndex = morpheus.DatasetUtil.getSeriesIndex(dataset, seriesName);
+    var seriesIndex = phantasus.DatasetUtil.getSeriesIndex(dataset, seriesName);
     var datasetFilter = seriesIndex === -1 ? function () {
       return true;
     } : function (ds, item) {
@@ -1034,11 +1034,11 @@ morpheus.ChartTool.prototype = {
 
     var items = [];
     var heatmap = this.heatmap;
-    var colorByInfo = morpheus.ChartTool.getVectorInfo(colorBy);
-    var sizeByInfo = morpheus.ChartTool.getVectorInfo(sizeBy);
+    var colorByInfo = phantasus.ChartTool.getVectorInfo(colorBy);
+    var sizeByInfo = phantasus.ChartTool.getVectorInfo(sizeBy);
     var colorModel = !colorByInfo.isColumns ? this.project.getRowColorModel()
       : this.project.getColumnColorModel();
-    var axisLabelInfo = morpheus.ChartTool.getVectorInfo(axisLabel);
+    var axisLabelInfo = phantasus.ChartTool.getVectorInfo(axisLabel);
     var axisLabelVector = axisLabelInfo.isColumns ? dataset.getColumnMetadata().getByName(axisLabelInfo.field) : dataset.getRowMetadata().getByName(
       axisLabelInfo.field);
     var sizeByVector = sizeByInfo.isColumns ? dataset.getColumnMetadata().getByName(sizeByInfo.field) : dataset.getRowMetadata().getByName(
@@ -1049,7 +1049,7 @@ morpheus.ChartTool.prototype = {
     var columnIds = [undefined];
     var sizeByScale = null;
     if (sizeByVector) {
-      var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+      var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
       sizeByScale = d3.scale.linear().domain(
         [minMax.min, minMax.max]).range([3, 16])
         .clamp(true);
@@ -1061,7 +1061,7 @@ morpheus.ChartTool.prototype = {
       var myPlot = $chart[0];
       $chart.appendTo(this.$chart);
       if (chartType === 'column profile') {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       this
         ._createProfile({
@@ -1095,7 +1095,7 @@ morpheus.ChartTool.prototype = {
       var transpose = chartType === 'column scatter matrix';
       showPoints = showPoints && (dataset.getRowCount() * dataset.getColumnCount()) <= 100000;
       if (transpose) {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       if (dataset.getRowCount() > 20) {
         $('<h4>Maximum chart size exceeded.</h4>')
@@ -1223,7 +1223,7 @@ morpheus.ChartTool.prototype = {
         }
       }
       showPoints = showPoints && items.length <= 100000;
-      var colorByInfo = morpheus.ChartTool.getVectorInfo(colorBy);
+      var colorByInfo = phantasus.ChartTool.getVectorInfo(colorBy);
       var colorByVector = colorByInfo.isColumns ? dataset.getColumnMetadata()
         .getByName(colorByInfo.field) : dataset.getRowMetadata()
         .getByName(colorByInfo.field);
@@ -1245,14 +1245,14 @@ morpheus.ChartTool.prototype = {
       };
       var sizeByScale = null;
       if (sizeByVector) {
-        var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+        var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
         sizeByScale = d3.scale.linear().domain([minMax.min, minMax.max])
           .range([3, 16]).clamp(true);
       }
       if (groupColumnsBy || groupRowsBy) {
-        var rowIdToArray = new morpheus.Map();
+        var rowIdToArray = new phantasus.Map();
         if (groupRowsBy) {
-          var groupRowsByInfo = morpheus.ChartTool
+          var groupRowsByInfo = phantasus.ChartTool
             .getVectorInfo(groupRowsBy);
           var vector = groupRowsByInfo.isColumns ? dataset
             .getColumnMetadata().getByName(groupRowsByInfo.field)
@@ -1265,7 +1265,7 @@ morpheus.ChartTool.prototype = {
             return vector.getValue(item.row);
           };
 
-          var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
+          var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
           for (var i = 0, nitems = items.length; i < nitems; i++) {
             var item = items[i];
             var value = getter(item);
@@ -1303,8 +1303,8 @@ morpheus.ChartTool.prototype = {
           } : function (item) {
             return vector.getValue(item.row);
           };
-          var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
-          var columnIdToIndex = new morpheus.Map();
+          var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
+          var columnIdToIndex = new phantasus.Map();
           var rowIndex = 0;
           rowIdToArray.forEach(function (array, id) {
             grid[rowIndex] = [];
@@ -1377,7 +1377,7 @@ morpheus.ChartTool.prototype = {
 
               }
             }
-            summary[i][j] = morpheus.Median(morpheus.VectorUtil.arrayAsVector(values));
+            summary[i][j] = phantasus.Median(phantasus.VectorUtil.arrayAsVector(values));
           }
         }
         // sort rows
@@ -1387,10 +1387,10 @@ morpheus.ChartTool.prototype = {
           for (var j = 0; j < gridColumnCount; j++) {
             values.push(summary[i][j]);
           }
-          rowMedians.push(morpheus.Median(morpheus.VectorUtil.arrayAsVector(values)));
+          rowMedians.push(phantasus.Median(phantasus.VectorUtil.arrayAsVector(values)));
         }
 
-        var newRowOrder = morpheus.Util.indexSort(rowMedians, false);
+        var newRowOrder = phantasus.Util.indexSort(rowMedians, false);
         var newRowIds = [];
         var newGrid = [];
         for (var i = 0; i < gridRowCount; i++) {
@@ -1604,7 +1604,7 @@ morpheus.ChartTool.prototype = {
   }
 };
 
-morpheus.ChartTool.newPlot = function (myPlot, traces, layout, config) {
+phantasus.ChartTool.newPlot = function (myPlot, traces, layout, config) {
   Plotly.newPlot(myPlot, traces, layout, config);
   var $a = $('<a data-toggle="tooltip" title="Toggle mode bar" href="#" style="fill: rgb(68,' +
     ' 122,' +

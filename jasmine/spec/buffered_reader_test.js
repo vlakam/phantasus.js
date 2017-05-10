@@ -11,7 +11,7 @@ describe('buffered_reader_test', function () {
   }
 
   it('test_chunk', function (done) {
-    if (morpheus.Util.isFetchSupported()) {
+    if (phantasus.Util.isFetchSupported()) {
       var url = '/jasmine/test_files/CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt';
       var lines = [];
       var splitLines = null;
@@ -21,7 +21,7 @@ describe('buffered_reader_test', function () {
       fetch(url).then(function (response) {
         if (response.ok) {
           var reader = response.body.getReader();
-          new morpheus.BufferedReader(reader, function (line) {
+          new phantasus.BufferedReader(reader, function (line) {
             lines.push(line);
           }, function () {
             p1.resolve();

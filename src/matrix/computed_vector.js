@@ -8,14 +8,14 @@
  * @param callback {Function} that takes an index and returns the value at the specified index
  * @constructor
  */
-morpheus.ComputedVector = function (name, size, callback) {
-  morpheus.AbstractVector.call(this, name, size);
+phantasus.ComputedVector = function (name, size, callback) {
+  phantasus.AbstractVector.call(this, name, size);
   this.callback = callback;
 };
 
-morpheus.ComputedVector.prototype = {
+phantasus.ComputedVector.prototype = {
   getValue: function (index) {
     return this.callback(index);
   }
 };
-morpheus.Util.extend(morpheus.ComputedVector, morpheus.AbstractVector);
+phantasus.Util.extend(phantasus.ComputedVector, phantasus.AbstractVector);

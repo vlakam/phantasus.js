@@ -1,5 +1,5 @@
-morpheus.ShapeField = function (shapes) {
-  shapes = shapes || morpheus.VectorShapeModel.SHAPES;
+phantasus.ShapeField = function (shapes) {
+  shapes = shapes || phantasus.VectorShapeModel.SHAPES;
   var _this = this;
   var html = [];
   var size2 = 8;
@@ -13,7 +13,7 @@ morpheus.ShapeField = function (shapes) {
   for (var i = 0; i < shapes.length; i++) {
     var context = new C2S(size2 * 2, size2 * 2);
     context.translate(4, 4);
-    morpheus.CanvasUtil.drawShape(context, shapes[i], x, y, size2);
+    phantasus.CanvasUtil.drawShape(context, shapes[i], x, y, size2);
     var svg = context.getSerializedSvg();
     html.push('<li><a data-name="' + shapes[i] + '" href="#">' + svg
       + '</a></li>');
@@ -35,12 +35,12 @@ morpheus.ShapeField = function (shapes) {
     } else {
       var context = new C2S(size2 * 2, size2 * 2);
       context.translate(4, 4);
-      morpheus.CanvasUtil.drawShape(context, val, x, y, size2);
+      phantasus.CanvasUtil.drawShape(context, val, x, y, size2);
       $header.html(context.getSerializedSvg());
     }
   };
   this.setShapeValue = setShapeValue;
   this.$el = $el;
 };
-morpheus.ShapeField.prototype = {};
-morpheus.Util.extend(morpheus.ShapeField, morpheus.Events);
+phantasus.ShapeField.prototype = {};
+phantasus.Util.extend(phantasus.ShapeField, phantasus.Events);

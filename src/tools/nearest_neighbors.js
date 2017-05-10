@@ -1,17 +1,17 @@
-morpheus.NearestNeighbors = function () {
+phantasus.NearestNeighbors = function () {
 };
-morpheus.NearestNeighbors.Functions = [morpheus.Cosine, morpheus.Euclidean,
-  morpheus.Jaccard, morpheus.KendallsCorrelation, morpheus.Pearson, morpheus.Spearman,
-  morpheus.WeightedMean];
-morpheus.NearestNeighbors.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.NearestNeighbors.Functions.length; i++) {
-    if (morpheus.NearestNeighbors.Functions[i].toString() === s) {
-      return morpheus.NearestNeighbors.Functions[i];
+phantasus.NearestNeighbors.Functions = [phantasus.Cosine, phantasus.Euclidean,
+  phantasus.Jaccard, phantasus.KendallsCorrelation, phantasus.Pearson, phantasus.Spearman,
+  phantasus.WeightedMean];
+phantasus.NearestNeighbors.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.NearestNeighbors.Functions.length; i++) {
+    if (phantasus.NearestNeighbors.Functions[i].toString() === s) {
+      return phantasus.NearestNeighbors.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
-morpheus.NearestNeighbors.prototype = {
+phantasus.NearestNeighbors.prototype = {
   toString: function () {
     return 'Nearest Neighbors';
   },
@@ -44,7 +44,7 @@ morpheus.NearestNeighbors.prototype = {
             // get numeric columns only
             for (var i = 0; i < metadata.getMetadataCount(); i++) {
               var v = metadata.get(i);
-              if (morpheus.VectorUtil.getDataType(v) === 'number') {
+              if (phantasus.VectorUtil.getDataType(v) === 'number') {
                 names.push(v.getName());
               }
             }
@@ -65,8 +65,8 @@ morpheus.NearestNeighbors.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.NearestNeighbors.Functions,
-      value: morpheus.Pearson.toString(),
+      options: phantasus.NearestNeighbors.Functions,
+      value: phantasus.Pearson.toString(),
       type: 'select'
     }, {
       name: 'compute_nearest_neighbors_of',
@@ -86,13 +86,13 @@ morpheus.NearestNeighbors.prototype = {
     var isColumns = options.input.compute_nearest_neighbors_of == 'selected columns' || options.input.compute_nearest_neighbors_of == 'row annotation';
     var isAnnotation = options.input.compute_nearest_neighbors_of == 'column annotation' || options.input.compute_nearest_neighbors_of == 'row annotation';
     var heatMap = options.heatMap;
-    var f = morpheus.NearestNeighbors.Functions
+    var f = phantasus.NearestNeighbors.Functions
       .fromString(options.input.metric);
     var dataset = project.getSortedFilteredDataset();
 
     if (isColumns) {
       // compute the nearest neighbors of row, so need to transpose
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var selectedIndices = (isColumns ? project.getColumnSelectionModel()
       : project.getRowSelectionModel()).getViewIndices().values();
@@ -104,10 +104,10 @@ morpheus.NearestNeighbors.prototype = {
     if (options.input.use_selected_only) {
       spaceIndices = (!isColumns ? project.getColumnSelectionModel()
         : project.getRowSelectionModel()).getViewIndices().values();
-      dataset = morpheus.DatasetUtil.slicedView(dataset, null,
+      dataset = phantasus.DatasetUtil.slicedView(dataset, null,
         spaceIndices);
     }
-    var d1 = morpheus.DatasetUtil
+    var d1 = phantasus.DatasetUtil
       .slicedView(dataset, selectedIndices, null);
     var list1;
     if (isAnnotation) {
@@ -118,22 +118,22 @@ morpheus.NearestNeighbors.prototype = {
     } else {
       if (d1.getRowCount() > 1) {
         // collapse each column in the dataset to a single value
-        var columnView = new morpheus.DatasetColumnView(d1);
-        var newDataset = new morpheus.Dataset({
+        var columnView = new phantasus.DatasetColumnView(d1);
+        var newDataset = new phantasus.Dataset({
           name: '',
           rows: 1,
           columns: d1.getColumnCount()
         });
         for (var j = 0, ncols = d1.getColumnCount(); j < ncols; j++) {
-          var v = morpheus.Percentile(columnView.setIndex(j), 50);
+          var v = phantasus.Percentile(columnView.setIndex(j), 50);
           newDataset.setValue(0, j, v);
         }
         d1 = newDataset;
       }
-      list1 = new morpheus.DatasetRowView(d1);
+      list1 = new phantasus.DatasetRowView(d1);
     }
 
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     var values = [];
     var v = dataset.getRowMetadata().getByName(f.toString());
     if (v == null) {
@@ -143,11 +143,11 @@ morpheus.NearestNeighbors.prototype = {
       v.setValue(i, f(list1, list2.setIndex(i)));
     }
     if (!isColumns) {
-      project.setRowSortKeys([new morpheus.SortKey(f.toString(),
-        morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([new phantasus.SortKey(f.toString(),
+        phantasus.SortKey.SortOrder.DESCENDING)], true);
     } else {
-      project.setColumnSortKeys([new morpheus.SortKey(f.toString(),
-        morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setColumnSortKeys([new phantasus.SortKey(f.toString(),
+        phantasus.SortKey.SortOrder.DESCENDING)], true);
     }
     project.trigger('trackChanged', {
       vectors: [v],

@@ -1,4 +1,4 @@
-morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
+phantasus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   var ignoreEvent = false;
   var rowGroupBy;
   var columnGroupBy;
@@ -10,7 +10,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   var rowSelection;
   var vscrollFunction;
   var hscrollFunction;
-  project.on(morpheus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy = function () {
+  project.on(phantasus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy = function () {
     if (ignoreEvent) {
       return;
     }
@@ -18,7 +18,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setGroupColumns(project.getGroupRows(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy = function () {
+  project.on(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy = function () {
     if (ignoreEvent) {
       return;
     }
@@ -26,7 +26,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setGroupRows(project.getGroupColumns(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.ROW_FILTER_CHANGED, rowFilter = function () {
+  project.on(phantasus.Project.Events.ROW_FILTER_CHANGED, rowFilter = function () {
     if (ignoreEvent) {
       return;
     }
@@ -34,7 +34,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setColumnFilter(project.getRowFilter(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter = function () {
+  project.on(phantasus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter = function () {
     if (ignoreEvent) {
       return;
     }
@@ -42,7 +42,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setRowFilter(project.getColumnFilter(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder = function () {
+  project.on(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder = function () {
     if (ignoreEvent) {
       return;
     }
@@ -50,7 +50,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setColumnSortKeys(project.getRowSortKeys(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder = function () {
+  project.on(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder = function () {
     if (ignoreEvent) {
       return;
     }
@@ -94,12 +94,12 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   });
 
   this.dispose = function () {
-    project.off(morpheus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy);
-    project.off(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy);
-    project.off(morpheus.Project.Events.ROW_FILTER_CHANGED, rowFilter);
-    project.off(morpheus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter);
-    project.off(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder);
-    project.off(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder);
+    project.off(phantasus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy);
+    project.off(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy);
+    project.off(phantasus.Project.Events.ROW_FILTER_CHANGED, rowFilter);
+    project.off(phantasus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter);
+    project.off(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder);
+    project.off(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder);
     project.getColumnSelectionModel().off('selectionChanged', columnSelection);
     project.getRowSelectionModel().off('selectionChanged', rowSelection);
     vscroll.off('scroll', vscrollFunction);

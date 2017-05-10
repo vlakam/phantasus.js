@@ -1,8 +1,8 @@
-morpheus.AbstractCanvas = function (offscreen) {
-  this.canvas = morpheus.CanvasUtil.createCanvas();
+phantasus.AbstractCanvas = function (offscreen) {
+  this.canvas = phantasus.CanvasUtil.createCanvas();
   this.lastClip = null;
   if (offscreen) {
-    this.offscreenCanvas = morpheus.CanvasUtil.createCanvas();
+    this.offscreenCanvas = phantasus.CanvasUtil.createCanvas();
   }
   this.offset = {
     x: 0,
@@ -10,7 +10,7 @@ morpheus.AbstractCanvas = function (offscreen) {
   };
 };
 
-morpheus.AbstractCanvas.prototype = {
+phantasus.AbstractCanvas.prototype = {
   visible: true,
   invalid: true,
   scrollX: 0,
@@ -52,7 +52,7 @@ morpheus.AbstractCanvas.prototype = {
     this.invalid = invalid;
   },
   setBounds: function (bounds) {
-    var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+    var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
     var canvases = [this.canvas];
     if (this.offscreenCanvas) {
       canvases.push(this.offscreenCanvas);
@@ -86,20 +86,20 @@ morpheus.AbstractCanvas.prototype = {
   paint: function (clip) {
     var canvas = this.canvas;
     var context = canvas.getContext('2d');
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     var width = this.getUnscaledWidth();
     var height = this.getUnscaledHeight();
     context.clearRect(0, 0, width, height);
     if (this.prePaint) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(this.offset.x, this.offset.y);
       this.prePaint(clip, context);
     }
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     if (this.offscreenCanvas) {
       if (this.invalid) {
         var oc = this.offscreenCanvas.getContext('2d');
-        morpheus.CanvasUtil.resetTransform(oc);
+        phantasus.CanvasUtil.resetTransform(oc);
         context.translate(this.offset.x, this.offset.y);
         oc.clearRect(0, 0, width, height);
         this.draw(clip, oc);
@@ -109,7 +109,7 @@ morpheus.AbstractCanvas.prototype = {
       this.draw(clip, context);
     }
     if (this.postPaint) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(this.offset.x, this.offset.y);
       this.postPaint(clip, context);
     }
@@ -152,10 +152,10 @@ morpheus.AbstractCanvas.prototype = {
     }
   },
   getUnscaledWidth: function () {
-    return this.canvas.width / morpheus.CanvasUtil.BACKING_SCALE;
+    return this.canvas.width / phantasus.CanvasUtil.BACKING_SCALE;
   },
   getUnscaledHeight: function () {
-    return this.canvas.height / morpheus.CanvasUtil.BACKING_SCALE;
+    return this.canvas.height / phantasus.CanvasUtil.BACKING_SCALE;
   },
   getWidth: function () {
     return this.canvas.width;

@@ -4,7 +4,7 @@
  * @param stops
  *            An array of objects with value and color
  */
-morpheus.HeatMapColorScheme = function (project, scheme) {
+phantasus.HeatMapColorScheme = function (project, scheme) {
   this.project = project;
   var that = this;
 
@@ -15,7 +15,7 @@ morpheus.HeatMapColorScheme = function (project, scheme) {
     if (scheme.valueToColorScheme) { // json representation
       this.fromJSON(scheme);
     } else {
-      this.rowValueToColorSupplier[null] = morpheus.HeatMapColorScheme
+      this.rowValueToColorSupplier[null] = phantasus.HeatMapColorScheme
         .createColorSupplier(scheme);
       this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     }
@@ -28,8 +28,8 @@ morpheus.HeatMapColorScheme = function (project, scheme) {
       });
   this.projectUpdated();
 };
-morpheus.HeatMapColorScheme.Predefined = {};
-morpheus.HeatMapColorScheme.Predefined.SUMMLY = function () {
+phantasus.HeatMapColorScheme.Predefined = {};
+phantasus.HeatMapColorScheme.Predefined.SUMMLY = function () {
   return {
     name: '(-100, -97.5, -95, 95, 97.5, 100)',
     type: 'fixed',
@@ -55,7 +55,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
+phantasus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
   return {
     name: '(-100, -95, -90, 90, 95, 100)',
     type: 'fixed',
@@ -81,7 +81,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
+phantasus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
   return {
     type: 'fixed',
     map: [{
@@ -112,7 +112,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.CN = function () {
+phantasus.HeatMapColorScheme.Predefined.CN = function () {
   return {
     type: 'fixed',
     map: [{
@@ -130,7 +130,7 @@ morpheus.HeatMapColorScheme.Predefined.CN = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.Predefined.BINARY = function () {
+phantasus.HeatMapColorScheme.Predefined.BINARY = function () {
   return {
     type: 'fixed',
     map: [{
@@ -142,12 +142,12 @@ morpheus.HeatMapColorScheme.Predefined.BINARY = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.Predefined.RELATIVE = function () {
+phantasus.HeatMapColorScheme.Predefined.RELATIVE = function () {
   return {
     type: 'relative'
   };
 };
-morpheus.HeatMapColorScheme.Predefined.MAF = function () {
+phantasus.HeatMapColorScheme.Predefined.MAF = function () {
   // coMut plot colors
 
   var canvas = document.createElement('canvas');
@@ -194,7 +194,7 @@ morpheus.HeatMapColorScheme.Predefined.MAF = function () {
     }]
   };
 };
-// morpheus.HeatMapColorScheme.Predefined.MAF_NEW = function() {
+// phantasus.HeatMapColorScheme.Predefined.MAF_NEW = function() {
 // // Synonymous 1
 // //In_frame_Indel 2
 // //Other_non_syn. 3
@@ -240,7 +240,7 @@ morpheus.HeatMapColorScheme.Predefined.MAF = function () {
 // } ]
 // };
 // };
-morpheus.HeatMapColorScheme.Predefined.ZS = function () {
+phantasus.HeatMapColorScheme.Predefined.ZS = function () {
   return {
     type: 'fixed',
     map: [{
@@ -258,18 +258,18 @@ morpheus.HeatMapColorScheme.Predefined.ZS = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.ScalingMode = {
+phantasus.HeatMapColorScheme.ScalingMode = {
   RELATIVE: 0,
   FIXED: 1
 };
 
-morpheus.HeatMapConditions = function () {
+phantasus.HeatMapConditions = function () {
   this.array = [];
   // each condition is a object with: series, shape, color and
   // accept(val) function
 
 };
-morpheus.HeatMapConditions.prototype = {
+phantasus.HeatMapConditions.prototype = {
   insert: function (index, c) {
     this.array.splice(index, 0, c);
   },
@@ -283,7 +283,7 @@ morpheus.HeatMapConditions.prototype = {
     this.array.splice(index, 1);
   },
   copy: function () {
-    var c = new morpheus.HeatMapConditions();
+    var c = new phantasus.HeatMapConditions();
     this.array.forEach(function (cond) {
       c.array.push(_.clone(cond));
     });
@@ -291,7 +291,7 @@ morpheus.HeatMapConditions.prototype = {
   }
 };
 
-morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
+phantasus.HeatMapColorScheme.createColorSupplier = function (options) {
   var type = options.type;
   var stepped = options.stepped;
   var map = options.map;
@@ -299,7 +299,7 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
   var min = 0;
   var max = 1;
   if (type === 'fixed') {
-    scalingMode = morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.FIXED;
     if (map) { // get min/max
       min = Number.MAX_VALUE;
       max = -Number.MAX_VALUE;
@@ -309,7 +309,7 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
       }
     }
   } else {
-    scalingMode = morpheus.HeatMapColorScheme.ScalingMode.RELATIVE;
+    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.RELATIVE;
   }
 
   var fractions = [];
@@ -352,9 +352,9 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
   if (options.size != null) {
     json.size = options.size;
   }
-  return morpheus.AbstractColorSupplier.fromJSON(json);
+  return phantasus.AbstractColorSupplier.fromJSON(json);
 };
-morpheus.HeatMapColorScheme.prototype = {
+phantasus.HeatMapColorScheme.prototype = {
   getColors: function () {
     return this.currentColorSupplier.getColors();
   },
@@ -414,8 +414,8 @@ morpheus.HeatMapColorScheme.prototype = {
   },
   setStepped: function (stepped) {
     var oldColorSupplier = this.currentColorSupplier;
-    var newColorSupplier = stepped ? new morpheus.SteppedColorSupplier()
-      : new morpheus.GradientColorSupplier();
+    var newColorSupplier = stepped ? new phantasus.SteppedColorSupplier()
+      : new phantasus.GradientColorSupplier();
     newColorSupplier.sizer = oldColorSupplier.getSizer();
     newColorSupplier.array = oldColorSupplier.getConditions();
     newColorSupplier.setScalingMode(oldColorSupplier.getScalingMode());
@@ -437,7 +437,7 @@ morpheus.HeatMapColorScheme.prototype = {
     json.valueToColorScheme = {};
     _.each(_.keys(this.rowValueToColorSupplier), function (key) {
       // save each scheme
-      json.valueToColorScheme[key] = morpheus.AbstractColorSupplier.toJSON(_this.rowValueToColorSupplier[key]);
+      json.valueToColorScheme[key] = phantasus.AbstractColorSupplier.toJSON(_this.rowValueToColorSupplier[key]);
     });
 
     return json;
@@ -453,7 +453,7 @@ morpheus.HeatMapColorScheme.prototype = {
     this.rowValueToColorSupplier = {};
     var obj = json.valueToColorScheme || json.colorSchemes;
     _.each(_.keys(obj), function (key) {
-      var colorSupplier = morpheus.AbstractColorSupplier
+      var colorSupplier = phantasus.AbstractColorSupplier
         .fromJSON(obj[key]);
       _this.rowValueToColorSupplier[key] = colorSupplier;
     });
@@ -462,7 +462,7 @@ morpheus.HeatMapColorScheme.prototype = {
   },
   copy: function (project) {
     var _this = this;
-    var c = new morpheus.HeatMapColorScheme(project);
+    var c = new phantasus.HeatMapColorScheme(project);
     c.separateColorSchemeForRowMetadataField = this.separateColorSchemeForRowMetadataField;
     if (c.separateColorSchemeForRowMetadataField != null) {
       c.vector = project.getSortedFilteredDataset().getRowMetadata()
@@ -511,7 +511,7 @@ morpheus.HeatMapColorScheme.prototype = {
         .getRowMetadata().getByName(
           this.separateColorSchemeForRowMetadataField);
     }
-    this.cachedRowStats = new morpheus.RowStats(dataset);
+    this.cachedRowStats = new phantasus.RowStats(dataset);
   },
   setColorSupplierForCurrentValue: function (colorSupplier) {
     this.rowValueToColorSupplier[this.value] = colorSupplier;
@@ -532,7 +532,7 @@ morpheus.HeatMapColorScheme.prototype = {
         this._ensureColorSupplierExists();
       }
     }
-    if (this.currentColorSupplier.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.currentColorSupplier.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       if (this.cachedRowStats.maybeUpdateRelative(row)) {
         this.currentColorSupplier
           .setMin(this.cachedRowStats.rowCachedMin);
@@ -551,7 +551,7 @@ morpheus.HeatMapColorScheme.prototype = {
   _ensureColorSupplierExists: function () {
     this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     if (this.currentColorSupplier === undefined) {
-      var cs = morpheus.HeatMapColorScheme.createColorSupplier({
+      var cs = phantasus.HeatMapColorScheme.createColorSupplier({
         type: 'relative'
       });
       this.rowValueToColorSupplier[this.value] = cs;
@@ -559,18 +559,18 @@ morpheus.HeatMapColorScheme.prototype = {
     }
   }
 };
-morpheus.RowStats = function (dataset) {
-  this.datasetRowView = new morpheus.DatasetRowView(dataset);
+phantasus.RowStats = function (dataset) {
+  this.datasetRowView = new phantasus.DatasetRowView(dataset);
   this.cachedRow = -1;
   this.rowCachedMax = 0;
   this.rowCachedMin = 0;
   this.rowCachedStandardDeviation = -1;
   this.rowCachedMean = -1;
 };
-morpheus.RowStats.prototype = {
+phantasus.RowStats.prototype = {
   cacheTransformValues: function (row, transform) {
-    var meanFunction = transform === morpheus.AbstractColorSupplier.Z_SCORE ? morpheus.Mean : morpheus.Median;
-    var stdevFunction = transform === morpheus.AbstractColorSupplier.Z_SCORE ? morpheus.StandardDeviation : morpheus.MAD;
+    var meanFunction = transform === phantasus.AbstractColorSupplier.Z_SCORE ? phantasus.Mean : phantasus.Median;
+    var stdevFunction = transform === phantasus.AbstractColorSupplier.Z_SCORE ? phantasus.StandardDeviation : phantasus.MAD;
     this.datasetRowView.setIndex(row);
     this.rowCachedMean = meanFunction(this.datasetRowView);
     this.rowCachedStandardDeviation = stdevFunction(this.datasetRowView, this.rowCachedMean);

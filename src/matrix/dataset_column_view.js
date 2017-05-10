@@ -1,9 +1,9 @@
-morpheus.DatasetColumnView = function (dataset) {
+phantasus.DatasetColumnView = function (dataset) {
   this.dataset = dataset;
   this.columnIndex = 0;
   this.seriesIndex = 0;
 };
-morpheus.DatasetColumnView.prototype = {
+phantasus.DatasetColumnView.prototype = {
   columnIndex: -1,
   size: function () {
     return this.dataset.getRowCount();

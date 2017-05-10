@@ -1,22 +1,22 @@
-morpheus.JsonDatasetReader = function () {
+phantasus.JsonDatasetReader = function () {
 
 };
 
-morpheus.JsonDatasetReader.prototype = {
+phantasus.JsonDatasetReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl));
+    var name = phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl));
     var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
     if (isString) {
       $.ajax(fileOrUrl).done(function (json) {
-        callback(null, morpheus.Dataset.fromJSON(json));
+        callback(null, phantasus.Dataset.fromJSON(json));
       }).fail(function (err) {
         callback(err);
       });
     } else {
       var reader = new FileReader();
       reader.onload = function (event) {
-        callback(null, morpheus.Dataset.fromJSON(JSON.parse(event.target.result)));
+        callback(null, phantasus.Dataset.fromJSON(JSON.parse(event.target.result)));
       };
       reader.onerror = function (event) {
         callback(event);

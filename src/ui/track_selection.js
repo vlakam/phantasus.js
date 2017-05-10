@@ -1,4 +1,4 @@
-morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
+phantasus.TrackSelection = function (track, positions, selectionModel, isColumns,
                                     heatMap) {
   var canvas = track.canvas;
   var startIndex = -1;
@@ -11,14 +11,14 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
       var squishFactor = total
         / (isColumns ? track.getUnscaledWidth() : track
           .getUnscaledHeight());
-      var clientXY = morpheus.CanvasUtil.getClientXY(event, useDelta);
-      var p = morpheus.CanvasUtil.getMousePosWithScroll(event.target,
+      var clientXY = phantasus.CanvasUtil.getClientXY(event, useDelta);
+      var p = phantasus.CanvasUtil.getMousePosWithScroll(event.target,
         event, 0, 0, useDelta);
       p[coord] *= squishFactor;
       return p;
 
     } else {
-      return morpheus.CanvasUtil.getMousePosWithScroll(event.target,
+      return phantasus.CanvasUtil.getMousePosWithScroll(event.target,
         event, heatMap.scrollLeft(), heatMap.scrollTop(),
         useDelta);
     }
@@ -27,7 +27,7 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
 
   var panning = false;
 
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(canvas, ['pan', 'tap', 'longpress'])
     .on('longpress', this.longpress = function (event) {
       event.preventDefault();
@@ -44,10 +44,10 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
         var position = getPosition(event);
         var endIndex = positions.getIndex(position[coord],
           false);
-        var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+        var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
           : event.srcEvent.ctrlKey;
         var viewIndices = commandKey ? selectionModel
-          .getViewIndices() : new morpheus.Set();
+          .getViewIndices() : new phantasus.Set();
         var _startIndex = startIndex;
         if (startIndex > endIndex) {
           var tmp = endIndex;
@@ -101,9 +101,9 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
             event.srcEvent.shiftKey);
         } else {
           heatMap.setSelectedTrack(track.name, isColumns);
-          var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+          var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
             : event.srcEvent.ctrlKey;
-          if (morpheus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+          if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
             // on
             // Mac
             return;
@@ -137,14 +137,14 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
               }
             }
           } else {
-            viewIndices = new morpheus.Set();
+            viewIndices = new phantasus.Set();
             viewIndices.add(index);
           }
           selectionModel.setViewIndices(viewIndices, true);
         }
       });
 };
-morpheus.TrackSelection.prototype = {
+phantasus.TrackSelection.prototype = {
   dispose: function () {
     this.hammer.off('longpress', this.longpress).off('panstart',
       this.panstart).off('panmove', this.panmove).off('panend', this.panend).off('tap', this.tap).off('doubletap', this.tap);

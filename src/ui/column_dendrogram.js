@@ -1,8 +1,8 @@
-morpheus.ColumnDendrogram = function (heatMap, tree, positions, project) {
-  morpheus.AbstractDendrogram.call(this, heatMap, tree, positions,
-    project, morpheus.AbstractDendrogram.Type.COLUMN);
+phantasus.ColumnDendrogram = function (heatMap, tree, positions, project) {
+  phantasus.AbstractDendrogram.call(this, heatMap, tree, positions,
+    project, phantasus.AbstractDendrogram.Type.COLUMN);
 };
-morpheus.ColumnDendrogram.prototype = {
+phantasus.ColumnDendrogram.prototype = {
   drawNode: function (context, node) {
     var radius = this.getNodeRadius(node);
     var pix = this.toPix(node);
@@ -34,7 +34,7 @@ morpheus.ColumnDendrogram.prototype = {
   },
   paintMouseOver: function (clip, context) {
     if (this.project.getHoverColumnIndex() !== -1) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(-clip.x, 0);
       this.drawColumnBorder(context, this.positions, this.project
         .getHoverColumnIndex(), this.getUnscaledWidth());
@@ -54,10 +54,10 @@ morpheus.ColumnDendrogram.prototype = {
     context.stroke();
   },
   getMaxIndex: function (clip) {
-    return morpheus.Positions.getRight(clip, this.positions);
+    return phantasus.Positions.getRight(clip, this.positions);
   },
   getMinIndex: function (clip) {
-    return morpheus.Positions.getLeft(clip, this.positions);
+    return phantasus.Positions.getLeft(clip, this.positions);
   },
   getPreferredSize: function (context) {
     return {
@@ -118,4 +118,4 @@ morpheus.ColumnDendrogram.prototype = {
     context.stroke();
   }
 };
-morpheus.Util.extend(morpheus.ColumnDendrogram, morpheus.AbstractDendrogram);
+phantasus.Util.extend(phantasus.ColumnDendrogram, phantasus.AbstractDendrogram);

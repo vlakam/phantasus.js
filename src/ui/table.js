@@ -16,8 +16,8 @@
 
 
 
-morpheus.Table = function (options) {
-  options = morpheus.Table.createOptions(options);
+phantasus.Table = function (options) {
+  options = phantasus.Table.createOptions(options);
   this.options = options;
   if (!options.width) {
     options.width = options.$el.attr('class');
@@ -38,7 +38,7 @@ morpheus.Table = function (options) {
   var visibleColumns = columns.filter(function (c) {
     return c.visible;
   });
-  var grid = new morpheus.Grid({
+  var grid = new phantasus.Grid({
     gridOptions: {
       select: options.select,
       rowHeight: options.rowHeight,
@@ -71,7 +71,7 @@ morpheus.Table = function (options) {
   this.$header = $header;
   var $right = $header.find('.pull-right');
   if (options.search) {
-    var tableSearch = new morpheus.TableSearchUI({
+    var tableSearch = new phantasus.TableSearchUI({
       $el: $header.find('[name=top]'),
       $right: $right
     });
@@ -121,7 +121,7 @@ morpheus.Table = function (options) {
       grid.setColumns(visibleColumns);
 
       if (newColumns.length > oldColumns.length) {
-        var set = new morpheus.Set();
+        var set = new phantasus.Set();
         for (var i = 0; i < newColumns.length; i++) {
           set.add(newColumns[i]);
         }
@@ -285,12 +285,12 @@ morpheus.Table = function (options) {
 }
 ;
 
-morpheus.Table.defaultRenderer = function (item, value) {
+phantasus.Table.defaultRenderer = function (item, value) {
   if (value == null) {
     return '';
   } else if (_.isNumber(value)) {
-    return morpheus.Util.nf(value);
-  } else if (morpheus.Util.isArray(value)) {
+    return phantasus.Util.nf(value);
+  } else if (phantasus.Util.isArray(value)) {
     var s = [];
     for (var i = 0, length = value.length; i < length; i++) {
       if (i > 0) {
@@ -305,7 +305,7 @@ morpheus.Table.defaultRenderer = function (item, value) {
   }
 };
 
-morpheus.Table.prototype = {
+phantasus.Table.prototype = {
   toText: function () {
     var text = [];
     var items = this.getItems();
@@ -326,7 +326,7 @@ morpheus.Table.prototype = {
           text.push('\t');
         }
         var value = columns[j].getter(item);
-        text.push(morpheus.Util.toString(value));
+        text.push(phantasus.Util.toString(value));
       }
       text.push('\n');
     }
@@ -389,7 +389,7 @@ morpheus.Table.prototype = {
     }
     var field = null;
     var semi = token.indexOf(':');
-    var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+    var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
     if (semi > 0) { // field search?
       if (token.charCodeAt(semi - 1) !== 92) { // \:
         var possibleField = $.trim(token.substring(0, semi));
@@ -398,7 +398,7 @@ morpheus.Table.prototype = {
           possibleField = possibleField.substring(1,
             possibleField.length - 1);
         }
-        var columnNameToColumn = new morpheus.Map();
+        var columnNameToColumn = new phantasus.Map();
         var columnNames = columns.map(function (c) {
           return c.name;
         });
@@ -414,7 +414,7 @@ morpheus.Table.prototype = {
       }
 
     } else if (ncolumns > 1) {
-      var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+      var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
       for (var j = 0; j < ncolumns; j++) {
         var field = columns[j].name;
         if (regex.test(field)) {
@@ -427,8 +427,8 @@ morpheus.Table.prototype = {
         }
       }
     }
-    var set = new morpheus.Set();
-    var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+    var set = new phantasus.Set();
+    var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
     var items = this.getItems();
     var dataTypes = [];
     // filter numeric columns
@@ -438,7 +438,7 @@ morpheus.Table.prototype = {
       for (var i = 0, nitems = items.length; i < nitems; i++) {
         var value = c.getter(items[i]);
         if (value != null) {
-          dataType = morpheus.Util.getDataType(value);
+          dataType = phantasus.Util.getDataType(value);
           break;
         }
       }
@@ -516,7 +516,7 @@ morpheus.Table.prototype = {
     var columns = this.columns.filter(function (c) {
       return (c.searchable && c.visible) || c.alwaysSearch;
     });
-    var columnNameToColumn = new morpheus.Map();
+    var columnNameToColumn = new phantasus.Map();
     var columnNames = columns.map(function (c) {
       return c.name;
     });
@@ -552,7 +552,7 @@ morpheus.Table.prototype = {
         }
         for (var j = 0, ncolumns = searchColumns.length; j < ncolumns; j++) {
           var value = searchColumns[j].getter(item);
-          if (morpheus.Util.isArray(value)) {
+          if (phantasus.Util.isArray(value)) {
             var nvalues = value.length;
             for (var i = 0; i < nvalues; i++) {
               if (predicate.accept(value[i])) {
@@ -583,14 +583,14 @@ morpheus.Table.prototype = {
         .setFilter(this.grid
           .getFilter());
     } else {
-      var tokens = morpheus.Util.getAutocompleteTokens(text);
+      var tokens = phantasus.Util.getAutocompleteTokens(text);
       var columns = this.columns.filter(function (c) {
         return (c.searchable && c.visible) || c.alwaysSearch;
       });
       var columnNames = columns.map(function (c) {
         return c.name;
       });
-      var predicates = morpheus.Util.createSearchPredicates({
+      var predicates = phantasus.Util.createSearchPredicates({
         tokens: tokens,
         fields: columnNames
       });
@@ -649,7 +649,7 @@ morpheus.Table.prototype = {
   }
 };
 
-morpheus.Table.createOptions = function (options) {
+phantasus.Table.createOptions = function (options) {
   options = $.extend(true, {}, {
     items: [],
     height: '564px',
@@ -672,7 +672,7 @@ morpheus.Table.createOptions = function (options) {
     var column = $.extend(true, {}, {
       id: i,
       tooltip: function (dataContext, value) {
-        return morpheus.Table.defaultRenderer(dataContext, value);
+        return phantasus.Table.defaultRenderer(dataContext, value);
       },
       formatter: function (row, cell, value, columnDef, dataContext) {
 
@@ -711,7 +711,7 @@ morpheus.Table.createOptions = function (options) {
       searchable: true,
       width: null,
       name: c.name,
-      renderer: morpheus.Table.defaultRenderer
+      renderer: phantasus.Table.defaultRenderer
     }, c);
 
     if (column.visible === undefined) {
@@ -742,7 +742,7 @@ morpheus.Table.createOptions = function (options) {
   return options;
 };
 
-morpheus.TableSearchUI = function (options) {
+phantasus.TableSearchUI = function (options) {
   var _this = this;
   var $search = $('<input name="search" type="text" class="form-control input-sm"' +
     ' placeholder="Search" autocomplete="off">');
@@ -763,7 +763,7 @@ morpheus.TableSearchUI = function (options) {
   $search.on('keyup', _.debounce(function () {
     _this.table.search($.trim($(this).val()));
   }, 100));
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: $search,
     suggestWhenEmpty: true,
     filter: function (tokens, response) {
@@ -775,9 +775,9 @@ morpheus.TableSearchUI = function (options) {
   });
 };
 
-morpheus.TableSearchUI.prototype = {
+phantasus.TableSearchUI.prototype = {
   updateSearchLabel: function () {
-    var text = 'Showing: ' + morpheus.Util.intFormat(this.table.getFilteredItemCount()) + ' / ' + morpheus.Util.intFormat(this.table.getAllItemCount());
+    var text = 'Showing: ' + phantasus.Util.intFormat(this.table.getFilteredItemCount()) + ' / ' + phantasus.Util.intFormat(this.table.getAllItemCount());
     this.$searchResults.html(text);
   },
   setTable: function (table) {

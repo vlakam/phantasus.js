@@ -1,10 +1,10 @@
-morpheus.HeatMapTrackColorLegend = function (tracks, colorModel) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.HeatMapTrackColorLegend = function (tracks, colorModel) {
+  phantasus.AbstractCanvas.call(this, false);
   this.tracks = tracks;
   this.colorModel = colorModel;
   this.canvas.style.position = '';
 };
-morpheus.HeatMapTrackColorLegend.prototype = {
+phantasus.HeatMapTrackColorLegend.prototype = {
   getPreferredSize: function () {
     var tracks = this.tracks;
     var colorModel = this.colorModel;
@@ -13,7 +13,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     var maxYPix = 0;
     var canvas = this.canvas;
     var context = canvas.getContext('2d');
-    context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+    context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
     for (var i = 0; i < tracks.length; i++) {
       ypix = 0;
       var maxWidth = 0;
@@ -49,8 +49,8 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     for (var i = 0; i < tracks.length; i++) {
       var ypix = 0;
       var vector = tracks[i].getVector();
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
-      context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+      context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
       context.textAlign = 'left';
       // draw name
       context.textBaseline = 'top';
@@ -68,7 +68,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
       if (scheme != null) { // draw continuous color legend
         context.save();
         context.translate(xpix, ypix);
-        morpheus.HeatMapColorSchemeLegend.drawColorScheme(context,
+        phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
           scheme, 200);
         context.restore();
         maxWidth = Math.max(maxWidth, 220);
@@ -76,7 +76,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
       } else {
         var map = colorModel.getDiscreteColorScheme(vector);
         var values = map.keys().sort(
-          morpheus.SortKey.ASCENDING_COMPARATOR);
+          phantasus.SortKey.ASCENDING_COMPARATOR);
         values.forEach(function (key) {
           if (key != null) {
             var color = colorModel.getMappedValue(vector, key);
@@ -87,7 +87,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
             context.fillStyle = color;
             context.fillRect(xpix, ypix, 12, 12);
             context.strokeRect(xpix, ypix, 12, 12);
-            context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+            context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
             context.fillText(key, xpix + 16, ypix);
             ypix += 14;
           }
@@ -97,4 +97,4 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.HeatMapTrackColorLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HeatMapTrackColorLegend, phantasus.AbstractCanvas);

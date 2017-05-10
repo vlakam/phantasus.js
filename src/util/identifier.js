@@ -1,7 +1,7 @@
-morpheus.Identifier = function (array) {
+phantasus.Identifier = function (array) {
   this.array = array;
 };
-morpheus.Identifier.prototype = {
+phantasus.Identifier.prototype = {
   toString: function () {
     return this.array.join(',');
   },

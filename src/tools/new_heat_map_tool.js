@@ -1,6 +1,6 @@
-morpheus.NewHeatMapTool = function () {
+phantasus.NewHeatMapTool = function () {
 };
-morpheus.NewHeatMapTool.prototype = {
+phantasus.NewHeatMapTool.prototype = {
   toString: function () {
     return 'New Heat Map';
   },
@@ -25,20 +25,20 @@ morpheus.NewHeatMapTool.prototype = {
       selectedRows: true,
       selectedColumns: true
     });
-    morpheus.DatasetUtil.shallowCopy(dataset);
-    //morpheus.DatasetUtil.toESSessionPromise(dataset);
+    phantasus.DatasetUtil.shallowCopy(dataset);
+    //phantasus.DatasetUtil.toESSessionPromise(dataset);
     console.log(dataset);
     // TODO see if we can subset dendrograms
     // only handle contiguous selections for now
     // if (heatMap.columnDendrogram != null) {
     // var indices = project.getColumnSelectionModel().getViewIndices()
     // .toArray();
-    // morpheus.DendrogramUtil.leastCommonAncestor();
+    // phantasus.DendrogramUtil.leastCommonAncestor();
     // }
     // if (heatMap.rowDendrogram != null) {
     //
     // }
-    var heatmap = new morpheus.HeatMap({
+    var heatmap = new phantasus.HeatMap({
       name: heatMap.getName(),
       dataset: dataset,
       parent: heatMap,

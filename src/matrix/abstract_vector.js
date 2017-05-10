@@ -6,16 +6,16 @@
  *            the vector name
  * @param size {number}
  *            the number of elements in this vector
- * @implements {morpheus.VectorInterface}
+ * @implements {phantasus.VectorInterface}
  * @constructor
  */
-morpheus.AbstractVector = function (name, size) {
+phantasus.AbstractVector = function (name, size) {
   this.name = name;
   this.n = size;
-  this.properties = new morpheus.Map();
+  this.properties = new phantasus.Map();
 };
 
-morpheus.AbstractVector.prototype = {
+phantasus.AbstractVector.prototype = {
   getValue: function (index) {
     throw new Error('Not implemented');
   },

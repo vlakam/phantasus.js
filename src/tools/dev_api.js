@@ -1,6 +1,6 @@
-morpheus.DevAPI = function () {
+phantasus.DevAPI = function () {
 };
-morpheus.DevAPI.prototype = {
+phantasus.DevAPI.prototype = {
   toString: function () {
     return 'API';
   },

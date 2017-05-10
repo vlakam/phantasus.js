@@ -1,6 +1,6 @@
-morpheus.SaveDatasetTool = function () {
+phantasus.SaveDatasetTool = function () {
 };
-morpheus.SaveDatasetTool.prototype = {
+phantasus.SaveDatasetTool.prototype = {
   toString: function () {
     return 'Save Dataset';
   },
@@ -56,20 +56,20 @@ morpheus.SaveDatasetTool.prototype = {
     var dataset = options.input.save_selection_only ? project.getSelectedDataset() : project.getSortedFilteredDataset();
     var writer;
     if (format === '1.2') {
-      writer = new morpheus.GctWriter12();
+      writer = new phantasus.GctWriter12();
     } else if (format === '1.3') {
-      writer = new morpheus.GctWriter();
+      writer = new phantasus.GctWriter();
     }
 
     if (series != null) {
-      var seriesIndex = morpheus.DatasetUtil.getSeriesIndex(dataset, series);
+      var seriesIndex = phantasus.DatasetUtil.getSeriesIndex(dataset, series);
       if (seriesIndex === -1) {
         seriesIndex = 0;
       }
-      dataset = seriesIndex === 0 ? dataset : new morpheus.DatasetSeriesView(dataset, [seriesIndex]);
+      dataset = seriesIndex === 0 ? dataset : new phantasus.DatasetSeriesView(dataset, [seriesIndex]);
     }
     var ext = writer.getExtension ? writer.getExtension() : '';
-    if (ext !== '' && !morpheus.Util.endsWith(fileName.toLowerCase(), '.' + ext)) {
+    if (ext !== '' && !phantasus.Util.endsWith(fileName.toLowerCase(), '.' + ext)) {
       fileName += '.' + ext;
     }
 

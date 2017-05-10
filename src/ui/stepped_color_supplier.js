@@ -1,7 +1,7 @@
-morpheus.SteppedColorSupplier = function () {
-  morpheus.AbstractColorSupplier.call(this);
+phantasus.SteppedColorSupplier = function () {
+  phantasus.AbstractColorSupplier.call(this);
   this.hiddenValue = 0;
-  this.hiddenValues = new morpheus.Set();
+  this.hiddenValues = new phantasus.Set();
   this.stepped = true;
 };
 /**
@@ -10,13 +10,13 @@ morpheus.SteppedColorSupplier = function () {
  *
  * @return The converted value.
  */
-morpheus.SteppedColorSupplier.linearScale = function (value, input0, input1,
+phantasus.SteppedColorSupplier.linearScale = function (value, input0, input1,
                                                       pix0, pix1) {
   return (value - input0) / (input1 - input0) * (pix1 - pix0) + pix0;
 };
-morpheus.SteppedColorSupplier.prototype = {
+phantasus.SteppedColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.SteppedColorSupplier();
+    return new phantasus.SteppedColorSupplier();
   },
   isStepped: function () {
     return true;
@@ -58,10 +58,10 @@ morpheus.SteppedColorSupplier.prototype = {
     } else if (value >= max) {
       return colors[colors.length - 1];
     }
-    var fraction = morpheus.SteppedColorSupplier.linearScale(value, min,
+    var fraction = phantasus.SteppedColorSupplier.linearScale(value, min,
         max, 0, 100) / 100;
     return colors[this.getIndexForFraction(fraction)];
   }
 };
-morpheus.Util.extend(morpheus.SteppedColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.SteppedColorSupplier,
+  phantasus.AbstractColorSupplier);

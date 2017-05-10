@@ -1,24 +1,24 @@
 (function(global){
 'use strict';
 /**
- * @name morpheus
+ * @name phantasus
  * @namespace
  */
-var morpheus = (typeof morpheus !== 'undefined') ? morpheus : {};
+var phantasus = (typeof phantasus !== 'undefined') ? phantasus : {};
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = morpheus; // Node
+  module.exports = phantasus; // Node
 } else if (typeof define === 'function' && define.amd) {
   define(function () { // AMD module
-    return morpheus;
+    return phantasus;
   });
 } else {
-  global.morpheus = morpheus; // browser global
+  global.phantasus = phantasus; // browser global
 }
-morpheus.Util = function () {
+phantasus.Util = function () {
 };
 
-morpheus.Util.URL = 'https://clue.io/morpheus/';
-morpheus.Util.RIGHT_ARROW = String.fromCharCode(8594);
+phantasus.Util.URL = 'https://clue.io/phantasus/';
+phantasus.Util.RIGHT_ARROW = String.fromCharCode(8594);
 /**
  * Add properties in c2 to c1
  *
@@ -27,29 +27,29 @@ morpheus.Util.RIGHT_ARROW = String.fromCharCode(8594);
  * @param {Object}
  *            c2 The object that obj1 inherits from
  */
-morpheus.Util.extend = function (c1, c2) {
+phantasus.Util.extend = function (c1, c2) {
   for (var key in c2.prototype) {
     if (!(key in c1.prototype)) {
       c1.prototype[key] = c2.prototype[key];
     }
   }
 };
-morpheus.Util.isFetchSupported = function () {
+phantasus.Util.isFetchSupported = function () {
   return navigator.userAgent.indexOf('Chrome') !== -1;
 };
 
-morpheus.Util.viewPortSize = function () {
+phantasus.Util.viewPortSize = function () {
   return window.getComputedStyle(document.body, ':before').content.replace(
     /"/g, '');
 };
 
-morpheus.Util.TRACKING_CODE_LOADED = false;
-morpheus.Util.loadTrackingCode = function () {
+phantasus.Util.TRACKING_CODE_LOADED = false;
+phantasus.Util.loadTrackingCode = function () {
   if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
-    if (morpheus.Util.TRACKING_CODE_LOADED) {
+    if (phantasus.Util.TRACKING_CODE_LOADED) {
       return;
     } else if (typeof ga === 'undefined') {
-      morpheus.Util.TRACKING_CODE_LOADED = true;
+      phantasus.Util.TRACKING_CODE_LOADED = true;
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
@@ -63,14 +63,14 @@ morpheus.Util.loadTrackingCode = function () {
       })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
     }
     if (typeof ga !== 'undefined') {
-      ga('create', 'UA-53973555-1', 'auto', 'morpheus');
-      ga('morpheus.send', 'pageview');
+      ga('create', 'UA-53973555-1', 'auto', 'phantasus');
+      ga('phantasus.send', 'pageview');
     }
-    morpheus.Util.TRACKING_CODE_LOADED = true;
+    phantasus.Util.TRACKING_CODE_LOADED = true;
   }
 };
 
-morpheus.Util.measureScrollbar = function () {
+phantasus.Util.measureScrollbar = function () {
   var $c = $(
     '<div style=\'position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;\'></div>')
     .appendTo('body');
@@ -81,13 +81,13 @@ morpheus.Util.measureScrollbar = function () {
   $c.remove();
   return dim;
 };
-morpheus.Util.trackEvent = function (options) {
+phantasus.Util.trackEvent = function (options) {
   if (typeof window !== 'undefined') {
-    if (!morpheus.Util.TRACKING_CODE_LOADED) {
-      morpheus.Util.loadTrackingCode();
+    if (!phantasus.Util.TRACKING_CODE_LOADED) {
+      phantasus.Util.loadTrackingCode();
     }
-    if (morpheus.Util.TRACKING_CODE_LOADED && typeof ga !== 'undefined') {
-      ga('morpheus.send', {
+    if (phantasus.Util.TRACKING_CODE_LOADED && typeof ga !== 'undefined') {
+      ga('phantasus.send', {
         hitType: 'event',
         eventCategory: options.eventCategory,
         eventAction: options.eventAction,
@@ -98,7 +98,7 @@ morpheus.Util.trackEvent = function (options) {
 
 };
 
-morpheus.Util.isString = function (value) {
+phantasus.Util.isString = function (value) {
   return typeof value === 'string' || value instanceof String;
 };
 /**
@@ -106,13 +106,13 @@ morpheus.Util.isString = function (value) {
  * @param val The value to determine the data type for.
  * @return {String} One of string, number, object, [string], [number], [object]
  */
-morpheus.Util.getDataType = function (val) {
+phantasus.Util.getDataType = function (val) {
   var dataType;
-  var isArray = morpheus.Util.isArray(val);
+  var isArray = phantasus.Util.isArray(val);
   if (isArray && val.length > 0) {
     val = val[0];
   }
-  if (morpheus.Util.isString(val)) {
+  if (phantasus.Util.isString(val)) {
     dataType = 'string';
   } else if (_.isNumber(val)) {
     dataType = 'number';
@@ -128,7 +128,7 @@ morpheus.Util.getDataType = function (val) {
 /**
  * Checks whether supplied argument is an array
  */
-morpheus.Util.isArray = function (array) {
+phantasus.Util.isArray = function (array) {
   var types = [Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
     Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array,];
   // handle native arrays
@@ -139,21 +139,21 @@ morpheus.Util.isArray = function (array) {
   }
   return false;
 };
-morpheus.Util.getWindowSearchObject = function () {
+phantasus.Util.getWindowSearchObject = function () {
   var searchObject = {};
   var hashObject = {};
   if (window.location.search.length > 0) {
-    searchObject = morpheus.Util.getQueryParams(window.location.search
+    searchObject = phantasus.Util.getQueryParams(window.location.search
       .substring(1));
   }
   if (window.location.hash.length > 0) {
-    hashObject = morpheus.Util.getQueryParams(window.location.hash
+    hashObject = phantasus.Util.getQueryParams(window.location.hash
       .substring(1));
   }
   return _.extend(hashObject, searchObject);
 };
 
-morpheus.Util.copyString = function (s) {
+phantasus.Util.copyString = function (s) {
   return (' ' + s).substr(1);
   //return (' ' + s).slice(1);
   // var copy = [];
@@ -162,7 +162,7 @@ morpheus.Util.copyString = function (s) {
   // }
   // return copy.join('');
 };
-morpheus.Util.getQueryParams = function (s) {
+phantasus.Util.getQueryParams = function (s) {
   var params = {};
   if (!s) {
     return params;
@@ -182,9 +182,9 @@ morpheus.Util.getQueryParams = function (s) {
   }
   return params;
 };
-morpheus.Util.getScriptPath = function (name) {
+phantasus.Util.getScriptPath = function (name) {
   if (!name) {
-    name = 'morpheus-latest.min.js';
+    name = 'phantasus-latest.min.js';
   }
   var scripts = document.getElementsByTagName('script');
   for (var i = scripts.length - 1; i >= 0; i--) {
@@ -199,14 +199,14 @@ morpheus.Util.getScriptPath = function (name) {
   }
 
   // not found
-  if (name === 'morpheus-latest.min.js') {
-    return morpheus.Util.getScriptPath('morpheus.js');
+  if (name === 'phantasus-latest.min.js') {
+    return phantasus.Util.getScriptPath('phantasus.js');
   }
   // return 1st script
   return scripts.length > 0 ? scripts[0].src : '';
 };
 
-morpheus.Util.forceDelete = function (obj) {
+phantasus.Util.forceDelete = function (obj) {
   try {
     var _garbageCollector = (function () {
       var ef = URL.createObjectURL(new Blob([''], {
@@ -223,7 +223,7 @@ morpheus.Util.forceDelete = function (obj) {
     console.log('Unable to delete');
   }
 };
-morpheus.Util.getFileName = function (fileOrUrl) {
+phantasus.Util.getFileName = function (fileOrUrl) {
   if (fileOrUrl instanceof File) {
     return fileOrUrl.name;
   }
@@ -255,10 +255,10 @@ morpheus.Util.getFileName = function (fileOrUrl) {
   }
   return name;
 };
-morpheus.Util.prefixWithZero = function (value) {
+phantasus.Util.prefixWithZero = function (value) {
   return value < 10 ? '0' + value : value;
 };
-morpheus.Util.getExtension = function (name) {
+phantasus.Util.getExtension = function (name) {
   name = '' + name;
   var dotIndex = name.lastIndexOf('.');
   if (dotIndex > 0) {
@@ -291,18 +291,18 @@ morpheus.Util.getExtension = function (name) {
  *            The file name.
  * @return The base file name.
  */
-morpheus.Util.getBaseFileName = function (name) {
+phantasus.Util.getBaseFileName = function (name) {
   var dotIndex = name.lastIndexOf('.');
   if (dotIndex > 0) {
     var suffix = name.substring(dotIndex + 1, name.length);
     if (suffix === 'gz' || suffix === 'zip' || suffix === 'bz2') {
-      return morpheus.Util.getBaseFileName(name.substring(0, dotIndex));
+      return phantasus.Util.getBaseFileName(name.substring(0, dotIndex));
     }
     return name.substring(0, dotIndex);
   }
   return name;
 };
-morpheus.Util.seq = function (length) {
+phantasus.Util.seq = function (length) {
   var array = [];
   for (var i = 0; i < length; i++) {
     array.push(i);
@@ -310,7 +310,7 @@ morpheus.Util.seq = function (length) {
   return array;
 };
 
-morpheus.Util.sequ32 = function (length) {
+phantasus.Util.sequ32 = function (length) {
   var array = new Uint32Array(length);
   for (var i = 0; i < length; i++) {
     array[i] = i;
@@ -322,7 +322,7 @@ morpheus.Util.sequ32 = function (length) {
  * Converts window hash or search to an object that maps keys to an array of
  * values. For example ?foo=bar returns {foo:[bar]}
  */
-morpheus.Util.paramsToObject = function (hash) {
+phantasus.Util.paramsToObject = function (hash) {
   var search = hash ? window.location.hash : window.location.search;
   if (search.length <= 1) {
     return {};
@@ -341,11 +341,11 @@ morpheus.Util.paramsToObject = function (hash) {
   }
   return result;
 };
-morpheus.Util.endsWith = function (string, suffix) {
+phantasus.Util.endsWith = function (string, suffix) {
   return string.length >= suffix.length
     && string.substr(string.length - suffix.length) === suffix;
 };
-morpheus.Util.measureSvgText = function (text, classname) {
+phantasus.Util.measureSvgText = function (text, classname) {
   if (!text || text.length === 0)
     return {
       height: 0,
@@ -366,14 +366,14 @@ morpheus.Util.measureSvgText = function (text, classname) {
     width: bbox.width
   };
 };
-morpheus.Util.IS_MAC = false;
+phantasus.Util.IS_MAC = false;
 if (typeof navigator !== 'undefined') {
-  morpheus.Util.IS_MAC = navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) ? true
+  phantasus.Util.IS_MAC = navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) ? true
     : false;
 }
-morpheus.Util.COMMAND_KEY = morpheus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
+phantasus.Util.COMMAND_KEY = phantasus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
 
-morpheus.Util.hammer = function (el, recognizers) {
+phantasus.Util.hammer = function (el, recognizers) {
   var hammer = new Hammer(el, {
     recognizers: []
   });
@@ -423,10 +423,10 @@ morpheus.Util.hammer = function (el, recognizers) {
 
   return hammer;
 };
-morpheus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
-  var filteredSet = new morpheus.Set();
-  var regex = new RegExp(morpheus.Util.escapeRegex(token), 'i');
-  var regexMatch = new RegExp('(' + morpheus.Util.escapeRegex(token) + ')', 'i');
+phantasus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
+  var filteredSet = new phantasus.Set();
+  var regex = new RegExp(phantasus.Util.escapeRegex(token), 'i');
+  var regexMatch = new RegExp('(' + phantasus.Util.escapeRegex(token) + ')', 'i');
   // iterate through the pool of strings and for any string that
   // contains the substring `q`, add it to the `matches` array
   if (fields) {
@@ -478,7 +478,7 @@ morpheus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max
  *
  * @param array. Array of format,data
  */
-morpheus.Util.setClipboardData = function (clipboardData, delay) {
+phantasus.Util.setClipboardData = function (clipboardData, delay) {
   var isRTL = document.documentElement.getAttribute('dir') == 'rtl';
   var fakeElem = document.createElement('div');
   fakeElem.contentEditable = true;
@@ -551,7 +551,7 @@ morpheus.Util.setClipboardData = function (clipboardData, delay) {
  *            when text field is empty.
  *
  */
-morpheus.Util.autosuggest = function (options) {
+phantasus.Util.autosuggest = function (options) {
   options = $.extend({}, {
     multi: true,
     delay: 500,
@@ -566,7 +566,7 @@ morpheus.Util.autosuggest = function (options) {
       return false;
     }
     if (options.multi) {
-      var terms = morpheus.Util
+      var terms = phantasus.Util
         .getAutocompleteTokens(
           options.$el[0].value,
           {
@@ -638,7 +638,7 @@ morpheus.Util.autosuggest = function (options) {
           }
           // delegate back to autocomplete, but extract the
           // autocomplete term
-          var terms = morpheus.Util
+          var terms = phantasus.Util
             .getAutocompleteTokens(
               request.term,
               {
@@ -713,7 +713,7 @@ morpheus.Util.autosuggest = function (options) {
 
 };
 
-morpheus.Util.getAutocompleteTokens = function (text, options) {
+phantasus.Util.getAutocompleteTokens = function (text, options) {
   options = $.extend({}, {
     trim: true
   }, options);
@@ -785,7 +785,7 @@ morpheus.Util.getAutocompleteTokens = function (text, options) {
   return filteredTokens;
 };
 
-morpheus.Util.showDialog = function ($el, title, options) {
+phantasus.Util.showDialog = function ($el, title, options) {
   var $dialog = $('<div></div>');
   $el.appendTo($dialog);
   $dialog.appendTo($(document.body));
@@ -819,7 +819,7 @@ morpheus.Util.showDialog = function ($el, title, options) {
  *            If a delim is specified each row, will contain a string separated
  *            by delim. Otherwise each row will contain an array.
  */
-morpheus.Util.sheetToArray = function (sheet, delim) {
+phantasus.Util.sheetToArray = function (sheet, delim) {
   var r = XLSX.utils.decode_range(sheet['!ref']);
   var rows = [];
   var colors = [];
@@ -861,7 +861,7 @@ morpheus.Util.sheetToArray = function (sheet, delim) {
   rows.colors = colors;
   return rows;
 };
-morpheus.Util.linesToObjects = function (lines) {
+phantasus.Util.linesToObjects = function (lines) {
   var header = lines[0];
   var array = [];
   var nfields = header.length;
@@ -883,7 +883,7 @@ morpheus.Util.linesToObjects = function (lines) {
  * @param options.prompt Prompt for sheet name
  * @param callback {Function} Callback
  */
-morpheus.Util.xlsxTo2dArray = function (options, callback) {
+phantasus.Util.xlsxTo2dArray = function (options, callback) {
   var workbook = XLSX.read(options.data, {
     type: 'binary',
     cellFormula: false,
@@ -892,7 +892,7 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
   });
   var sheetNames = workbook.SheetNames;
   if (options.prompt && sheetNames.length > 1) {
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'sheet',
       type: 'bootstrap-select',
@@ -900,19 +900,19 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
       required: true,
       col: 'col-xs-2'
     });
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Choose Sheet',
       html: formBuilder.$form,
       onClose: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
-        var lines = morpheus.Util.sheetToArray(worksheet);
+        var lines = phantasus.Util.sheetToArray(worksheet);
         callback(null, lines);
       }
     });
 
   } else {
     var worksheet = workbook.Sheets[sheetNames[0]];
-    var lines = morpheus.Util.sheetToArray(worksheet);
+    var lines = phantasus.Util.sheetToArray(worksheet);
     callback(null, lines);
   }
 
@@ -923,7 +923,7 @@ morpheus.Util.xlsxTo2dArray = function (options, callback) {
  * @param options.prompt Prompt for sheet name
  * @param callback {Function} Callback
  */
-morpheus.Util.xlsxTo1dArray = function (options, callback) {
+phantasus.Util.xlsxTo1dArray = function (options, callback) {
   var workbook = XLSX.read(options.data, {
     type: 'binary',
     cellFormula: false,
@@ -932,7 +932,7 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
   });
   var sheetNames = workbook.SheetNames;
   if (options.prompt && sheetNames.length > 1) {
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'sheet',
       type: 'bootstrap-select',
@@ -941,19 +941,19 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
       col: 'col-xs-2'
     });
 
-    morpheus.FormBuilder.showOkCancel({
+    phantasus.FormBuilder.showOkCancel({
       title: 'Choose Sheet',
       cancel: false,
       content: formBuilder.$form,
       okCallback: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
-        callback(null, morpheus.Util.sheetToArray(worksheet, '\t'));
+        callback(null, phantasus.Util.sheetToArray(worksheet, '\t'));
       }
     });
 
   } else {
     var worksheet = workbook.Sheets[sheetNames[0]];
-    callback(null, morpheus.Util.sheetToArray(worksheet, '\t'));
+    callback(null, phantasus.Util.sheetToArray(worksheet, '\t'));
   }
 
 };
@@ -961,9 +961,9 @@ morpheus.Util.xlsxTo1dArray = function (options, callback) {
 /**
  * Returns a promise that resolves to a string
  */
-morpheus.Util.getText = function (urlOrFile) {
+phantasus.Util.getText = function (urlOrFile) {
   var deferred = $.Deferred();
-  if (morpheus.Util.isString(urlOrFile)) {
+  if (phantasus.Util.isString(urlOrFile)) {
     $.ajax({
       contentType: 'text/plain',
       url: urlOrFile,
@@ -983,7 +983,7 @@ morpheus.Util.getText = function (urlOrFile) {
   }
   return deferred.promise();
 };
-morpheus.Util.createOptions = function (values, none) {
+phantasus.Util.createOptions = function (values, none) {
   var html = [];
   if (none) {
     html.push('<option value="">(None)</option>');
@@ -1000,12 +1000,12 @@ morpheus.Util.createOptions = function (values, none) {
 
 /**
  * Computes the rank using the given index array. The index array can be
- * obtained from the morpheus.Util.indexSort method. Does not handle ties.
+ * obtained from the phantasus.Util.indexSort method. Does not handle ties.
  *
  * @param index
  * @return The ranks.
  */
-morpheus.Util.rankIndexArray = function (index) {
+phantasus.Util.rankIndexArray = function (index) {
   var rank = [];
   var n = index.length;
   for (var j = 0; j < n; j++) {
@@ -1014,7 +1014,7 @@ morpheus.Util.rankIndexArray = function (index) {
   return rank;
 };
 
-morpheus.Util.indexSort = function (array, ascending) {
+phantasus.Util.indexSort = function (array, ascending) {
   var pairs = [];
   array.forEach(function (value, index) {
     pairs.push({
@@ -1022,9 +1022,9 @@ morpheus.Util.indexSort = function (array, ascending) {
       index: index
     });
   });
-  return morpheus.Util.indexSortPairs(pairs, ascending);
+  return phantasus.Util.indexSortPairs(pairs, ascending);
 };
-morpheus.Util.indexSortPairs = function (array, ascending) {
+phantasus.Util.indexSortPairs = function (array, ascending) {
   if (ascending) {
     array.sort(function (a, b) {
       return (a.value < b.value ? -1 : (a.value === b.value ? (a.index < b.index ? -1 : 1) : 1));
@@ -1040,7 +1040,7 @@ morpheus.Util.indexSortPairs = function (array, ascending) {
   });
   return indices;
 };
-morpheus.Util.arrayEquals = function (array1, array2, comparator) {
+phantasus.Util.arrayEquals = function (array1, array2, comparator) {
   if (array1 == array2)
     return true;
   if (array1 == null || array2 == null) {
@@ -1062,54 +1062,54 @@ morpheus.Util.arrayEquals = function (array1, array2, comparator) {
   }
   return true;
 };
-morpheus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
+phantasus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
   : function (d) {
   return '' + Math.round(d);
 };
-morpheus.Util.intFormat = function (n) {
-  return morpheus.Util._intFormat(n);
+phantasus.Util.intFormat = function (n) {
+  return phantasus.Util._intFormat(n);
 };
-morpheus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
+phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
   return '' + d;
 };
-morpheus.Util.nf = function (n) {
+phantasus.Util.nf = function (n) {
   var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
-    .toPrecision(4) : morpheus.Util._nf(n);
-  return morpheus.Util.removeTrailingZerosInFraction(str);
+    .toPrecision(4) : phantasus.Util._nf(n);
+  return phantasus.Util.removeTrailingZerosInFraction(str);
 };
-morpheus.Util.createNumberFormat = function (nfractionDigits) {
+phantasus.Util.createNumberFormat = function (nfractionDigits) {
   var d3Formatter = d3.format('.' + nfractionDigits + 'f');
   var f = function (value) {
     var str = d3Formatter(value);
-    return morpheus.Util.removeTrailingZerosInFraction(str);
+    return phantasus.Util.removeTrailingZerosInFraction(str);
   };
   return f;
 };
 
-morpheus.Util.wrapNumber = function (value, object) {
+phantasus.Util.wrapNumber = function (value, object) {
   var n = new Number(value);
   n.toObject = function () {
     return object;
   };
   return n;
 };
-morpheus.Util.toString = function (value) {
+phantasus.Util.toString = function (value) {
   if (value == null) {
     return '';
   } else if (_.isNumber(value)) {
-    return morpheus.Util.nf(value);
-  } else if (morpheus.Util.isArray(value)) {
-    return morpheus.Util.arrayToString(value, ', ');
+    return phantasus.Util.nf(value);
+  } else if (phantasus.Util.isArray(value)) {
+    return phantasus.Util.arrayToString(value, ', ');
   }
   return '' + value;
 };
 
-morpheus.Util.arrayToString = function (value, sep) {
+phantasus.Util.arrayToString = function (value, sep) {
   var s = [];
   for (var i = 0, length = value.length; i < length; i++) {
     var val_i = value[i];
     if (_.isNumber(val_i)) {
-      s.push(morpheus.Util.nf(val_i));
+      s.push(phantasus.Util.nf(val_i));
     } else {
       s.push('' + val_i);
     }
@@ -1118,7 +1118,7 @@ morpheus.Util.arrayToString = function (value, sep) {
   return s.join(sep);
 
 };
-morpheus.Util.removeTrailingZerosInFraction = function (str) {
+phantasus.Util.removeTrailingZerosInFraction = function (str) {
   var index = str.lastIndexOf('.');
   if (str.lastIndexOf('e') !== -1) {
     return str;
@@ -1140,10 +1140,10 @@ morpheus.Util.removeTrailingZerosInFraction = function (str) {
   }
   return str;
 };
-morpheus.Util.s = function (n) {
+phantasus.Util.s = function (n) {
   return n === 1 ? '' : 's';
 };
-morpheus.Util.create2dArray = function (rows, columns) {
+phantasus.Util.create2dArray = function (rows, columns) {
   var array2d = [];
   for (var i = 0; i < rows; i++) {
     var array = [];
@@ -1154,12 +1154,12 @@ morpheus.Util.create2dArray = function (rows, columns) {
   }
   return array2d;
 };
-morpheus.Util.escapeRegex = function (value) {
+phantasus.Util.escapeRegex = function (value) {
   return value.replace(/[*]/g, '.*')
     .replace(/[-[\]{}()+?,\\^$|#\s]/g, '\\$&');
 };
 
-morpheus.Util.createSearchPredicates = function (options) {
+phantasus.Util.createSearchPredicates = function (options) {
   options = $.extend({}, {
     validateFieldNames: true,
     caseSensitive: true
@@ -1241,50 +1241,50 @@ morpheus.Util.createSearchPredicates = function (options) {
           var start = parseFloat(token.substring(0, rangeIndex));
           var end = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(start) && !isNaN(end)) {
-            predicate = new morpheus.Util.NumberRangePredicate(
+            predicate = new phantasus.Util.NumberRangePredicate(
               field, start, end);
           }
         } else if (rangeToken === '>') {
           var val = parseFloat(token.substring(rangeIndex + 1));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.GreaterThanPredicate(
+            predicate = new phantasus.Util.GreaterThanPredicate(
               field, val);
           }
         } else if (rangeToken === '>=') {
           var val = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.GreaterThanOrEqualPredicate(
+            predicate = new phantasus.Util.GreaterThanOrEqualPredicate(
               field, val);
           }
         } else if (rangeToken === '<') {
           var val = parseFloat(token.substring(rangeIndex + 1));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.LessThanPredicate(
+            predicate = new phantasus.Util.LessThanPredicate(
               field, val);
           }
         } else if (rangeToken === '<=') {
           var val = parseFloat(token.substring(rangeIndex + 2));
           if (!isNaN(val)) {
-            predicate = new morpheus.Util.LessThanOrEqualPredicate(
+            predicate = new phantasus.Util.LessThanOrEqualPredicate(
               field, val);
           }
         } else if (rangeToken === '=') {
           var val = parseFloat(token.substring(rangeIndex + 1));
-          predicate = new morpheus.Util.EqualsPredicate(
+          predicate = new phantasus.Util.EqualsPredicate(
             field, val);
         } else {
           console.log('Unknown range token:' + rangeToken);
         }
       } else if (token[0] === '"' && token[token.length - 1] === '"') { // exact
         token = token.substring(1, token.length - 1);
-        predicate = new morpheus.Util.ExactTermPredicate(field,
+        predicate = new phantasus.Util.ExactTermPredicate(field,
           token);
       } else if (token[0] === '(' && token[token.length - 1] === ')') { // exact terms
         token = token.substring(1, token.length - 1);
-        var values = morpheus.Util.getAutocompleteTokens(token);
+        var values = phantasus.Util.getAutocompleteTokens(token);
 
         if (values.length > 0) {
-          predicate = new morpheus.Util.ExactTermsPredicate(field,
+          predicate = new phantasus.Util.ExactTermsPredicate(field,
             values.map(function (val) {
               if (val[0] === '"' && val[val.length - 1] === '"') {
                 val = val.substring(1, val.length - 1);
@@ -1293,15 +1293,15 @@ morpheus.Util.createSearchPredicates = function (options) {
             }));
         }
       } else if (token.indexOf('*') !== -1) { // contains
-        predicate = new morpheus.Util.RegexPredicate(field, token);
+        predicate = new phantasus.Util.RegexPredicate(field, token);
       } else {
-        predicate = defaultIsExactMatch ? new morpheus.Util.ExactTermPredicate(
+        predicate = defaultIsExactMatch ? new phantasus.Util.ExactTermPredicate(
           field, token)
-          : new morpheus.Util.RegexPredicate(field, token);
+          : new phantasus.Util.RegexPredicate(field, token);
 
       }
       if (predicate != null) {
-        predicates.push(isNot ? new morpheus.Util.NotPredicate(
+        predicates.push(isNot ? new phantasus.Util.NotPredicate(
           predicate) : predicate);
       }
 
@@ -1310,8 +1310,8 @@ morpheus.Util.createSearchPredicates = function (options) {
 }
 ;
 
-morpheus.Util.createRegExpStringToMatchText = function (text) {
-  var tokens = morpheus.Util.getAutocompleteTokens(text);
+phantasus.Util.createRegExpStringToMatchText = function (text) {
+  var tokens = phantasus.Util.getAutocompleteTokens(text);
   if (tokens.length === 0) {
     return null;
   }
@@ -1319,26 +1319,26 @@ morpheus.Util.createRegExpStringToMatchText = function (text) {
   _.each(tokens, function (token) {
     if (token[0] === '"' && token[token.length - 1] === '"') {
       token = token.substring(1, token.length - 1);
-      regex.push('^' + morpheus.Util.escapeRegex(token) + '$'); // exact
+      regex.push('^' + phantasus.Util.escapeRegex(token) + '$'); // exact
       // match
     } else {
-      regex.push(morpheus.Util.escapeRegex(token));
+      regex.push(phantasus.Util.escapeRegex(token));
     }
   });
   return '(' + regex.join('|') + ')';
 };
-morpheus.Util.createRegExpToMatchText = function (text) {
-  var s = morpheus.Util.createRegExpStringToMatchText(text);
+phantasus.Util.createRegExpToMatchText = function (text) {
+  var s = phantasus.Util.createRegExpStringToMatchText(text);
   return s == null ? null : new RegExp(s, 'i');
 };
-morpheus.Util.reorderArray = function (array, index) {
+phantasus.Util.reorderArray = function (array, index) {
   var newArray = [];
   for (var i = 0; i < index.length; i++) {
     newArray.push(array[index[i]]);
   }
   return newArray;
 };
-morpheus.Util.getSearchString = function () {
+phantasus.Util.getSearchString = function () {
   var s = window.location.search;
   return s.length > 1 ? s.substring(1) : '';
 };
@@ -1347,7 +1347,7 @@ morpheus.Util.getSearchString = function () {
  *
  * @return An array of arrays
  */
-morpheus.Util.splitLines = function (lines) {
+phantasus.Util.splitLines = function (lines) {
   var tab = /\t/;
   var tokens = [];
   for (var i = 0, nlines = lines.length; i < nlines; i++) {
@@ -1365,11 +1365,11 @@ morpheus.Util.splitLines = function (lines) {
  *            a File or url
  * @return A deferred object that resolves to an array of strings
  */
-morpheus.Util.readLines = function (fileOrUrl, interactive) {
+phantasus.Util.readLines = function (fileOrUrl, interactive) {
   var isFile = fileOrUrl instanceof File;
-  var isString = morpheus.Util.isString(fileOrUrl);
-  var name = morpheus.Util.getFileName(fileOrUrl);
-  var ext = morpheus.Util.getExtension(name);
+  var isString = phantasus.Util.isString(fileOrUrl);
+  var name = phantasus.Util.getFileName(fileOrUrl);
+  var ext = phantasus.Util.getExtension(name);
   var deferred = $.Deferred();
   if (isString) { // URL
     if (ext === 'xlsx') {
@@ -1386,7 +1386,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
             arr[i] = String.fromCharCode(data[i]);
           }
           var bstr = arr.join('');
-          morpheus.Util.xlsxTo1dArray({
+          phantasus.Util.xlsxTo1dArray({
             data: bstr,
             prompt: interactive
           }, function (err, lines) {
@@ -1402,7 +1402,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
       $.ajax({
         url: fileOrUrl,
       }).done(function (text, status, xhr) {
-        deferred.resolve(morpheus.Util.splitOnNewLine(text));
+        deferred.resolve(phantasus.Util.splitOnNewLine(text));
       });
     }
   } else if (isFile) {
@@ -1415,7 +1415,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
           arr[i] = String.fromCharCode(data[i]);
         }
         var bstr = arr.join('');
-        morpheus.Util
+        phantasus.Util
           .xlsxTo1dArray({
             data: bstr,
             prompt: interactive
@@ -1423,7 +1423,7 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
             deferred.resolve(lines);
           });
       } else {
-        deferred.resolve(morpheus.Util.splitOnNewLine(event.target.result));
+        deferred.resolve(phantasus.Util.splitOnNewLine(event.target.result));
       }
 
     };
@@ -1437,8 +1437,8 @@ morpheus.Util.readLines = function (fileOrUrl, interactive) {
   }
   return deferred;
 };
-morpheus.Util.createValueToIndices = function (array, field) {
-  var map = new morpheus.Map();
+phantasus.Util.createValueToIndices = function (array, field) {
+  var map = new phantasus.Map();
   _.each(array, function (item) {
     var key = item[field];
     var values = map.get(key);
@@ -1451,13 +1451,13 @@ morpheus.Util.createValueToIndices = function (array, field) {
   return map;
 };
 
-morpheus.Util.createLoadingEl = function () {
+phantasus.Util.createLoadingEl = function () {
   return $('<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
 };
 /**
  * Splits a string by the new line character, trimming whitespace
  */
-morpheus.Util.splitOnNewLine = function (text, commentChar) {
+phantasus.Util.splitOnNewLine = function (text, commentChar) {
   var commentCharCode = commentChar !== undefined ? commentChar.charCodeAt(0)
     : undefined;
 
@@ -1485,12 +1485,12 @@ morpheus.Util.splitOnNewLine = function (text, commentChar) {
   return rows;
 };
 
-morpheus.Util.ContainsPredicate = function (field, text) {
+phantasus.Util.ContainsPredicate = function (field, text) {
   this.field = field;
   text = text.toLowerCase();
   this.text = text;
 };
-morpheus.Util.ContainsPredicate.prototype = {
+phantasus.Util.ContainsPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1511,14 +1511,14 @@ morpheus.Util.ContainsPredicate.prototype = {
     return 'ContainsPredicate ' + this.field + ':' + this.text;
   }
 };
-morpheus.Util.ExactTermsPredicate = function (field, values) {
+phantasus.Util.ExactTermsPredicate = function (field, values) {
   this.field = field;
-  this.values = new morpheus.Set();
+  this.values = new phantasus.Set();
   for (var i = 0, nvalues = values.length; i < nvalues; i++) {
     this.values.add(values[i]);
   }
 };
-morpheus.Util.ExactTermsPredicate.prototype = {
+phantasus.Util.ExactTermsPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1540,12 +1540,12 @@ morpheus.Util.ExactTermsPredicate.prototype = {
   }
 };
 
-morpheus.Util.ExactTermPredicate = function (field, term) {
+phantasus.Util.ExactTermPredicate = function (field, term) {
   this.field = field;
   term = term.toLowerCase();
   this.text = term;
 };
-morpheus.Util.ExactTermPredicate.prototype = {
+phantasus.Util.ExactTermPredicate.prototype = {
   accept: function (value) {
     if (value == null) {
       return false;
@@ -1566,12 +1566,12 @@ morpheus.Util.ExactTermPredicate.prototype = {
     return 'ExactTermPredicate ' + this.field + ':' + this.text;
   }
 };
-morpheus.Util.RegexPredicate = function (field, text) {
+phantasus.Util.RegexPredicate = function (field, text) {
   this.field = field;
   this.text = text;
-  this.regex = new RegExp(morpheus.Util.escapeRegex(text), 'i');
+  this.regex = new RegExp(phantasus.Util.escapeRegex(text), 'i');
 };
-morpheus.Util.RegexPredicate.prototype = {
+phantasus.Util.RegexPredicate.prototype = {
   accept: function (value) {
     return this.regex.test('' + value);
   },
@@ -1588,12 +1588,12 @@ morpheus.Util.RegexPredicate.prototype = {
     return 'RegexPredicate ' + this.field + ':' + this.regex;
   }
 };
-morpheus.Util.NumberRangePredicate = function (field, min, max) {
+phantasus.Util.NumberRangePredicate = function (field, min, max) {
   this.field = field;
   this.min = min;
   this.max = max;
 };
-morpheus.Util.NumberRangePredicate.prototype = {
+phantasus.Util.NumberRangePredicate.prototype = {
   accept: function (value) {
     return value >= this.min && value <= this.max;
   },
@@ -1609,11 +1609,11 @@ morpheus.Util.NumberRangePredicate.prototype = {
   }
 };
 
-morpheus.Util.GreaterThanPredicate = function (field, val) {
+phantasus.Util.GreaterThanPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.GreaterThanPredicate.prototype = {
+phantasus.Util.GreaterThanPredicate.prototype = {
   accept: function (value) {
     return value > this.val;
   },
@@ -1625,11 +1625,11 @@ morpheus.Util.GreaterThanPredicate.prototype = {
   }
 };
 
-morpheus.Util.GreaterThanOrEqualPredicate = function (field, val) {
+phantasus.Util.GreaterThanOrEqualPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.GreaterThanOrEqualPredicate.prototype = {
+phantasus.Util.GreaterThanOrEqualPredicate.prototype = {
   accept: function (value) {
     return value >= this.val;
   },
@@ -1640,11 +1640,11 @@ morpheus.Util.GreaterThanOrEqualPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.LessThanPredicate = function (field, val) {
+phantasus.Util.LessThanPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.LessThanPredicate.prototype = {
+phantasus.Util.LessThanPredicate.prototype = {
   accept: function (value) {
     return value < this.val;
   },
@@ -1655,11 +1655,11 @@ morpheus.Util.LessThanPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.LessThanOrEqualPredicate = function (field, val) {
+phantasus.Util.LessThanOrEqualPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.LessThanOrEqualPredicate.prototype = {
+phantasus.Util.LessThanOrEqualPredicate.prototype = {
   accept: function (value) {
     return value <= this.val;
   },
@@ -1670,11 +1670,11 @@ morpheus.Util.LessThanOrEqualPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.EqualsPredicate = function (field, val) {
+phantasus.Util.EqualsPredicate = function (field, val) {
   this.field = field;
   this.val = val;
 };
-morpheus.Util.EqualsPredicate.prototype = {
+phantasus.Util.EqualsPredicate.prototype = {
   accept: function (value) {
     return value === this.val;
   },
@@ -1685,10 +1685,10 @@ morpheus.Util.EqualsPredicate.prototype = {
     return true;
   }
 };
-morpheus.Util.NotPredicate = function (p) {
+phantasus.Util.NotPredicate = function (p) {
   this.p = p;
 };
-morpheus.Util.NotPredicate.prototype = {
+phantasus.Util.NotPredicate.prototype = {
   accept: function (value) {
     return !this.p.accept(value);
   },
@@ -1704,7 +1704,7 @@ morpheus.Util.NotPredicate.prototype = {
 };
 
 
-morpheus.Util.getFieldNames = function (rexp) {
+phantasus.Util.getFieldNames = function (rexp) {
   var strValues = rexp.attrValue[0].stringValue;
   var res = [];
   strValues.forEach(function (v) {
@@ -1712,8 +1712,8 @@ morpheus.Util.getFieldNames = function (rexp) {
   });
   return res;
 };
-morpheus.Util.getRexpData = function (rexp, rclass) {
-  var names = morpheus.Util.getFieldNames(rexp);
+phantasus.Util.getRexpData = function (rexp, rclass) {
+  var names = phantasus.Util.getFieldNames(rexp);
   var data = {};
   for (var i = 0; i < names.length; i++) {
     var rexpV = rexp.rexpValue[i];
@@ -1745,18 +1745,18 @@ morpheus.Util.getRexpData = function (rexp, rclass) {
   return data;
 };
 
-morpheus.Util.getFilePath = function (session, str) {
+phantasus.Util.getFilePath = function (session, str) {
   var splitted = str.split("/");
   var fileName = splitted[splitted.length - 1].substring(0, splitted[splitted.length - 1].length - 2);
   return session.getLoc() + "files/" + fileName;
 };
 
-morpheus.Util.getTrueIndices = function (dataset) {
+phantasus.Util.getTrueIndices = function (dataset) {
   console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
   var rowIndices = dataset.rowIndices ? dataset.rowIndices : [];
-  var rows = morpheus.Util.getConsNumbers(rowIndices.length);
+  var rows = phantasus.Util.getConsNumbers(rowIndices.length);
   var columnIndices = dataset.columnIndices ? dataset.columnIndices : [];
-  var columns = morpheus.Util.getConsNumbers(columnIndices.length);
+  var columns = phantasus.Util.getConsNumbers(columnIndices.length);
   var iter = 0;
   var savedDataset = dataset;
   console.log("rows processing");
@@ -1797,19 +1797,19 @@ morpheus.Util.getTrueIndices = function (dataset) {
   }
 
   console.log("res", rows, columns);
-  var conseqRows = morpheus.Util.getConsNumbers(dataset.rows);
-  var conseqCols = morpheus.Util.getConsNumbers(dataset.columns);
+  var conseqRows = phantasus.Util.getConsNumbers(dataset.rows);
+  var conseqCols = phantasus.Util.getConsNumbers(dataset.columns);
   console.log(conseqCols);
   var ans = {};
-  console.log(morpheus.Util.equalArrays(rows, conseqRows));
-  if (morpheus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && morpheus.Util.equalArrays(conseqRows, rowIndices)) {
+  console.log(phantasus.Util.equalArrays(rows, conseqRows));
+  if (phantasus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && phantasus.Util.equalArrays(conseqRows, rowIndices)) {
     ans.rows = [];
   }
   else {
     ans.rows = rows.length > 0 ? rows : rowIndices;
   }
-  console.log(morpheus.Util.equalArrays(columns, conseqCols));
-  if (morpheus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && morpheus.Util.equalArrays(conseqCols, columnIndices)) {
+  console.log(phantasus.Util.equalArrays(columns, conseqCols));
+  if (phantasus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && phantasus.Util.equalArrays(conseqCols, columnIndices)) {
     ans.columns = [];
   }
   else {
@@ -1819,7 +1819,7 @@ morpheus.Util.getTrueIndices = function (dataset) {
   return ans;
 };
 
-morpheus.Util.getConsNumbers = function (n) {
+phantasus.Util.getConsNumbers = function (n) {
   var ar = [];
   for (var i = 0; i < n; i++) {
     ar.push(i);
@@ -1827,7 +1827,7 @@ morpheus.Util.getConsNumbers = function (n) {
   return ar;
 };
 
-morpheus.Util.equalArrays = function (a, b) {
+phantasus.Util.equalArrays = function (a, b) {
   if (a.length != b.length || a == null || b == null) {
     return false;
   }
@@ -1838,9 +1838,9 @@ morpheus.Util.equalArrays = function (a, b) {
   }
   return true;
 };
-morpheus.BlobFromPath = function () {
+phantasus.BlobFromPath = function () {
 };
-morpheus.BlobFromPath.getFileBlob = function (url, cb) {
+phantasus.BlobFromPath.getFileBlob = function (url, cb) {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url);
   xhr.responseType = "blob";
@@ -1850,20 +1850,20 @@ morpheus.BlobFromPath.getFileBlob = function (url, cb) {
   xhr.send();
 };
 
-morpheus.BlobFromPath.blobToFile = function (blob) {
+phantasus.BlobFromPath.blobToFile = function (blob) {
   blob.lastModifiedDate = new Date();
   return blob;
 };
 
-morpheus.BlobFromPath.getFileObject = function (filePathOrUrl, cb) {
-  morpheus.BlobFromPath.getFileBlob(filePathOrUrl, function (blob) {
-    cb(morpheus.BlobFromPath.blobToFile(blob));
+phantasus.BlobFromPath.getFileObject = function (filePathOrUrl, cb) {
+  phantasus.BlobFromPath.getFileBlob(filePathOrUrl, function (blob) {
+    cb(phantasus.BlobFromPath.blobToFile(blob));
   });
 };
 // code taken from KineticJS
-morpheus.Events = function () {
+phantasus.Events = function () {
 };
-morpheus.Events.prototype = {
+phantasus.Events.prototype = {
   /**
    * Pass in a string of events delimmited by a space to bind multiple events
    * at once such as 'mousedown mouseup mousemove'. Include a namespace to
@@ -1995,10 +1995,10 @@ morpheus.Events.prototype = {
   }
 };
 
-morpheus.Identifier = function (array) {
+phantasus.Identifier = function (array) {
   this.array = array;
 };
-morpheus.Identifier.prototype = {
+phantasus.Identifier.prototype = {
   toString: function () {
     return this.array.join(',');
   },
@@ -2020,12 +2020,12 @@ morpheus.Identifier.prototype = {
   }
 };
 
-morpheus.Map = function () {
+phantasus.Map = function () {
   this.map = {}; // object string -> key, value
   // the key field is stored to get the original key object back
   this.n = 0;
 };
-morpheus.Map.prototype = {
+phantasus.Map.prototype = {
   toJSON: function () {
     var json = {};
     this.forEach(function (value, key) {
@@ -2140,18 +2140,18 @@ morpheus.Map.prototype = {
   }
 };
 
-morpheus.Map.fromJSON = function (json) {
-  var map = new morpheus.Map();
+phantasus.Map.fromJSON = function (json) {
+  var map = new phantasus.Map();
   for (var key in json) {
     map.set(key, json[key]);
   }
   return map;
 };
 
-morpheus.Set = function () {
-  this._map = new morpheus.Map();
+phantasus.Set = function () {
+  this._map = new phantasus.Map();
 };
-morpheus.Set.prototype = {
+phantasus.Set.prototype = {
   toJSON: function () {
     var json = [];
     this.forEach(function (value) {
@@ -2201,15 +2201,15 @@ morpheus.Set.prototype = {
   }
 };
 
-morpheus.Set.fromJSON = function (json) {
-  var set = new morpheus.Set();
+phantasus.Set.fromJSON = function (json) {
+  var set = new phantasus.Set();
   for (var i = 0, length = json.length; i < length; i++) {
     set.add(json[i]);
   }
   return set;
 };
 
-morpheus.ArrayBufferReader = function (buffer) {
+phantasus.ArrayBufferReader = function (buffer) {
   this.buffer = buffer;
   this.bufferLength = buffer.length;
   this.index = 0;
@@ -2230,7 +2230,7 @@ morpheus.ArrayBufferReader = function (buffer) {
   }
 };
 
-morpheus.ArrayBufferReader.prototype = {
+phantasus.ArrayBufferReader.prototype = {
   readLine: function () {
     var index = this.index;
     var bufferLength = this.bufferLength;
@@ -2263,7 +2263,7 @@ morpheus.ArrayBufferReader.prototype = {
   }
 };
 
-morpheus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
+phantasus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
   var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
   if (isString) { // URL
     var oReq = new XMLHttpRequest();
@@ -2304,14 +2304,14 @@ morpheus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
   }
 };
 
-morpheus.Array2dReaderInteractive = function () {
+phantasus.Array2dReaderInteractive = function () {
 
 };
 
-morpheus.Array2dReaderInteractive.prototype = {
+phantasus.Array2dReaderInteractive.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl));
+    var name = phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl));
     var html = [];
     html.push('<div>');
     html.push('<label>Click the table cell containing the first data row and column.</label>');
@@ -2333,7 +2333,7 @@ morpheus.Array2dReaderInteractive.prototype = {
     html.push('</div>');
     var $el = $(html.join(''));
 
-    morpheus.Util.readLines(fileOrUrl, true).done(function (lines) {
+    phantasus.Util.readLines(fileOrUrl, true).done(function (lines) {
       // show in table
       var tab = /\t/;
       for (var i = 0, nrows = lines.length; i < nrows; i++) {
@@ -2372,8 +2372,8 @@ morpheus.Array2dReaderInteractive.prototype = {
           }
           var html = ['<div style="width:100%;height:100%;background-color:' + color + '">'];
           if (_.isNumber(value)) {
-            html.push(morpheus.Util.nf(value));
-          } else if (morpheus.Util.isArray(value)) {
+            html.push(phantasus.Util.nf(value));
+          } else if (phantasus.Util.isArray(value)) {
             var s = [];
             for (var i = 0, length = value.length; i < length; i++) {
               if (i > 0) {
@@ -2439,7 +2439,7 @@ morpheus.Array2dReaderInteractive.prototype = {
       footer
         .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
       var $footer = $(footer.join(''));
-      morpheus.FormBuilder.showOkCancel({
+      phantasus.FormBuilder.showOkCancel({
         title: 'Open',
         content: $el,
         close: false,
@@ -2461,7 +2461,7 @@ morpheus.Array2dReaderInteractive.prototype = {
     var columnCount = lines[0].length;
     var columns = columnCount - dataColumnStart;
     var rows = lines.length - dataRowStart;
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: rows,
       columns: columns,
@@ -2491,7 +2491,7 @@ morpheus.Array2dReaderInteractive.prototype = {
           }
         }
         if (!nonEmpty) {
-          dataset.getColumnMetadata().remove(morpheus.MetadataUtil.indexOf(dataset.getColumnMetadata(), v.getName()));
+          dataset.getColumnMetadata().remove(phantasus.MetadataUtil.indexOf(dataset.getColumnMetadata(), v.getName()));
         }
 
       }
@@ -2527,14 +2527,14 @@ morpheus.Array2dReaderInteractive.prototype = {
       }
     }
 
-    morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-    morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+    phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+    phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
       1);
     cb(null, dataset);
   }
 };
 
-morpheus.BufferedReader = function (reader, callback, doneCallback) {
+phantasus.BufferedReader = function (reader, callback, doneCallback) {
   var textDecoder = new TextDecoder();
   var skipLF = false;
   var text = '';
@@ -2550,7 +2550,7 @@ morpheus.BufferedReader = function (reader, callback, doneCallback) {
         skipLF = false;
       } else if (c === '\n' || c === '\r') {
         skipLF = c === '\r'; // \r\n windows line ending
-        var s = morpheus.Util.copyString(text.substring(start, i));
+        var s = phantasus.Util.copyString(text.substring(start, i));
         callback(s);
         start = i + 1;
       } else {
@@ -2569,7 +2569,7 @@ morpheus.BufferedReader = function (reader, callback, doneCallback) {
   });
 };
 
-morpheus.BufferedReader.parse = function (url, options) {
+phantasus.BufferedReader.parse = function (url, options) {
   var delim = options.delimiter;
   var regex = new RegExp(delim);
   var handleTokens = options.handleTokens;
@@ -2577,7 +2577,7 @@ morpheus.BufferedReader.parse = function (url, options) {
   fetch(url).then(function (response) {
     if (response.ok) {
       var reader = response.body.getReader();
-      new morpheus.BufferedReader(reader, function (line) {
+      new phantasus.BufferedReader(reader, function (line) {
         handleTokens(line.split(regex));
       }, function () {
         complete();
@@ -2626,9 +2626,9 @@ morpheus.BufferedReader.parse = function (url, options) {
  * <p/>
  * </UL>
  */
-morpheus.ClsReader = function () {
+phantasus.ClsReader = function () {
 };
-morpheus.ClsReader.prototype = {
+phantasus.ClsReader.prototype = {
   /**
    * Parses the cls file.
    *
@@ -2685,21 +2685,21 @@ morpheus.ClsReader.prototype = {
   }
 };
 
-morpheus.ClsWriter = function () {
+phantasus.ClsWriter = function () {
 
 };
-morpheus.ClsWriter.prototype = {
+phantasus.ClsWriter.prototype = {
   write: function (vector) {
     var pw = [];
     var size = vector.size();
     pw.push(size);
     pw.push(' ');
-    var set = morpheus.VectorUtil.getSet(vector);
+    var set = phantasus.VectorUtil.getSet(vector);
     pw.push(set.size());
     pw.push(' ');
     pw.push('1\n');
     pw.push('#');
-    var valueToIndex = new morpheus.Map();
+    var valueToIndex = new phantasus.Map();
     var index = 0;
     set.forEach(function (name) {
       pw.push(' ');
@@ -2718,11 +2718,11 @@ morpheus.ClsWriter.prototype = {
   }
 };
 
-morpheus.GctReader = function () {
+phantasus.GctReader = function () {
 
 };
 
-morpheus.GctReader.prototype = {
+phantasus.GctReader.prototype = {
   getFormatName: function () {
     return 'gct';
   },
@@ -2731,7 +2731,7 @@ morpheus.GctReader.prototype = {
     if (fileOrUrl instanceof File) {
       this._readChunking(fileOrUrl, callback, false);
     } else {
-      if (morpheus.Util.isFetchSupported()) {
+      if (phantasus.Util.isFetchSupported()) {
         this._readChunking(fileOrUrl, callback, true);
       } else {
         this._readNoChunking(fileOrUrl, callback);
@@ -2812,7 +2812,7 @@ morpheus.GctReader.prototype = {
       } else if (lineNumber === 2) {
         columnNamesArray = tokens;
         for (var i = 0; i < columnNamesArray.length; i++) {
-          columnNamesArray[i] = morpheus.Util.copyString(columnNamesArray[i]);
+          columnNamesArray[i] = phantasus.Util.copyString(columnNamesArray[i]);
         }
         if (ncols === -1) {
           ncols = columnNamesArray.length - numRowAnnotations - 1;
@@ -2838,7 +2838,7 @@ morpheus.GctReader.prototype = {
           var index = j + numRowAnnotations + 1;
           var columnName = index < columnNamesArray.length ? columnNamesArray[index]
             : null;
-          columnMetadata[0].push(morpheus.Util.copyString(columnName));
+          columnMetadata[0].push(phantasus.Util.copyString(columnName));
         }
 
         for (var j = 0; j < numRowAnnotations; j++) {
@@ -2851,12 +2851,12 @@ morpheus.GctReader.prototype = {
         dataMatrixLineNumberStart = 3 + numColumnAnnotations;
       } else { // lines >=3
         if (lineNumber < dataMatrixLineNumberStart) {
-          var metadataName = morpheus.Util.copyString(tokens[0]);
+          var metadataName = phantasus.Util.copyString(tokens[0]);
           var v = [];
           columnMetadata.push(v);
           columnMetadataNames.push(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.push(morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.push(phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         } else { // data lines
           if (tokens[0] !== '') {
@@ -2867,7 +2867,7 @@ morpheus.GctReader.prototype = {
             for (var rowAnnotationIndex = 0; rowAnnotationIndex <= numRowAnnotations; rowAnnotationIndex++) {
               var rowMetadataValue = tokens[rowAnnotationIndex];
               rowMetadata[rowAnnotationIndex].push(
-                morpheus.Util.copyString(rowMetadataValue));
+                phantasus.Util.copyString(rowMetadataValue));
 
             }
 
@@ -2881,7 +2881,7 @@ morpheus.GctReader.prototype = {
       lineNumber++;
 
     };
-    (useFetch ? morpheus.BufferedReader : Papa).parse(fileOrUrl, {
+    (useFetch ? phantasus.BufferedReader : Papa).parse(fileOrUrl, {
       delimiter: '\t',	// auto-detect
       newline: '',	// auto-detect
       header: false,
@@ -2895,8 +2895,8 @@ morpheus.GctReader.prototype = {
         handleTokens(result.data[0]);
       },
       complete: function () {
-        var dataset = new morpheus.Dataset({
-          name: morpheus.Util.getBaseFileName(morpheus.Util
+        var dataset = new phantasus.Dataset({
+          name: phantasus.Util.getBaseFileName(phantasus.Util
             .getFileName(fileOrUrl)),
           rows: matrix.length,
           columns: ncols,
@@ -2909,8 +2909,8 @@ morpheus.GctReader.prototype = {
         for (var i = 0; i < columnMetadataNames.length; i++) {
           dataset.getColumnMetadata().add(columnMetadataNames[i]).array = columnMetadata[i];
         }
-        morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-        morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+        phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+        phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
           1);
         callback(null, dataset);
       },
@@ -2927,7 +2927,7 @@ morpheus.GctReader.prototype = {
   },
   _read: function (datasetName, reader) {
     var tab = /\t/;
-    var versionLine = morpheus.Util.copyString(reader.readLine().trim());
+    var versionLine = phantasus.Util.copyString(reader.readLine().trim());
     if (versionLine === '') {
       throw new Error('Missing version line');
     }
@@ -2939,7 +2939,7 @@ morpheus.GctReader.prototype = {
     } else {
       console.log('Unknown version: assuming version 2');
     }
-    var dimensionsLine = morpheus.Util.copyString(reader.readLine());
+    var dimensionsLine = phantasus.Util.copyString(reader.readLine());
     if (dimensionsLine == null) {
       throw new Error('No dimensions specified');
     }
@@ -2967,7 +2967,7 @@ morpheus.GctReader.prototype = {
           'Number of rows and columns must be greater than 0.');
       }
     }
-    var columnNamesLine = morpheus.Util.copyString(reader.readLine());
+    var columnNamesLine = phantasus.Util.copyString(reader.readLine());
     if (columnNamesLine == null) {
       throw new Error('No column annotations');
     }
@@ -3002,7 +3002,7 @@ morpheus.GctReader.prototype = {
         var index = j + numRowAnnotations + 1;
         var columnName = index < columnNamesArray.length ? columnNamesArray[index]
           : null;
-        columnMetadata[0].push(morpheus.Util.copyString(columnName));
+        columnMetadata[0].push(phantasus.Util.copyString(columnName));
       }
 
       for (var j = 0; j < numRowAnnotations; j++) {
@@ -3024,7 +3024,7 @@ morpheus.GctReader.prototype = {
           columnMetadata.push(v);
           columnMetadataNames.push(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.push(morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.push(phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         }
       }
@@ -3042,7 +3042,7 @@ morpheus.GctReader.prototype = {
           for (var rowAnnotationIndex = 0; rowAnnotationIndex < numRowAnnotationsPlusOne; rowAnnotationIndex++) {
             var rowMetadataValue = tokens[rowAnnotationIndex];
             rowMetadata[rowAnnotationIndex].push(
-              morpheus.Util.copyString(rowMetadataValue));
+              phantasus.Util.copyString(rowMetadataValue));
 
           }
 
@@ -3053,7 +3053,7 @@ morpheus.GctReader.prototype = {
         }
 
       }
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         name: datasetName,
         rows: matrix.length,
         columns: ncols,
@@ -3066,13 +3066,13 @@ morpheus.GctReader.prototype = {
       for (var i = 0; i < columnMetadataNames.length; i++) {
         dataset.getColumnMetadata().add(columnMetadataNames[i]).array = columnMetadata[i];
       }
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
         1);
       return dataset;
 
     } else {
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         dataType: 'Float32',
         name: datasetName,
         rows: nrows,
@@ -3085,13 +3085,13 @@ morpheus.GctReader.prototype = {
           var index = j + numRowAnnotations + 1;
           var columnName = index < columnNamesArray.length ? columnNamesArray[index]
             : null;
-          columnIds.setValue(j, morpheus.Util.copyString(columnName));
+          columnIds.setValue(j, phantasus.Util.copyString(columnName));
         }
 
       } else {
         for (var j = 0; j < ncols; j++) {
           var columnName = columnNamesArray[j + numRowAnnotations + 1];
-          columnIds.setValue(j, morpheus.Util.copyString(columnName));
+          columnIds.setValue(j, phantasus.Util.copyString(columnName));
         }
       }
 
@@ -3119,7 +3119,7 @@ morpheus.GctReader.prototype = {
           var metadataName = tokens[0];
           var v = dataset.getColumnMetadata().add(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.setValue(j, morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.setValue(j, phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         }
       }
@@ -3133,19 +3133,19 @@ morpheus.GctReader.prototype = {
         }
         var tokens = s.split(tab);
         if (version === 2) {
-          rowAnnotationVectors[0].setValue(rowIndex, morpheus.Util.copyString(tokens[0]));
+          rowAnnotationVectors[0].setValue(rowIndex, phantasus.Util.copyString(tokens[0]));
           var desc = tokens[1];
           if (!nonEmptyDescriptionFound) {
             nonEmptyDescriptionFound = desc !== '';
           }
-          rowAnnotationVectors[1].setValue(rowIndex, morpheus.Util.copyString(desc));
+          rowAnnotationVectors[1].setValue(rowIndex, phantasus.Util.copyString(desc));
         } else {
           // we iterate to numRowAnnotations + 1 to include id row
           // metadata field
           for (var rowAnnotationIndex = 0; rowAnnotationIndex < numRowAnnotationsPlusOne; rowAnnotationIndex++) {
             var rowMetadataValue = tokens[rowAnnotationIndex];
             rowAnnotationVectors[rowAnnotationIndex].setValue(rowIndex,
-              morpheus.Util.copyString(rowMetadataValue));
+              phantasus.Util.copyString(rowMetadataValue));
 
           }
         }
@@ -3153,7 +3153,7 @@ morpheus.GctReader.prototype = {
           var token = tokens[columnIndex + dataColumnStart];
           // if (token[0] === '{') {
           // var value = JSON.parse(token);
-          // dataset.setValue(rowIndex, columnIndex, morpheus.Util
+          // dataset.setValue(rowIndex, columnIndex, phantasus.Util
           // .wrapNumber(value.__v, value));
           // } else {
           // dataset.setValue(rowIndex, columnIndex, parseFloat(token));
@@ -3170,22 +3170,22 @@ morpheus.GctReader.prototype = {
         throw new Error('Missing data rows');
       }
 
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
         1);
       return dataset;
     }
   },
   _readNoChunking: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         callback(null, _this._read(name,
-          new morpheus.ArrayBufferReader(new Uint8Array(
+          new phantasus.ArrayBufferReader(new Uint8Array(
             arrayBuffer))));
       }
     });
@@ -3193,7 +3193,7 @@ morpheus.GctReader.prototype = {
     // 	url: fileOrUrl,
     // 	dataType: 'text'
     // }).done(function (text) {
-    // 	callback(null, _this.read(name, new morpheus.StringReader(text)));
+    // 	callback(null, _this.read(name, new phantasus.StringReader(text)));
     // }).fail(function (err) {
     // 	callback(err);
     // });
@@ -3201,14 +3201,14 @@ morpheus.GctReader.prototype = {
   }
 };
 
-morpheus.GctWriter = function () {
+phantasus.GctWriter = function () {
 };
 
-morpheus.GctWriter.idFirst = function (model) {
+phantasus.GctWriter.idFirst = function (model) {
   var fields = ['id', 'Id', 'pr_id'];
   var idIndex = -1;
   for (var i = 0; i < fields.length; i++) {
-    idIndex = morpheus.MetadataUtil.indexOf(model, fields[i]);
+    idIndex = phantasus.MetadataUtil.indexOf(model, fields[i]);
     if (idIndex !== -1) {
       break;
     }
@@ -3221,14 +3221,14 @@ morpheus.GctWriter.idFirst = function (model) {
         order[j++] = i;
       }
     }
-    return new morpheus.MetadataModelColumnView(model, order);
+    return new phantasus.MetadataModelColumnView(model, order);
   }
   return model;
 };
 
-morpheus.GctWriter.prototype = {
+phantasus.GctWriter.prototype = {
   toString: function (value) {
-    return morpheus.Util.toString(value);
+    return phantasus.Util.toString(value);
   },
   getExtension: function () {
     return 'gct';
@@ -3237,8 +3237,8 @@ morpheus.GctWriter.prototype = {
     if (pw == null) {
       pw = [];
     }
-    var rowMetadata = morpheus.GctWriter.idFirst(dataset.getRowMetadata());
-    var columnMetadata = morpheus.GctWriter.idFirst(dataset
+    var rowMetadata = phantasus.GctWriter.idFirst(dataset.getRowMetadata());
+    var columnMetadata = phantasus.GctWriter.idFirst(dataset
       .getColumnMetadata());
     this.writeHeader(rowMetadata, columnMetadata, pw);
     this.writeData(dataset, rowMetadata, pw);
@@ -3261,8 +3261,8 @@ morpheus.GctWriter.prototype = {
         pw.push('\t');
         var value = dataset.getValue(i, j);
         // pw.push((value != null && value.toObject) ? JSON
-        // .stringify(value.toObject()) : morpheus.Util.nf(value));
-        pw.push(morpheus.Util.nf(value));
+        // .stringify(value.toObject()) : phantasus.Util.nf(value));
+        pw.push(phantasus.Util.nf(value));
       }
       pw.push('\n');
     }
@@ -3309,16 +3309,16 @@ morpheus.GctWriter.prototype = {
   }
 };
 
-morpheus.GctWriter12 = function () {
+phantasus.GctWriter12 = function () {
   this.options = {
     rowDescription: 'Description',
     rowId: 'id',
     columnId: 'id'
   };
 };
-morpheus.GctWriter12.prototype = {
+phantasus.GctWriter12.prototype = {
   toString: function (value) {
-    return morpheus.Util.toString(value);
+    return phantasus.Util.toString(value);
   },
   getExtension: function () {
     return 'gct';
@@ -3334,8 +3334,8 @@ morpheus.GctWriter12.prototype = {
     pw.push('\n');
     pw.push(rows + '\t' + columns);
     pw.push('\n');
-    var rowMetadata = morpheus.GctWriter.idFirst(dataset.getRowMetadata());
-    var columnMetadata = morpheus.GctWriter.idFirst(dataset
+    var rowMetadata = phantasus.GctWriter.idFirst(dataset.getRowMetadata());
+    var columnMetadata = phantasus.GctWriter.idFirst(dataset
       .getColumnMetadata());
     pw.push('Name');
     pw.push('\t');
@@ -3369,7 +3369,7 @@ morpheus.GctWriter12.prototype = {
       }
       for (var j = 0; j < columns; j++) {
         pw.push('\t');
-        pw.push(morpheus.Util.nf(dataset.getValue(i, j)));
+        pw.push(phantasus.Util.nf(dataset.getValue(i, j)));
       }
     }
     pw.push('\n');
@@ -3377,22 +3377,22 @@ morpheus.GctWriter12.prototype = {
   }
 };
 
-morpheus.GisticReader = function () {
+phantasus.GisticReader = function () {
 
 };
-morpheus.GisticReader.prototype = {
+phantasus.GisticReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._read(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (x) {
@@ -3435,7 +3435,7 @@ morpheus.GisticReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: matrix.length,
       columns: ncols,
@@ -3454,23 +3454,23 @@ morpheus.GisticReader.prototype = {
   }
 };
 
-morpheus.GmtDatasetReader = function () {
+phantasus.GmtDatasetReader = function () {
 };
-morpheus.GmtDatasetReader.prototype = {
+phantasus.GmtDatasetReader.prototype = {
   getFormatName: function () {
     return 'gmt';
   },
   read: function (fileOrUrl, callback) {
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
-          callback(null, morpheus.DatasetUtil.geneSetsToDataset(name,
-            new morpheus.GmtReader()
-              .read(new morpheus.ArrayBufferReader(
+          callback(null, phantasus.DatasetUtil.geneSetsToDataset(name,
+            new phantasus.GmtReader()
+              .read(new phantasus.ArrayBufferReader(
                 new Uint8Array(arrayBuffer)))));
         }
         catch (x) {
@@ -3482,9 +3482,9 @@ morpheus.GmtDatasetReader.prototype = {
   }
 };
 
-morpheus.GmtReader = function () {
+phantasus.GmtReader = function () {
 };
-morpheus.GmtReader.prototype = {
+phantasus.GmtReader.prototype = {
   read: function (reader) {
     var sets = [];
     var tab = /\t/;
@@ -3520,18 +3520,18 @@ morpheus.GmtReader.prototype = {
   }
 };
 
-morpheus.GseReader = function (options) {
+phantasus.GseReader = function (options) {
   this.type = options.type;
 };
-morpheus.GseReader.prototype = {
+phantasus.GseReader.prototype = {
   read: function (name, callback) {
     var req = ocpu.call('loadGEO', {name: name, type: this.type}, function (session) {
-      //console.log('morpheus.GseReader.prototype.read ::', session);
+      //console.log('phantasus.GseReader.prototype.read ::', session);
       session.getObject(function (success) {
-        //console.log('morpheus.GseReader.prototype.read ::', success);
+        //console.log('phantasus.GseReader.prototype.read ::', success);
         var r = new FileReader();
-        var filePath = morpheus.Util.getFilePath(session, success);
-        //console.log('morpheus.GseReader.prototype.read ::', filePath);
+        var filePath = phantasus.Util.getFilePath(session, success);
+        //console.log('phantasus.GseReader.prototype.read ::', filePath);
         r.onload = function (e) {
           var contents = e.target.result;
           var ProtoBuf = dcodeIO.ProtoBuf;
@@ -3549,7 +3549,7 @@ morpheus.GseReader.prototype = {
 
             var res = REXP.decode(contents);
 
-            var jsondata = morpheus.Util.getRexpData(res, rclass);
+            var jsondata = phantasus.Util.getRexpData(res, rclass);
 
             var flatData = jsondata.data.values;
             var nrowData = jsondata.data.dim[0];
@@ -3570,7 +3570,7 @@ morpheus.GseReader.prototype = {
               }
               matrix.push(curArray);
             }
-            var dataset = new morpheus.Dataset({
+            var dataset = new phantasus.Dataset({
               name: name,
               rows: nrowData,
               columns: ncolData,
@@ -3581,12 +3581,12 @@ morpheus.GseReader.prototype = {
             });
 
 
-            /*console.log("morpheus.GseReader.prototype.read ::", "input list", res);
-             console.log("morpheus.GseReader.prototype.read ::", "metaNames", metaNames);
-             console.log("morpheus.GseReader.prototype.read ::", dataset);*/
+            /*console.log("phantasus.GseReader.prototype.read ::", "input list", res);
+             console.log("phantasus.GseReader.prototype.read ::", "metaNames", metaNames);
+             console.log("phantasus.GseReader.prototype.read ::", dataset);*/
             /*var columnsIds = dataset.getColumnMetadata().add('id');
             for (var i = 0; i < ncolData; i++) {
-              columnsIds.setValue(i, morpheus.Util.copyString(participants[i]));
+              columnsIds.setValue(i, phantasus.Util.copyString(participants[i]));
             }*/
             //console.log(flatPdata);
             for (var i = 0; i < metaNames.length; i++) {
@@ -3608,16 +3608,16 @@ morpheus.GseReader.prototype = {
                 rowIds.setValue(j, id[j])
               }
             }
-            morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-            morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+            phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+            phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
               1);
             callback(null, dataset);
 
           });
         };
 
-        morpheus.BlobFromPath.getFileObject(filePath, function (file) {
-          //console.log('morpheus.GseReader.prototype.read ::', file);
+        phantasus.BlobFromPath.getFileObject(filePath, function (file) {
+          //console.log('phantasus.GseReader.prototype.read ::', file);
           r.readAsArrayBuffer(file);
         });
 
@@ -3625,7 +3625,7 @@ morpheus.GseReader.prototype = {
     });
     req.fail(function () {
       callback(req.responseText);
-      //console.log('morpheus.GseReader.prototype.read ::', req.responseText);
+      //console.log('phantasus.GseReader.prototype.read ::', req.responseText);
     });
 
   },
@@ -3633,25 +3633,25 @@ morpheus.GseReader.prototype = {
 
   }
 };
-morpheus.JsonDatasetReader = function () {
+phantasus.JsonDatasetReader = function () {
 
 };
 
-morpheus.JsonDatasetReader.prototype = {
+phantasus.JsonDatasetReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl));
+    var name = phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl));
     var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
     if (isString) {
       $.ajax(fileOrUrl).done(function (json) {
-        callback(null, morpheus.Dataset.fromJSON(json));
+        callback(null, phantasus.Dataset.fromJSON(json));
       }).fail(function (err) {
         callback(err);
       });
     } else {
       var reader = new FileReader();
       reader.onload = function (event) {
-        callback(null, morpheus.Dataset.fromJSON(JSON.parse(event.target.result)));
+        callback(null, phantasus.Dataset.fromJSON(JSON.parse(event.target.result)));
       };
       reader.onerror = function (event) {
         callback(event);
@@ -3662,7 +3662,7 @@ morpheus.JsonDatasetReader.prototype = {
   },
 };
 
-morpheus.MafFileReader = function () {
+phantasus.MafFileReader = function () {
   this.geneFilter = null;
 };
 /**
@@ -3670,14 +3670,14 @@ morpheus.MafFileReader = function () {
  * @param options.dataset
  * @param options.fields
  */
-morpheus.MafFileReader.summarizeMutations = function (options) {
+phantasus.MafFileReader.summarizeMutations = function (options) {
   var dataset = options.dataset;
   var fields = options.fields;
   var count = fields.length;
   var vector = dataset.getRowMetadata().add('mutation_summary');
   vector.getProperties().set(
-    morpheus.VectorKeys.FIELDS, fields);
-  vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[number]');
+    phantasus.VectorKeys.FIELDS, fields);
+  vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[number]');
 
   // computing dynamically screws things up b/c summary is computed for other data types (e.g. CN)
   for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
@@ -3692,7 +3692,7 @@ morpheus.MafFileReader.summarizeMutations = function (options) {
   }
 };
 
-morpheus.MafFileReader.getField = function (fieldNames, headerToIndex) {
+phantasus.MafFileReader.getField = function (fieldNames, headerToIndex) {
   var name;
   var index;
 
@@ -3715,38 +3715,38 @@ morpheus.MafFileReader.getField = function (fieldNames, headerToIndex) {
   }
 };
 
-morpheus.MafFileReader.VARIANT_MAP = new morpheus.Map();
+phantasus.MafFileReader.VARIANT_MAP = new phantasus.Map();
 // silent
-morpheus.MafFileReader.VARIANT_MAP.set('Silent', 1);
+phantasus.MafFileReader.VARIANT_MAP.set('Silent', 1);
 // in-frame indel
-morpheus.MafFileReader.VARIANT_MAP.set('In_Frame_Del', 2);
-morpheus.MafFileReader.VARIANT_MAP.set('In_Frame_Ins', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Del', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Ins', 2);
 // other
-morpheus.MafFileReader.VARIANT_MAP.set('Translation_Start_Site', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Nonstop_Mutation', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('3\'UTR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('3\'Flank', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('5\'UTR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('5\'Flank', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('IGR', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Intron', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('RNA', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Targeted_Region', 3);
-morpheus.MafFileReader.VARIANT_MAP.set('Unknown', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Translation_Start_Site', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Nonstop_Mutation', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('3\'UTR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('3\'Flank', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('5\'UTR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('5\'Flank', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('IGR', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Intron', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('RNA', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Targeted_Region', 3);
+phantasus.MafFileReader.VARIANT_MAP.set('Unknown', 3);
 // mis-sense
-morpheus.MafFileReader.VARIANT_MAP.set('Missense_Mutation', 4);
+phantasus.MafFileReader.VARIANT_MAP.set('Missense_Mutation', 4);
 // splice site
-morpheus.MafFileReader.VARIANT_MAP.set('Splice_Site', 5);
+phantasus.MafFileReader.VARIANT_MAP.set('Splice_Site', 5);
 // frame shift indel
-morpheus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Del', 6);
-morpheus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Ins', 6);
+phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Del', 6);
+phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Ins', 6);
 // non-sense
-morpheus.MafFileReader.VARIANT_MAP.set('Nonsense_Mutation', 7);
+phantasus.MafFileReader.VARIANT_MAP.set('Nonsense_Mutation', 7);
 
-morpheus.MafFileReader.FIELD_NAMES = ['Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
+phantasus.MafFileReader.FIELD_NAMES = ['Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
   'Missense', 'Splice Site', 'Frame Shift', 'Nonsense'];
 
-morpheus.MafFileReader.prototype = {
+phantasus.MafFileReader.prototype = {
   setGeneFilter: function (geneFilter) {
     this.geneFilter = geneFilter;
   },
@@ -3770,10 +3770,10 @@ morpheus.MafFileReader.prototype = {
     //   'tumor_f', 'i_tumor_f', 'Tumor_Sample_Barcode', 'tumor_name',
     //   'Tumor_Sample_UUID', 'encoding'];
     //
-    var sampleField = morpheus.MafFileReader.getField([
+    var sampleField = phantasus.MafFileReader.getField([
         'Tumor_Sample_Barcode', 'tumor_name', 'Tumor_Sample_UUID'],
       headerToIndex);
-    var encodingField = morpheus.MafFileReader.getField([
+    var encodingField = phantasus.MafFileReader.getField([
         'encoding'],
       headerToIndex); // gives a numeric value for string
     if (sampleField == null) {
@@ -3782,7 +3782,7 @@ morpheus.MafFileReader.prototype = {
     var encodingColumnIndex = encodingField == null ? -1 : encodingField.index;
     var sampleColumnName = sampleField.name;
     var sampleIdColumnIndex = sampleField.index;
-    var tumorFractionField = morpheus.MafFileReader.getField(['ccf_hat',
+    var tumorFractionField = phantasus.MafFileReader.getField(['ccf_hat',
       'tumor_f', 'i_tumor_f'], headerToIndex);
     var ccfColumnName;
     var ccfColumnIndex;
@@ -3820,12 +3820,12 @@ morpheus.MafFileReader.prototype = {
     }
     // keep fields that are in file only
 
-    var geneSymbolToIndex = new morpheus.Map();
-    var sampleIdToIndex = new morpheus.Map();
+    var geneSymbolToIndex = new phantasus.Map();
+    var sampleIdToIndex = new phantasus.Map();
     var variantMatrix = [];
     var ccfMatrix = [];
     var s;
-    var customNumberToValueMap = new morpheus.Map();
+    var customNumberToValueMap = new phantasus.Map();
 
     var hasMutationInfo = chromosomeColumn !== undefined && startPositionColumn !== undefined && refAlleleColumn !== undefined && tumorAllelColumn !== undefined;
     while ((s = reader.readLine()) !== null) {
@@ -3850,7 +3850,7 @@ morpheus.MafFileReader.prototype = {
         var value = String(tokens[variantColumnIndex]);
         var variantCode;
         if (encodingColumnIndex === -1) {
-          variantCode = morpheus.MafFileReader.VARIANT_MAP.get(value);
+          variantCode = phantasus.MafFileReader.VARIANT_MAP.get(value);
           if (variantCode === undefined) {
             variantCode = 3;
           }
@@ -3872,7 +3872,7 @@ morpheus.MafFileReader.prototype = {
             + String(tokens[refAlleleColumn]) + ' > '
             + String(tokens[tumorAllelColumn]);
         }
-        var wrappedVariant = morpheus.Util.wrapNumber(variantCode,
+        var wrappedVariant = phantasus.Util.wrapNumber(variantCode,
           variantObject);
         var variantRow = variantMatrix[rowIndex];
         if (variantRow === undefined) {
@@ -3902,7 +3902,7 @@ morpheus.MafFileReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       array: variantMatrix,
       dataType: 'Number',
@@ -3939,14 +3939,14 @@ morpheus.MafFileReader.prototype = {
         var order = this.geneFilter.get(gene);
         orderVector.setValue(i, order);
       }
-      var project = new morpheus.Project(dataset);
-      project.setRowSortKeys([new morpheus.SortKey('order',
-        morpheus.SortKey.SortOrder.ASCENDING)], true); // sort
+      var project = new phantasus.Project(dataset);
+      project.setRowSortKeys([new phantasus.SortKey('order',
+        phantasus.SortKey.SortOrder.ASCENDING)], true); // sort
       // collapsed
       // dataset
       var tmp = project.getSortedFilteredDataset();
-      project = new morpheus.Project(tmp);
-      var columnIndices = morpheus.Util.seq(tmp.getColumnCount());
+      project = new phantasus.Project(tmp);
+      var columnIndices = phantasus.Util.seq(tmp.getColumnCount());
       columnIndices
         .sort(function (a, b) {
           for (var i = 0, nrows = tmp.getRowCount(); i < nrows; i++) {
@@ -3971,11 +3971,11 @@ morpheus.MafFileReader.prototype = {
           }
           return 0;
         });
-      dataset = new morpheus.SlicedDatasetView(dataset, null,
+      dataset = new phantasus.SlicedDatasetView(dataset, null,
         columnIndices);
     }
 
-    var fieldNames = morpheus.MafFileReader.FIELD_NAMES;
+    var fieldNames = phantasus.MafFileReader.FIELD_NAMES;
     if (customNumberToValueMap.size() > 0) {
       var pairs = [];
       customNumberToValueMap.forEach(function (value, key) {
@@ -3992,29 +3992,29 @@ morpheus.MafFileReader.prototype = {
       });
     }
     var numUniqueValues = fieldNames.length;
-    morpheus.MafFileReader.summarizeMutations({
+    phantasus.MafFileReader.summarizeMutations({
       dataset: dataset,
       fields: fieldNames
     });
-    morpheus.MafFileReader
+    phantasus.MafFileReader
       .summarizeMutations({
-        dataset: new morpheus.TransposedDatasetView(dataset),
+        dataset: new phantasus.TransposedDatasetView(dataset),
         fields: fieldNames
       });
 
     var mutationSummarySelectionVector = dataset.getColumnMetadata().add('mutation_summary_selection');
     mutationSummarySelectionVector.getProperties().set(
-      morpheus.VectorKeys.FIELDS,
+      phantasus.VectorKeys.FIELDS,
       fieldNames);
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[number]');
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION, true);
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[number]');
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION, true);
     var datasetName = dataset.getName();
-    mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.FUNCTION, {
+    mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.FUNCTION, {
       binSize: 1,
       domain: [1, 8],
       cumulative: false
     });
-    // mutationSummarySelectionVector.getProperties().set(morpheus.VectorKeys.FUNCTION, function (view, selectedDataset, columnIndex) {
+    // mutationSummarySelectionVector.getProperties().set(phantasus.VectorKeys.FUNCTION, function (view, selectedDataset, columnIndex) {
     //   var sourceVector = selectedDataset.getRowMetadata().getByName('Source');
     //   var bins = new Int32Array(numUniqueValues); // 1-7
     //   for (var i = 0, nrows = selectedDataset.getRowCount(); i < nrows; i++) {
@@ -4033,15 +4033,15 @@ morpheus.MafFileReader.prototype = {
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._getGeneLevelDataset(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (err) {
@@ -4053,22 +4053,22 @@ morpheus.MafFileReader.prototype = {
   }
 };
 
-morpheus.SegTabReader = function () {
+phantasus.SegTabReader = function () {
   this.regions = null;
 };
-morpheus.SegTabReader.binByRegion = function (dataset, regions) {
+phantasus.SegTabReader.binByRegion = function (dataset, regions) {
 
   var chromosomeVector = dataset.getRowMetadata().getByName('Chromosome');
   var startVector = dataset.getRowMetadata().getByName('Start_bp');
   var endVector = dataset.getRowMetadata().getByName('End_bp');
 
-  var collapsedDataset = new morpheus.Dataset({
+  var collapsedDataset = new phantasus.Dataset({
     name: dataset.getName(),
     rows: regions.length,
     columns: dataset.getColumnCount(),
     dataType: 'Float32'
   });
-  morpheus.DatasetUtil.fill(collapsedDataset, NaN);
+  phantasus.DatasetUtil.fill(collapsedDataset, NaN);
   var regionIdVector = collapsedDataset.getRowMetadata().add('id');
   var newChromosomeVector = collapsedDataset.getRowMetadata().add(
     'chromosome');
@@ -4085,7 +4085,7 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
 
   }
 
-  var summarizeFunction = morpheus.Mean;
+  var summarizeFunction = phantasus.Mean;
   collapsedDataset.setColumnMetadata(dataset.getColumnMetadata());
   for (var regionIndex = 0; regionIndex < regions.length; regionIndex++) {
     var region = regions[regionIndex];
@@ -4100,9 +4100,9 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
       }
     }
     if (rowIndices.length > 0) {
-      var slice = morpheus.DatasetUtil.slicedView(dataset, rowIndices,
+      var slice = phantasus.DatasetUtil.slicedView(dataset, rowIndices,
         null);
-      var columnView = new morpheus.DatasetColumnView(slice);
+      var columnView = new phantasus.DatasetColumnView(slice);
       for (var j = 0; j < dataset.getColumnCount(); j++) {
         columnView.setIndex(j);
         for (var series = 0; series < nseries; series++) {
@@ -4122,7 +4122,7 @@ morpheus.SegTabReader.binByRegion = function (dataset, regions) {
   return collapsedDataset;
 };
 
-morpheus.SegTabReader.prototype = {
+phantasus.SegTabReader.prototype = {
   getFormatName: function () {
     return 'seg';
   },
@@ -4138,12 +4138,12 @@ morpheus.SegTabReader.prototype = {
       fieldNameToIndex[name] = i;
     }
 
-    var sampleField = morpheus.MafFileReader.getField(['pair_id',
+    var sampleField = phantasus.MafFileReader.getField(['pair_id',
       'Tumor_Sample_Barcode', 'tumor_name', 'Tumor_Sample_UUID',
       'Sample'], fieldNameToIndex);
     var sampleColumnName = sampleField.name;
     var sampleIdColumnIndex = sampleField.index;
-    var tumorFractionField = morpheus.MafFileReader.getField(['ccf_hat',
+    var tumorFractionField = phantasus.MafFileReader.getField(['ccf_hat',
       'tumor_f', 'i_tumor_f'], fieldNameToIndex);
     var ccfColumnName;
     var ccfColumnIndex;
@@ -4152,20 +4152,20 @@ morpheus.SegTabReader.prototype = {
       ccfColumnIndex = tumorFractionField.index;
     }
     var chromosomeColumn = fieldNameToIndex.Chromosome;
-    var startPositionColumn = morpheus.MafFileReader.getField(['Start_bp',
+    var startPositionColumn = phantasus.MafFileReader.getField(['Start_bp',
       'Start'], fieldNameToIndex).index;
-    var endPositionColumn = morpheus.MafFileReader.getField(['End_bp',
+    var endPositionColumn = phantasus.MafFileReader.getField(['End_bp',
       'End'], fieldNameToIndex, {
       remove: false,
       lc: true
     }).index;
-    var valueField = morpheus.MafFileReader.getField(['tau',
+    var valueField = phantasus.MafFileReader.getField(['tau',
       'Segment_Mean']).index;
     var s;
     var matrix = [];
     var ccfMatrix = [];
-    var sampleIdToIndex = new morpheus.Map();
-    var chromosomeStartEndToIndex = new morpheus.Map();
+    var sampleIdToIndex = new phantasus.Map();
+    var chromosomeStartEndToIndex = new phantasus.Map();
     while ((s = reader.readLine()) !== null) {
       if (s === '') {
         continue;
@@ -4177,7 +4177,7 @@ morpheus.SegTabReader.prototype = {
         columnIndex = sampleIdToIndex.size();
         sampleIdToIndex.set(sample, columnIndex);
       }
-      var rowId = new morpheus.Identifier([
+      var rowId = new phantasus.Identifier([
         String(tokens[chromosomeColumn]),
         String(tokens[startPositionColumn]),
         String(tokens[endPositionColumn])]);
@@ -4188,7 +4188,7 @@ morpheus.SegTabReader.prototype = {
         chromosomeStartEndToIndex.set(rowId, rowIndex);
       }
       var value = parseFloat(String(tokens[valueField]));
-      value = isNaN(value) ? value : (morpheus.Log2(value) - 1);
+      value = isNaN(value) ? value : (phantasus.Log2(value) - 1);
       var matrixRow = matrix[rowIndex];
       if (matrixRow === undefined) {
         matrixRow = [];
@@ -4202,7 +4202,7 @@ morpheus.SegTabReader.prototype = {
         ccfMatrix[rowIndex][columnIndex] = parseFloat(tokens[ccfColumnIndex]);
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       array: matrix,
       dataType: 'number',
@@ -4233,21 +4233,21 @@ morpheus.SegTabReader.prototype = {
     }
 
     if (this.regions != null && this.regions.length > 0) {
-      dataset = morpheus.SegTabReader.binByRegion(dataset, this.regions);
+      dataset = phantasus.SegTabReader.binByRegion(dataset, this.regions);
     }
     return dataset;
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         // try {
-        callback(null, _this._read(name, new morpheus.ArrayBufferReader(
+        callback(null, _this._read(name, new phantasus.ArrayBufferReader(
           new Uint8Array(arrayBuffer))));
         // } catch (err) {
         // callback(err);
@@ -4258,11 +4258,11 @@ morpheus.SegTabReader.prototype = {
   }
 };
 
-morpheus.TcgaUtil = function () {
+phantasus.TcgaUtil = function () {
 
 };
 
-morpheus.TcgaUtil.DISEASE_STUDIES = {
+phantasus.TcgaUtil.DISEASE_STUDIES = {
   'ACC': 'Adrenocortical carcinoma',
   'BLCA': 'Bladder Urothelial Carcinoma',
   'BRCA': 'Breast invasive carcinoma',
@@ -4306,7 +4306,7 @@ morpheus.TcgaUtil.DISEASE_STUDIES = {
   'UVM': 'Uveal Melanoma'
 };
 
-morpheus.TcgaUtil.SAMPLE_TYPES = {
+phantasus.TcgaUtil.SAMPLE_TYPES = {
   '01': 'Primary solid Tumor',
   '02': 'Recurrent Solid Tumor',
   '03': 'Primary Blood Derived Cancer - Peripheral Blood',
@@ -4328,7 +4328,7 @@ morpheus.TcgaUtil.SAMPLE_TYPES = {
   '61': 'Cell Line Derived Xenograft Tissue'
 };
 
-morpheus.TcgaUtil.barcode = function (s) {
+phantasus.TcgaUtil.barcode = function (s) {
   var tokens = s.split('-');
   var id = tokens[2];
   var sampleType;
@@ -4338,9 +4338,9 @@ morpheus.TcgaUtil.barcode = function (s) {
     if (sampleType.length > 2) {
       sampleType = sampleType.substring(0, 2);
     }
-    sampleType = morpheus.TcgaUtil.SAMPLE_TYPES[sampleType];
+    sampleType = phantasus.TcgaUtil.SAMPLE_TYPES[sampleType];
   } else {
-    sampleType = morpheus.TcgaUtil.SAMPLE_TYPES['01'];
+    sampleType = phantasus.TcgaUtil.SAMPLE_TYPES['01'];
   }
   return {
     id: id.toLowerCase(),
@@ -4348,19 +4348,19 @@ morpheus.TcgaUtil.barcode = function (s) {
   };
 };
 
-morpheus.TcgaUtil.setIdAndSampleType = function (dataset) {
+phantasus.TcgaUtil.setIdAndSampleType = function (dataset) {
   var idVector = dataset.getColumnMetadata().get(0);
   var participantId = dataset.getColumnMetadata().add('participant_id');
   var sampleType = dataset.getColumnMetadata().add('sample_type');
   for (var i = 0, size = idVector.size(); i < size; i++) {
-    var barcode = morpheus.TcgaUtil.barcode(idVector.getValue(i));
+    var barcode = phantasus.TcgaUtil.barcode(idVector.getValue(i));
     idVector.setValue(i, barcode.id + '-' + barcode.sampleType);
     sampleType.setValue(i, barcode.sampleType);
     participantId.setValue(i, barcode.id);
   }
 };
 
-morpheus.TcgaUtil.getDataset = function (options) {
+phantasus.TcgaUtil.getDataset = function (options) {
   var promises = [];
   var datasets = [];
   var returnDeferred = $.Deferred();
@@ -4369,12 +4369,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
     // id + type
     var mrna = $.Deferred();
     promises.push(mrna);
-    new morpheus.TxtReader().read(options.mrna, function (err, dataset) {
+    new phantasus.TxtReader().read(options.mrna, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       mrna.resolve();
     });
@@ -4383,16 +4383,16 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.mutation) {
     var mutation = $.Deferred();
     promises.push(mutation);
-    new morpheus.MafFileReader().read(options.mutation, function (err, dataset) {
+    new phantasus.MafFileReader().read(options.mutation, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       mutation.resolve();
     });
-    var sigGenesAnnotation = morpheus.Util.readLines(options.sigGenes);
+    var sigGenesAnnotation = phantasus.Util.readLines(options.sigGenes);
     sigGenesAnnotation.done(function (lines) {
       sigGenesLines = lines;
     });
@@ -4401,13 +4401,13 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.gistic) {
     var gistic = $.Deferred();
     promises.push(gistic);
-    new morpheus.GisticReader().read(options.gistic,
+    new phantasus.GisticReader().read(options.gistic,
       function (err, dataset) {
         if (err) {
           console.log('Error reading file:' + err);
         } else {
           datasets.push(dataset);
-          morpheus.TcgaUtil.setIdAndSampleType(dataset);
+          phantasus.TcgaUtil.setIdAndSampleType(dataset);
         }
         gistic.resolve();
       });
@@ -4417,7 +4417,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var gisticGene = $.Deferred();
     promises.push(gisticGene);
 
-    new morpheus.TxtReader({
+    new phantasus.TxtReader({
       dataColumnStart: 3
 
     }).read(options.gisticGene, function (err, dataset) {
@@ -4425,7 +4425,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       gisticGene.resolve();
     });
@@ -4434,12 +4434,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
   if (options.seg) {
     var seg = $.Deferred();
     promises.push(seg);
-    new morpheus.SegTabReader().read(options.seg, function (err, dataset) {
+    new phantasus.SegTabReader().read(options.seg, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       seg.resolve();
     });
@@ -4449,12 +4449,12 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var rppa = $.Deferred();
     promises.push(rppa);
 
-    new morpheus.TxtReader().read(options.rppa, function (err, dataset) {
+    new phantasus.TxtReader().read(options.rppa, function (err, dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
 
       rppa.resolve();
@@ -4465,26 +4465,26 @@ morpheus.TcgaUtil.getDataset = function (options) {
     // id + type
     var methylation = $.Deferred();
     promises.push(methylation);
-    new morpheus.TxtReader({}).read(options.methylation, function (err,
+    new phantasus.TxtReader({}).read(options.methylation, function (err,
                                                                    dataset) {
       if (err) {
         console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
-        morpheus.TcgaUtil.setIdAndSampleType(dataset);
+        phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
       methylation.resolve();
     });
   }
 
-  var mrnaClustPromise = morpheus.Util.readLines(options.mrnaClust);
+  var mrnaClustPromise = phantasus.Util.readLines(options.mrnaClust);
   promises.push(mrnaClustPromise);
   var sampleIdToClusterId;
   mrnaClustPromise.done(function (lines) {
     // SampleName cluster silhouetteValue
     // SampleName cluster silhouetteValue
     // TCGA-OR-A5J1-01 1 0.00648776228925048
-    sampleIdToClusterId = new morpheus.Map();
+    sampleIdToClusterId = new phantasus.Map();
     var lineNumber = 0;
     while (lines[lineNumber].indexOf('SampleName') !== -1) {
       lineNumber++;
@@ -4492,14 +4492,14 @@ morpheus.TcgaUtil.getDataset = function (options) {
     var tab = /\t/;
     for (; lineNumber < lines.length; lineNumber++) {
       var tokens = lines[lineNumber].split(tab);
-      var barcode = morpheus.TcgaUtil.barcode(tokens[0]);
+      var barcode = phantasus.TcgaUtil.barcode(tokens[0]);
       sampleIdToClusterId.set(barcode.id + '-' + barcode.sampleType, tokens[1]);
     }
   });
   var annotationCallbacks = [];
   var annotationDef = null;
   if (options.columnAnnotations) {
-    annotationDef = morpheus.DatasetUtil.annotate({
+    annotationDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
       isColumns: true
     });
@@ -4543,11 +4543,11 @@ morpheus.TcgaUtil.getDataset = function (options) {
           }
         }
 
-        var joined = new morpheus.JoinedDataset(
+        var joined = new phantasus.JoinedDataset(
           datasets[datasetIndices[0]],
           datasets[datasetIndices[1]], 'id', 'id');
         for (var i = 2; i < datasetIndices.length; i++) {
-          joined = new morpheus.JoinedDataset(joined,
+          joined = new phantasus.JoinedDataset(joined,
             datasets[datasetIndices[i]], 'id', 'id');
         }
         datasetToReturn = joined;
@@ -4563,13 +4563,13 @@ morpheus.TcgaUtil.getDataset = function (options) {
       }
       // view in space of mutation sample ids only
       if (options.mutation) {
-        var sourceToIndices = morpheus.VectorUtil
+        var sourceToIndices = phantasus.VectorUtil
           .createValueToIndicesMap(datasetToReturn
             .getRowMetadata().getByName('Source'));
-        var mutationDataset = new morpheus.SlicedDatasetView(
+        var mutationDataset = new phantasus.SlicedDatasetView(
           datasetToReturn, sourceToIndices
             .get('mutations_merged.maf'));
-        new morpheus.OpenFileTool()
+        new phantasus.OpenFileTool()
           .annotate(sigGenesLines, mutationDataset, false,
             null, 'id', 'gene', ['q']);
         var qVector = mutationDataset.getRowMetadata().getByName(
@@ -4585,7 +4585,7 @@ morpheus.TcgaUtil.getDataset = function (options) {
         }
 
         mutationDataset.getRowMetadata().remove(
-          morpheus.MetadataUtil.indexOf(mutationDataset
+          phantasus.MetadataUtil.indexOf(mutationDataset
             .getRowMetadata(), 'q'));
       }
       if (annotationDef) {
@@ -4593,8 +4593,8 @@ morpheus.TcgaUtil.getDataset = function (options) {
           f(datasetToReturn);
         });
       }
-      console.log("morpheus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
-      morpheus.DatasetUtil.toESSessionPromise(datasetToReturn);
+      console.log("phantasus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
+      phantasus.DatasetUtil.toESSessionPromise(datasetToReturn);
       returnDeferred.resolve(datasetToReturn);
     });
   return returnDeferred;
@@ -4606,25 +4606,25 @@ morpheus.TcgaUtil.getDataset = function (options) {
  * @param options.dataColumnStart
  * @constructor
  */
-morpheus.TxtReader = function (options) {
+phantasus.TxtReader = function (options) {
   if (options == null) {
     options = {};
   }
   this.options = options;
 };
-morpheus.TxtReader.prototype = {
+phantasus.TxtReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._read(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (x) {
@@ -4678,7 +4678,7 @@ morpheus.TxtReader.prototype = {
       var tokens = testLine.split(tab);
       for (var j = 0; j < dataColumnStart; j++) {
         // row metadata
-        arrayOfRowArrays[j].push(morpheus.Util.copyString(tokens[j]));
+        arrayOfRowArrays[j].push(phantasus.Util.copyString(tokens[j]));
       }
       for (var j = dataColumnStart, k = 0; k < ncols; j++, k++) {
         var token = tokens[j];
@@ -4693,7 +4693,7 @@ morpheus.TxtReader.prototype = {
         var tokens = s.split(tab);
         for (var j = 0; j < dataColumnStart; j++) {
           // row metadata
-          arrayOfRowArrays[j].push(morpheus.Util.copyString(tokens[j]));
+          arrayOfRowArrays[j].push(phantasus.Util.copyString(tokens[j]));
         }
         for (var j = dataColumnStart, k = 0; k < ncols; j++, k++) {
           var token = tokens[j];
@@ -4701,7 +4701,7 @@ morpheus.TxtReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: matrix.length,
       columns: ncols,
@@ -4711,7 +4711,7 @@ morpheus.TxtReader.prototype = {
 
     var columnIds = dataset.getColumnMetadata().add('id');
     for (var i = 0, j = dataColumnStart; i < ncols; i++, j++) {
-      columnIds.setValue(i, morpheus.Util.copyString(header[j]));
+      columnIds.setValue(i, phantasus.Util.copyString(header[j]));
     }
     var rowIdVector = dataset.getRowMetadata().add('id');
     rowIdVector.array = arrayOfRowArrays[0];
@@ -4725,14 +4725,14 @@ morpheus.TxtReader.prototype = {
   }
 };
 
-morpheus.XlsxDatasetReader = function () {
+phantasus.XlsxDatasetReader = function () {
 };
-morpheus.XlsxDatasetReader.prototype = {
+phantasus.XlsxDatasetReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
@@ -4755,11 +4755,11 @@ morpheus.XlsxDatasetReader.prototype = {
   },
 
   _read: function (datasetName, bstr, callback) {
-    morpheus.Util.xlsxTo2dArray({data: bstr}, function (err, lines) {
+    phantasus.Util.xlsxTo2dArray({data: bstr}, function (err, lines) {
       var nrows = lines.length - 1;
       var header = lines[0];
       var ncols = header.length - 1;
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         name: datasetName,
         rows: nrows,
         columns: ncols
@@ -4784,13 +4784,13 @@ morpheus.XlsxDatasetReader.prototype = {
   }
 };
 
-morpheus.VectorAdapter = function (v) {
+phantasus.VectorAdapter = function (v) {
   if (v == null) {
     throw 'vector is null';
   }
   this.v = v;
 };
-morpheus.VectorAdapter.prototype = {
+phantasus.VectorAdapter.prototype = {
   setValue: function (i, value) {
     this.v.setValue(i, value);
   },
@@ -4817,19 +4817,19 @@ morpheus.VectorAdapter.prototype = {
  * setValue.
  * @param rows {number} The number of rows
  * @param columns {number} The number of columns
- * @implements {morpheus.DatasetInterface}
+ * @implements {phantasus.DatasetInterface}
  * @constructor
  */
-morpheus.AbstractDataset = function (rows, columns) {
+phantasus.AbstractDataset = function (rows, columns) {
   this.seriesNames = [];
   this.seriesArrays = [];
   this.seriesDataTypes = [];
   this.rows = rows;
   this.columns = columns;
-  this.rowMetadataModel = new morpheus.MetadataModel(rows);
-  this.columnMetadataModel = new morpheus.MetadataModel(columns);
+  this.rowMetadataModel = new phantasus.MetadataModel(rows);
+  this.columnMetadataModel = new phantasus.MetadataModel(columns);
 };
-morpheus.AbstractDataset.prototype = {
+phantasus.AbstractDataset.prototype = {
   /**
    * @ignore
    * @param metadata
@@ -4986,16 +4986,16 @@ morpheus.AbstractDataset.prototype = {
  *            the vector name
  * @param size {number}
  *            the number of elements in this vector
- * @implements {morpheus.VectorInterface}
+ * @implements {phantasus.VectorInterface}
  * @constructor
  */
-morpheus.AbstractVector = function (name, size) {
+phantasus.AbstractVector = function (name, size) {
   this.name = name;
   this.n = size;
-  this.properties = new morpheus.Map();
+  this.properties = new phantasus.Map();
 };
 
-morpheus.AbstractVector.prototype = {
+phantasus.AbstractVector.prototype = {
   getValue: function (index) {
     throw new Error('Not implemented');
   },
@@ -5010,26 +5010,26 @@ morpheus.AbstractVector.prototype = {
   }
 };
 
-morpheus.SignalToNoise = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
-  var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-  var s2 = Math.sqrt(morpheus.Variance(list2, m2));
+phantasus.SignalToNoise = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+  var s2 = Math.sqrt(phantasus.Variance(list2, m2));
   return (m1 - m2) / (s1 + s2);
 };
-morpheus.SignalToNoise.toString = function () {
+phantasus.SignalToNoise.toString = function () {
   return 'Signal to noise';
 };
 
-morpheus.createSignalToNoiseAdjust = function (percent) {
+phantasus.createSignalToNoiseAdjust = function (percent) {
   percent = percent || 0.2;
   var f = function (list1, list2) {
-    var m1 = morpheus.Mean(list1);
-    var m2 = morpheus.Mean(list2);
-    var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-    var s2 = Math.sqrt(morpheus.Variance(list2, m2));
-    s1 = morpheus.SignalToNoise.thresholdStandardDeviation(m1, s1, percent);
-    s2 = morpheus.SignalToNoise.thresholdStandardDeviation(m2, s2, percent);
+    var m1 = phantasus.Mean(list1);
+    var m2 = phantasus.Mean(list2);
+    var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+    var s2 = Math.sqrt(phantasus.Variance(list2, m2));
+    s1 = phantasus.SignalToNoise.thresholdStandardDeviation(m1, s1, percent);
+    s2 = phantasus.SignalToNoise.thresholdStandardDeviation(m2, s2, percent);
     // ensure variance is at least 20% of mean
     return (m1 - m2) / (s1 + s2);
   };
@@ -5039,7 +5039,7 @@ morpheus.createSignalToNoiseAdjust = function (percent) {
   return f;
 };
 
-morpheus.SignalToNoise.thresholdStandardDeviation = function (mean,
+phantasus.SignalToNoise.thresholdStandardDeviation = function (mean,
                                                               standardDeviation, percent) {
   var returnValue = standardDeviation;
   var absMean = Math.abs(mean);
@@ -5054,7 +5054,7 @@ morpheus.SignalToNoise.thresholdStandardDeviation = function (mean,
   return returnValue;
 };
 
-morpheus.createContingencyTable = function (listOne, listTwo, groupingValue) {
+phantasus.createContingencyTable = function (listOne, listTwo, groupingValue) {
   if (groupingValue == null || isNaN(groupingValue)) {
     groupingValue = 1;
   }
@@ -5096,16 +5096,16 @@ morpheus.createContingencyTable = function (listOne, listTwo, groupingValue) {
   var d = N + k - n - K;
   return [a, b, c, d];
 };
-morpheus.FisherExact = function (listOne, listTwo) {
-  var abcd = morpheus.createContingencyTable(listOne, listTwo, 1);
-  return morpheus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2], abcd[3]);
+phantasus.FisherExact = function (listOne, listTwo) {
+  var abcd = phantasus.createContingencyTable(listOne, listTwo, 1);
+  return phantasus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2], abcd[3]);
 };
 
-morpheus.createFisherExact = function (groupingValue) {
+phantasus.createFisherExact = function (groupingValue) {
   var f = function (listOne, listTwo) {
-    var abcd = morpheus.createContingencyTable(listOne, listTwo,
+    var abcd = phantasus.createContingencyTable(listOne, listTwo,
       groupingValue);
-    return morpheus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2],
+    return phantasus.FisherExact.fisherTest(abcd[0], abcd[1], abcd[2],
       abcd[3]);
   };
   return f;
@@ -5115,21 +5115,21 @@ morpheus.createFisherExact = function (groupingValue) {
 /**
  * Computes the hypergeometric probability.
  */
-morpheus.FisherExact.phyper = function (a, b, c, d) {
+phantasus.FisherExact.phyper = function (a, b, c, d) {
   return Math
-    .exp((morpheus.FisherExact.logFactorial(a + b)
-      + morpheus.FisherExact.logFactorial(c + d)
-      + morpheus.FisherExact.logFactorial(a + c) + morpheus.FisherExact
+    .exp((phantasus.FisherExact.logFactorial(a + b)
+      + phantasus.FisherExact.logFactorial(c + d)
+      + phantasus.FisherExact.logFactorial(a + c) + phantasus.FisherExact
         .logFactorial(b + d))
-      - (morpheus.FisherExact.logFactorial(a)
-      + morpheus.FisherExact.logFactorial(b)
-      + morpheus.FisherExact.logFactorial(c)
-      + morpheus.FisherExact.logFactorial(d) + morpheus.FisherExact
+      - (phantasus.FisherExact.logFactorial(a)
+      + phantasus.FisherExact.logFactorial(b)
+      + phantasus.FisherExact.logFactorial(c)
+      + phantasus.FisherExact.logFactorial(d) + phantasus.FisherExact
         .logFactorial(a + b + c + d)));
 
 };
 
-morpheus.FisherExact.logFactorials = [0.00000000000000000,
+phantasus.FisherExact.logFactorials = [0.00000000000000000,
   0.00000000000000000, 0.69314718055994531, 1.79175946922805500,
   3.17805383034794562, 4.78749174278204599, 6.57925121201010100,
   8.52516136106541430, 10.60460290274525023, 12.80182748008146961,
@@ -5140,7 +5140,7 @@ morpheus.FisherExact.logFactorials = [0.00000000000000000,
   48.47118135183522388, 51.60667556776437357, 54.78472939811231919,
   58.00360522298051994, 61.26170176100200198, 64.55753862700633106,
   67.88974313718153498, 71.25703896716800901];
-morpheus.FisherExact.logFactorial = function (k) {
+phantasus.FisherExact.logFactorial = function (k) {
   if (k >= 30) { // stirlings approximation
     var C0 = 9.18938533204672742e-01;
     var C1 = 8.33333333333333333e-02;
@@ -5153,19 +5153,19 @@ morpheus.FisherExact.logFactorial = function (k) {
       * (C1 + rr * (C3 + rr * (C5 + rr * C7)));
     // log k! = (k + 1/2)log(k) - k + (1/2)log(2Pi) + stirlingCorrection(k)
   }
-  return morpheus.FisherExact.logFactorials[k];
+  return phantasus.FisherExact.logFactorials[k];
 };
 
-morpheus.FisherExact.fisherTest = function (a, b, c, d) {
+phantasus.FisherExact.fisherTest = function (a, b, c, d) {
   // match R 2-sided fisher.test
-  var p = morpheus.FisherExact.phyper(a, b, c, d);
+  var p = phantasus.FisherExact.phyper(a, b, c, d);
   var sum = p;
   for (var _a = 0, n = a + b + c + d; _a <= n; _a++) {
     var _b = a + b - _a;
     var _c = a + c - _a;
     var _d = b + d - _b;
     if (_a !== a && _b >= 0 && _c >= 0 && _d >= 0) {
-      var _p = morpheus.FisherExact.phyper(_a, _b, _c, _d);
+      var _p = phantasus.FisherExact.phyper(_a, _b, _c, _d);
       if (_p <= p) {
         sum += _p;
       }
@@ -5176,31 +5176,31 @@ morpheus.FisherExact.fisherTest = function (a, b, c, d) {
   // var gt = jStat.hypgeom.cdf(b, a + b + c + d, a + b, b + d);
   // return Math.min(1, 2 * Math.min(lt, gt));
 };
-morpheus.FisherExact.toString = function () {
+phantasus.FisherExact.toString = function () {
   return 'Fisher Exact Test';
 };
 
-morpheus.FoldChange = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
+phantasus.FoldChange = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
   return (m1 / m2);
 };
-morpheus.FoldChange.toString = function () {
+phantasus.FoldChange.toString = function () {
   return 'Fold Change';
 };
-morpheus.TTest = function (list1, list2) {
-  var m1 = morpheus.Mean(list1);
-  var m2 = morpheus.Mean(list2);
-  var s1 = Math.sqrt(morpheus.Variance(list1, m1));
-  var s2 = Math.sqrt(morpheus.Variance(list2, m2));
-  var n1 = morpheus.CountNonNaN(list1);
-  var n2 = morpheus.CountNonNaN(list2);
+phantasus.TTest = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  var s1 = Math.sqrt(phantasus.Variance(list1, m1));
+  var s2 = Math.sqrt(phantasus.Variance(list2, m2));
+  var n1 = phantasus.CountNonNaN(list1);
+  var n2 = phantasus.CountNonNaN(list2);
   return ((m1 - m2) / Math.sqrt((s1 * s1 / n1) + (s2 * s2 / n2)));
 };
-morpheus.TTest.toString = function () {
+phantasus.TTest.toString = function () {
   return 'T-Test';
 };
-morpheus.Spearman = function (list1, list2) {
+phantasus.Spearman = function (list1, list2) {
   var flist1 = [];
   var flist2 = [];
   for (var i = 0, n = list1.size(); i < n; i++) {
@@ -5212,16 +5212,16 @@ morpheus.Spearman = function (list1, list2) {
     flist1.push(v1);
     flist2.push(v2);
   }
-  var rank1 = morpheus.Ranking(flist1);
-  var rank2 = morpheus.Ranking(flist2);
-  return morpheus.Pearson(new morpheus.Vector('', rank1.length)
-    .setArray(rank1), new morpheus.Vector('', rank2.length)
+  var rank1 = phantasus.Ranking(flist1);
+  var rank2 = phantasus.Ranking(flist2);
+  return phantasus.Pearson(new phantasus.Vector('', rank1.length)
+    .setArray(rank1), new phantasus.Vector('', rank2.length)
     .setArray(rank2));
 };
-morpheus.Spearman.toString = function () {
+phantasus.Spearman.toString = function () {
   return 'Spearman rank correlation';
 };
-morpheus.WeightedMean = function (weights, values) {
+phantasus.WeightedMean = function (weights, values) {
   var numerator = 0;
   var denom = 0;
   for (var i = 0, size = values.size(); i < size; i++) {
@@ -5236,11 +5236,11 @@ morpheus.WeightedMean = function (weights, values) {
   }
   return denom === 0 ? NaN : numerator / denom;
 };
-morpheus.WeightedMean.toString = function () {
+phantasus.WeightedMean.toString = function () {
   return 'Weighted average';
 };
 
-morpheus.createOneMinusMatrixValues = function (dataset) {
+phantasus.createOneMinusMatrixValues = function (dataset) {
   var f = function (listOne, listTwo) {
     return 1 - dataset.getValue(listOne.getIndex(), listTwo.getIndex());
   };
@@ -5250,7 +5250,7 @@ morpheus.createOneMinusMatrixValues = function (dataset) {
   return f;
 };
 
-morpheus.Pearson = function (listOne, listTwo) {
+phantasus.Pearson = function (listOne, listTwo) {
   var sumx = 0;
   var sumxx = 0;
   var sumy = 0;
@@ -5275,11 +5275,11 @@ morpheus.Pearson = function (listOne, listTwo) {
     * (sumyy - (sumy * sumy / N)));
   return denr == 0 ? 1 : numr / denr;
 };
-morpheus.Pearson.toString = function () {
+phantasus.Pearson.toString = function () {
   return 'Pearson correlation';
 };
 
-morpheus.Jaccard = function (listOne, listTwo) {
+phantasus.Jaccard = function (listOne, listTwo) {
 
   var orCount = 0;
   var andCount = 0;
@@ -5303,11 +5303,11 @@ morpheus.Jaccard = function (listOne, listTwo) {
   return 1 - (andCount / orCount);
 };
 
-morpheus.Jaccard.toString = function () {
+phantasus.Jaccard.toString = function () {
   return 'Jaccard distance';
 };
 
-morpheus.Cosine = function (listOne, listTwo) {
+phantasus.Cosine = function (listOne, listTwo) {
   var sumX2 = 0;
   var sumY2 = 0;
   var sumXY = 0;
@@ -5324,11 +5324,11 @@ morpheus.Cosine = function (listOne, listTwo) {
   return (sumXY / Math.sqrt(sumX2 * sumY2));
 };
 
-morpheus.Cosine.toString = function () {
+phantasus.Cosine.toString = function () {
   return 'Cosine similarity';
 };
 
-morpheus.Euclidean = function (x, y) {
+phantasus.Euclidean = function (x, y) {
   var dist = 0;
   for (var i = 0, size = x.size(); i < size; ++i) {
     var x_i = x.getValue(i);
@@ -5340,10 +5340,10 @@ morpheus.Euclidean = function (x, y) {
   }
   return Math.sqrt(dist);
 };
-morpheus.Euclidean.toString = function () {
+phantasus.Euclidean.toString = function () {
   return 'Euclidean distance';
 };
-morpheus.OneMinusFunction = function (f) {
+phantasus.OneMinusFunction = function (f) {
   var dist = function (x, y) {
     return 1 - f(x, y);
   };
@@ -5354,7 +5354,7 @@ morpheus.OneMinusFunction = function (f) {
   return dist;
 };
 
-morpheus.LinearRegression = function (xVector, yVector) {
+phantasus.LinearRegression = function (xVector, yVector) {
   var sumX = 0;
   var sumY = 0;
   var sumXX = 0;
@@ -5381,7 +5381,7 @@ morpheus.LinearRegression = function (xVector, yVector) {
   };
 };
 
-morpheus.KendallsCorrelation = function (x, y) {
+phantasus.KendallsCorrelation = function (x, y) {
 
   /**
    * Returns the sum of the number from 1 .. n according to Gauss' summation formula:
@@ -5504,7 +5504,7 @@ morpheus.KendallsCorrelation = function (x, y) {
   var nonTiedPairsMultiplied = (numPairs - tiedXPairs) * (numPairs - tiedYPairs);
   return concordantMinusDiscordant / Math.sqrt(nonTiedPairsMultiplied);
 };
-morpheus.KendallsCorrelation.toString = function () {
+phantasus.KendallsCorrelation.toString = function () {
   return 'Kendall\'s correlation';
 };
 
@@ -5518,19 +5518,19 @@ morpheus.KendallsCorrelation.toString = function () {
  * @param callback {Function} that takes an index and returns the value at the specified index
  * @constructor
  */
-morpheus.ComputedVector = function (name, size, callback) {
-  morpheus.AbstractVector.call(this, name, size);
+phantasus.ComputedVector = function (name, size, callback) {
+  phantasus.AbstractVector.call(this, name, size);
   this.callback = callback;
 };
 
-morpheus.ComputedVector.prototype = {
+phantasus.ComputedVector.prototype = {
   getValue: function (index) {
     return this.callback(index);
   }
 };
-morpheus.Util.extend(morpheus.ComputedVector, morpheus.AbstractVector);
+phantasus.Util.extend(phantasus.ComputedVector, phantasus.AbstractVector);
 
-morpheus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
+phantasus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
   if (dataset == null) {
     throw 'dataset is null';
   }
@@ -5539,7 +5539,7 @@ morpheus.DatasetAdapter = function (dataset, rowMetadata, columnMetadata) {
   this.columnMetadata = columnMetadata || dataset.getColumnMetadata();
 
 };
-morpheus.DatasetAdapter.prototype = {
+phantasus.DatasetAdapter.prototype = {
   getDataset: function () {
     return this.dataset;
   },
@@ -5584,12 +5584,12 @@ morpheus.DatasetAdapter.prototype = {
   }
 };
 
-morpheus.DatasetColumnView = function (dataset) {
+phantasus.DatasetColumnView = function (dataset) {
   this.dataset = dataset;
   this.columnIndex = 0;
   this.seriesIndex = 0;
 };
-morpheus.DatasetColumnView.prototype = {
+phantasus.DatasetColumnView.prototype = {
   columnIndex: -1,
   size: function () {
     return this.dataset.getRowCount();
@@ -5614,7 +5614,7 @@ morpheus.DatasetColumnView.prototype = {
  * two-dimensional matrices. A dataset also has metadata associated with each
  * row and column.
  *
- * @interface morpheus.DatasetInterface
+ * @interface phantasus.DatasetInterface
  */
 
 /**
@@ -5622,7 +5622,7 @@ morpheus.DatasetColumnView.prototype = {
  * standard error of data points for example.
  *
  * @function
- * @name morpheus.DatasetInterface#getName
+ * @name phantasus.DatasetInterface#getName
  * @param seriesIndex {number} the series
  * @return {string} the series name
  */
@@ -5632,7 +5632,7 @@ morpheus.DatasetColumnView.prototype = {
  * error of data points for example.
  *
  * @function
- * @name morpheus.DatasetInterface#setName
+ * @name phantasus.DatasetInterface#setName
  * @param seriesIndex {number} the series
  * @param name {string} the series name
  */
@@ -5641,23 +5641,23 @@ morpheus.DatasetColumnView.prototype = {
  * Gets the row metadata for this dataset.
  *
  * @function
- * @name morpheus.DatasetInterface#getRowMetadata
- * @return {morpheus.MetadataModelInterface} the row metadata
+ * @name phantasus.DatasetInterface#getRowMetadata
+ * @return {phantasus.MetadataModelInterface} the row metadata
  */
 
 /**
  * Gets the column metadata for this dataset.
  *
  * @function
- * @name morpheus.DatasetInterface#getColumnMetadata
- * @return {morpheus.MetadataModelInterface} The column metadata
+ * @name phantasus.DatasetInterface#getColumnMetadata
+ * @return {phantasus.MetadataModelInterface} The column metadata
  */
 
 /**
  * Returns the number of rows in the dataset.
  *
  * @function
- * @name morpheus.DatasetInterface#getRowCount
+ * @name phantasus.DatasetInterface#getRowCount
  * @return {number} the number of rows
  */
 
@@ -5665,7 +5665,7 @@ morpheus.DatasetColumnView.prototype = {
  * Returns the number of columns in the dataset.
  *
  * @function
- * @name morpheus.DatasetInterface#getColumnCount
+ * @name phantasus.DatasetInterface#getColumnCount
  * @return {number} the number of columns
  */
 
@@ -5674,7 +5674,7 @@ morpheus.DatasetColumnView.prototype = {
  * Series can be used to store standard error of data points for example.
  *
  * @function
- * @name morpheus.DatasetInterface#getValue
+ * @name phantasus.DatasetInterface#getValue
  * @param rowIndex {number} the row index
  * @param columnIndex {number} the column index
  * @param seriesIndex {number} the series index
@@ -5685,7 +5685,7 @@ morpheus.DatasetColumnView.prototype = {
  * Sets the value at the given row and column for the given series.
  *
  * @function
- * @name morpheus.DatasetInterface#setValue
+ * @name phantasus.DatasetInterface#setValue
  * @param rowIndex {number} the row index
  * @param columnIndex {number} the column index
  * @param value the value
@@ -5696,7 +5696,7 @@ morpheus.DatasetColumnView.prototype = {
  * Adds the specified series.
  *
  * @function
- * @name morpheus.DatasetInterface#addSeries
+ * @name phantasus.DatasetInterface#addSeries
  * @param options.name {string} the series name
  * @param options.dataType {string} the series data type (e.g. object, Float32, Int8)
  * @return {number} the series index
@@ -5706,7 +5706,7 @@ morpheus.DatasetColumnView.prototype = {
  * Removes the specified series.
  *
  * @function
- * @name morpheus.DatasetInterface#removeSeries
+ * @name phantasus.DatasetInterface#removeSeries
  * @param seriesIndex {number} The series index.
  */
 
@@ -5715,7 +5715,7 @@ morpheus.DatasetColumnView.prototype = {
  * error of data points for example.
  *
  * @function
- * @name morpheus.DatasetInterface#getSeriesCount
+ * @name phantasus.DatasetInterface#getSeriesCount
  * @return {number} the number of series
  */
 
@@ -5723,18 +5723,18 @@ morpheus.DatasetColumnView.prototype = {
  * Returns the data type at the specified series index.
  *
  * @function
- * @name morpheus.DatasetInterface#getDataType
+ * @name phantasus.DatasetInterface#getDataType
  * @param seriesIndex {number} the series index
  * @return {string} the series data type (e.g. Number, Float32, Int8)
  */
 
 
-morpheus.DatasetRowView = function (dataset) {
+phantasus.DatasetRowView = function (dataset) {
   this.dataset = dataset;
   this.index = 0;
   this.seriesIndex = 0;
 };
-morpheus.DatasetRowView.prototype = {
+phantasus.DatasetRowView.prototype = {
   size: function () {
     return this.dataset.getColumnCount();
   },
@@ -5758,11 +5758,11 @@ morpheus.DatasetRowView.prototype = {
   }
 };
 
-morpheus.DatasetSeriesView = function (dataset, seriesIndices) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.DatasetSeriesView = function (dataset, seriesIndices) {
+  phantasus.DatasetAdapter.call(this, dataset);
   this.seriesIndices = seriesIndices;
 };
-morpheus.DatasetSeriesView.prototype = {
+phantasus.DatasetSeriesView.prototype = {
   getValue: function (i, j, seriesIndex) {
     seriesIndex = seriesIndex || 0;
     return this.dataset.getValue(i, j, this.seriesIndices[seriesIndex]);
@@ -5791,16 +5791,16 @@ morpheus.DatasetSeriesView.prototype = {
     return this.getName();
   }
 };
-morpheus.Util.extend(morpheus.DatasetSeriesView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.DatasetSeriesView, phantasus.DatasetAdapter);
 
 /**
- * Static utilities for morpheus.DatasetInterface instances
+ * Static utilities for phantasus.DatasetInterface instances
  *
- * @class morpheus.DatasetUtil
+ * @class phantasus.DatasetUtil
  */
-morpheus.DatasetUtil = function () {
+phantasus.DatasetUtil = function () {
 };
-morpheus.DatasetUtil.min = function (dataset, seriesIndex) {
+phantasus.DatasetUtil.min = function (dataset, seriesIndex) {
   seriesIndex = seriesIndex || 0;
   var min = Number.MAX_VALUE;
   for (var i = 0, rows = dataset.getRowCount(); i < rows; i++) {
@@ -5814,14 +5814,14 @@ morpheus.DatasetUtil.min = function (dataset, seriesIndex) {
   }
   return min;
 };
-morpheus.DatasetUtil.slicedView = function (dataset, rows, columns) {
-  return new morpheus.SlicedDatasetView(dataset, rows, columns);
+phantasus.DatasetUtil.slicedView = function (dataset, rows, columns) {
+  return new phantasus.SlicedDatasetView(dataset, rows, columns);
 };
-morpheus.DatasetUtil.transposedView = function (dataset) {
-  return dataset instanceof morpheus.TransposedDatasetView ? dataset
-    .getDataset() : new morpheus.TransposedDatasetView(dataset);
+phantasus.DatasetUtil.transposedView = function (dataset) {
+  return dataset instanceof phantasus.TransposedDatasetView ? dataset
+    .getDataset() : new phantasus.TransposedDatasetView(dataset);
 };
-morpheus.DatasetUtil.max = function (dataset, seriesIndex) {
+phantasus.DatasetUtil.max = function (dataset, seriesIndex) {
   seriesIndex = seriesIndex || 0;
   var max = -Number.MAX_VALUE;
   for (var i = 0, rows = dataset.getRowCount(); i < rows; i++) {
@@ -5836,51 +5836,51 @@ morpheus.DatasetUtil.max = function (dataset, seriesIndex) {
   return max;
 };
 
-morpheus.DatasetUtil.getDatasetReader = function (ext, options) {
+phantasus.DatasetUtil.getDatasetReader = function (ext, options) {
   if (options == null) {
     options = {};
   }
   var datasetReader;
   if (ext === 'maf') {
-    datasetReader = new morpheus.MafFileReader();
+    datasetReader = new phantasus.MafFileReader();
     if (options && options.mafGeneFilter) {
       datasetReader.setGeneFilter(options.mafGeneFilter);
     }
   } else if (ext === 'gct') {
-    datasetReader = new morpheus.GctReader();
-    // datasetReader = new morpheus.StreamingGctReader();
+    datasetReader = new phantasus.GctReader();
+    // datasetReader = new phantasus.StreamingGctReader();
   } else if (ext === 'gmt') {
-    datasetReader = new morpheus.GmtDatasetReader();
+    datasetReader = new phantasus.GmtDatasetReader();
   } else if (ext === 'xlsx' || ext === 'xls') {
-    datasetReader = options.interactive ? new morpheus.Array2dReaderInteractive() : new morpheus.XlsxDatasetReader();
+    datasetReader = options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.XlsxDatasetReader();
   } else if (ext === 'segtab' || ext === 'seg') {
-    datasetReader = new morpheus.SegTabReader();
+    datasetReader = new phantasus.SegTabReader();
     if (options && options.regions) {
       datasetReader.setRegions(options.regions);
     }
   } else if (ext === 'txt' || ext === 'tsv' || ext === 'csv') {
-    datasetReader = options.interactive ? new morpheus.Array2dReaderInteractive() : new morpheus.TxtReader();
+    datasetReader = options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.TxtReader();
   } else if (ext === 'json') {
-    datasetReader = new morpheus.JsonDatasetReader();
+    datasetReader = new phantasus.JsonDatasetReader();
   } else {
-    datasetReader = new morpheus.GctReader();
+    datasetReader = new phantasus.GctReader();
   }
   return datasetReader;
 }
 ;
 
-morpheus.DatasetUtil.readDatasetArray = function (datasets) {
+phantasus.DatasetUtil.readDatasetArray = function (datasets) {
   var retDef = $.Deferred();
   var loadedDatasets = [];
   var promises = [];
   _.each(datasets, function (url, i) {
-    var p = morpheus.DatasetUtil.read(url);
+    var p = phantasus.DatasetUtil.read(url);
     p.index = i;
     p.done(function (dataset) {
       loadedDatasets[this.index] = dataset;
     });
     p.fail(function (err) {
-      var message = ['Error opening ' + morpheus.Util
+      var message = ['Error opening ' + phantasus.Util
         .getFileName(url) + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
@@ -5899,7 +5899,7 @@ morpheus.DatasetUtil.readDatasetArray = function (datasets) {
     .apply($, promises)
     .then(
       function () {
-        retDef.resolve(morpheus.DatasetUtil.join(loadedDatasets, 'id'));
+        retDef.resolve(phantasus.DatasetUtil.join(loadedDatasets, 'id'));
       });
   return retDef;
 };
@@ -5913,44 +5913,44 @@ morpheus.DatasetUtil.readDatasetArray = function (datasets) {
  * @return A jQuery Deferred object that resolves to an array of functions to
  *         execute with a dataset parameter.
  */
-morpheus.DatasetUtil.annotate = function (options) {
+phantasus.DatasetUtil.annotate = function (options) {
   var retDef = $.Deferred();
   var promises = [];
   var functions = [];
   var isColumns = options.isColumns;
   _.each(options.annotations, function (ann, annotationIndex) {
-    if (morpheus.Util.isArray(ann.file)) { // already parsed text
+    if (phantasus.Util.isArray(ann.file)) { // already parsed text
       functions[annotationIndex] = function (dataset) {
-        new morpheus.OpenFileTool().annotate(ann.file, dataset,
+        new phantasus.OpenFileTool().annotate(ann.file, dataset,
           isColumns, null, ann.datasetField, ann.fileField,
           ann.include);
       };
     } else {
-      var result = morpheus.Util.readLines(ann.file);
-      var fileName = morpheus.Util.getFileName(ann.file);
+      var result = phantasus.Util.readLines(ann.file);
+      var fileName = phantasus.Util.getFileName(ann.file);
       var deferred = $.Deferred();
       promises.push(deferred);
       result.fail(function (message) {
         deferred.reject(message);
       });
       result.done(function (lines) {
-        if (morpheus.Util.endsWith(fileName, '.gmt')) {
-          var sets = new morpheus.GmtReader().parseLines(lines);
+        if (phantasus.Util.endsWith(fileName, '.gmt')) {
+          var sets = new phantasus.GmtReader().parseLines(lines);
           functions[annotationIndex] = function (dataset) {
-            new morpheus.OpenFileTool().annotate(null, dataset,
+            new phantasus.OpenFileTool().annotate(null, dataset,
               isColumns, sets, ann.datasetField,
               ann.fileField);
           };
           deferred.resolve();
-        } else if (morpheus.Util.endsWith(fileName, '.cls')) {
+        } else if (phantasus.Util.endsWith(fileName, '.cls')) {
           functions[annotationIndex] = function (dataset) {
-            new morpheus.OpenFileTool().annotateCls(null, dataset,
+            new phantasus.OpenFileTool().annotateCls(null, dataset,
               fileName, isColumns, lines);
           };
           deferred.resolve();
         } else {
           functions[annotationIndex] = function (dataset) {
-            new morpheus.OpenFileTool().annotate(lines, dataset,
+            new phantasus.OpenFileTool().annotate(lines, dataset,
               isColumns, null, ann.datasetField,
               ann.fileField, ann.include);
           };
@@ -5968,9 +5968,9 @@ morpheus.DatasetUtil.annotate = function (options) {
  * Reads a dataset at the specified URL or file
  * @param file
  *            a File or URL
- * @return A promise that resolves to morpheus.DatasetInterface
+ * @return A promise that resolves to phantasus.DatasetInterface
  */
-morpheus.DatasetUtil.read = function (fileOrUrl, options) {
+phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (fileOrUrl == null) {
     throw 'File is null';
   }
@@ -5978,32 +5978,32 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
     options = {};
   }
   var isFile = fileOrUrl instanceof File;
-  var isString = morpheus.Util.isString(fileOrUrl);
-  var ext = options.extension ? options.extension : morpheus.Util.getExtension(morpheus.Util.getFileName(fileOrUrl));
+  var isString = phantasus.Util.isString(fileOrUrl);
+  var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
   var datasetReader;
   var str = fileOrUrl.toString();
 
   var isGSE = isString && (fileOrUrl.substring(0, 3) === 'GSE' || fileOrUrl.substring(0, 3) === 'GDS');
 
   if (isGSE) {
-    datasetReader = new morpheus.GseReader({type: fileOrUrl.substring(0, 3)});
+    datasetReader = new phantasus.GseReader({type: fileOrUrl.substring(0, 3)});
   }
   else if (ext === '' && str != null && str.indexOf('blob:') === 0) {
-    datasetReader = new morpheus.TxtReader(); // copy from clipboard
+    datasetReader = new phantasus.TxtReader(); // copy from clipboard
   } else {
-    datasetReader = morpheus.DatasetUtil.getDatasetReader(ext, options);
+    datasetReader = phantasus.DatasetUtil.getDatasetReader(ext, options);
   }
   if (isString || isFile) { // URL or file
     var deferred = $.Deferred();
     // override toString so can determine file name
     if (options.background) {
-      var path = morpheus.Util.getScriptPath();
+      var path = phantasus.Util.getScriptPath();
       var blob = new Blob(
         ['self.onmessage = function(e) {'
         + 'importScripts(e.data.path);'
-        + 'var ext = morpheus.Util.getExtension(morpheus.Util'
+        + 'var ext = phantasus.Util.getExtension(phantasus.Util'
         + '.getFileName(e.data.fileOrUrl));'
-        + 'var datasetReader = morpheus.DatasetUtil.getDatasetReader(ext,'
+        + 'var datasetReader = phantasus.DatasetUtil.getDatasetReader(ext,'
         + '	e.data.options);'
         + 'datasetReader.read(e.data.fileOrUrl, function(err,dataset) {'
         + '	self.postMessage(dataset);' + '	});' + '}']);
@@ -6011,7 +6011,7 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
       var blobURL = window.URL.createObjectURL(blob);
       var worker = new Worker(blobURL);
       worker.addEventListener('message', function (e) {
-        deferred.resolve(morpheus.Dataset.fromJSON(e.data));
+        deferred.resolve(phantasus.Dataset.fromJSON(e.data));
         window.URL.revokeObjectURL(blobURL);
       }, false);
       // start the worker
@@ -6028,7 +6028,7 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
         } else {
           deferred.resolve(dataset);
           console.log(dataset);
-          morpheus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
         }
       });
 
@@ -6037,7 +6037,7 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
     pr.toString = function () {
       return '' + fileOrUrl;
     };
-    //console.log("morpheus.DatasetUtil.read ::", pr);
+    //console.log("phantasus.DatasetUtil.read ::", pr);
     return pr;
   } else if (typeof fileOrUrl.done === 'function') { // assume it's a
     // deferred
@@ -6047,7 +6047,7 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
     if (fileOrUrl.getRowCount) {
       deferred.resolve(fileOrUrl);
     } else {
-      deferred.resolve(morpheus.Dataset.fromJSON(fileOrUrl));
+      deferred.resolve(phantasus.Dataset.fromJSON(fileOrUrl));
     }
     return deferred.promise();
   }
@@ -6066,7 +6066,7 @@ morpheus.DatasetUtil.read = function (fileOrUrl, options) {
  *            An array of row metadata fields to include from the dataset
  *
  */
-morpheus.DatasetUtil.toObjectArray = function (dataset, options) {
+phantasus.DatasetUtil.toObjectArray = function (dataset, options) {
   var columns = options.columns || [0];
   var columnFields = options.columnFields || ['value'];
   if (columnFields.length !== columns.length) {
@@ -6079,9 +6079,9 @@ morpheus.DatasetUtil.toObjectArray = function (dataset, options) {
   // all metadata
   var rowMetadata = dataset.getRowMetadata();
   if (!metadataFields) {
-    metadataFields = morpheus.MetadataUtil.getMetadataNames(rowMetadata);
+    metadataFields = phantasus.MetadataUtil.getMetadataNames(rowMetadata);
   }
-  var vectors = morpheus.MetadataUtil.getVectors(rowMetadata, metadataFields);
+  var vectors = phantasus.MetadataUtil.getVectors(rowMetadata, metadataFields);
   // build an object that contains the matrix values for the given columns
   // along
   // with any metadata
@@ -6098,7 +6098,7 @@ morpheus.DatasetUtil.toObjectArray = function (dataset, options) {
   }
   return array;
 };
-morpheus.DatasetUtil.fixL1K = function (dataset) {
+phantasus.DatasetUtil.fixL1K = function (dataset) {
   var names = {
     'cell_id': 'Cell Line',
     'pert_idose': 'Dose (\u00B5M)',
@@ -6169,8 +6169,8 @@ morpheus.DatasetUtil.fixL1K = function (dataset) {
   fixCommas(dataset.getRowMetadata());
   fixCommas(dataset.getColumnMetadata());
 };
-morpheus.DatasetUtil.geneSetsToDataset = function (name, sets) {
-  var uniqueIds = new morpheus.Map();
+phantasus.DatasetUtil.geneSetsToDataset = function (name, sets) {
+  var uniqueIds = new phantasus.Map();
   for (var i = 0, length = sets.length; i < length; i++) {
     var ids = sets[i].ids;
     for (var j = 0, nIds = ids.length; j < nIds; j++) {
@@ -6178,7 +6178,7 @@ morpheus.DatasetUtil.geneSetsToDataset = function (name, sets) {
     }
   }
   var uniqueIdsArray = uniqueIds.keys();
-  var dataset = new morpheus.Dataset({
+  var dataset = new phantasus.Dataset({
     name: name,
     rows: uniqueIdsArray.length,
     columns: sets.length
@@ -6191,7 +6191,7 @@ morpheus.DatasetUtil.geneSetsToDataset = function (name, sets) {
   for (var i = 0, size = uniqueIdsArray.length; i < size; i++) {
     rowIds.setValue(i, uniqueIdsArray[i]);
   }
-  var rowIdToIndex = morpheus.VectorUtil.createValueToIndexMap(rowIds);
+  var rowIdToIndex = phantasus.VectorUtil.createValueToIndexMap(rowIds);
   for (var i = 0, length = sets.length; i < length; i++) {
     var ids = sets[i].ids;
     for (var j = 0, nIds = ids.length; j < nIds; j++) {
@@ -6200,38 +6200,38 @@ morpheus.DatasetUtil.geneSetsToDataset = function (name, sets) {
   }
   return dataset;
 };
-morpheus.DatasetUtil.DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
+phantasus.DatasetUtil.DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
   + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
   + ' a tab-delimited text file, or an Excel spreadsheet';
-morpheus.DatasetUtil.SESSION_FILE_FORMAT = 'a saved Morpheus session';
+phantasus.DatasetUtil.SESSION_FILE_FORMAT = 'a saved phantasus session';
 
-morpheus.DatasetUtil.DATASET_AND_SESSION_FILE_FORMATS = '<a target="_blank"' +
+phantasus.DatasetUtil.DATASET_AND_SESSION_FILE_FORMATS = '<a target="_blank"' +
   ' href="https://clue.io/help#datasets">GCT 1.3</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
   + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, an Excel spreadsheet, or a saved Morpheus session';
-morpheus.DatasetUtil.BASIC_DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
+  + ' a tab-delimited text file, an Excel spreadsheet, or a saved phantasus session';
+phantasus.DatasetUtil.BASIC_DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
   + ' or a tab-delimited text file';
-morpheus.DatasetUtil.GCT_FILE_FORMAT = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>';
-morpheus.DatasetUtil.ANNOTATION_FILE_FORMATS = 'an xlsx file, tab-delimited text file, or a <a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT file</a>';
-morpheus.DatasetUtil.DENDROGRAM_FILE_FORMATS = 'a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
-morpheus.DatasetUtil.OPEN_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
+phantasus.DatasetUtil.GCT_FILE_FORMAT = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>';
+phantasus.DatasetUtil.ANNOTATION_FILE_FORMATS = 'an xlsx file, tab-delimited text file, or a <a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT file</a>';
+phantasus.DatasetUtil.DENDROGRAM_FILE_FORMATS = 'a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
+phantasus.DatasetUtil.OPEN_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
   + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
   + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
   + ' a tab-delimited text file, or a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
-morpheus.DatasetUtil.getRootDataset = function (dataset) {
+phantasus.DatasetUtil.getRootDataset = function (dataset) {
   while (dataset.getDataset) {
     dataset = dataset.getDataset();
   }
   return dataset;
 };
 
-morpheus.DatasetUtil.getSeriesIndex = function (dataset, name) {
+phantasus.DatasetUtil.getSeriesIndex = function (dataset, name) {
   for (var i = 0, nseries = dataset.getSeriesCount(); i < nseries; i++) {
     if (name === dataset.getName(i)) {
       return i;
@@ -6239,7 +6239,7 @@ morpheus.DatasetUtil.getSeriesIndex = function (dataset, name) {
   }
   return -1;
 };
-morpheus.DatasetUtil.getSeriesNames = function (dataset) {
+phantasus.DatasetUtil.getSeriesNames = function (dataset) {
   var names = [];
   for (var i = 0, nseries = dataset.getSeriesCount(); i < nseries; i++) {
     names.push(dataset.getName(i));
@@ -6265,23 +6265,23 @@ morpheus.DatasetUtil.getSeriesNames = function (dataset) {
  * @return Set of matching indices.
  *
  */
-morpheus.DatasetUtil.searchValues = function (options) {
+phantasus.DatasetUtil.searchValues = function (options) {
   if (text === '') {
     return;
   }
   var dataset = options.dataset;
   var text = options.text;
-  var tokens = morpheus.Util.getAutocompleteTokens(text);
+  var tokens = phantasus.Util.getAutocompleteTokens(text);
   if (tokens.length == 0) {
     return;
   }
-  var predicates = morpheus.Util.createSearchPredicates({
+  var predicates = phantasus.Util.createSearchPredicates({
     tokens: tokens,
     defaultMatchMode: options.defaultMatchMode
   });
   var matchAllPredicates = options.matchAllPredicates === true;
   var npredicates = predicates.length;
-  var viewIndices = new morpheus.Set();
+  var viewIndices = new phantasus.Set();
 
   function isMatch(object, toObject, predicate) {
     if (object != null) {
@@ -6350,7 +6350,7 @@ morpheus.DatasetUtil.searchValues = function (options) {
 
       if (matches) {
         viewIndices
-          .add(new morpheus.Identifier(
+          .add(new phantasus.Identifier(
             [i, j]));
       }
     }
@@ -6362,7 +6362,7 @@ morpheus.DatasetUtil.searchValues = function (options) {
 /**
  * Search dataset values.
  */
-morpheus.DatasetUtil.autocompleteValues = function (dataset) {
+phantasus.DatasetUtil.autocompleteValues = function (dataset) {
   return function (tokens, cb) {
 
     var token = tokens != null && tokens.length > 0 ? tokens[tokens.selectionStartIndex]
@@ -6426,9 +6426,9 @@ morpheus.DatasetUtil.autocompleteValues = function (dataset) {
 
     }
 
-    var set = new morpheus.Set();
+    var set = new phantasus.Set();
     // regex used to determine if a string starts with substring `q`
-    var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+    var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
     // iterate through the pool of strings and for any string that
     // contains the substring `q`, add it to the `matches` array
     var max = 10;
@@ -6442,7 +6442,7 @@ morpheus.DatasetUtil.autocompleteValues = function (dataset) {
           if (field !== null) {
             var val = object[field];
             if (val != null) {
-              var id = new morpheus.Identifier([val, field]);
+              var id = new phantasus.Identifier([val, field]);
               if (!set.has(id) && regex.test(val)) {
                 set.add(id);
                 if (set.size() === max) {
@@ -6453,7 +6453,7 @@ morpheus.DatasetUtil.autocompleteValues = function (dataset) {
           } else { // search all fields
             for (var name in object) {
               var val = object[name];
-              var id = new morpheus.Identifier([val, name]);
+              var id = new phantasus.Identifier([val, name]);
               if (!set.has(id) && regex.test(val)) {
                 set.add(id);
                 if (set.size() === max) {
@@ -6493,7 +6493,7 @@ morpheus.DatasetUtil.autocompleteValues = function (dataset) {
   };
 
 };
-// morpheus.DatasetUtil.toJSON = function(dataset) {
+// phantasus.DatasetUtil.toJSON = function(dataset) {
 // var json = [];
 // json.push('{');
 // json.push('"name":"' + dataset.getName() + '", ');
@@ -6540,7 +6540,7 @@ morpheus.DatasetUtil.autocompleteValues = function (dataset) {
 // json.push('}'); // end json object
 // return json.join('');
 // };
-morpheus.DatasetUtil.fill = function (dataset, value, seriesIndex) {
+phantasus.DatasetUtil.fill = function (dataset, value, seriesIndex) {
   seriesIndex = seriesIndex || 0;
   for (var i = 0, nrows = dataset.getRowCount(), ncols = dataset
     .getColumnCount(); i < nrows; i++) {
@@ -6560,7 +6560,7 @@ morpheus.DatasetUtil.fill = function (dataset, value, seriesIndex) {
  * @param options.newColumnAnnotationName newDataset column annotation name to use for matching
  *
  */
-morpheus.DatasetUtil.overlay = function (options) {
+phantasus.DatasetUtil.overlay = function (options) {
   var dataset = options.dataset;
   var newDataset = options.newDataset;
   var current_dataset_row_annotation_name = options.rowAnnotationName;
@@ -6568,12 +6568,12 @@ morpheus.DatasetUtil.overlay = function (options) {
   var new_dataset_row_annotation_name = options.newRowAnnotationName;
   var new_dataset_column_annotation_name = options.newColumnAnnotationName;
 
-  var rowValueToIndexMap = morpheus.VectorUtil
+  var rowValueToIndexMap = phantasus.VectorUtil
     .createValueToIndexMap(dataset
       .getRowMetadata()
       .getByName(
         current_dataset_row_annotation_name));
-  var columnValueToIndexMap = morpheus.VectorUtil
+  var columnValueToIndexMap = phantasus.VectorUtil
     .createValueToIndexMap(dataset
       .getColumnMetadata()
       .getByName(
@@ -6620,7 +6620,7 @@ morpheus.DatasetUtil.overlay = function (options) {
         .push(i);
     }
   }
-  newDataset = new morpheus.SlicedDatasetView(
+  newDataset = new phantasus.SlicedDatasetView(
     newDataset,
     newDatasetRowIndicesSubset,
     newDatasetColumnIndicesSubset);
@@ -6644,9 +6644,9 @@ morpheus.DatasetUtil.overlay = function (options) {
  * Joins datasets by appending rows.
  * @param datasets
  * @param field
- * @return {morpheus.AbstractDataset} The joined dataset.
+ * @return {phantasus.AbstractDataset} The joined dataset.
  */
-morpheus.DatasetUtil.join = function (datasets, field) {
+phantasus.DatasetUtil.join = function (datasets, field) {
   if (datasets.length === 0) {
     throw 'No datasets';
   }
@@ -6659,14 +6659,14 @@ morpheus.DatasetUtil.join = function (datasets, field) {
     return datasets[0];
   }
   // take union of all ids
-  var ids = new morpheus.Set();
+  var ids = new phantasus.Set();
   for (var i = 0; i < datasets.length; i++) {
     var idVector = datasets[i].getColumnMetadata().getByName(field);
     for (var j = 0, size = idVector.size(); j < size; j++) {
       ids.add(idVector.getValue(j));
     }
   }
-  var dummyDataset = new morpheus.Dataset({
+  var dummyDataset = new phantasus.Dataset({
     rows: 0,
     columns: ids.size(),
     name: datasets[0].getName()
@@ -6677,20 +6677,20 @@ morpheus.DatasetUtil.join = function (datasets, field) {
     dummyIdVector.setValue(counter++, id);
   });
 
-  var dataset = new morpheus.JoinedDataset(
+  var dataset = new phantasus.JoinedDataset(
     dummyDataset, datasets[0], field,
     field);
   for (var i = 1; i < datasets.length; i++) {
-    dataset = new morpheus.JoinedDataset(dataset,
+    dataset = new phantasus.JoinedDataset(dataset,
       datasets[i], field, field);
   }
   return dataset;
 };
-morpheus.DatasetUtil.shallowCopy = function (dataset) {
+phantasus.DatasetUtil.shallowCopy = function (dataset) {
   // make a shallow copy of the dataset, metadata is immutable via the UI
-  var rowMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+  var rowMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
     .getRowMetadata());
-  var columnMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+  var columnMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
     .getColumnMetadata());
   dataset.getRowMetadata = function () {
     return rowMetadataModel;
@@ -6701,8 +6701,8 @@ morpheus.DatasetUtil.shallowCopy = function (dataset) {
   return dataset;
 };
 
-morpheus.DatasetUtil.copy = function (dataset) {
-  var newDataset = new morpheus.Dataset({
+phantasus.DatasetUtil.copy = function (dataset) {
+  var newDataset = new phantasus.Dataset({
     name: dataset.getName(),
     rows: dataset.getRowCount(),
     columns: dataset.getColumnCount(),
@@ -6726,9 +6726,9 @@ morpheus.DatasetUtil.copy = function (dataset) {
       }
     }
   }
-  var rowMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+  var rowMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
     .getRowMetadata());
-  var columnMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+  var columnMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
     .getColumnMetadata());
   newDataset.getRowMetadata = function () {
     return rowMetadataModel;
@@ -6741,7 +6741,7 @@ morpheus.DatasetUtil.copy = function (dataset) {
   }
   return newDataset;
 };
-morpheus.DatasetUtil.toString = function (dataset, value, seriesIndex) {
+phantasus.DatasetUtil.toString = function (dataset, value, seriesIndex) {
   seriesIndex = seriesIndex || 0;
   var s = [];
   for (var i = 0, nrows = dataset.getRowCount(), ncols = dataset
@@ -6750,13 +6750,13 @@ morpheus.DatasetUtil.toString = function (dataset, value, seriesIndex) {
       if (j > 0) {
         s.push(', ');
       }
-      s.push(morpheus.Util.nf(dataset.getValue(i, j, seriesIndex)));
+      s.push(phantasus.Util.nf(dataset.getValue(i, j, seriesIndex)));
     }
     s.push('\n');
   }
   return s.join('');
 };
-morpheus.DatasetUtil.getNonEmptyRows = function (dataset) {
+phantasus.DatasetUtil.getNonEmptyRows = function (dataset) {
   var rowsToKeep = [];
   for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
     var keep = false;
@@ -6773,7 +6773,7 @@ morpheus.DatasetUtil.getNonEmptyRows = function (dataset) {
   }
   return rowsToKeep;
 };
-morpheus.DatasetUtil.getContentArray = function (dataset) {
+phantasus.DatasetUtil.getContentArray = function (dataset) {
 
   var array = [];
   var nr = dataset.rows;
@@ -6788,10 +6788,10 @@ morpheus.DatasetUtil.getContentArray = function (dataset) {
   console.log("getContentArray ::", array);
   return array;
 };
-morpheus.DatasetUtil.getMetadataArray = function (dataset) {
+phantasus.DatasetUtil.getMetadataArray = function (dataset) {
   var pDataArray = [];
   var labelDescription = [];
-  //console.log("morpheus.DatasetUtil.getMetadataArray ::", dataset);
+  //console.log("phantasus.DatasetUtil.getMetadataArray ::", dataset);
   var columnMeta = dataset.getColumnMetadata();
   var features = columnMeta.getMetadataCount();
   var participants = dataset.getColumnCount();
@@ -6837,20 +6837,20 @@ morpheus.DatasetUtil.getMetadataArray = function (dataset) {
   };
 };
 
-morpheus.DatasetUtil.toESSessionPromise = function (options) {
+phantasus.DatasetUtil.toESSessionPromise = function (options) {
   var dataset = options.dataset ? options.dataset : options;
 
   console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
-  //var copiedDataset = morpheus.DatasetUtil.copy(dataset);
+  //var copiedDataset = phantasus.DatasetUtil.copy(dataset);
   //console.log("EsSessionPromise ::", "after copying", dataset);
   while (dataset.dataset) {
     dataset = dataset.dataset;
   }
   dataset.setESSession(new Promise(function (resolve, reject) {
-    //console.log("morpheus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof morpheus.Dataset, dataset instanceof morpheus.SlicedDatasetView);
+    //console.log("phantasus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof phantasus.Dataset, dataset instanceof phantasus.SlicedDatasetView);
     /*		if (dataset.dataset) {
-     //console.log("morpheus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof morpheus.SlicedDatasetView", "go deeper");
-     morpheus.DatasetUtil.toESSessionPromise(dataset.dataset);
+     //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof phantasus.SlicedDatasetView", "go deeper");
+     phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
     console.log("before going further", options);
     if (options.isGEO) {
@@ -6859,8 +6859,8 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
       return;
     }
 
-    var array = morpheus.DatasetUtil.getContentArray(dataset);
-    var meta = morpheus.DatasetUtil.getMetadataArray(dataset);
+    var array = phantasus.DatasetUtil.getContentArray(dataset);
+    var meta = phantasus.DatasetUtil.getMetadataArray(dataset);
 
     console.log(array, meta);
     var messageJSON = {
@@ -6924,15 +6924,15 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
         console.log("ExpressionSetCreation :: ", "ProtoBuilder failed", error);
         return;
       }
-      //console.log("morpheus.DatasetUtil.toESSessionPromise ::", "protobuilder error", error);
-      //console.log("morpheus.DatasetUtil.toESSessionPromise ::", "protobuilder success", success);
+      //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder error", error);
+      //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder success", success);
       var builder = success,
         rexp = builder.build("rexp"),
         REXP = rexp.REXP;
 
       var proto = new REXP(messageJSON);
       var req = ocpu.call("createES", proto, function (session) {
-        //console.log("morpheus.DatasetUtil.toESSessionPromise ::", "from successful request", session);
+        //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "from successful request", session);
         resolve(session);
       }, true);
 
@@ -6947,7 +6947,7 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
 /**
  * Default implementation of a dataset.
  *
- * @extends {morpheus.AbstractDataset}
+ * @extends {phantasus.AbstractDataset}
  * @param options.rows {number} Number of rows
  * @param options.columns {number} Number of columns
  * @param options.name {string} Dataset name
@@ -6955,8 +6955,8 @@ morpheus.DatasetUtil.toESSessionPromise = function (options) {
  * @param options.esSession {Promise} openCPU session, which contains ExpressionSet version of the dataset
  * @constructor
  */
-morpheus.Dataset = function (options) {
-  morpheus.AbstractDataset.call(this, options.rows,
+phantasus.Dataset = function (options) {
+  phantasus.AbstractDataset.call(this, options.rows,
     options.columns);
 
   if (options.dataType == null) {
@@ -6967,7 +6967,7 @@ morpheus.Dataset = function (options) {
     this.esSession = options.esSession;
   }
   this.seriesNames.push(options.name);
-  this.seriesArrays.push(options.array ? options.array : morpheus.Dataset
+  this.seriesArrays.push(options.array ? options.array : phantasus.Dataset
     .createArray(options));
   this.seriesDataTypes.push(options.dataType);
   //console.log(this);
@@ -6980,14 +6980,14 @@ morpheus.Dataset = function (options) {
  * @param options.seriesIndices
  * @return JSON representation of a dataset
  */
-morpheus.Dataset.toJSON = function (dataset, options) {
+phantasus.Dataset.toJSON = function (dataset, options) {
   options = options || {};
   var seriesArrays = [];
   var seriesDataTypes = [];
   var seriesNames = [];
   var seriesIndices = options.seriesIndices;
   if (seriesIndices == null) {
-    seriesIndices = morpheus.Util.sequ32(dataset.getSeriesCount());
+    seriesIndices = phantasus.Util.sequ32(dataset.getSeriesCount());
   }
   for (var series = 0; series < seriesIndices.length; series++) {
     var seriesIndex = seriesIndices[series];
@@ -7008,9 +7008,9 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     for (var i = 0, size = vector.size(); i < size; i++) {
       array[i] = vector.getValue(i);
     }
-    var properties = new morpheus.Map();
+    var properties = new phantasus.Map();
     vector.getProperties().forEach(function (value, key) {
-      if (morpheus.VectorKeys.JSON_WHITELIST.has(key)) {
+      if (phantasus.VectorKeys.JSON_WHITELIST.has(key)) {
         properties.set(key, value);
       }
     });
@@ -7024,7 +7024,7 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     var vectors = [];
     var filter;
     if (fields) {
-      filter = new morpheus.Set();
+      filter = new phantasus.Set();
       fields.forEach(function (field) {
         filter.add(field);
       });
@@ -7057,7 +7057,7 @@ morpheus.Dataset.toJSON = function (dataset, options) {
     }
   };
 };
-morpheus.Dataset.fromJSON = function (options) {
+phantasus.Dataset.fromJSON = function (options) {
   // Object {seriesNames:
   // Array[1], seriesArrays:
   // Array[1], rows:
@@ -7075,7 +7075,7 @@ morpheus.Dataset.fromJSON = function (options) {
   // rows: 6238
   // seriesArrays: Array[1]
   // seriesNames: Array[1]
-  // var array = morpheus.Dataset.createArray(options);
+  // var array = phantasus.Dataset.createArray(options);
   // for (var i = 0; i < options.rows; i++) {
   // var row = array[i];
   // var jsonRow = options.array[i];
@@ -7090,10 +7090,10 @@ morpheus.Dataset.fromJSON = function (options) {
       if (options.seriesMappings[seriesIndex]) {
 
         var map = options.seriesMappings[seriesIndex]; // e.g. foo:1, bar:3
-        var valueMap = new morpheus.Map();
+        var valueMap = new phantasus.Map();
         for (var key in map) {
           var value = map[key];
-          valueMap.set(value, morpheus.Util.wrapNumber(value, key));
+          valueMap.set(value, phantasus.Util.wrapNumber(value, key));
         }
 
         var array = options.seriesArrays[seriesIndex];
@@ -7107,7 +7107,7 @@ morpheus.Dataset.fromJSON = function (options) {
       }
     }
   }
-  var dataset = new morpheus.Dataset({
+  var dataset = new phantasus.Dataset({
     name: options.seriesNames[0],
     dataType: options.seriesDataTypes[0],
     array: options.seriesArrays[0],
@@ -7117,17 +7117,17 @@ morpheus.Dataset.fromJSON = function (options) {
 
   if (options.rowMetadataModel) {
     options.rowMetadataModel.vectors.forEach(function (v) {
-      var vector = new morpheus.Vector(v.name, dataset.getRowCount());
+      var vector = new phantasus.Vector(v.name, dataset.getRowCount());
       vector.array = v.array;
-      vector.properties = morpheus.Map.fromJSON(v.properties);
+      vector.properties = phantasus.Map.fromJSON(v.properties);
       dataset.rowMetadataModel.vectors.push(vector);
     });
   }
   if (options.columnMetadataModel) {
     options.columnMetadataModel.vectors.forEach(function (v) {
-      var vector = new morpheus.Vector(v.name, dataset.getColumnCount());
+      var vector = new phantasus.Vector(v.name, dataset.getColumnCount());
       vector.array = v.array;
-      vector.properties = morpheus.Map.fromJSON(v.properties);
+      vector.properties = phantasus.Map.fromJSON(v.properties);
       dataset.columnMetadataModel.vectors.push(vector);
 
     });
@@ -7141,7 +7141,7 @@ morpheus.Dataset.fromJSON = function (options) {
   }
   return dataset;
 };
-morpheus.Dataset.createArray = function (options) {
+phantasus.Dataset.createArray = function (options) {
   var array = [];
   if (options.dataType == null || options.dataType === 'Float32') {
     for (var i = 0; i < options.rows; i++) {
@@ -7162,7 +7162,7 @@ morpheus.Dataset.createArray = function (options) {
   }
   return array;
 };
-morpheus.Dataset.prototype = {
+phantasus.Dataset.prototype = {
   getValue: function (i, j, seriesIndex) {
     seriesIndex = seriesIndex || 0;
     return this.seriesArrays[seriesIndex][i][j];
@@ -7183,28 +7183,28 @@ morpheus.Dataset.prototype = {
     this.seriesDataTypes.push(options.dataType);
     this.seriesNames.push(options.name);
     this.seriesArrays.push(options.array != null ? options.array
-      : morpheus.Dataset.createArray(options));
+      : phantasus.Dataset.createArray(options));
     return this.seriesNames.length - 1;
   },
   setESSession: function (session) {
-    //console.log("morpheus.Dataset.prototype.setESSession ::", this, session);
+    //console.log("phantasus.Dataset.prototype.setESSession ::", this, session);
     this.esSession = session;
   },
   getESSession: function () {
-    //console.log("morpheus.Dataset.prototype.getESSession ::", this);
+    //console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
   }
 
 };
-morpheus.Util.extend(morpheus.Dataset, morpheus.AbstractDataset);
+phantasus.Util.extend(phantasus.Dataset, phantasus.AbstractDataset);
 
-morpheus.ElementSelectionModel = function (project) {
-  this.viewIndices = new morpheus.Set();
+phantasus.ElementSelectionModel = function (project) {
+  this.viewIndices = new phantasus.Set();
   this.project = project;
 };
-morpheus.ElementSelectionModel.prototype = {
+phantasus.ElementSelectionModel.prototype = {
   click: function (rowIndex, columnIndex, add) {
-    var id = new morpheus.Identifier([rowIndex, columnIndex]);
+    var id = new phantasus.Identifier([rowIndex, columnIndex]);
     var isSelected = this.viewIndices.has(id);
     if (add) {
       isSelected ? this.viewIndices.remove(id) : this.viewIndices.add(id);
@@ -7224,11 +7224,11 @@ morpheus.ElementSelectionModel.prototype = {
     this.trigger('selectionChanged');
   },
   clear: function () {
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
   },
   /**
    *
-   * @returns {morpheus.Set}
+   * @returns {phantasus.Set}
    */
   getViewIndices: function () {
     return this.viewIndices;
@@ -7251,31 +7251,31 @@ morpheus.ElementSelectionModel.prototype = {
   },
   restore: function () {
     var project = this.project;
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
     for (var i = 0, length = this.modelIndices.length; i < length; i++) {
       var rowIndex = project
         .convertModelRowIndexToView(this.modelIndices[i][0]);
       var columnIndex = project
         .convertModelColumnIndexToView(this.modelIndices[i][1]);
       if (rowIndex !== -1 && columnIndex !== -1) {
-        this.viewIndices.add(new morpheus.Identifier([rowIndex,
+        this.viewIndices.add(new phantasus.Identifier([rowIndex,
           columnIndex]));
       }
     }
   }
 };
-morpheus.Util.extend(morpheus.ElementSelectionModel, morpheus.Events);
+phantasus.Util.extend(phantasus.ElementSelectionModel, phantasus.Events);
 
-morpheus.CombinedFilter = function (isAndFilter) {
+phantasus.CombinedFilter = function (isAndFilter) {
   this.filters = [];
   this.isAndFilter = isAndFilter;
   this.enabledFilters = [];
   this.name = 'combined filter';
 };
 
-morpheus.CombinedFilter.prototype = {
+phantasus.CombinedFilter.prototype = {
   shallowClone: function () {
-    var f = new morpheus.CombinedFilter(this.isAndFilter);
+    var f = new phantasus.CombinedFilter(this.isAndFilter);
     f.filters = this.filters.slice(0);
     return f;
   },
@@ -7295,7 +7295,7 @@ morpheus.CombinedFilter.prototype = {
     return this.isAndFilter;
   },
   equals: function (f) {
-    if (!(f instanceof morpheus.CombinedFilter)) {
+    if (!(f instanceof phantasus.CombinedFilter)) {
       return false;
     }
     if (this.isAndFilter !== f.isAndFilter) {
@@ -7354,7 +7354,7 @@ morpheus.CombinedFilter.prototype = {
   init: function (dataset) {
     for (var i = 0, nfilters = this.filters.length; i < nfilters; i++) {
       if (this.filters[i].isColumns()) { // all filters operate on rows
-        this.filters[i].init(new morpheus.TransposedDatasetView(dataset));
+        this.filters[i].init(new phantasus.TransposedDatasetView(dataset));
       } else {
         this.filters[i].init(dataset);
       }
@@ -7386,18 +7386,18 @@ morpheus.CombinedFilter.prototype = {
     return this.enabledFilters.length > 0;
   }
 };
-morpheus.Util.extend(morpheus.CombinedFilter, morpheus.Events);
+phantasus.Util.extend(phantasus.CombinedFilter, phantasus.Events);
 /**
  * @param acceptIndicesSet
- *            a morpheus.Set that contains the model indices in the dataset to
+ *            a phantasus.Set that contains the model indices in the dataset to
  *            retain.
  */
-morpheus.IndexFilter = function (acceptIndicesSet, name, isColumns) {
+phantasus.IndexFilter = function (acceptIndicesSet, name, isColumns) {
   this.acceptIndicesSet = acceptIndicesSet;
   this.name = name;
   this.columns = isColumns;
 };
-morpheus.IndexFilter.prototype = {
+phantasus.IndexFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -7412,7 +7412,7 @@ morpheus.IndexFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.IndexFilter
+    return filter instanceof phantasus.IndexFilter
       && this.acceptIndicesSet.equals(filter.acceptIndicesSet);
   },
   init: function (dataset) {
@@ -7430,14 +7430,14 @@ morpheus.IndexFilter.prototype = {
     return this.acceptIndicesSet.has(index);
   }
 };
-morpheus.VectorFilter = function (set, maxSetSize, name, isColumns) {
+phantasus.VectorFilter = function (set, maxSetSize, name, isColumns) {
   this.set = set;
   this.name = name;
   this.maxSetSize = maxSetSize;
   this.columns = isColumns;
 };
 
-morpheus.VectorFilter.prototype = {
+phantasus.VectorFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -7450,7 +7450,7 @@ morpheus.VectorFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.VectorFilter
+    return filter instanceof phantasus.VectorFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -7470,11 +7470,11 @@ morpheus.VectorFilter.prototype = {
   }
 };
 
-morpheus.NotNullFilter = function (name, isColumns) {
+phantasus.NotNullFilter = function (name, isColumns) {
   this.name = name;
   this.columns = isColumns;
 };
-morpheus.NotNullFilter.prototype = {
+phantasus.NotNullFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -7486,7 +7486,7 @@ morpheus.NotNullFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.NotNullFilter
+    return filter instanceof phantasus.NotNullFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -7506,14 +7506,14 @@ morpheus.NotNullFilter.prototype = {
   }
 };
 
-morpheus.RangeFilter = function (min, max, name, isColumns) {
+phantasus.RangeFilter = function (min, max, name, isColumns) {
   this.min = min;
   this.max = max;
   this.name = name;
   this.columns = isColumns;
 };
 
-morpheus.RangeFilter.prototype = {
+phantasus.RangeFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -7532,7 +7532,7 @@ morpheus.RangeFilter.prototype = {
     this.max = isNaN(value) ? Number.MAX_VALUE : value;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.RangeFilter
+    return filter instanceof phantasus.RangeFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -7554,17 +7554,17 @@ morpheus.RangeFilter.prototype = {
   }
 };
 
-morpheus.TopNFilter = function (n, direction, name, isColumns) {
+phantasus.TopNFilter = function (n, direction, name, isColumns) {
   this.n = n;
   this.direction = direction;
   this.name = name;
   this.columns = isColumns;
 };
 
-morpheus.TopNFilter.TOP = 0;
-morpheus.TopNFilter.BOTTOM = 1;
-morpheus.TopNFilter.TOP_BOTTOM = 2;
-morpheus.TopNFilter.prototype = {
+phantasus.TopNFilter.TOP = 0;
+phantasus.TopNFilter.BOTTOM = 1;
+phantasus.TopNFilter.TOP_BOTTOM = 2;
+phantasus.TopNFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -7587,7 +7587,7 @@ morpheus.TopNFilter.prototype = {
     this.direction = direction;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.TopNFilter
+    return filter instanceof phantasus.TopNFilter
       && this.name === filter.name && this.n === filter.n
       && this.direction === filter.direction;
   },
@@ -7596,7 +7596,7 @@ morpheus.TopNFilter.prototype = {
     if (!this.vector) {
       var vector = dataset.getRowMetadata().getByName(this.name);
       this.vector = vector;
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       for (var i = 0, size = vector.size(); i < size; i++) {
         var value = vector.getValue(i);
         if (!isNaN(value)) {
@@ -7622,11 +7622,11 @@ morpheus.TopNFilter.prototype = {
     var topAndBottomValues = [this.sortedValues[topAndBottomIndices[0]],
       this.sortedValues[topAndBottomIndices[1]]];
 
-    if (this.direction === morpheus.TopNFilter.TOP) {
+    if (this.direction === phantasus.TopNFilter.TOP) {
       this.f = function (val) {
         return isNaN(val) ? false : val >= topAndBottomValues[0];
       };
-    } else if (this.direction === morpheus.TopNFilter.BOTTOM) {
+    } else if (this.direction === phantasus.TopNFilter.BOTTOM) {
       this.f = function (val) {
         return isNaN(val) ? false : val <= topAndBottomValues[1];
       };
@@ -7652,11 +7652,11 @@ morpheus.TopNFilter.prototype = {
   }
 };
 
-morpheus.AlwaysTrueFilter = function () {
+phantasus.AlwaysTrueFilter = function () {
 
 };
 
-morpheus.AlwaysTrueFilter.prototype = {
+phantasus.AlwaysTrueFilter.prototype = {
   isEnabled: function () {
     return false;
   },
@@ -7664,7 +7664,7 @@ morpheus.AlwaysTrueFilter.prototype = {
 
   },
   equals: function (filter) {
-    return filter instanceof morpheus.AlwaysTrueFilter;
+    return filter instanceof phantasus.AlwaysTrueFilter;
 
   },
   init: function (dataset) {
@@ -7684,40 +7684,40 @@ morpheus.AlwaysTrueFilter.prototype = {
   }
 };
 
-morpheus.CombinedFilter.fromJSON = function (combinedFilter, json) {
+phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
   combinedFilter.setAnd(json.isAnd);
   json.filters.forEach(function (filter) {
     if (filter.type === 'set') {
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       filter.values.forEach(function (value) {
         set.add(value);
       });
-      combinedFilter.add(new morpheus.VectorFilter(
+      combinedFilter.add(new phantasus.VectorFilter(
         set,
         filter.maxSetSize,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'range') {
-      combinedFilter.add(new morpheus.RangeFilter(
+      combinedFilter.add(new phantasus.RangeFilter(
         filter.min,
         filter.max,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'top') {
-      combinedFilter.add(new morpheus.TopNFilter(
+      combinedFilter.add(new phantasus.TopNFilter(
         filter.n,
         filter.direction,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'index') {
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       filter.indices.forEach(function (value) {
         set.add(value);
       });
-      combinedFilter.add(new morpheus.IndexFilter(
+      combinedFilter.add(new phantasus.IndexFilter(
         set,
         filter.name,
         filter.isColumns
@@ -7728,15 +7728,15 @@ morpheus.CombinedFilter.fromJSON = function (combinedFilter, json) {
   });
 };
 
-morpheus.CombinedFilter.toJSON = function (filter) {
+phantasus.CombinedFilter.toJSON = function (filter) {
   var json = {
     isAnd: filter.isAnd(),
     filters: []
   };
   filter.getFilters().forEach(function (filter) {
     if (filter.isEnabled()) {
-      if (filter instanceof morpheus.VectorFilter) {
-        // morpheus.VectorFilter = function (set, maxSetSize, name, isColumns)
+      if (filter instanceof phantasus.VectorFilter) {
+        // phantasus.VectorFilter = function (set, maxSetSize, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -7744,8 +7744,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           maxSetSize: filter.maxSetSize,
           type: 'set'
         });
-      } else if (filter instanceof morpheus.RangeFilter) {
-        // morpheus.RangeFilter = function (min, max, name, isColumns)
+      } else if (filter instanceof phantasus.RangeFilter) {
+        // phantasus.RangeFilter = function (min, max, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -7753,8 +7753,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           max: filter.max,
           type: 'range'
         });
-      } else if (filter instanceof morpheus.TopNFilter) {
-        // morpheus.TopNFilter = function (n, direction, name, isColumns)
+      } else if (filter instanceof phantasus.TopNFilter) {
+        // phantasus.TopNFilter = function (n, direction, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -7762,8 +7762,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           max: filter.direction,
           type: 'top'
         });
-      } else if (filter instanceof morpheus.IndexFilter) {
-        // morpheus.IndexFilter = function (acceptIndicesSet, name, isColumns
+      } else if (filter instanceof phantasus.IndexFilter) {
+        // phantasus.IndexFilter = function (acceptIndicesSet, name, isColumns
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -7776,12 +7776,12 @@ morpheus.CombinedFilter.toJSON = function (filter) {
   return json;
 };
 
-morpheus.IndexMapper = function (project, isRows) {
+phantasus.IndexMapper = function (project, isRows) {
   this.project = project;
   this.isRows = isRows;
   this.sortKeys = [];
   /**
-   * {morpheus.Map} Maps from model index to view index. Note that not all
+   * {phantasus.Map} Maps from model index to view index. Note that not all
    * model indices are contained in the map because they might have been
    * filtered from the view.
    */
@@ -7790,12 +7790,12 @@ morpheus.IndexMapper = function (project, isRows) {
   this.filteredModelIndices = null;
   /** {Array} sorted and filtered model indices */
   this.filteredSortedModelIndices = null;
-  this.filter = new morpheus.CombinedFilter(true);
+  this.filter = new phantasus.CombinedFilter(true);
   this._filter();
   this._sort();
 };
 
-morpheus.IndexMapper.prototype = {
+phantasus.IndexMapper.prototype = {
   convertModelIndexToView: function (modelIndex) {
     var index = this.modelToView.get(modelIndex);
     return index !== undefined ? index : -1;
@@ -7832,7 +7832,7 @@ morpheus.IndexMapper.prototype = {
     }
 
     this.filteredModelIndices = filteredModelIndices != null ? filteredModelIndices
-      : morpheus.Util.seq(count);
+      : phantasus.Util.seq(count);
   },
   _sort: function () {
     var sortKeys = this.sortKeys;
@@ -7841,7 +7841,7 @@ morpheus.IndexMapper.prototype = {
 
       var nkeys = sortKeys.length;
       for (var i = 0; i < nkeys; i++) {
-        sortKeys[i].init(sortKeys[i].isColumns() ? new morpheus.TransposedDatasetView(dataset) : dataset, this.filteredSortedModelIndices);
+        sortKeys[i].init(sortKeys[i].isColumns() ? new phantasus.TransposedDatasetView(dataset) : dataset, this.filteredSortedModelIndices);
       }
       this.filteredSortedModelIndices = this.filteredModelIndices
         .slice(0);
@@ -7862,7 +7862,7 @@ morpheus.IndexMapper.prototype = {
       this.filteredSortedModelIndices = this.filteredModelIndices;
     }
 
-    var modelToView = new morpheus.Map();
+    var modelToView = new phantasus.Map();
     for (var i = 0, length = this.filteredSortedModelIndices.length; i < length; i++) {
       modelToView.set(this.filteredSortedModelIndices[i], i);
     }
@@ -7892,7 +7892,7 @@ morpheus.IndexMapper.prototype = {
 /**
  * Adds rows in dataset2 to dataset1
  */
-morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
+phantasus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
                                    dataset2Field, sourceFieldName) {
   sourceFieldName = sourceFieldName || 'Source';
   this.dataset1Field = dataset1Field;
@@ -7905,7 +7905,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
   }
   if (dataset1Field) { // reorder dataset 2 to match dataset 1
     var v1 = dataset1.getColumnMetadata().getByName(dataset1Field);
-    var dataset2ValueToIndex = morpheus.VectorUtil
+    var dataset2ValueToIndex = phantasus.VectorUtil
       .createValueToIndexMap(dataset2.getColumnMetadata().getByName(
         dataset2Field));
     var dataset2ColumnIndices = [];
@@ -7913,7 +7913,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
       dataset2ColumnIndices[i] = dataset2ValueToIndex.get(v1.getValue(i));
       // undefined indices are handles in SlicedDatasetWithNulls
     }
-    dataset2 = new morpheus.SlicedDatasetWithNulls(dataset2,
+    dataset2 = new phantasus.SlicedDatasetWithNulls(dataset2,
       dataset2ColumnIndices, dataset1.getColumnCount(), dataset1
         .getColumnMetadata());
   }
@@ -7954,7 +7954,7 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
   var metadataInDifferentOrder = false;
   for (var i = 0, count = dataset1.getRowMetadata().getMetadataCount(); i < count; i++) {
     var name = dataset1.getRowMetadata().get(i).getName();
-    var index = morpheus.MetadataUtil.indexOf(dataset2.getRowMetadata(),
+    var index = phantasus.MetadataUtil.indexOf(dataset2.getRowMetadata(),
       name);
     dataset2RowMetadataOrder.push(index);
     if (index !== i) {
@@ -7977,12 +7977,12 @@ morpheus.JoinedDataset = function (dataset1, dataset2, dataset1Field,
     });
   }
 
-  this.rowMetadata = new morpheus.JoinedMetadataModel(this.dataset1
+  this.rowMetadata = new phantasus.JoinedMetadataModel(this.dataset1
     .getRowMetadata(), !metadataInDifferentOrder ? this.dataset2
-    .getRowMetadata() : new morpheus.MetadataModelColumnView(
+    .getRowMetadata() : new phantasus.MetadataModelColumnView(
     this.dataset2.getRowMetadata(), dataset2RowMetadataOrder));
 };
-morpheus.JoinedDataset.prototype = {
+phantasus.JoinedDataset.prototype = {
   getName: function (seriesIndex) {
     return this.dataset1.getName(seriesIndex);
   },
@@ -8035,14 +8035,14 @@ morpheus.JoinedDataset.prototype = {
     return this.getName();
   }
 };
-morpheus.SlicedDatasetWithNulls = function (dataset, columnIndices, columnCount,
+phantasus.SlicedDatasetWithNulls = function (dataset, columnIndices, columnCount,
                                             columnMetadata) {
-  morpheus.DatasetAdapter.call(this, dataset);
+  phantasus.DatasetAdapter.call(this, dataset);
   this.columnIndices = columnIndices;
   this.columnCount = columnCount;
   this.columnMetadata = columnMetadata;
 };
-morpheus.SlicedDatasetWithNulls.prototype = {
+phantasus.SlicedDatasetWithNulls.prototype = {
   getColumnMetadata: function () {
     return this.columnMetadata;
   },
@@ -8063,14 +8063,14 @@ morpheus.SlicedDatasetWithNulls.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.SlicedDatasetWithNulls, morpheus.DatasetAdapter);
-morpheus.JoinedVector = function (v1, v2) {
+phantasus.Util.extend(phantasus.SlicedDatasetWithNulls, phantasus.DatasetAdapter);
+phantasus.JoinedVector = function (v1, v2) {
   this.v1 = v1;
   this.v2 = v2;
-  morpheus.VectorAdapter.call(this, v1);
-  this.properties = new morpheus.Map();
+  phantasus.VectorAdapter.call(this, v1);
+  this.properties = new phantasus.Map();
 };
-morpheus.JoinedVector.prototype = {
+phantasus.JoinedVector.prototype = {
   setValue: function (i, value) {
     i < this.v1.size() ? this.v1.setValue(i, value) : this.v2.setValue(i
       - this.v1.size(), value);
@@ -8086,23 +8086,23 @@ morpheus.JoinedVector.prototype = {
     return this.properties;
   }
 };
-morpheus.Util.extend(morpheus.JoinedVector, morpheus.VectorAdapter);
-morpheus.JoinedMetadataModel = function (m1, m2) {
+phantasus.Util.extend(phantasus.JoinedVector, phantasus.VectorAdapter);
+phantasus.JoinedMetadataModel = function (m1, m2) {
   this.m1 = m1;
   this.m2 = m2;
   this.vectors = [];
   for (var i = 0, count = m1.getMetadataCount(); i < count; i++) {
     var v1 = this.m1.get(i);
     var v2 = this.m2.get(i);
-    var v = new morpheus.JoinedVector(v1, v2);
+    var v = new phantasus.JoinedVector(v1, v2);
     // copy properties
     v1.getProperties().forEach(function (val, key) {
-      if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
         v.properties.set(key, val);
       }
     });
     v2.getProperties().forEach(function (val, key) {
-      if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
         v.properties.set(key, val);
       }
     });
@@ -8110,14 +8110,14 @@ morpheus.JoinedMetadataModel = function (m1, m2) {
     this.vectors.push(v);
   }
 };
-morpheus.JoinedMetadataModel.prototype = {
+phantasus.JoinedMetadataModel.prototype = {
   add: function (name) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     var oldVector;
     if (index !== -1) {
       oldVector = this.remove(index);
     }
-    var v = new morpheus.Vector(name, this.getItemCount());
+    var v = new phantasus.Vector(name, this.getItemCount());
     if (oldVector != null) {
       // copy properties
       oldVector.getProperties().forEach(function (val, key) {
@@ -8154,12 +8154,12 @@ morpheus.JoinedMetadataModel.prototype = {
 
 /**
  *
- *@implements {morpheus.MetadataModelInterface}
+ *@implements {phantasus.MetadataModelInterface}
  */
-morpheus.MetadataModelAdapter = function (model) {
+phantasus.MetadataModelAdapter = function (model) {
   this.model = model;
 };
-morpheus.MetadataModelAdapter.prototype = {
+phantasus.MetadataModelAdapter.prototype = {
   add: function (name) {
     return this.model.add(name);
   },
@@ -8180,14 +8180,14 @@ morpheus.MetadataModelAdapter.prototype = {
   }
 };
 
-morpheus.MetadataModelColumnView = function (model, indices) {
+phantasus.MetadataModelColumnView = function (model, indices) {
   this.model = model;
   this.indices = indices;
 };
-morpheus.MetadataModelColumnView.prototype = {
+phantasus.MetadataModelColumnView.prototype = {
   add: function (name) {
     var vector = this.model.add(name);
-    var index = morpheus.MetadataUtil.indexOf(this.model, name);
+    var index = phantasus.MetadataUtil.indexOf(this.model, name);
     this.indices.push(index);
     return vector;
   },
@@ -8209,16 +8209,16 @@ morpheus.MetadataModelColumnView.prototype = {
     return v;
   },
   getByName: function (name) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     return index !== -1 ? this.get(index) : undefined;
   }
 };
-morpheus.Util.extend(morpheus.MetadataModelColumnView,
-  morpheus.MetadataModelAdapter);
+phantasus.Util.extend(phantasus.MetadataModelColumnView,
+  phantasus.MetadataModelAdapter);
 
 /**
  * Stores annotations for the rows or columns of a dataset.
- * @interface morpheus.MetadataModelInterface
+ * @interface phantasus.MetadataModelInterface
  *
  */
 
@@ -8227,10 +8227,10 @@ morpheus.Util.extend(morpheus.MetadataModelColumnView,
  * with the same name already exists, it is removed and existing properties
  * and values copied to the new vector before appending the new vector.
  * @function
- * @name morpheus.MetadataModelInterface#add
+ * @name phantasus.MetadataModelInterface#add
  * @param name {String} The vector name to be inserted into this meta data instance.
  * @param options {object}
- * @return {morpheus.VectorInterface} the added vector.
+ * @return {phantasus.VectorInterface} the added vector.
  */
 
 /**
@@ -8238,7 +8238,7 @@ morpheus.Util.extend(morpheus.MetadataModelColumnView,
  * contains.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getItemCount
+ * @name phantasus.MetadataModelInterface#getItemCount
  * @return {number} the item count
  */
 
@@ -8246,9 +8246,9 @@ morpheus.Util.extend(morpheus.MetadataModelColumnView,
  * Returns the vector at the specified metadata index.
  *
  * @function
- * @name morpheus.MetadataModelInterface#get
+ * @name phantasus.MetadataModelInterface#get
  * @param index {number} the metadata index
- * @return {morpheus.VectorInterface} the vector
+ * @return {phantasus.VectorInterface} the vector
  */
 
 /**
@@ -8257,9 +8257,9 @@ morpheus.Util.extend(morpheus.MetadataModelColumnView,
  * indices).
  *
  * @function
- * @name morpheus.MetadataModelInterface#remove
+ * @name phantasus.MetadataModelInterface#remove
  * @param index {number} the meta data index to remove.
- * @return {morpheus.VectorInterface} the removed vector
+ * @return {phantasus.VectorInterface} the removed vector
  * @throws Error if index < 0 or >= getMetadataCount
  */
 
@@ -8267,29 +8267,29 @@ morpheus.Util.extend(morpheus.MetadataModelColumnView,
  * Returns the vector witht the specified name.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getByName
+ * @name phantasus.MetadataModelInterface#getByName
  * @param name {string} the vector name
- * @return {morpheus.VectorInterface} the vector
+ * @return {phantasus.VectorInterface} the vector
  */
 
 /**
  * Returns the number of vectors in this meta data instance.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getMetadataCount
+ * @name phantasus.MetadataModelInterface#getMetadataCount
  * @return {number} the number of vectors.
  */
 
 
 
-morpheus.MetadataModelItemView = function (model, indices) {
+phantasus.MetadataModelItemView = function (model, indices) {
   this.model = model;
   this.indices = indices;
 };
-morpheus.MetadataModelItemView.prototype = {
+phantasus.MetadataModelItemView.prototype = {
   add: function (name) {
     var v = this.model.add(name);
-    return new morpheus.SlicedVector(v, this.indices);
+    return new phantasus.SlicedVector(v, this.indices);
   },
   getItemCount: function () {
     return this.indices.length;
@@ -8299,46 +8299,46 @@ morpheus.MetadataModelItemView.prototype = {
     if (v === undefined) {
       return undefined;
     }
-    return new morpheus.SlicedVector(v, this.indices);
+    return new phantasus.SlicedVector(v, this.indices);
   },
   getByName: function (name) {
     var v = this.model.getByName(name);
     if (v === undefined) {
       return undefined;
     }
-    return new morpheus.SlicedVector(v, this.indices);
+    return new phantasus.SlicedVector(v, this.indices);
   },
   getMetadataCount: function () {
     return this.model.getMetadataCount();
   }
 };
-morpheus.Util.extend(morpheus.MetadataModelItemView,
-  morpheus.MetadataModelAdapter);
+phantasus.Util.extend(phantasus.MetadataModelItemView,
+  phantasus.MetadataModelAdapter);
 
 /**
  * Creates a new meta data model instance.
  *
  * @param itemCount {number}
  *            the number of items that vectors in this instances will hold.
- * @implements {morpheus.MetadataModelInterface}
+ * @implements {phantasus.MetadataModelInterface}
  * @constructor
  */
-morpheus.MetadataModel = function (itemCount) {
+phantasus.MetadataModel = function (itemCount) {
   this.itemCount = itemCount;
   this.vectors = [];
 };
-morpheus.MetadataModel.prototype = {
+phantasus.MetadataModel.prototype = {
   add: function (name, options) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     var oldVector;
     if (index !== -1) {
       oldVector = this.remove(index);
     }
-    var v = new morpheus.Vector(name, this.getItemCount());
+    var v = new phantasus.Vector(name, this.getItemCount());
     if (oldVector != null) {
       // copy properties?
 //			oldVector.getProperties().forEach(function(val, key) {
-//				if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+//				if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
 //					v.getProperties().set(key, val);
 //				}
 //
@@ -8368,7 +8368,7 @@ morpheus.MetadataModel.prototype = {
     return this.vectors.splice(index, 1)[0];
   },
   getByName: function (name) {
-    var index = morpheus.MetadataUtil.indexOf(this, name);
+    var index = phantasus.MetadataUtil.indexOf(this, name);
     return index !== -1 ? this.get(index) : undefined;
   },
   getMetadataCount: function () {
@@ -8376,10 +8376,10 @@ morpheus.MetadataModel.prototype = {
   }
 };
 
-morpheus.MetadataUtil = function () {
+phantasus.MetadataUtil = function () {
 };
 
-morpheus.MetadataUtil.renameFields = function (dataset, options) {
+phantasus.MetadataUtil.renameFields = function (dataset, options) {
   _.each(options.rows, function (item) {
     if (item.renameTo) {
       var v = dataset.getRowMetadata().getByName(item.field);
@@ -8412,7 +8412,7 @@ morpheus.MetadataUtil.renameFields = function (dataset, options) {
  * @param options.matchAllPredicates Whether to match all predicates
  *
  */
-morpheus.MetadataUtil.search = function (options) {
+phantasus.MetadataUtil.search = function (options) {
   var model = options.model;
   var fullModel = options.fullModel;
   if (!fullModel) {
@@ -8424,23 +8424,23 @@ morpheus.MetadataUtil.search = function (options) {
   if (text === '') {
     return null;
   }
-  var tokens = morpheus.Util.getAutocompleteTokens(text);
+  var tokens = phantasus.Util.getAutocompleteTokens(text);
   if (tokens.length == 0) {
     return null;
   }
   var indexField = 'INDEX';
-  var fieldNames = morpheus.MetadataUtil.getMetadataNames(fullModel);
+  var fieldNames = phantasus.MetadataUtil.getMetadataNames(fullModel);
   fieldNames.push(indexField);
-  var predicates = morpheus.Util.createSearchPredicates({
+  var predicates = phantasus.Util.createSearchPredicates({
     tokens: tokens,
     fields: fieldNames,
     defaultMatchMode: options.defaultMatchMode
   });
   var vectors = [];
-  var nameToVector = new morpheus.Map();
+  var nameToVector = new phantasus.Map();
   for (var j = 0; j < fullModel.getMetadataCount(); j++) {
     var v = fullModel.get(j);
-    var dataType = morpheus.VectorUtil.getDataType(v);
+    var dataType = phantasus.VectorUtil.getDataType(v);
     var wrapper = {
       vector: v,
       dataType: dataType,
@@ -8462,13 +8462,13 @@ morpheus.MetadataUtil.search = function (options) {
       var wrapper = nameToVector.get(filterColumnName);
       if (wrapper && (wrapper.dataType === 'number' || wrapper.dataType === '[number]')) {
         if (predicate.getText) {
-          predicates[p] = new morpheus.Util.EqualsPredicate(filterColumnName, parseFloat(predicate.getText()));
+          predicates[p] = new phantasus.Util.EqualsPredicate(filterColumnName, parseFloat(predicate.getText()));
         } else if (predicate.getValues) {
           var values = [];
           predicate.getValues().forEach(function (val) {
             values.push(parseFloat(val));
           });
-          predicate[p] = new morpheus.Util.ExactTermsPredicate(filterColumnName, values);
+          predicate[p] = new phantasus.Util.ExactTermsPredicate(filterColumnName, values);
         }
       }
     }
@@ -8561,19 +8561,19 @@ morpheus.MetadataUtil.search = function (options) {
   return indices;
 };
 
-morpheus.MetadataUtil.shallowCopy = function (model) {
-  var copy = new morpheus.MetadataModel(model.getItemCount());
+phantasus.MetadataUtil.shallowCopy = function (model) {
+  var copy = new phantasus.MetadataModel(model.getItemCount());
   for (var i = 0; i < model.getMetadataCount(); i++) {
     var v = model.get(i);
     // copy properties b/c they can be modified via ui
-    var newVector = new morpheus.VectorAdapter(v);
-    newVector.properties = new morpheus.Map();
+    var newVector = new phantasus.VectorAdapter(v);
+    newVector.properties = new phantasus.Map();
     newVector.getProperties = function () {
       return this.properties;
     };
 
     v.getProperties().forEach(function (val, key) {
-      if (!morpheus.VectorKeys.COPY_IGNORE.has(key)) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
         newVector.properties.set(key, val);
       }
 
@@ -8583,7 +8583,7 @@ morpheus.MetadataUtil.shallowCopy = function (model) {
   }
   return copy;
 };
-morpheus.MetadataUtil.autocomplete = function (model) {
+phantasus.MetadataUtil.autocomplete = function (model) {
   return function (tokens, cb) {
     // check for term:searchText
     var matches = [];
@@ -8605,22 +8605,22 @@ morpheus.MetadataUtil.autocomplete = function (model) {
             possibleField = possibleField.substring(1,
               possibleField.length - 1);
           }
-          var index = morpheus.MetadataUtil.indexOf(searchModel,
+          var index = phantasus.MetadataUtil.indexOf(searchModel,
             possibleField);
           if (index !== -1) {
             fieldSearchFieldName = possibleField;
             token = $.trim(token.substring(semi + 1));
-            searchModel = new morpheus.MetadataModelColumnView(
+            searchModel = new phantasus.MetadataModelColumnView(
               model, [index]);
           }
         }
 
       }
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       // regex used to determine if a string starts with substring `q`
 
-      regex = new RegExp(morpheus.Util.escapeRegex(token), 'i');
-      regexMatch = new RegExp('(' + morpheus.Util.escapeRegex(token) + ')', 'i');
+      regex = new RegExp(phantasus.Util.escapeRegex(token), 'i');
+      regexMatch = new RegExp('(' + phantasus.Util.escapeRegex(token) + ')', 'i');
       // iterate through the pool of strings and for any string that
       // contains the substring `q`, add it to the `matches` array
       var max = 10;
@@ -8629,7 +8629,7 @@ morpheus.MetadataUtil.autocomplete = function (model) {
       var isArray = [];
       for (var j = 0; j < searchModel.getMetadataCount(); j++) {
         var v = searchModel.get(j);
-        var dataType = morpheus.VectorUtil.getDataType(v);
+        var dataType = phantasus.VectorUtil.getDataType(v);
         if (dataType === 'string' || dataType === '[string]') { // skip
           // numeric
           // fields
@@ -8647,7 +8647,7 @@ morpheus.MetadataUtil.autocomplete = function (model) {
           if (val != null) {
             if (isArray[j]) {
               for (var k = 0; k < val.length; k++) {
-                var id = new morpheus.Identifier([val[k],
+                var id = new phantasus.Identifier([val[k],
                   v.getName()]);
                 if (!set.has(id) && regex.test(val[k])) {
                   set.add(id);
@@ -8657,7 +8657,7 @@ morpheus.MetadataUtil.autocomplete = function (model) {
                 }
               }
             } else {
-              var id = new morpheus.Identifier([val,
+              var id = new phantasus.Identifier([val,
                 v.getName()]);
               if (!set.has(id) && regex.test(val)) {
                 set.add(id);
@@ -8701,7 +8701,7 @@ morpheus.MetadataUtil.autocomplete = function (model) {
 
     for (var j = 0; j < searchModel.getMetadataCount(); j++) {
       var v = searchModel.get(j);
-      var dataType = morpheus.VectorUtil.getDataType(v);
+      var dataType = phantasus.VectorUtil.getDataType(v);
       var field = v.getName();
       if (dataType === 'number' || dataType === 'string'
         || dataType === '[string]') {
@@ -8725,7 +8725,7 @@ morpheus.MetadataUtil.autocomplete = function (model) {
   };
 };
 
-morpheus.MetadataUtil.getMetadataNames = function (metadataModel) {
+phantasus.MetadataUtil.getMetadataNames = function (metadataModel) {
   var names = [];
   for (var i = 0, count = metadataModel.getMetadataCount(); i < count; i++) {
     names.push(metadataModel.get(i).getName(i));
@@ -8737,19 +8737,19 @@ morpheus.MetadataUtil.getMetadataNames = function (metadataModel) {
   });
   return names;
 };
-morpheus.MetadataUtil.getVectors = function (metadataModel, names) {
+phantasus.MetadataUtil.getVectors = function (metadataModel, names) {
   var vectors = [];
   names.forEach(function (name) {
     var v = metadataModel.getByName(name);
     if (!v) {
       throw name + ' not found. Available fields are '
-      + morpheus.MetadataUtil.getMetadataNames(metadataModel);
+      + phantasus.MetadataUtil.getMetadataNames(metadataModel);
     }
     vectors.push(v);
   });
   return vectors;
 };
-morpheus.MetadataUtil.indexOf = function (metadataModel, name) {
+phantasus.MetadataUtil.indexOf = function (metadataModel, name) {
   for (var i = 0, length = metadataModel.getMetadataCount(); i < length; i++) {
     if (name === metadataModel.get(i).getName()) {
       return i;
@@ -8758,9 +8758,9 @@ morpheus.MetadataUtil.indexOf = function (metadataModel, name) {
   return -1;
 };
 
-morpheus.MetadataUtil.DEFAULT_STRING_ARRAY_FIELDS = ['target', 'gene_target', 'moa'];
+phantasus.MetadataUtil.DEFAULT_STRING_ARRAY_FIELDS = ['target', 'gene_target', 'moa'];
 
-morpheus.MetadataUtil.DEFAULT_HIDDEN_FIELDS = new morpheus.Set();
+phantasus.MetadataUtil.DEFAULT_HIDDEN_FIELDS = new phantasus.Set();
 ['pr_analyte_id', 'pr_gene_title', 'pr_gene_id', 'pr_analyte_num',
   'pr_bset_id', 'pr_lua_id', 'pr_pool_id', 'pr_is_bing', 'pr_is_inf',
   'pr_is_lmark', 'qc_slope', 'qc_f_logp', 'qc_iqr', 'bead_batch',
@@ -8770,23 +8770,23 @@ morpheus.MetadataUtil.DEFAULT_HIDDEN_FIELDS = new morpheus.Set();
   'pert_mfc_id', 'pert_time', 'pert_time_unit', 'pert_univ_id',
   'pert_vehicle', 'pool_id', 'rna_plate', 'rna_well', 'count_mean',
   'count_cv', 'provenance_code'].forEach(function (name) {
-  morpheus.MetadataUtil.DEFAULT_HIDDEN_FIELDS.add(name);
+  phantasus.MetadataUtil.DEFAULT_HIDDEN_FIELDS.add(name);
 });
 
-morpheus.MetadataUtil.maybeConvertStrings = function (metadata,
+phantasus.MetadataUtil.maybeConvertStrings = function (metadata,
                                                       metadataStartIndex) {
   for (var i = metadataStartIndex, count = metadata.getMetadataCount(); i < count; i++) {
-    morpheus.VectorUtil.maybeConvertStringToNumber(metadata.get(i));
+    phantasus.VectorUtil.maybeConvertStringToNumber(metadata.get(i));
   }
-  morpheus.MetadataUtil.DEFAULT_STRING_ARRAY_FIELDS.forEach(function (field) {
+  phantasus.MetadataUtil.DEFAULT_STRING_ARRAY_FIELDS.forEach(function (field) {
     if (metadata.getByName(field)) {
-      morpheus.VectorUtil.maybeConvertToStringArray(metadata
+      phantasus.VectorUtil.maybeConvertToStringArray(metadata
         .getByName(field), ',');
     }
   });
 
 };
-morpheus.MetadataUtil.copy = function (src, dest) {
+phantasus.MetadataUtil.copy = function (src, dest) {
   if (src.getItemCount() != dest.getItemCount()) {
     throw 'Item count not equal in source and destination. '
     + src.getItemCount() + ' != ' + dest.getItemCount();
@@ -8804,14 +8804,14 @@ morpheus.MetadataUtil.copy = function (src, dest) {
     }
   }
 };
-morpheus.MetadataUtil.addVectorIfNotExists = function (metadataModel, name) {
+phantasus.MetadataUtil.addVectorIfNotExists = function (metadataModel, name) {
   var v = metadataModel.getByName(name);
   if (!v) {
     v = metadataModel.add(name);
   }
   return v;
 };
-morpheus.MetadataUtil.getMatchingIndices = function (metadataModel, tokens) {
+phantasus.MetadataUtil.getMatchingIndices = function (metadataModel, tokens) {
   var indices = {};
   for (var itemIndex = 0, nitems = metadataModel.getItemCount(); itemIndex < nitems; itemIndex++) {
     var matches = false;
@@ -8834,7 +8834,7 @@ morpheus.MetadataUtil.getMatchingIndices = function (metadataModel, tokens) {
   return indices;
 };
 
-morpheus.MolarConcentration = function () {
+phantasus.MolarConcentration = function () {
 
 };
 /*
@@ -8848,11 +8848,11 @@ morpheus.MolarConcentration = function () {
  zeptomolar 	zM 	10-21 molar 	10-18 mol/m3
  yoctomolar 	yM[3] 	10-24 molar	10-27 mol/m3
  */
-morpheus.MolarConcentration.getMicroMolarConcentration = function (text) {
+phantasus.MolarConcentration.getMicroMolarConcentration = function (text) {
   /** concentration in molar*/
   text = text.toLowerCase();
-  for (var i = 0; i < morpheus.MolarConcentration.CONCENTRATIONS.length; i++) {
-    var pair = morpheus.MolarConcentration.CONCENTRATIONS[i];
+  for (var i = 0; i < phantasus.MolarConcentration.CONCENTRATIONS.length; i++) {
+    var pair = phantasus.MolarConcentration.CONCENTRATIONS[i];
     var key = pair[0];
     var factorToMolar = pair[1];
     var index = text.indexOf(key);
@@ -8865,7 +8865,7 @@ morpheus.MolarConcentration.getMicroMolarConcentration = function (text) {
     }
   }
 };
-morpheus.MolarConcentration.CONCENTRATIONS = [
+phantasus.MolarConcentration.CONCENTRATIONS = [
   ['mm', 10E3],
   ['um', 10E6],
   ['\u00B5' + 'm', 10E6],
@@ -8881,7 +8881,7 @@ morpheus.MolarConcentration.CONCENTRATIONS = [
 
 
 
-morpheus.Positions = function () {
+phantasus.Positions = function () {
   this.spaces = undefined;
   this.defaultPositionFunction = function (index) {
     return (this.size * index);
@@ -8893,7 +8893,7 @@ morpheus.Positions = function () {
   this.squishedIndices = {};
   this.isSquished = false;
 };
-morpheus.Positions.getBottom = function (rect, rowPositions) {
+phantasus.Positions.getBottom = function (rect, rowPositions) {
   var bottom = rowPositions.getLength();
   if (rect != null) {
     bottom = 1 + rowPositions.getIndex(rect.y + rect.height, false);
@@ -8902,7 +8902,7 @@ morpheus.Positions.getBottom = function (rect, rowPositions) {
   }
   return bottom;
 };
-morpheus.Positions.getTop = function (rect, rowPositions) {
+phantasus.Positions.getTop = function (rect, rowPositions) {
   var top = 0;
   if (rect != null) {
     top = rowPositions.getIndex(rect.y, false) - 1;
@@ -8911,7 +8911,7 @@ morpheus.Positions.getTop = function (rect, rowPositions) {
   }
   return top;
 };
-morpheus.Positions.getLeft = function (rect, columnPositions) {
+phantasus.Positions.getLeft = function (rect, columnPositions) {
   var left = 0;
   if (rect != null) {
     left = columnPositions.getIndex(rect.x, false) - 1;
@@ -8920,7 +8920,7 @@ morpheus.Positions.getLeft = function (rect, columnPositions) {
   }
   return left;
 };
-morpheus.Positions.getRight = function (rect, columnPositions) {
+phantasus.Positions.getRight = function (rect, columnPositions) {
   var right = columnPositions.getLength();
   if (rect != null) {
     right = 1 + columnPositions.getIndex(rect.x + rect.width, false);
@@ -8928,13 +8928,13 @@ morpheus.Positions.getRight = function (rect, columnPositions) {
   }
   return right;
 };
-morpheus.Positions.prototype = {
+phantasus.Positions.prototype = {
   length: 0,
   size: 13,
   squishFactor: 0.1,
   compress: true,
   copy: function () {
-    var copy = new morpheus.Positions();
+    var copy = new phantasus.Positions();
     if (this.spaces) {
       copy.spaces = this.spaces.slice();
     }
@@ -9084,29 +9084,29 @@ morpheus.Positions.prototype = {
  * @param dataset
  * @constructor
  */
-morpheus.Project = function (dataset) {
+phantasus.Project = function (dataset) {
   this.originalDataset = dataset;
-  this.rowIndexMapper = new morpheus.IndexMapper(this, true);
-  this.columnIndexMapper = new morpheus.IndexMapper(this, false);
+  this.rowIndexMapper = new phantasus.IndexMapper(this, true);
+  this.columnIndexMapper = new phantasus.IndexMapper(this, false);
   this.groupRows = [];
   this.groupColumns = [];
-  this.rowColorModel = new morpheus.VectorColorModel();
-  this.columnColorModel = new morpheus.VectorColorModel();
-  this.rowShapeModel = new morpheus.VectorShapeModel();
-  this.columnShapeModel = new morpheus.VectorShapeModel();
+  this.rowColorModel = new phantasus.VectorColorModel();
+  this.columnColorModel = new phantasus.VectorColorModel();
+  this.rowShapeModel = new phantasus.VectorShapeModel();
+  this.columnShapeModel = new phantasus.VectorShapeModel();
   this.hoverColumnIndex = -1;
   this.hoverRowIndex = -1;
-  this.columnSelectionModel = new morpheus.SelectionModel(this, true);
-  this.rowSelectionModel = new morpheus.SelectionModel(this, false);
-  this.elementSelectionModel = new morpheus.ElementSelectionModel(this);
+  this.columnSelectionModel = new phantasus.SelectionModel(this, true);
+  this.rowSelectionModel = new phantasus.SelectionModel(this, false);
+  this.elementSelectionModel = new phantasus.ElementSelectionModel(this);
   this.symmetricProjectListener = null;
-  morpheus.Project._recomputeCalculatedFields(this.originalDataset);
-  morpheus.Project
-    ._recomputeCalculatedFields(new morpheus.TransposedDatasetView(
+  phantasus.Project._recomputeCalculatedFields(this.originalDataset);
+  phantasus.Project
+    ._recomputeCalculatedFields(new phantasus.TransposedDatasetView(
       this.originalDataset));
   this.history = [];
 };
-morpheus.Project.Events = {
+phantasus.Project.Events = {
   DATASET_CHANGED: 'datasetChanged',
   ROW_GROUP_BY_CHANGED: 'rowGroupByChanged',
   COLUMN_GROUP_BY_CHANGED: 'columnGroupByChanged',
@@ -9118,15 +9118,15 @@ morpheus.Project.Events = {
   COLUMN_TRACK_REMOVED: 'columnTrackRemoved'
 };
 
-morpheus.Project._recomputeCalculatedFields = function (dataset) {
+phantasus.Project._recomputeCalculatedFields = function (dataset) {
   var metadata = dataset.getColumnMetadata();
-  var view = new morpheus.DatasetColumnView(dataset);
+  var view = new phantasus.DatasetColumnView(dataset);
   for (var metadataIndex = 0,
          count = metadata.getMetadataCount(); metadataIndex < count; metadataIndex++) {
     var vector = metadata.get(metadataIndex);
-    if (vector.getProperties().get(morpheus.VectorKeys.FUNCTION) != null
-      && vector.getProperties().get(morpheus.VectorKeys.RECOMPUTE_FUNCTION)) {
-      var f = morpheus.VectorUtil.jsonToFunction(vector, morpheus.VectorKeys.FUNCTION);
+    if (vector.getProperties().get(phantasus.VectorKeys.FUNCTION) != null
+      && vector.getProperties().get(phantasus.VectorKeys.RECOMPUTE_FUNCTION)) {
+      var f = phantasus.VectorUtil.jsonToFunction(vector, phantasus.VectorKeys.FUNCTION);
       for (var j = 0, size = vector.size(); j < size; j++) {
         view.setIndex(j);
         vector.setValue(j, f(view, dataset, j));
@@ -9135,14 +9135,14 @@ morpheus.Project._recomputeCalculatedFields = function (dataset) {
   }
 
 };
-morpheus.Project.prototype = {
+phantasus.Project.prototype = {
   isSymmetric: function () {
     return this.symmetricProjectListener != null;
   },
   setSymmetric: function (heatMap) {
     if (heatMap != null) {
       if (this.symmetricProjectListener == null) {
-        this.symmetricProjectListener = new morpheus.SymmetricProjectListener(heatMap.getProject(), heatMap.vscroll, heatMap.hscroll);
+        this.symmetricProjectListener = new phantasus.SymmetricProjectListener(heatMap.getProject(), heatMap.vscroll, heatMap.hscroll);
       }
     } else {
       if (this.symmetricProjectListener != null) {
@@ -9204,7 +9204,7 @@ morpheus.Project.prototype = {
     this.rowSelectionModel.clear();
     this.elementSelectionModel.clear();
     if (notify) {
-      this.trigger(morpheus.Project.Events.DATASET_CHANGED);
+      this.trigger(phantasus.Project.Events.DATASET_CHANGED);
     }
   },
   setGroupRows: function (keys, notify) {
@@ -9215,7 +9215,7 @@ morpheus.Project.prototype = {
       }
     }
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_GROUP_BY_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_GROUP_BY_CHANGED);
     }
   },
   setGroupColumns: function (keys, notify) {
@@ -9226,7 +9226,7 @@ morpheus.Project.prototype = {
       }
     }
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED);
     }
   },
   setRowFilter: function (filter, notify) {
@@ -9234,7 +9234,7 @@ morpheus.Project.prototype = {
     this.rowIndexMapper.setFilter(filter);
     this._restoreSelection(false);
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_FILTER_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_FILTER_CHANGED);
     }
   },
   getRowFilter: function () {
@@ -9248,14 +9248,14 @@ morpheus.Project.prototype = {
     this.columnIndexMapper.setFilter(filter);
     this._restoreSelection(true);
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_FILTER_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_FILTER_CHANGED);
     }
   },
   getColumnColorModel: function () {
     return this.columnColorModel;
   },
   getSortedFilteredDataset: function () {
-    return morpheus.DatasetUtil.slicedView(this.getFullDataset(),
+    return phantasus.DatasetUtil.slicedView(this.getFullDataset(),
       this.rowIndexMapper.convertToView(), this.columnIndexMapper
         .convertToView());
   },
@@ -9286,7 +9286,7 @@ morpheus.Project.prototype = {
         columns = null;
       }
     }
-    return rows == null && columns == null ? dataset : new morpheus.SlicedDatasetView(dataset, rows, columns);
+    return rows == null && columns == null ? dataset : new phantasus.SlicedDatasetView(dataset, rows, columns);
   },
   _saveSelection: function (isColumns) {
     this.elementSelectionModel.save();
@@ -9314,7 +9314,7 @@ morpheus.Project.prototype = {
     this.rowIndexMapper.setSortKeys(keys);
     this._restoreSelection(false);
     if (notify) {
-      this.trigger(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED);
+      this.trigger(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED);
     }
   },
   setColumnSortKeys: function (keys, notify) {
@@ -9327,7 +9327,7 @@ morpheus.Project.prototype = {
     this.columnIndexMapper.setSortKeys(keys);
     this._restoreSelection(true);
     if (notify) {
-      this.trigger(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED);
+      this.trigger(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED);
     }
   },
   getRowSortKeys: function () {
@@ -9355,15 +9355,15 @@ morpheus.Project.prototype = {
     return this.rowSelectionModel.isViewIndexSelected(index);
   }
 };
-morpheus.Util.extend(morpheus.Project, morpheus.Events);
+phantasus.Util.extend(phantasus.Project, phantasus.Events);
 
-morpheus.QNorm = function () {
+phantasus.QNorm = function () {
 
 };
 /**
  * Performs quantile normalization.
  */
-morpheus.QNorm.execute = function (data) {
+phantasus.QNorm.execute = function (data) {
   var rows = data.getRowCount();
   var cols = data.getColumnCount();
   var i, j, ind;
@@ -9371,7 +9371,7 @@ morpheus.QNorm.execute = function (data) {
   var row_mean = new Float32Array(rows);
   var ranks = new Float32Array(rows);
   /* # sort original columns */
-  dimat = morpheus.QNorm.get_di_matrix(data);
+  dimat = phantasus.QNorm.get_di_matrix(data);
   for (j = 0; j < cols; j++) {
     dimat[j].sort(function (s1, s2) {
       if (s1.data < s2.data) {
@@ -9400,7 +9400,7 @@ morpheus.QNorm.execute = function (data) {
 
   /* # unsort mean columns */
   for (j = 0; j < cols; j++) {
-    morpheus.QNorm.get_ranks(ranks, dimat[j], rows);
+    phantasus.QNorm.get_ranks(ranks, dimat[j], rows);
     for (i = 0; i < rows; i++) {
       ind = dimat[j][i].rank;
       if (ranks[i] - Math.floor(ranks[i]) > 0.4) {
@@ -9421,7 +9421,7 @@ morpheus.QNorm.execute = function (data) {
  * ************************************************************************
  */
 
-morpheus.QNorm.get_di_matrix = function (data) {
+phantasus.QNorm.get_di_matrix = function (data) {
   var i, j;
   var rows = data.getRowCount();
   var cols = data.getColumnCount();
@@ -9444,7 +9444,7 @@ morpheus.QNorm.get_di_matrix = function (data) {
  * ************************************************************************
  */
 
-morpheus.QNorm.get_ranks = function (rank, x, n) {
+phantasus.QNorm.get_ranks = function (rank, x, n) {
   var i, j, k;
   i = 0;
   while (i < n) {
@@ -9464,12 +9464,12 @@ morpheus.QNorm.get_ranks = function (rank, x, n) {
 };
 
 
-morpheus.SelectionModel = function (project, isColumns) {
-  this.viewIndices = new morpheus.Set();
+phantasus.SelectionModel = function (project, isColumns) {
+  this.viewIndices = new phantasus.Set();
   this.project = project;
   this.isColumns = isColumns;
 };
-morpheus.SelectionModel.prototype = {
+phantasus.SelectionModel.prototype = {
   setViewIndices: function (indices, notify) {
     this.viewIndices = indices;
     if (notify) {
@@ -9480,11 +9480,11 @@ morpheus.SelectionModel.prototype = {
     return this.viewIndices.has(index);
   },
   clear: function () {
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
   },
   /**
    *
-   * @returns {morpheus.Set}
+   * @returns {phantasus.Set}
    */
   getViewIndices: function () {
     return this.viewIndices;
@@ -9509,7 +9509,7 @@ morpheus.SelectionModel.prototype = {
   },
   restore: function () {
     var project = this.project;
-    this.viewIndices = new morpheus.Set();
+    this.viewIndices = new phantasus.Set();
     var f = this.isColumns ? project.convertModelColumnIndexToView
       : project.convertModelRowIndexToView;
     f = _.bind(f, project);
@@ -9521,10 +9521,10 @@ morpheus.SelectionModel.prototype = {
     }
   },
 };
-morpheus.Util.extend(morpheus.SelectionModel, morpheus.Events);
+phantasus.Util.extend(phantasus.SelectionModel, phantasus.Events);
 
-morpheus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
+  phantasus.DatasetAdapter.call(this, dataset);
   if (rowIndices == null) {
     rowIndices = null;
   }
@@ -9533,15 +9533,15 @@ morpheus.SlicedDatasetView = function (dataset, rowIndices, columnIndices) {
   }
   this.rowIndices = rowIndices;
   this.columnIndices = columnIndices;
-  //morpheus.DatasetUtil.toESSessionPromise(this);
+  //phantasus.DatasetUtil.toESSessionPromise(this);
 };
-morpheus.SlicedDatasetView.prototype = {
+phantasus.SlicedDatasetView.prototype = {
   setESSession: function (session) {
-    //console.log("morpheus.SlicedDatasetView.prototype.setESSession ::", this, session);
+    //console.log("phantasus.SlicedDatasetView.prototype.setESSession ::", this, session);
     this.dataset.setESSession(session);
   },
   getESSession: function () {
-    //console.log("morpheus.SlicedDatasetView.prototype.getESSession ::", this);
+    //console.log("phantasus.SlicedDatasetView.prototype.getESSession ::", this);
     return this.dataset.getESSession();
   },
   getRowCount: function () {
@@ -9565,12 +9565,12 @@ morpheus.SlicedDatasetView.prototype = {
       seriesIndex);
   },
   getRowMetadata: function () {
-    return this.rowIndices !== null ? new morpheus.MetadataModelItemView(
+    return this.rowIndices !== null ? new phantasus.MetadataModelItemView(
       this.dataset.getRowMetadata(), this.rowIndices) : this.dataset
       .getRowMetadata();
   },
   getColumnMetadata: function () {
-    return this.columnIndices !== null ? new morpheus.MetadataModelItemView(
+    return this.columnIndices !== null ? new phantasus.MetadataModelItemView(
       this.dataset.getColumnMetadata(), this.columnIndices)
       : this.dataset.getColumnMetadata();
   },
@@ -9578,13 +9578,13 @@ morpheus.SlicedDatasetView.prototype = {
     return this.getName();
   }
 };
-morpheus.Util.extend(morpheus.SlicedDatasetView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.SlicedDatasetView, phantasus.DatasetAdapter);
 
-morpheus.SlicedVector = function (v, indices) {
-  morpheus.VectorAdapter.call(this, v);
+phantasus.SlicedVector = function (v, indices) {
+  phantasus.VectorAdapter.call(this, v);
   this.indices = indices;
 };
-morpheus.SlicedVector.prototype = {
+phantasus.SlicedVector.prototype = {
   setValue: function (i, value) {
     this.v.setValue(this.indices[i], value);
   },
@@ -9595,9 +9595,9 @@ morpheus.SlicedVector.prototype = {
     return this.indices.length;
   }
 };
-morpheus.Util.extend(morpheus.SlicedVector, morpheus.VectorAdapter);
+phantasus.Util.extend(phantasus.SlicedVector, phantasus.VectorAdapter);
 
-morpheus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) {
+phantasus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) {
   var highlightedModelIndices = {};
   var p = project;
   var viewIndices = [];
@@ -9620,7 +9620,7 @@ morpheus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) {
   this.name = name;
   this.columns = columns;
 };
-morpheus.MatchesOnTopSortKey.prototype = {
+phantasus.MatchesOnTopSortKey.prototype = {
   /**
    * Indicates whether this key is sorting rows or columns.
    * @return {*}
@@ -9646,9 +9646,9 @@ morpheus.MatchesOnTopSortKey.prototype = {
     return this.name;
   }
 };
-morpheus.SortKey = function (field, sortOrder, columns) {
+phantasus.SortKey = function (field, sortOrder, columns) {
   if (typeof sortOrder === 'string') {
-    sortOrder = morpheus.SortKey.SortOrder[sortOrder.toUpperCase()];
+    sortOrder = phantasus.SortKey.SortOrder[sortOrder.toUpperCase()];
   }
   this.field = field;
   this.sortOrder = sortOrder;
@@ -9658,7 +9658,7 @@ morpheus.SortKey = function (field, sortOrder, columns) {
   this.columns = columns;
 };
 
-morpheus.SortKey.prototype = {
+phantasus.SortKey.prototype = {
   isColumns: function () {
     return this.columns;
   },
@@ -9672,27 +9672,27 @@ morpheus.SortKey.prototype = {
       this.v.getValue = function () {
         return 0;
       };
-      this.c = this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING ? morpheus.SortKey.ASCENDING_COMPARATOR
-        : morpheus.SortKey.DESCENDING_COMPARATOR;
+      this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.ASCENDING_COMPARATOR
+        : phantasus.SortKey.DESCENDING_COMPARATOR;
     } else {
-      var dataType = morpheus.VectorUtil.getDataType(this.v);
+      var dataType = phantasus.VectorUtil.getDataType(this.v);
       if (dataType === 'number') {
-        this.c = this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING ? morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR
-          : morpheus.SortKey.NUMBER_DESCENDING_COMPARATOR;
+        this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR
+          : phantasus.SortKey.NUMBER_DESCENDING_COMPARATOR;
       } else if (dataType === '[number]') {
         var summary = this.v.getProperties().get(
-            morpheus.VectorKeys.ARRAY_SUMMARY_FUNCTION)
-          || morpheus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION;
+            phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION)
+          || phantasus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION;
 
-        this.c = this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING ? morpheus.SortKey
+        this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey
           .ARRAY_ASCENDING_COMPARATOR(summary)
-          : morpheus.SortKey.ARRAY_DESCENDING_COMPARATOR(summary);
+          : phantasus.SortKey.ARRAY_DESCENDING_COMPARATOR(summary);
       } else {
-        this.c = this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING ? morpheus.SortKey.ASCENDING_COMPARATOR
-          : morpheus.SortKey.DESCENDING_COMPARATOR;
+        this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.ASCENDING_COMPARATOR
+          : phantasus.SortKey.DESCENDING_COMPARATOR;
       }
     }
-    if (this.sortOrder === morpheus.SortKey.SortOrder.TOP_N) {
+    if (this.sortOrder === phantasus.SortKey.SortOrder.TOP_N) {
       var pairs = [];
       var missingIndices = [];
       for (var i = 0, nrows = visibleModelIndices.length; i < nrows; i++) {
@@ -9709,7 +9709,7 @@ morpheus.SortKey.prototype = {
       }
       // sort values in descending order
       var c = this.c;
-      this.c = morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR;
+      this.c = phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR;
       pairs
         .sort(function (pair1, pair2) {
           return c(pair1.value, pair2.value);
@@ -9781,7 +9781,7 @@ morpheus.SortKey.prototype = {
  * @param isColumnSort -
  *            sort columns by selected rows.
  */
-morpheus.SortByValuesKey = function (modelIndices, sortOrder, isColumnSort) {
+phantasus.SortByValuesKey = function (modelIndices, sortOrder, isColumnSort) {
   this.field = 'selection';
   this.bothCount = 10;
   this.modelIndices = modelIndices;
@@ -9790,7 +9790,7 @@ morpheus.SortByValuesKey = function (modelIndices, sortOrder, isColumnSort) {
   this.setSortOrder(sortOrder);
 
 };
-morpheus.SortByValuesKey.prototype = {
+phantasus.SortByValuesKey.prototype = {
   isColumns: function () {
     return this.isColumnSort;
   },
@@ -9800,14 +9800,14 @@ morpheus.SortByValuesKey.prototype = {
   init: function (dataset, visibleModelIndices) {
     // isColumnSort-sort columns by selected rows
     // dataset is transposed if !isColumnSort
-    this.dataset = morpheus.DatasetUtil.slicedView(dataset, null,
+    this.dataset = phantasus.DatasetUtil.slicedView(dataset, null,
       this.modelIndices);
-    this.rowView = new morpheus.DatasetRowView(this.dataset);
-    this.summaryFunction = this.modelIndices.length > 1 ? morpheus.Median
+    this.rowView = new phantasus.DatasetRowView(this.dataset);
+    this.summaryFunction = this.modelIndices.length > 1 ? phantasus.Median
       : function (row) {
       return row.getValue(0);
     };
-    if (this.sortOrder === morpheus.SortKey.SortOrder.TOP_N) {
+    if (this.sortOrder === phantasus.SortKey.SortOrder.TOP_N) {
       var pairs = [];
       var missingIndices = [];
       for (var i = 0, nrows = visibleModelIndices.length; i < nrows; i++) {
@@ -9876,15 +9876,15 @@ morpheus.SortByValuesKey.prototype = {
   },
   setSortOrder: function (sortOrder) {
     if (typeof sortOrder === 'string') {
-      sortOrder = morpheus.SortKey.SortOrder[sortOrder.toUpperCase()];
+      sortOrder = phantasus.SortKey.SortOrder[sortOrder.toUpperCase()];
     }
     this.sortOrder = sortOrder;
-    if (this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING) {
-      this.c = morpheus.SortKey.ELEMENT_ASCENDING_COMPARATOR;
-    } else if (this.sortOrder === morpheus.SortKey.SortOrder.DESCENDING) {
-      this.c = morpheus.SortKey.ELEMENT_DESCENDING_COMPARATOR;
+    if (this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING) {
+      this.c = phantasus.SortKey.ELEMENT_ASCENDING_COMPARATOR;
+    } else if (this.sortOrder === phantasus.SortKey.SortOrder.DESCENDING) {
+      this.c = phantasus.SortKey.ELEMENT_DESCENDING_COMPARATOR;
     } else {
-      this.c = morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR;
+      this.c = phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR;
     }
 
   },
@@ -9906,7 +9906,7 @@ morpheus.SortByValuesKey.prototype = {
  *            This sort key name
  * @param columns Whether column sort
  */
-morpheus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, columns) {
+phantasus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, columns) {
   this.nvisible = nvisible;
   var modelIndexToValue = [];
   for (var i = 0, length = modelIndices.length; i < length; i++) {
@@ -9915,10 +9915,10 @@ morpheus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, colum
   this.modelIndices = modelIndices;
   this.modelIndexToValue = modelIndexToValue;
   this.name = name;
-  this.c = morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR;
+  this.c = phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR;
   this.columns = columns;
 };
-morpheus.SpecifiedModelSortOrder.prototype = {
+phantasus.SpecifiedModelSortOrder.prototype = {
   isColumns: function () {
     return this.columns;
   },
@@ -9935,8 +9935,8 @@ morpheus.SpecifiedModelSortOrder.prototype = {
   },
   setSortOrder: function (sortOrder) {
     this.sortOrder = sortOrder;
-    this.c = this.sortOrder === morpheus.SortKey.SortOrder.ASCENDING ? morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR
-      : morpheus.SortKey.NUMBER_DESCENDING_COMPARATOR;
+    this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR
+      : phantasus.SortKey.NUMBER_DESCENDING_COMPARATOR;
   },
   getSortOrder: function () {
     return this.sortOrder;
@@ -9951,7 +9951,7 @@ morpheus.SpecifiedModelSortOrder.prototype = {
  *
  * @param values
  */
-morpheus.SpecifiedGroupByKey = function (clusterIds, columns) {
+phantasus.SpecifiedGroupByKey = function (clusterIds, columns) {
   this.clusterIds = clusterIds;
   this.c = function (a, b) {
     return (a === b ? 0 : // Values are equal
@@ -9960,7 +9960,7 @@ morpheus.SpecifiedGroupByKey = function (clusterIds, columns) {
   };
   this.columns = columns;
 };
-morpheus.SpecifiedGroupByKey.prototype = {
+phantasus.SpecifiedGroupByKey.prototype = {
   isColumns: function () {
     return this.columns;
   },
@@ -9983,7 +9983,7 @@ morpheus.SpecifiedGroupByKey.prototype = {
     return 'Dendrogram Cut';
   }
 };
-morpheus.SortKey.SortOrder = {
+phantasus.SortKey.SortOrder = {
   ASCENDING: 0,
   DESCENDING: 1,
   UNSORTED: 2,
@@ -9993,7 +9993,7 @@ morpheus.SortKey.SortOrder = {
 /**
  * Comparator to sort ascending using lowercase string comparison
  */
-morpheus.SortKey.ASCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.ASCENDING_COMPARATOR = function (a, b) {
   // we want NaNs to end up at the bottom
   var aNaN = (a == null);
   var bNaN = (b == null);
@@ -10013,7 +10013,7 @@ morpheus.SortKey.ASCENDING_COMPARATOR = function (a, b) {
 /**
  * Comparator to sort descending using lowercase string comparison
  */
-morpheus.SortKey.DESCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.DESCENDING_COMPARATOR = function (a, b) {
   var aNaN = (a == null);
   var bNaN = (b == null);
   if (aNaN && bNaN) {
@@ -10030,7 +10030,7 @@ morpheus.SortKey.DESCENDING_COMPARATOR = function (a, b) {
   return (a === b ? 0 : (a < b ? 1 : -1));
 };
 
-morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR = function (a, b) {
   // we want NaNs to end up at the bottom
   var aNaN = (a == null || isNaN(a));
   var bNaN = (b == null || isNaN(b));
@@ -10046,7 +10046,7 @@ morpheus.SortKey.NUMBER_ASCENDING_COMPARATOR = function (a, b) {
   return (a === b ? 0 : (a < b ? -1 : 1));
 };
 
-morpheus.SortKey.NUMBER_DESCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.NUMBER_DESCENDING_COMPARATOR = function (a, b) {
   var aNaN = (a == null || isNaN(a));
   var bNaN = (b == null || isNaN(b));
   if (aNaN && bNaN) {
@@ -10062,18 +10062,18 @@ morpheus.SortKey.NUMBER_DESCENDING_COMPARATOR = function (a, b) {
   return (a === b ? 0 : (a < b ? 1 : -1));
 };
 
-morpheus.SortKey.STRING_ASCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.STRING_ASCENDING_COMPARATOR = function (a, b) {
   a = (a == null || a.toLowerCase === undefined) ? null : a.toLowerCase();
   b = (b == null || b.toLowerCase === undefined) ? null : b.toLowerCase();
   return (a === b ? 0 : (a < b ? -1 : 1));
 };
-morpheus.SortKey.STRING_DESCENDING_COMPARATOR = function (a, b) {
+phantasus.SortKey.STRING_DESCENDING_COMPARATOR = function (a, b) {
   a = (a == null || a.toLowerCase === undefined) ? null : a.toLowerCase();
   b = (b == null || b.toLowerCase === undefined) ? null : b.toLowerCase();
   return (a === b ? 0 : (a < b ? 1 : -1));
 };
 
-morpheus.SortKey.ELEMENT_ASCENDING_COMPARATOR = function (obj1, obj2) {
+phantasus.SortKey.ELEMENT_ASCENDING_COMPARATOR = function (obj1, obj2) {
   var a = +obj1;
   var b = +obj2;
   var aNaN = isNaN(a);
@@ -10106,7 +10106,7 @@ morpheus.SortKey.ELEMENT_ASCENDING_COMPARATOR = function (obj1, obj2) {
   return (a === b ? 0 : (a < b ? -1 : 1));
 };
 
-morpheus.SortKey.ELEMENT_DESCENDING_COMPARATOR = function (obj1, obj2) {
+phantasus.SortKey.ELEMENT_DESCENDING_COMPARATOR = function (obj1, obj2) {
   // we want NaNs to end up at the bottom
   var a = +obj1;
   var b = +obj2;
@@ -10137,12 +10137,12 @@ morpheus.SortKey.ELEMENT_DESCENDING_COMPARATOR = function (obj1, obj2) {
   }
   return (a === b ? 0 : (a < b ? 1 : -1));
 };
-morpheus.SortKey.BOX_PLOT_SUMMARY_FUNCTION = function (array) {
+phantasus.SortKey.BOX_PLOT_SUMMARY_FUNCTION = function (array) {
   var box = array.box;
   if (box == null) {
-    var v = morpheus.VectorUtil.arrayAsVector(array);
-    box = morpheus
-      .BoxPlotItem(this.indices != null ? new morpheus.SlicedVector(
+    var v = phantasus.VectorUtil.arrayAsVector(array);
+    box = phantasus
+      .BoxPlotItem(this.indices != null ? new phantasus.SlicedVector(
         v, this.indices) : v);
     array.box = box;
   }
@@ -10150,7 +10150,7 @@ morpheus.SortKey.BOX_PLOT_SUMMARY_FUNCTION = function (array) {
   return box.q3;
 };
 
-morpheus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION = function (array) {
+phantasus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION = function (array) {
   var a = 0;
   if (array != null) {
     var aPosMax = -Number.MAX_VALUE;
@@ -10175,7 +10175,7 @@ morpheus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION = function (array) {
   }
   return a;
 };
-morpheus.SortKey.ARRAY_ASCENDING_COMPARATOR = function (summary) {
+phantasus.SortKey.ARRAY_ASCENDING_COMPARATOR = function (summary) {
   return function (a, b) {
     var aNaN = a == null;
     var bNaN = b == null;
@@ -10205,7 +10205,7 @@ morpheus.SortKey.ARRAY_ASCENDING_COMPARATOR = function (summary) {
   };
 };
 
-morpheus.SortKey.ARRAY_DESCENDING_COMPARATOR = function (summary) {
+phantasus.SortKey.ARRAY_DESCENDING_COMPARATOR = function (summary) {
   return function (a, b) {
     var aNaN = a == null;
     var bNaN = b == null;
@@ -10235,20 +10235,20 @@ morpheus.SortKey.ARRAY_DESCENDING_COMPARATOR = function (summary) {
   };
 };
 
-morpheus.SortKey.reverseComparator = function (c) {
+phantasus.SortKey.reverseComparator = function (c) {
   return function (a, b) {
     return c(b, a);
   };
 };
-morpheus.SortKey.keepExistingSortKeys = function (newSortKeys, existingSortKeys) {
+phantasus.SortKey.keepExistingSortKeys = function (newSortKeys, existingSortKeys) {
   var dendrogramSortKey = null;
   var matchesOnTopSortKey = null;
   for (var i = 0, length = existingSortKeys.length; i < length; i++) {
     var key = existingSortKeys[i];
-    if (key instanceof morpheus.MatchesOnTopSortKey && key.toString() === 'matches on top') {
+    if (key instanceof phantasus.MatchesOnTopSortKey && key.toString() === 'matches on top') {
       matchesOnTopSortKey = key;
     }
-    if (key instanceof morpheus.SpecifiedModelSortOrder
+    if (key instanceof phantasus.SpecifiedModelSortOrder
       && key.name === 'dendrogram') {
       dendrogramSortKey = key;
     }
@@ -10262,20 +10262,20 @@ morpheus.SortKey.keepExistingSortKeys = function (newSortKeys, existingSortKeys)
   return newSortKeys;
 };
 
-morpheus.SortKey.fromJSON = function (project, json) {
+phantasus.SortKey.fromJSON = function (project, json) {
   var sortKeys = [];
   json.forEach(function (key) {
     if (key.type === 'annotation') {
-      sortKeys.push(new morpheus.SortKey(key.field, key.order, key.isColumns));
+      sortKeys.push(new phantasus.SortKey(key.field, key.order, key.isColumns));
     } else if (key.type === 'byValues') {
-      sortKeys.push(new morpheus.SortByValuesKey(key.modelIndices, key.order, key.isColumns));
+      sortKeys.push(new phantasus.SortByValuesKey(key.modelIndices, key.order, key.isColumns));
     } else if (key.type === 'specified') {
-      sortKeys.push(new morpheus.SpecifiedModelSortOrder(key.modelIndices, key.nvisible, key.name, key.isColumns));
+      sortKeys.push(new phantasus.SpecifiedModelSortOrder(key.modelIndices, key.nvisible, key.name, key.isColumns));
     } else if (key.type === 'matchesOnTop') {
-      sortKeys.push(new morpheus.MatchesOnTopSortKey(project, key.modelIndices, key.name, key.isColumns));
+      sortKeys.push(new phantasus.MatchesOnTopSortKey(project, key.modelIndices, key.name, key.isColumns));
     } else {
       if (key.field != null) {
-        sortKeys.push(new morpheus.SortKey(key.field, key.order));
+        sortKeys.push(new phantasus.SortKey(key.field, key.order));
       } else {
         console.log('Unknown key: ' + key);
       }
@@ -10284,24 +10284,24 @@ morpheus.SortKey.fromJSON = function (project, json) {
   return sortKeys;
 };
 
-morpheus.SortKey.toJSON = function (sortKeys) {
+phantasus.SortKey.toJSON = function (sortKeys) {
   var json = [];
   sortKeys.forEach(function (key) {
-    if (key instanceof morpheus.SortKey) {
+    if (key instanceof phantasus.SortKey) {
       json.push({
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'annotation',
         field: '' + key,
       });
-    } else if (key instanceof morpheus.SortByValuesKey) {
+    } else if (key instanceof phantasus.SortByValuesKey) {
       json.push({
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'byValues',
         modelIndices: key.modelIndices
       });
-    } else if (key instanceof morpheus.SpecifiedModelSortOrder) {
+    } else if (key instanceof phantasus.SpecifiedModelSortOrder) {
       json.push({
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
@@ -10310,7 +10310,7 @@ morpheus.SortKey.toJSON = function (sortKeys) {
         name: key.name,
         nvisible: key.nvisible
       });
-    } else if (key instanceof morpheus.MatchesOnTopSortKey) {
+    } else if (key instanceof phantasus.MatchesOnTopSortKey) {
       json.push({
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
@@ -10325,7 +10325,7 @@ morpheus.SortKey.toJSON = function (sortKeys) {
   return json;
 };
 
-morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
+phantasus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   var ignoreEvent = false;
   var rowGroupBy;
   var columnGroupBy;
@@ -10337,7 +10337,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   var rowSelection;
   var vscrollFunction;
   var hscrollFunction;
-  project.on(morpheus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy = function () {
+  project.on(phantasus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10345,7 +10345,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setGroupColumns(project.getGroupRows(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy = function () {
+  project.on(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10353,7 +10353,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setGroupRows(project.getGroupColumns(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.ROW_FILTER_CHANGED, rowFilter = function () {
+  project.on(phantasus.Project.Events.ROW_FILTER_CHANGED, rowFilter = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10361,7 +10361,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setColumnFilter(project.getRowFilter(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter = function () {
+  project.on(phantasus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10369,7 +10369,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setRowFilter(project.getColumnFilter(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder = function () {
+  project.on(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10377,7 +10377,7 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
     project.setColumnSortKeys(project.getRowSortKeys(), true);
     ignoreEvent = false;
   });
-  project.on(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder = function () {
+  project.on(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder = function () {
     if (ignoreEvent) {
       return;
     }
@@ -10421,12 +10421,12 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
   });
 
   this.dispose = function () {
-    project.off(morpheus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy);
-    project.off(morpheus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy);
-    project.off(morpheus.Project.Events.ROW_FILTER_CHANGED, rowFilter);
-    project.off(morpheus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter);
-    project.off(morpheus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder);
-    project.off(morpheus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder);
+    project.off(phantasus.Project.Events.ROW_GROUP_BY_CHANGED, rowGroupBy);
+    project.off(phantasus.Project.Events.COLUMN_GROUP_BY_CHANGED, columnGroupBy);
+    project.off(phantasus.Project.Events.ROW_FILTER_CHANGED, rowFilter);
+    project.off(phantasus.Project.Events.COLUMN_FILTER_CHANGED, columnFilter);
+    project.off(phantasus.Project.Events.ROW_SORT_ORDER_CHANGED, rowSortOrder);
+    project.off(phantasus.Project.Events.COLUMN_SORT_ORDER_CHANGED, columnSortOrder);
     project.getColumnSelectionModel().off('selectionChanged', columnSelection);
     project.getRowSelectionModel().off('selectionChanged', rowSelection);
     vscroll.off('scroll', vscrollFunction);
@@ -10437,10 +10437,10 @@ morpheus.SymmetricProjectListener = function (project, vscroll, hscroll) {
 
 
 
-morpheus.TransposedDatasetView = function (dataset) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.TransposedDatasetView = function (dataset) {
+  phantasus.DatasetAdapter.call(this, dataset);
 };
-morpheus.TransposedDatasetView.prototype = {
+phantasus.TransposedDatasetView.prototype = {
   getRowCount: function () {
     return this.dataset.getColumnCount();
   },
@@ -10460,7 +10460,7 @@ morpheus.TransposedDatasetView.prototype = {
     return this.dataset.getRowMetadata();
   }
 };
-morpheus.Util.extend(morpheus.TransposedDatasetView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.TransposedDatasetView, phantasus.DatasetAdapter);
 
 /**
  * Provides percentile computation.
@@ -10487,14 +10487,14 @@ morpheus.Util.extend(morpheus.TransposedDatasetView, morpheus.DatasetAdapter);
  *
  * @param p Percentile between 0 and 100
  */
-morpheus.Percentile = function (vector, p, isSorted) {
-  return morpheus.ArrayPercentile(morpheus.RemoveNaN(vector), p, isSorted);
+phantasus.Percentile = function (vector, p, isSorted) {
+  return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), p, isSorted);
 };
 /**
  * @private
  * @ignore
  */
-morpheus.RemoveNaN = function (values) {
+phantasus.RemoveNaN = function (values) {
   var array = [];
   for (var i = 0, size = values.size(); i < size; i++) {
     var value = values.getValue(i);
@@ -10504,16 +10504,16 @@ morpheus.RemoveNaN = function (values) {
   }
   return array;
 };
-morpheus.Median = function (vector) {
-  return morpheus.ArrayPercentile(morpheus.RemoveNaN(vector), 50, false);
+phantasus.Median = function (vector) {
+  return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), 50, false);
 };
-morpheus.Median.toString = function () {
+phantasus.Median.toString = function () {
   return 'Median';
 };
 /**
  * @ignore
  */
-morpheus.ArrayPercentile = function (values, p, isSorted) {
+phantasus.ArrayPercentile = function (values, p, isSorted) {
 
   if (!isSorted) {
     values.sort(function (a, b) {
@@ -10525,7 +10525,7 @@ morpheus.ArrayPercentile = function (values, p, isSorted) {
 /**
  * @ignore
  */
-morpheus.MaxPercentiles = function (percentiles) {
+phantasus.MaxPercentiles = function (percentiles) {
   var f = function (vector) {
     var values = [];
     for (var i = 0, size = vector.size(); i < size; i++) {
@@ -10542,7 +10542,7 @@ morpheus.MaxPercentiles = function (percentiles) {
     });
     var max = 0;
     for (var i = 0; i < percentiles.length; i++) {
-      var p = morpheus.ArrayPercentile(values, percentiles[i], true);
+      var p = phantasus.ArrayPercentile(values, percentiles[i], true);
       if (Math.abs(p) > Math.abs(max)) {
         max = p;
       }
@@ -10565,7 +10565,7 @@ morpheus.MaxPercentiles = function (percentiles) {
   };
   return f;
 };
-morpheus.Mean = function (vector) {
+phantasus.Mean = function (vector) {
   var sum = 0;
   var count = 0;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -10577,10 +10577,10 @@ morpheus.Mean = function (vector) {
   }
   return count === 0 ? NaN : sum / count;
 };
-morpheus.Mean.toString = function () {
+phantasus.Mean.toString = function () {
   return 'Mean';
 };
-morpheus.Sum = function (vector) {
+phantasus.Sum = function (vector) {
   var sum = 0;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -10592,10 +10592,10 @@ morpheus.Sum = function (vector) {
   }
   return !found ? NaN : sum;
 };
-morpheus.Sum.toString = function () {
+phantasus.Sum.toString = function () {
   return 'Sum';
 };
-morpheus.CountNonNaN = function (vector) {
+phantasus.CountNonNaN = function (vector) {
   var count = 0;
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -10605,11 +10605,11 @@ morpheus.CountNonNaN = function (vector) {
   }
   return count;
 };
-morpheus.CountNonNaN.toString = function () {
+phantasus.CountNonNaN.toString = function () {
   return 'Count non-NaN';
 };
 
-morpheus.Max = function (vector) {
+phantasus.Max = function (vector) {
   var max = -Number.MAX_VALUE;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -10621,10 +10621,10 @@ morpheus.Max = function (vector) {
   }
   return !found ? NaN : max;
 };
-morpheus.Max.toString = function () {
+phantasus.Max.toString = function () {
   return 'Max';
 };
-morpheus.Min = function (vector) {
+phantasus.Min = function (vector) {
   var min = Number.MAX_VALUE;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -10636,12 +10636,12 @@ morpheus.Min = function (vector) {
   }
   return !found ? NaN : min;
 };
-morpheus.Min.toString = function () {
+phantasus.Min.toString = function () {
   return 'Min';
 };
-morpheus.Variance = function (list, mean) {
+phantasus.Variance = function (list, mean) {
   if (mean == undefined) {
-    mean = morpheus.Mean(list);
+    mean = phantasus.Mean(list);
   }
   var sum = 0;
   var n = 0;
@@ -10664,23 +10664,23 @@ morpheus.Variance = function (list, mean) {
   var variance = sum / n;
   return variance;
 };
-morpheus.Variance.toString = function () {
+phantasus.Variance.toString = function () {
   return 'Variance';
 };
 
-morpheus.StandardDeviation = function (list, mean) {
-  return Math.sqrt(morpheus.Variance(list, mean));
+phantasus.StandardDeviation = function (list, mean) {
+  return Math.sqrt(phantasus.Variance(list, mean));
 };
-morpheus.StandardDeviation.toString = function () {
+phantasus.StandardDeviation.toString = function () {
   return 'Standard deviation';
 };
 
 var LOG_10 = Math.log(10);
-morpheus.Log10 = function (x) {
+phantasus.Log10 = function (x) {
   return x <= 0 ? 0 : Math.log(x) / LOG_10;
 };
 var LOG_2 = Math.log(2);
-morpheus.Log2 = function (x) {
+phantasus.Log2 = function (x) {
   return x <= 0 ? 0 : Math.log(x) / LOG_2;
 };
 
@@ -10690,11 +10690,11 @@ morpheus.Log2 = function (x) {
  * @param nominalPValues
  *            Array of nominal p-values.
  */
-morpheus.FDR_BH = function (nominalPValues) {
+phantasus.FDR_BH = function (nominalPValues) {
   var size = nominalPValues.length;
   var fdr = [];
-  var pValueIndices = morpheus.Util.indexSort(nominalPValues, true);
-  var ranks = morpheus.Util.rankIndexArray(pValueIndices);
+  var pValueIndices = phantasus.Util.indexSort(nominalPValues, true);
+  var ranks = phantasus.Util.rankIndexArray(pValueIndices);
 
   // check for ties
   for (var i = pValueIndices.length - 1; i > 0; i--) {
@@ -10711,7 +10711,7 @@ morpheus.FDR_BH = function (nominalPValues) {
   }
 
   // ensure fdr is monotonically decreasing
-  var pIndices = morpheus.Util.indexSort(nominalPValues, false);
+  var pIndices = phantasus.Util.indexSort(nominalPValues, false);
   for (var i = 0; i < pIndices.length - 1; i++) {
     var highIndex = pIndices[i];
     var lowIndex = pIndices[i + 1];
@@ -10723,13 +10723,13 @@ morpheus.FDR_BH = function (nominalPValues) {
   return fdr;
 };
 
-morpheus.FDR_BH.tString = function () {
+phantasus.FDR_BH.tString = function () {
   return 'FDR(BH)';
 };
 
-morpheus.MAD = function (list, median) {
+phantasus.MAD = function (list, median) {
   if (median == null) {
-    median = morpheus.Percentile(list, 50);
+    median = phantasus.Percentile(list, 50);
   }
   var temp = [];
   for (var j = 0, size = list.size(); j < size; j++) {
@@ -10738,24 +10738,24 @@ morpheus.MAD = function (list, median) {
       temp.push(Math.abs(value - median));
     }
   }
-  var r = morpheus.Percentile(new morpheus.Vector('', temp.length)
+  var r = phantasus.Percentile(new phantasus.Vector('', temp.length)
     .setArray(temp), 50);
   return 1.4826 * r;
 };
-morpheus.MAD.toString = function () {
+phantasus.MAD.toString = function () {
   return 'Median absolute deviation';
 };
-morpheus.CV = function (list) {
-  var mean = morpheus.Mean(list);
-  var stdev = Math.sqrt(morpheus.Variance(list, mean));
+phantasus.CV = function (list) {
+  var mean = phantasus.Mean(list);
+  var stdev = Math.sqrt(phantasus.Variance(list, mean));
   return stdev / mean;
 };
-morpheus.CV.toString = function () {
+phantasus.CV.toString = function () {
   return 'Coefficient of variation';
 };
 
-morpheus.BoxPlotItem = function (list) {
-  var values = morpheus.RemoveNaN(list);
+phantasus.BoxPlotItem = function (list) {
+  var values = phantasus.RemoveNaN(list);
   values.sort(function (a, b) {
     return (a === b ? 0 : (a < b ? -1 : 1));
   });
@@ -10768,9 +10768,9 @@ morpheus.BoxPlotItem = function (list) {
       upperAdjacentValue: NaN
     };
   }
-  var median = morpheus.ArrayPercentile(values, 50, true);
-  var q1 = morpheus.ArrayPercentile(values, 25, true);
-  var q3 = morpheus.ArrayPercentile(values, 75, true);
+  var median = phantasus.ArrayPercentile(values, 50, true);
+  var q1 = phantasus.ArrayPercentile(values, 25, true);
+  var q3 = phantasus.ArrayPercentile(values, 75, true);
   var w = 1.5;
   var upperAdjacentValue = -Number.MAX_VALUE;
   var lowerAdjacentValue = Number.MAX_VALUE;
@@ -10822,52 +10822,52 @@ morpheus.BoxPlotItem = function (list) {
 
 };
 
-morpheus.VectorColorModel = function () {
-  this.vectorNameToColorMap = new morpheus.Map();
-  this.vectorNameToColorScheme = new morpheus.Map();
-  this.colors = morpheus.VectorColorModel.TWENTY_COLORS;
+phantasus.VectorColorModel = function () {
+  this.vectorNameToColorMap = new phantasus.Map();
+  this.vectorNameToColorScheme = new phantasus.Map();
+  this.colors = phantasus.VectorColorModel.TWENTY_COLORS;
 };
 
-morpheus.VectorColorModel.YES_COLOR = '#d8b365';
-morpheus.VectorColorModel.FEMALE = '#ff99ff';
-morpheus.VectorColorModel.MALE = '#66ccff';
+phantasus.VectorColorModel.YES_COLOR = '#d8b365';
+phantasus.VectorColorModel.FEMALE = '#ff99ff';
+phantasus.VectorColorModel.MALE = '#66ccff';
 
 // tableau 20-same as d3 category20
-morpheus.VectorColorModel.TWENTY_COLORS = ['#1f77b4', '#aec7e8', '#ff7f0e',
+phantasus.VectorColorModel.TWENTY_COLORS = ['#1f77b4', '#aec7e8', '#ff7f0e',
   '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd',
   '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f',
   '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'];
-morpheus.VectorColorModel.CATEGORY_20A = morpheus.VectorColorModel.TWENTY_COLORS;
-morpheus.VectorColorModel.CATEGORY_20B = ['#393b79', '#5254a3', '#6b6ecf',
+phantasus.VectorColorModel.CATEGORY_20A = phantasus.VectorColorModel.TWENTY_COLORS;
+phantasus.VectorColorModel.CATEGORY_20B = ['#393b79', '#5254a3', '#6b6ecf',
   '#9c9ede', '#637939', '#8ca252', '#b5cf6b', '#cedb9c', '#8c6d31',
   '#bd9e39', '#e7ba52', '#e7cb94', '#843c39', '#ad494a', '#d6616b',
   '#e7969c', '#7b4173', '#a55194', '#ce6dbd', '#de9ed6'];
-morpheus.VectorColorModel.CATEGORY_20C = ['#3182bd', '#6baed6', '#9ecae1',
+phantasus.VectorColorModel.CATEGORY_20C = ['#3182bd', '#6baed6', '#9ecae1',
   '#c6dbef', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354',
   '#74c476', '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
   '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
 
-morpheus.VectorColorModel.CATEGORY_ALL = [].concat(
-  morpheus.VectorColorModel.CATEGORY_20A,
-  morpheus.VectorColorModel.CATEGORY_20B,
-  morpheus.VectorColorModel.CATEGORY_20C);
+phantasus.VectorColorModel.CATEGORY_ALL = [].concat(
+  phantasus.VectorColorModel.CATEGORY_20A,
+  phantasus.VectorColorModel.CATEGORY_20B,
+  phantasus.VectorColorModel.CATEGORY_20C);
 
-morpheus.VectorColorModel.TABLEAU10 = ['#1f77b4', '#ff7f0e', '#2ca02c',
+phantasus.VectorColorModel.TABLEAU10 = ['#1f77b4', '#ff7f0e', '#2ca02c',
   '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22',
   '#17becf'];
-morpheus.VectorColorModel.STANDARD_COLORS = {
+phantasus.VectorColorModel.STANDARD_COLORS = {
   'na': '#c0c0c0',
   'nan': '#c0c0c0',
   '': '#ffffff',
   'wt': '#ffffff',
   'n': '#ffffff',
   '0': '#ffffff',
-  'y': morpheus.VectorColorModel.YES_COLOR,
-  '1': morpheus.VectorColorModel.YES_COLOR,
-  'male': morpheus.VectorColorModel.MALE,
-  'm': morpheus.VectorColorModel.MALE,
-  'female': morpheus.VectorColorModel.FEMALE,
-  'f': morpheus.VectorColorModel.FEMALE,
+  'y': phantasus.VectorColorModel.YES_COLOR,
+  '1': phantasus.VectorColorModel.YES_COLOR,
+  'male': phantasus.VectorColorModel.MALE,
+  'm': phantasus.VectorColorModel.MALE,
+  'female': phantasus.VectorColorModel.FEMALE,
+  'f': phantasus.VectorColorModel.FEMALE,
   'kd': '#C675A8',
   'oe': '#56b4e9',
   'cp': '#FF9933',
@@ -10889,28 +10889,28 @@ morpheus.VectorColorModel.STANDARD_COLORS = {
   'cancer': '#1490C1',
   'immortalized normal': '#FF8000'
 };
-morpheus.VectorColorModel.getStandardColor = function (value) {
+phantasus.VectorColorModel.getStandardColor = function (value) {
   if (value == null) {
     return '#ffffff';
   }
   var stringValue = value.toString().toLowerCase();
-  return morpheus.VectorColorModel.STANDARD_COLORS[stringValue];
+  return phantasus.VectorColorModel.STANDARD_COLORS[stringValue];
 
 };
-morpheus.VectorColorModel.getColorMapForNumber = function (length) {
+phantasus.VectorColorModel.getColorMapForNumber = function (length) {
   var colors;
   if (length < 3) {
     colors = colorbrewer.Set1[3];
   } else {
     colors = colorbrewer.Paired[length];
   }
-  return colors ? colors : morpheus.VectorColorModel.TWENTY_COLORS;
+  return colors ? colors : phantasus.VectorColorModel.TWENTY_COLORS;
 };
-morpheus.VectorColorModel.prototype = {
+phantasus.VectorColorModel.prototype = {
   toJSON: function () {
     var json = {};
     this.vectorNameToColorScheme.forEach(function (colorScheme, name) {
-      var colorSchemeJSON = morpheus.AbstractColorSupplier.toJSON(colorScheme);
+      var colorSchemeJSON = phantasus.AbstractColorSupplier.toJSON(colorScheme);
       colorSchemeJSON.continuous = true;
       json[name] = colorSchemeJSON;
     });
@@ -10922,9 +10922,9 @@ morpheus.VectorColorModel.prototype = {
   fromJSON: function (json) {
     for (var name in json) {
       if (json.continuous) {
-        this.vectorNameToColorScheme.set(name, morpheus.AbstractColorSupplier.fromJSON());
+        this.vectorNameToColorScheme.set(name, phantasus.AbstractColorSupplier.fromJSON());
       } else {
-        this.vectorNameToColorMap.set(name, morpheus.Map.fromJSON(json[name]));
+        this.vectorNameToColorMap.set(name, phantasus.Map.fromJSON(json[name]));
       }
     }
   },
@@ -10933,16 +10933,16 @@ morpheus.VectorColorModel.prototype = {
     this.vectorNameToColorScheme.remove(vector.getName());
   },
   copy: function () {
-    var c = new morpheus.VectorColorModel();
+    var c = new phantasus.VectorColorModel();
     c.colors = this.colors.slice(0);
     this.vectorNameToColorMap.forEach(function (colorMap, name) {
-      var newColorMap = new morpheus.Map();
+      var newColorMap = new phantasus.Map();
       newColorMap.setAll(colorMap); // copy existing values
       c.vectorNameToColorMap.set(name, newColorMap);
     });
     this.vectorNameToColorScheme.forEach(function (colorScheme, name) {
       c.vectorNameToColorScheme.set(name, colorScheme
-        .copy(new morpheus.Project(new morpheus.Dataset({
+        .copy(new phantasus.Project(new phantasus.Dataset({
           name: '',
           rows: 1,
           columns: 1
@@ -10951,8 +10951,8 @@ morpheus.VectorColorModel.prototype = {
     return c;
   },
   clearAll: function () {
-    this.vectorNameToColorMap = new morpheus.Map();
-    this.vectorNameToColorScheme = new morpheus.Map();
+    this.vectorNameToColorMap = new phantasus.Map();
+    this.vectorNameToColorScheme = new phantasus.Map();
   },
   containsDiscreteColor: function (vector, value) {
     var metadataValueToColorMap = this.vectorNameToColorMap.get(vector
@@ -10973,11 +10973,11 @@ morpheus.VectorColorModel.prototype = {
     return this.vectorNameToColorMap.get(vector.getName());
   },
   createContinuousColorMap: function (vector) {
-    var minMax = morpheus.VectorUtil.getMinMax(vector);
+    var minMax = phantasus.VectorUtil.getMinMax(vector);
     var min = minMax.min;
     var max = minMax.max;
-    var cs = new morpheus.HeatMapColorScheme(new morpheus.Project(
-      new morpheus.Dataset({
+    var cs = new phantasus.HeatMapColorScheme(new phantasus.Project(
+      new phantasus.Dataset({
         name: '',
         rows: 1,
         columns: 1
@@ -10996,7 +10996,7 @@ morpheus.VectorColorModel.prototype = {
 
   },
   _getColorForValue: function (value) {
-    var color = morpheus.VectorColorModel.getStandardColor(value);
+    var color = phantasus.VectorColorModel.getStandardColor(value);
     if (color == null) { // try to reuse existing color map
       var existingMetadataValueToColorMap = this.vectorNameToColorMap
         .values();
@@ -11021,11 +11021,11 @@ morpheus.VectorColorModel.prototype = {
     var metadataValueToColorMap = this.vectorNameToColorMap.get(vector
       .getName());
     if (metadataValueToColorMap === undefined) {
-      metadataValueToColorMap = new morpheus.Map();
+      metadataValueToColorMap = new phantasus.Map();
       this.vectorNameToColorMap.set(vector.getName(),
         metadataValueToColorMap);
       // set all possible colors
-      var values = morpheus.VectorUtil.getValues(vector);
+      var values = phantasus.VectorUtil.getValues(vector);
       var ncolors = 0;
       var colors = null;
       if (values.length < 3) {
@@ -11039,7 +11039,7 @@ morpheus.VectorColorModel.prototype = {
         if (values.length <= 20) {
           colors = d3.scale.category20().range();
         } else {
-          colors = morpheus.VectorColorModel.CATEGORY_ALL;
+          colors = phantasus.VectorColorModel.CATEGORY_ALL;
         }
       }
       console.log("getMappedValue", colors);
@@ -11077,7 +11077,7 @@ morpheus.VectorColorModel.prototype = {
     var metadataValueToColorMap = this.vectorNameToColorMap.get(vector
       .getName());
     if (metadataValueToColorMap === undefined) {
-      metadataValueToColorMap = new morpheus.Map();
+      metadataValueToColorMap = new phantasus.Map();
       this.vectorNameToColorMap.set(vector.getName(),
         metadataValueToColorMap);
     }
@@ -11088,14 +11088,14 @@ morpheus.VectorColorModel.prototype = {
 /**
  * An interface for an ordered collection of values.
  *
- * @interface morpheus.VectorInterface
+ * @interface phantasus.VectorInterface
  */
 
 /**
  * Returns the value at the specified index.
  *
  * @function
- * @name morpheus.VectorInterface#getValue
+ * @name phantasus.VectorInterface#getValue
  * @param index the index
  * @return the value
  */
@@ -11104,15 +11104,15 @@ morpheus.VectorColorModel.prototype = {
  * Gets the key-value pairs associated with this vector.
  *
  * @function
- * @name morpheus.VectorInterface#getProperties
- * @return {morpheus.Map}
+ * @name phantasus.VectorInterface#getProperties
+ * @return {phantasus.Map}
  */
 
 /**
  * Returns the number of elements in this vector.
  *
  * @function
- * @name morpheus.VectorInterface#size
+ * @name phantasus.VectorInterface#size
  * @return {number} the size.
  */
 
@@ -11120,59 +11120,59 @@ morpheus.VectorColorModel.prototype = {
  * Returns the name of this vector.
  *
  * @function
- * @name morpheus.VectorInterface#getName
+ * @name phantasus.VectorInterface#getName
  * @return {string} the name
  */
 
 
 
 
-morpheus.VectorKeys = {};
+phantasus.VectorKeys = {};
 /** [string] of field names in array */
-morpheus.VectorKeys.FIELDS = 'morpheus.fields';
-morpheus.VectorKeys.VALUE_TO_INDICES = 'morpheus.valueToIndices';
-/** [int] of visible field indices in morpheus.VectorKeys.FIELDS */
-morpheus.VectorKeys.VISIBLE_FIELDS = 'morpheus.visibleFields';
-morpheus.VectorKeys.DATA_TYPE = 'morpheus.dataType';
+phantasus.VectorKeys.FIELDS = 'phantasus.fields';
+phantasus.VectorKeys.VALUE_TO_INDICES = 'phantasus.valueToIndices';
+/** [int] of visible field indices in phantasus.VectorKeys.FIELDS */
+phantasus.VectorKeys.VISIBLE_FIELDS = 'phantasus.visibleFields';
+phantasus.VectorKeys.DATA_TYPE = 'phantasus.dataType';
 /** Function to map an array to a single value for sorting */
-morpheus.VectorKeys.ARRAY_SUMMARY_FUNCTION = 'morpheus.arraySummaryFunct';
+phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION = 'phantasus.arraySummaryFunct';
 /** Key for object (e.g. box plot) that summarizes data values */
-morpheus.VectorKeys.HEADER_SUMMARY = 'morpheus.headerSummary';
+phantasus.VectorKeys.HEADER_SUMMARY = 'phantasus.headerSummary';
 /** Key indicating to show header summary */
-morpheus.VectorKeys.SHOW_HEADER_SUMMARY = 'morpheus.showHeaderSummary';
+phantasus.VectorKeys.SHOW_HEADER_SUMMARY = 'phantasus.showHeaderSummary';
 
-morpheus.VectorKeys.TITLE = 'morpheus.title';
+phantasus.VectorKeys.TITLE = 'phantasus.title';
 /** Function to compute vector value */
-morpheus.VectorKeys.FUNCTION = 'morpheus.funct';
+phantasus.VectorKeys.FUNCTION = 'phantasus.funct';
 
 /** Indicates that vector values are dynamically computed based on selection */
-morpheus.VectorKeys.SELECTION = 'morpheus.selection';
+phantasus.VectorKeys.SELECTION = 'phantasus.selection';
 
 /** Whether to recompute a function when creating a new heat map */
-morpheus.VectorKeys.RECOMPUTE_FUNCTION = 'morpheus.recompute.funct';
+phantasus.VectorKeys.RECOMPUTE_FUNCTION = 'phantasus.recompute.funct';
 
 /** Boolean, whether to recompute a function when heat map selection changes */
-morpheus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'morpheus.recompute.funct.selection';
+phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'phantasus.recompute.funct.selection';
 
-morpheus.VectorKeys.COPY_IGNORE = new morpheus.Set();
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.HEADER_SUMMARY);
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.DATA_TYPE);
-morpheus.VectorKeys.COPY_IGNORE.add(morpheus.VectorKeys.VALUE_TO_INDICES);
+phantasus.VectorKeys.COPY_IGNORE = new phantasus.Set();
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.HEADER_SUMMARY);
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.DATA_TYPE);
+phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.VALUE_TO_INDICES);
 
-morpheus.VectorKeys.JSON_WHITELIST = new morpheus.Set();
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.FIELDS);
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.DATA_TYPE);
-morpheus.VectorKeys.JSON_WHITELIST.add(morpheus.VectorKeys.TITLE);
+phantasus.VectorKeys.JSON_WHITELIST = new phantasus.Set();
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.FIELDS);
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.DATA_TYPE);
+phantasus.VectorKeys.JSON_WHITELIST.add(phantasus.VectorKeys.TITLE);
 
-morpheus.VectorShapeModel = function () {
-  this.shapes = morpheus.VectorShapeModel.SHAPES;
-  this.vectorNameToShapeMap = new morpheus.Map();
+phantasus.VectorShapeModel = function () {
+  this.shapes = phantasus.VectorShapeModel.SHAPES;
+  this.vectorNameToShapeMap = new phantasus.Map();
 };
 
-morpheus.VectorShapeModel.SHAPES = ['circle', 'square', 'plus', 'x',
+phantasus.VectorShapeModel.SHAPES = ['circle', 'square', 'plus', 'x',
   'asterisk', 'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
   'triangle-right', 'minus'];
-morpheus.VectorShapeModel.STANDARD_SHAPES = {
+phantasus.VectorShapeModel.STANDARD_SHAPES = {
   cp: 'diamond',
   oe: 'plus',
   pcl: 'asterisk',
@@ -11180,15 +11180,15 @@ morpheus.VectorShapeModel.STANDARD_SHAPES = {
   ctrl: 'circle'
 };
 
-morpheus.VectorShapeModel.prototype = {
+phantasus.VectorShapeModel.prototype = {
   clear: function (vector) {
     this.vectorNameToShapeMap.remove(vector.getName());
   },
   copy: function () {
-    var c = new morpheus.VectorShapeModel();
+    var c = new phantasus.VectorShapeModel();
     c.shapes = this.shapes.slice(0);
     this.vectorNameToShapeMap.forEach(function (shapeMap, name) {
-      var newShapeMap = new morpheus.Map();
+      var newShapeMap = new phantasus.Map();
       newShapeMap.setAll(shapeMap); // copy existing values
       c.vectorNameToShapeMap.set(name, newShapeMap);
     });
@@ -11196,14 +11196,14 @@ morpheus.VectorShapeModel.prototype = {
     return c;
   },
   clearAll: function () {
-    this.vectorNameToShapeMap = new morpheus.Map();
+    this.vectorNameToShapeMap = new phantasus.Map();
   },
   _getShapeForValue: function (value) {
     if (value == null) {
       return 'none';
     }
     var str = value.toString().toLowerCase();
-    var mapped = morpheus.VectorShapeModel.STANDARD_SHAPES[str];
+    var mapped = phantasus.VectorShapeModel.STANDARD_SHAPES[str];
     if (mapped !== undefined) {
       return mapped;
     }
@@ -11226,11 +11226,11 @@ morpheus.VectorShapeModel.prototype = {
     var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
-      metadataValueToShapeMap = new morpheus.Map();
+      metadataValueToShapeMap = new phantasus.Map();
       this.vectorNameToShapeMap.set(vector.getName(),
         metadataValueToShapeMap);
       // set all possible shapes
-      var values = morpheus.VectorUtil.getValues(vector);
+      var values = phantasus.VectorUtil.getValues(vector);
       for (var i = 0, nvalues = values.length; i < nvalues; i++) {
         var shape = this._getShapeForValue(values[i]);
         if (shape == null) {
@@ -11254,7 +11254,7 @@ morpheus.VectorShapeModel.prototype = {
     var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
-      metadataValueToShapeMap = new morpheus.Map();
+      metadataValueToShapeMap = new phantasus.Map();
       this.vectorNameToShapeMap.set(vector.getName(),
         metadataValueToShapeMap);
     }
@@ -11262,10 +11262,10 @@ morpheus.VectorShapeModel.prototype = {
   }
 };
 
-morpheus.VectorUtil = function () {
+phantasus.VectorUtil = function () {
 };
 
-morpheus.VectorUtil.jsonToFunction = function (vector, key) {
+phantasus.VectorUtil.jsonToFunction = function (vector, key) {
   var f = vector.getProperties().get(key);
   if (typeof f === 'object') {
     var binSize = f.binSize;
@@ -11315,9 +11315,9 @@ morpheus.VectorUtil.jsonToFunction = function (vector, key) {
   }
   return f;
 };
-morpheus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) {
-  var map = new morpheus.Map();
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
+phantasus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) {
+  var map = new phantasus.Map();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (isArray) {
@@ -11333,12 +11333,12 @@ morpheus.VectorUtil.createValueToIndexMap = function (vector, splitArrayValues) 
   return map;
 };
 
-morpheus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues) {
+phantasus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues) {
   if (!vector) {
     throw 'vector is null';
   }
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
-  var map = new morpheus.Map();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
+  var map = new phantasus.Map();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (isArray) {
@@ -11364,12 +11364,12 @@ morpheus.VectorUtil.createValueToIndicesMap = function (vector, splitArrayValues
   return map;
 };
 
-morpheus.VectorUtil.createValueToCountMap = function (vector) {
+phantasus.VectorUtil.createValueToCountMap = function (vector) {
   if (!vector) {
     throw 'vector is null';
   }
-  var map = new morpheus.Map();
-  var dataType = morpheus.VectorUtil.getDataType(vector);
+  var map = new phantasus.Map();
+  var dataType = phantasus.VectorUtil.getDataType(vector);
   var isArray = dataType[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
@@ -11388,8 +11388,8 @@ morpheus.VectorUtil.createValueToCountMap = function (vector) {
   return map;
 };
 
-morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToIndicesMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -11401,7 +11401,7 @@ morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     var list = map.get(key);
     if (list === undefined) {
       list = [];
@@ -11411,8 +11411,8 @@ morpheus.VectorUtil.createValuesToIndicesMap = function (vectors) {
   }
   return map;
 };
-morpheus.VectorUtil.createValuesToIndexMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToIndexMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -11424,14 +11424,14 @@ morpheus.VectorUtil.createValuesToIndexMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     map.set(key, i);
   }
   return map;
 };
 
-morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
-  var map = new morpheus.Map();
+phantasus.VectorUtil.createValuesToCountMap = function (vectors) {
+  var map = new phantasus.Map();
   var nvectors = vectors.length;
   if (vectors[0] == null) {
     throw 'no vectors found';
@@ -11443,7 +11443,7 @@ morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
       var val = vector.getValue(i);
       array.push(val);
     }
-    var key = new morpheus.Identifier(array);
+    var key = new phantasus.Identifier(array);
     var count = map.get(key) || 0;
     map.set(key, count + 1);
   }
@@ -11457,8 +11457,8 @@ morpheus.VectorUtil.createValuesToCountMap = function (vectors) {
  * @returns A sorted array of unique values contained in the vector. Note that array values are
  * not split.
  */
-morpheus.VectorUtil.getValues = function (vector, excludeNull) {
-  var set = new morpheus.Set();
+phantasus.VectorUtil.getValues = function (vector, excludeNull) {
+  var set = new phantasus.Set();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     if (excludeNull && val == null) {
@@ -11467,13 +11467,13 @@ morpheus.VectorUtil.getValues = function (vector, excludeNull) {
     set.add(val);
   }
   var array = set.values();
-  array.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+  array.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
   return array;
 };
 
-morpheus.VectorUtil.getSet = function (vector, splitArrayValues) {
-  var set = new morpheus.Set();
-  var isArray = splitArrayValues && morpheus.VectorUtil.getDataType(vector)[0] === '[';
+phantasus.VectorUtil.getSet = function (vector, splitArrayValues) {
+  var set = new phantasus.Set();
+  var isArray = splitArrayValues && phantasus.VectorUtil.getDataType(vector)[0] === '[';
   for (var j = 0, size = vector.size(); j < size; j++) {
     var value = vector.getValue(j);
     if (isArray) {
@@ -11489,7 +11489,7 @@ morpheus.VectorUtil.getSet = function (vector, splitArrayValues) {
   }
   return set;
 };
-morpheus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
+phantasus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
   var newValues = [];
   var regex = new RegExp(delim);
   var found = false;
@@ -11512,13 +11512,13 @@ morpheus.VectorUtil.maybeConvertToStringArray = function (vector, delim) {
     for (var i = 0, nrows = newValues.length; i < nrows; i++) {
       vector.setValue(i, newValues[i]);
     }
-    vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, '[string]');
+    vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, '[string]');
   }
 
   return found;
 };
 
-morpheus.VectorUtil.maybeConvertStringToNumber = function (vector) {
+phantasus.VectorUtil.maybeConvertStringToNumber = function (vector) {
   var newValues = [];
   var found = false;
   for (var i = 0, nrows = vector.size(); i < nrows; i++) {
@@ -11538,14 +11538,14 @@ morpheus.VectorUtil.maybeConvertStringToNumber = function (vector) {
   for (var i = 0, nrows = newValues.length; i < nrows; i++) {
     vector.setValue(i, newValues[i]);
   }
-  vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, 'number');
+  vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, 'number');
   return true;
 };
-morpheus.VectorUtil.containsMoreThanOneValue = function (vector) {
-  return morpheus.VectorUtil.containsMoreThanNValues(vector, 1);
+phantasus.VectorUtil.containsMoreThanOneValue = function (vector) {
+  return phantasus.VectorUtil.containsMoreThanNValues(vector, 1);
 };
-morpheus.VectorUtil.containsMoreThanNValues = function (vector, n) {
-  var s = new morpheus.Set();
+phantasus.VectorUtil.containsMoreThanNValues = function (vector, n) {
+  var s = new phantasus.Set();
   for (var j = 0, size = vector.size(); j < size; j++) {
     var val = vector.getValue(j);
     s.add(val);
@@ -11556,10 +11556,10 @@ morpheus.VectorUtil.containsMoreThanNValues = function (vector, n) {
   return false;
 };
 
-morpheus.VectorUtil.createSpanMap = function (vector) {
+phantasus.VectorUtil.createSpanMap = function (vector) {
   var previous = vector.getValue(0);
   // find 1st row with different value
-  var startIndexToEndIndex = new morpheus.Map();
+  var startIndexToEndIndex = new phantasus.Map();
   var start = 0;
   for (var i = 1, nrows = vector.size(); i < nrows; i++) {
     var val = vector.getValue(i);
@@ -11573,7 +11573,7 @@ morpheus.VectorUtil.createSpanMap = function (vector) {
   startIndexToEndIndex.set(start, vector.size());
   return startIndexToEndIndex;
 };
-morpheus.VectorUtil.toArray = function (vector) {
+phantasus.VectorUtil.toArray = function (vector) {
   var array = [];
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -11582,12 +11582,12 @@ morpheus.VectorUtil.toArray = function (vector) {
   return array;
 };
 
-morpheus.VectorUtil.arrayAsVector = function (array, name) {
-  var v = new morpheus.Vector(name, array.length);
+phantasus.VectorUtil.arrayAsVector = function (array, name) {
+  var v = new phantasus.Vector(name, array.length);
   v.array = array;
   return v;
 };
-morpheus.VectorUtil.toString = function (vector) {
+phantasus.VectorUtil.toString = function (vector) {
   var array = [];
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -11596,22 +11596,22 @@ morpheus.VectorUtil.toString = function (vector) {
   return array.join(', ');
 };
 
-morpheus.VectorUtil.getDataType = function (vector) {
-  var dataType = vector.getProperties().get(morpheus.VectorKeys.DATA_TYPE);
+phantasus.VectorUtil.getDataType = function (vector) {
+  var dataType = vector.getProperties().get(phantasus.VectorKeys.DATA_TYPE);
   if (dataType === undefined) {
-    var firstNonNull = morpheus.VectorUtil.getFirstNonNull(vector);
-    dataType = morpheus.Util.getDataType(firstNonNull);
-    vector.getProperties().set(morpheus.VectorKeys.DATA_TYPE, dataType);
+    var firstNonNull = phantasus.VectorUtil.getFirstNonNull(vector);
+    dataType = phantasus.Util.getDataType(firstNonNull);
+    vector.getProperties().set(phantasus.VectorKeys.DATA_TYPE, dataType);
   }
   return dataType;
 
 };
 
-morpheus.VectorUtil.getMinMax = function (vector) {
+phantasus.VectorUtil.getMinMax = function (vector) {
   var min = Number.MAX_VALUE;
   var max = -Number.MAX_VALUE;
-  var fields = vector.getProperties().get(morpheus.VectorKeys.FIELDS);
-  var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
+  var fields = vector.getProperties().get(phantasus.VectorKeys.FIELDS);
+  var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
   if (fields != null) {
     var nvalues = fields.length;
     for (var i = 0, size = vector.size(); i < size; i++) {
@@ -11654,7 +11654,7 @@ morpheus.VectorUtil.getMinMax = function (vector) {
   };
 }
 ;
-morpheus.VectorUtil.getFirstNonNull = function (vector) {
+phantasus.VectorUtil.getFirstNonNull = function (vector) {
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
     if (val != null) {
@@ -11663,8 +11663,8 @@ morpheus.VectorUtil.getFirstNonNull = function (vector) {
   }
   return null;
 };
-morpheus.VectorUtil.isNumber = function (vector) {
-  return morpheus.VectorUtil.getDataType(vector) === 'number';
+phantasus.VectorUtil.isNumber = function (vector) {
+  return phantasus.VectorUtil.getDataType(vector) === 'number';
 };
 
 /**
@@ -11678,19 +11678,19 @@ morpheus.VectorUtil.isNumber = function (vector) {
  *            the number of elements in this vector
  * @constructor
  */
-morpheus.Vector = function (name, size) {
+phantasus.Vector = function (name, size) {
   this.array = [];
-  morpheus.AbstractVector.call(this, name, size);
+  phantasus.AbstractVector.call(this, name, size);
 };
 /**
  * @static
  */
-morpheus.Vector.fromArray = function (name, array) {
-  var v = new morpheus.Vector(name, array.length);
+phantasus.Vector.fromArray = function (name, array) {
+  var v = new phantasus.Vector(name, array.length);
   v.array = array;
   return v;
 };
-morpheus.Vector.prototype = {
+phantasus.Vector.prototype = {
   /**
    * @ignore
    * @param value
@@ -11722,16 +11722,16 @@ morpheus.Vector.prototype = {
   /**
    * @ignore
    * @param array
-   * @returns {morpheus.Vector}
+   * @returns {phantasus.Vector}
    */
   setArray: function (array) {
     this.array = array;
     return this;
   }
 };
-morpheus.Util.extend(morpheus.Vector, morpheus.AbstractVector);
+phantasus.Util.extend(phantasus.Vector, phantasus.AbstractVector);
 
-morpheus.LandingPage = function (pageOptions) {
+phantasus.LandingPage = function (pageOptions) {
   pageOptions = $.extend({}, {
     el: $('#vis')
   }, pageOptions);
@@ -11745,12 +11745,13 @@ morpheus.LandingPage = function (pageOptions) {
 
   html
     .push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
-  html.push('<span>M</span>');
-  html.push('<span>o</span>');
-  html.push('<span>r</span>');
-  html.push('<span>p</span>');
+  html.push('<span>P</span>');
   html.push('<span>h</span>');
-  html.push('<span>e</span>');
+  html.push('<span>a</span>');
+  html.push('<span>n</span>');
+  html.push('<span>t</span>');
+  html.push('<span>a</span>');
+  html.push('<span>s</span>');
   html.push('<span>u</span>');
   html.push('<span>s</span>');
   html.push('</span>');
@@ -11765,15 +11766,15 @@ morpheus.LandingPage = function (pageOptions) {
   var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
   var brands = $html.find('[data-name="brand"] > span');
   $html.appendTo($el);
-  new morpheus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
-  var formBuilder = new morpheus.FormBuilder();
+  new phantasus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
+  var formBuilder = new phantasus.FormBuilder();
   formBuilder.append({
     name: 'file',
     showLabel: false,
     value: '',
     type: 'file',
     required: true,
-    help: morpheus.DatasetUtil.DATASET_FILE_FORMATS
+    help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
   });
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
@@ -11787,11 +11788,11 @@ morpheus.LandingPage = function (pageOptions) {
     }
   };
   setTimeout(step, 300);
-  this.tabManager = new morpheus.TabManager({landingPage: this});
+  this.tabManager = new phantasus.TabManager({landingPage: this});
   this.tabManager.on('change rename add remove', function (e) {
     var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
     if (title == null || title === '') {
-      title = 'Morpheus';
+      title = 'phantasus';
     }
     document.title = title;
   });
@@ -11803,7 +11804,7 @@ morpheus.LandingPage = function (pageOptions) {
   // }
 };
 
-morpheus.LandingPage.prototype = {
+phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
@@ -11813,7 +11814,7 @@ morpheus.LandingPage.prototype = {
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
       options.landingPage = _this;
-      new morpheus.HeatMap(options);
+      new phantasus.HeatMap(options);
     }
 
   },
@@ -11822,13 +11823,13 @@ morpheus.LandingPage.prototype = {
     this.$el.hide();
     $(window)
       .off(
-        'paste.morpheus drop.morpheus dragover.morpheus dragenter.morpheus');
+        'paste.phantasus drop.phantasus dragover.phantasus dragenter.phantasus');
     this.formBuilder.off('change');
   },
   show: function () {
     var _this = this;
     if (navigator.onLine && !this.sampleDatasets) {
-      this.sampleDatasets = new morpheus.SampleDatasets({
+      this.sampleDatasets = new phantasus.SampleDatasets({
         $el: this.$sampleDatasetsEl,
         show: true,
         callback: function (heatMapOptions) {
@@ -11846,12 +11847,12 @@ morpheus.LandingPage.prototype = {
       }
     });
 
-    $(window).on('beforeunload.morpheus', function () {
+    $(window).on('beforeunload.phantasus', function () {
       if (_this.tabManager.getTabCount() > 0) {
-        return 'Are you sure you want to close Morpheus?';
+        return 'Are you sure you want to close phantasus?';
       }
     });
-    $(window).on('paste.morpheus', function (e) {
+    $(window).on('paste.phantasus', function (e) {
       var tagName = e.target.tagName;
       if (tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA') {
         return;
@@ -11872,11 +11873,11 @@ morpheus.LandingPage.prototype = {
         _this.openFile(url);
       }
 
-    }).on('dragover.morpheus dragenter.morpheus', function (e) {
+    }).on('dragover.phantasus dragenter.phantasus', function (e) {
       e.preventDefault();
       e.stopPropagation();
     }).on(
-      'drop.morpheus',
+      'drop.phantasus',
       function (e) {
         if (e.originalEvent.dataTransfer
           && e.originalEvent.dataTransfer.files.length) {
@@ -11894,12 +11895,12 @@ morpheus.LandingPage.prototype = {
   },
   openFile: function (value) {
     var _this = this;
-    var fileName = morpheus.Util.getFileName(value);
+    var fileName = phantasus.Util.getFileName(value);
     if (fileName.toLowerCase().indexOf('.json') === fileName.length - 5) {
-      morpheus.Util.getText(value).done(function (text) {
+      phantasus.Util.getText(value).done(function (text) {
         _this.open(JSON.parse(text));
       }).fail(function (err) {
-        morpheus.FormBuilder.showMessageModal({
+        phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session'
         });
@@ -11912,7 +11913,7 @@ morpheus.LandingPage.prototype = {
         }
       };
 
-      morpheus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
+      phantasus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
         if (readOptions) {
           for (var key in readOptions) {
             options.dataset.options[key] = readOptions[key];
@@ -11924,7 +11925,7 @@ morpheus.LandingPage.prototype = {
   }
 };
 
-morpheus.SampleDatasets = function (options) {
+phantasus.SampleDatasets = function (options) {
   if (!options.openText) {
     options.openText = 'Open';
   }
@@ -12032,7 +12033,7 @@ morpheus.SampleDatasets = function (options) {
           var tokens = line.split('\t');
           var type = tokens[0];
           var dataTypes = tokens[1].split(',');
-          var name = morpheus.TcgaUtil.DISEASE_STUDIES[type];
+          var name = phantasus.TcgaUtil.DISEASE_STUDIES[type];
           var disease = {
             mrna: dataTypes
               .indexOf('mRNAseq_RSEM_normalized_log2.txt') !== -1,
@@ -12137,7 +12138,7 @@ morpheus.SampleDatasets = function (options) {
       });
 };
 
-morpheus.SampleDatasets.getTcgaDataset = function (options) {
+phantasus.SampleDatasets.getTcgaDataset = function (options) {
   var baseUrl = 'https://s3.amazonaws.com/data.clue.io/morpheus/tcga/'
     + options.type + '/';
   var datasetOptions = {};
@@ -12170,10 +12171,10 @@ morpheus.SampleDatasets.getTcgaDataset = function (options) {
     datasetField: 'participant_id',
     fileField: 'patient_id'
   }];
-  return morpheus.TcgaUtil.getDataset(datasetOptions);
+  return phantasus.TcgaUtil.getDataset(datasetOptions);
 
 };
-morpheus.SampleDatasets.getCCLEDataset = function (options) {
+phantasus.SampleDatasets.getCCLEDataset = function (options) {
   var datasets = [];
   if (options.sig_genes) {
     datasets
@@ -12181,7 +12182,7 @@ morpheus.SampleDatasets.getCCLEDataset = function (options) {
     // datasets
     // .push({
     // dataset :
-    // '//s3.amazonaws.com/data.clue.io/morpheus/1650_HC_plus_RD_muts.maf.txt'
+    // '//s3.amazonaws.com/data.clue.io/phantasus/1650_HC_plus_RD_muts.maf.txt'
     // });
   }
   if (options.cn) {
@@ -12215,9 +12216,9 @@ morpheus.SampleDatasets.getCCLEDataset = function (options) {
   });
 
   var returnDeferred = $.Deferred();
-  var datasetDef = morpheus.DatasetUtil.readDatasetArray(datasets);
+  var datasetDef = phantasus.DatasetUtil.readDatasetArray(datasets);
 
-  var annotationDef = morpheus.DatasetUtil.annotate({
+  var annotationDef = phantasus.DatasetUtil.annotate({
     annotations: columnAnnotations,
     isColumns: true
   });
@@ -12241,13 +12242,13 @@ morpheus.SampleDatasets.getCCLEDataset = function (options) {
     annotationCallbacks.forEach(function (f) {
       f(datasetToReturn);
     });
-    morpheus.DatasetUtil.toESSessionPromise(datasetToReturn);
+    phantasus.DatasetUtil.toESSessionPromise(datasetToReturn);
     returnDeferred.resolve(datasetToReturn);
   });
 
   return returnDeferred;
 };
-morpheus.SampleDatasets.prototype = {
+phantasus.SampleDatasets.prototype = {
 
   openTcga: function (options) {
     this
@@ -12292,7 +12293,7 @@ morpheus.SampleDatasets.prototype = {
           field: 'mRNAseq_cluster',
           display: 'color, highlight'
         }],
-        dataset: morpheus.SampleDatasets.getTcgaDataset(options)
+        dataset: phantasus.SampleDatasets.getTcgaDataset(options)
       });
   },
   openCCLE: function (options) {
@@ -12327,14 +12328,14 @@ morpheus.SampleDatasets.prototype = {
         field: 'primary_site',
         display: 'color, highlight'
       }],
-      dataset: morpheus.SampleDatasets.getCCLEDataset(options)
+      dataset: phantasus.SampleDatasets.getCCLEDataset(options)
     });
   }
 };
 
-morpheus.AdjustDataTool = function () {
+phantasus.AdjustDataTool = function () {
 };
-morpheus.AdjustDataTool.prototype = {
+phantasus.AdjustDataTool.prototype = {
   toString: function () {
     return 'Adjust';
   },
@@ -12369,7 +12370,7 @@ morpheus.AdjustDataTool.prototype = {
     if (options.input.log_2 || options.input.inverse_log_2
       || options.input['z-score'] || options.input['robust_z-score'] || options.input.quantile_normalize) {
       // clone the values 1st
-      var sortedFilteredDataset = morpheus.DatasetUtil.copy(project
+      var sortedFilteredDataset = phantasus.DatasetUtil.copy(project
         .getSortedFilteredDataset());
       var rowIndices = project.getRowSelectionModel()
         .getViewIndices().values().sort(
@@ -12387,15 +12388,15 @@ morpheus.AdjustDataTool.prototype = {
       if (columnIndices.length === 0) {
         columnIndices = null;
       }
-      var dataset = options.input.use_selected_rows_and_columns_only ? new morpheus.Slice
+      var dataset = options.input.use_selected_rows_and_columns_only ? new phantasus.Slice
         : sortedFilteredDataset;
-      var rowView = new morpheus.DatasetRowView(dataset);
+      var rowView = new phantasus.DatasetRowView(dataset);
       var functions = [];
       var changed = false;
       if (options.input.log_2) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
-            dataset.setValue(i, j, morpheus.Log2(dataset.getValue(
+            dataset.setValue(i, j, phantasus.Log2(dataset.getValue(
               i, j)));
           }
         }
@@ -12413,14 +12414,14 @@ morpheus.AdjustDataTool.prototype = {
         changed = true;
       }
       if (options.input.quantile_normalize) {
-        morpheus.QNorm.execute(dataset);
+        phantasus.QNorm.execute(dataset);
         changed = true;
       }
       if (options.input['z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           rowView.setIndex(i);
-          var mean = morpheus.Mean(rowView);
-          var stdev = Math.sqrt(morpheus.Variance(rowView));
+          var mean = phantasus.Mean(rowView);
+          var stdev = Math.sqrt(phantasus.Variance(rowView));
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
             dataset.setValue(i, j, (dataset.getValue(i, j) - mean)
               / stdev);
@@ -12430,8 +12431,8 @@ morpheus.AdjustDataTool.prototype = {
       if (options.input['robust_z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
           rowView.setIndex(i);
-          var median = morpheus.Median(rowView);
-          var mad = morpheus.MAD(rowView, median);
+          var median = phantasus.Median(rowView);
+          var mad = phantasus.MAD(rowView, median);
           for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
             dataset.setValue(i, j,
               (dataset.getValue(i, j) - median) / mad);
@@ -12441,9 +12442,9 @@ morpheus.AdjustDataTool.prototype = {
       }
 
       /* if (changed) {
-       morpheus.DatasetUtil.toESSessionPromise(dataset);
+       phantasus.DatasetUtil.toESSessionPromise(dataset);
        }*/
-      return new morpheus.HeatMap({
+      return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,
         parent: heatMap,
@@ -12452,10 +12453,10 @@ morpheus.AdjustDataTool.prototype = {
     }
   }
 };
-morpheus.AnnotateDendrogramTool = function (isColumns) {
+phantasus.AnnotateDendrogramTool = function (isColumns) {
   this._isColumns = isColumns;
 };
-morpheus.AnnotateDendrogramTool.prototype = {
+phantasus.AnnotateDendrogramTool.prototype = {
   toString: function () {
     return 'Annotate Dendrogram';
   },
@@ -12472,12 +12473,12 @@ morpheus.AnnotateDendrogramTool.prototype = {
     var fileOrUrl = options.input.file;
     var isColumns = this._isColumns;
     var heatMap = options.heatMap;
-    var result = morpheus.Util.readLines(fileOrUrl);
-    var fileName = morpheus.Util.getFileName(fileOrUrl);
+    var result = phantasus.Util.readLines(fileOrUrl);
+    var fileName = phantasus.Util.getFileName(fileOrUrl);
     var dendrogram = isColumns ? heatMap.columnDendrogram
       : heatMap.rowDendrogram;
-    var nameToNode = new morpheus.Map();
-    morpheus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
+    var nameToNode = new phantasus.Map();
+    phantasus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
       function (node) {
         nameToNode.set(node.name, node);
         return true;
@@ -12533,18 +12534,18 @@ morpheus.AnnotateDendrogramTool.prototype = {
           required: true
         }];
       };
-      morpheus.HeatMap.showTool(promptTool, heatMap);
+      phantasus.HeatMap.showTool(promptTool, heatMap);
     });
   }
 };
 
 /**
  * @param chartOptions.project
- *            morpheus.Project
+ *            phantasus.Project
  * @param chartOptions.getVisibleTrackNames
  *            {Function}
  */
-morpheus.ChartTool = function (chartOptions) {
+phantasus.ChartTool = function (chartOptions) {
   var _this = this;
   this.getVisibleTrackNames = chartOptions.getVisibleTrackNames;
   this.project = chartOptions.project;
@@ -12555,7 +12556,7 @@ morpheus.ChartTool = function (chartOptions) {
     + '<div class="col-xs-10"><div style="position:relative;" data-name="chartDiv"></div></div>'
     + '</div></div>');
 
-  var formBuilder = new morpheus.FormBuilder({
+  var formBuilder = new phantasus.FormBuilder({
     vertical: true
   });
   this.formBuilder = formBuilder;
@@ -12599,10 +12600,10 @@ morpheus.ChartTool = function (chartOptions) {
       value: ''
     }];
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getRowMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -12618,10 +12619,10 @@ morpheus.ChartTool = function (chartOptions) {
           });
         });
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getColumnMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -12709,7 +12710,7 @@ morpheus.ChartTool = function (chartOptions) {
   formBuilder.append({
     name: 'series',
     type: 'bootstrap-select',
-    options: ['(None)'].concat(morpheus.DatasetUtil
+    options: ['(None)'].concat(phantasus.DatasetUtil
       .getSeriesNames(project.getFullDataset()))
   });
   formBuilder.append({
@@ -12790,7 +12791,7 @@ morpheus.ChartTool = function (chartOptions) {
       _this.tooltip.length = 0; // clear array
       if (tooltipVal != null) {
         tooltipVal.forEach(function (tip) {
-          _this.tooltip.push(morpheus.ChartTool.getVectorInfo(tip));
+          _this.tooltip.push(phantasus.ChartTool.getVectorInfo(tip));
         });
       }
     } else {
@@ -12828,7 +12829,7 @@ morpheus.ChartTool = function (chartOptions) {
   formBuilder.$form.appendTo($configPane);
   this.$el.appendTo($dialog);
   $dialog.dialog({
-    dialogClass: 'morpheus',
+    dialogClass: 'phantasus',
     close: function (event, ui) {
       project.off('trackChanged.chart', trackChanged);
       project.getRowSelectionModel().off('selectionChanged.chart', draw);
@@ -12845,8 +12846,8 @@ morpheus.ChartTool = function (chartOptions) {
   this.draw();
 };
 
-morpheus.ChartTool.getPlotlyDefaults2 = function () {
-  var plotly = morpheus.ChartTool.getPlotlyDefaults();
+phantasus.ChartTool.getPlotlyDefaults2 = function () {
+  var plotly = phantasus.ChartTool.getPlotlyDefaults();
   plotly.layout.width = 600;
   plotly.layout.height = 600;
   plotly.layout.margin = {
@@ -12860,8 +12861,8 @@ morpheus.ChartTool.getPlotlyDefaults2 = function () {
   return plotly;
 };
 
-morpheus.ChartTool.BUTTONS_TO_REMOVE_FOR_STATIC_CHART = ['select2d', 'lasso2d']; // ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
-morpheus.ChartTool.getPlotlyDefaults = function () {
+phantasus.ChartTool.BUTTONS_TO_REMOVE_FOR_STATIC_CHART = ['select2d', 'lasso2d']; // ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
+phantasus.ChartTool.getPlotlyDefaults = function () {
   var layout = {
     hovermode: 'closest',
     autosize: true,
@@ -12935,7 +12936,7 @@ morpheus.ChartTool.getPlotlyDefaults = function () {
   };
 };
 
-morpheus.ChartTool.getVectorInfo = function (value) {
+phantasus.ChartTool.getVectorInfo = function (value) {
   var field = value.substring(0, value.length - 2);
   var isColumns = value.substring(value.length - 2) === '_c';
   return {
@@ -12943,7 +12944,7 @@ morpheus.ChartTool.getVectorInfo = function (value) {
     isColumns: isColumns
   };
 };
-morpheus.ChartTool.prototype = {
+phantasus.ChartTool.prototype = {
   _addListeners: function (div) {
     var _this = this;
     div.on('plotly_beforeexport', function () {
@@ -12961,7 +12962,7 @@ morpheus.ChartTool.prototype = {
   },
   annotate: function (options) {
     var _this = this;
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -12979,7 +12980,7 @@ morpheus.ChartTool.prototype = {
     // options : [ 'Rows', 'Columns', 'Rows And Columns' ],
     // value : 'Rows'
     // });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate Selection',
         content: formBuilder.$form,
@@ -13028,22 +13029,22 @@ morpheus.ChartTool.prototype = {
             }
           }
           if (isRows) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(rowVector);
             _this.project.trigger('trackChanged', {
               vectors: [rowVector],
               render: existingRowVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: false
             });
           }
           if (isColumns) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(columnVector);
             _this.project.trigger('trackChanged', {
               vectors: [columnVector],
               render: existingColumnVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: true
             });
           }
@@ -13098,7 +13099,7 @@ morpheus.ChartTool.prototype = {
           for (var i = 0; i < indices.length; i++) {
             var index = indices[i];
             if (index === 0 || v.getValue(index) !== v.getValue(0)) {
-              morpheus.HeatMapTooltipProvider.vectorToString(v,
+              phantasus.HeatMapTooltipProvider.vectorToString(v,
                 index, s, '<br>');
             }
           }
@@ -13127,7 +13128,7 @@ morpheus.ChartTool.prototype = {
     };
     var selection = null;
     var _this = this;
-    morpheus.ChartTool.newPlot(myPlot, [trace], options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, [trace], options.layout, options.config);
     this._addListeners(myPlot);
 
   },
@@ -13176,10 +13177,10 @@ morpheus.ChartTool.prototype = {
           for (var tipIndex = 0; tipIndex < _this.tooltip.length; tipIndex++) {
             var tip = _this.tooltip[tipIndex];
             if (tip.isColumns) {
-              morpheus.HeatMapTooltipProvider.vectorToString(dataset.getColumnMetadata().getByName(tip.field),
+              phantasus.HeatMapTooltipProvider.vectorToString(dataset.getColumnMetadata().getByName(tip.field),
                 this.j, s, '<br>');
             } else {
-              morpheus.HeatMapTooltipProvider.vectorToString(dataset.getRowMetadata().getByName(tip.field),
+              phantasus.HeatMapTooltipProvider.vectorToString(dataset.getRowMetadata().getByName(tip.field),
                 this.i, s, '<br>');
             }
           }
@@ -13233,7 +13234,7 @@ morpheus.ChartTool.prototype = {
     //       },
     //       click: function () {
     //         if (!selection) {
-    //           morpheus.FormBuilder
+    //           phantasus.FormBuilder
     //           .showInModal({
     //             title: 'Annotate Selection',
     //             html: 'Please select points in the chart',
@@ -13251,7 +13252,7 @@ morpheus.ChartTool.prototype = {
     var $parent = $(myPlot).parent();
     options.layout.width = $parent.width();
     options.layout.height = this.$dialog.height() - 30;
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     //   selection = eventData;
     // });
@@ -13295,7 +13296,7 @@ morpheus.ChartTool.prototype = {
     var selection = null;
     var _this = this;
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     // 	selection = eventData;
     // });
@@ -13310,7 +13311,7 @@ morpheus.ChartTool.prototype = {
     var traces = [];
     // split by color by value
 
-    var colorByValueToArray = new morpheus.Map();
+    var colorByValueToArray = new phantasus.Map();
     for (var k = 0, nitems = array.length; k < nitems; k++) {
       var item = array[k];
       var val = dataset.getValue(item.row, item.column);
@@ -13339,7 +13340,7 @@ morpheus.ChartTool.prototype = {
     var selection = null;
     var _this = this;
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     // myPlot.on('plotly_selected', function (eventData) {
     // 	selection = eventData;
     // });
@@ -13400,7 +13401,7 @@ morpheus.ChartTool.prototype = {
             }
 
             var v = metadata.getByName(tip.field);
-            morpheus.HeatMapTooltipProvider.vectorToString(v,
+            phantasus.HeatMapTooltipProvider.vectorToString(v,
               index, s, '<br>');
 
           }
@@ -13460,7 +13461,7 @@ morpheus.ChartTool.prototype = {
     //       },
     //       click: function () {
     //         if (!selection) {
-    //           morpheus.FormBuilder
+    //           phantasus.FormBuilder
     //           .showInModal({
     //             title: 'Annotate Selection',
     //             html: 'Please select points in the chart',
@@ -13477,10 +13478,10 @@ morpheus.ChartTool.prototype = {
     //     }]]
     //   });
 
-    morpheus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
+    phantasus.ChartTool.newPlot(myPlot, traces, options.layout, options.config);
     var $span = $('<div' +
       ' style="display:none;position:absolute;font-size:10px;left:2px;top:4px;">#' +
-      ' points:' + morpheus.Util.intFormat(array.length) + '</div>');
+      ' points:' + phantasus.Util.intFormat(array.length) + '</div>');
 
     $span.appendTo($(myPlot));
     // myPlot.on('plotly_selected', function (eventData) {
@@ -13501,7 +13502,7 @@ morpheus.ChartTool.prototype = {
   draw: function () {
     var _this = this;
     this.$chart.empty();
-    var plotlyDefaults = morpheus.ChartTool.getPlotlyDefaults();
+    var plotlyDefaults = phantasus.ChartTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
     // 140 to 800
@@ -13546,7 +13547,7 @@ morpheus.ChartTool.prototype = {
       emptyToAll: false
     });
 
-    var seriesIndex = morpheus.DatasetUtil.getSeriesIndex(dataset, seriesName);
+    var seriesIndex = phantasus.DatasetUtil.getSeriesIndex(dataset, seriesName);
     var datasetFilter = seriesIndex === -1 ? function () {
       return true;
     } : function (ds, item) {
@@ -13574,11 +13575,11 @@ morpheus.ChartTool.prototype = {
 
     var items = [];
     var heatmap = this.heatmap;
-    var colorByInfo = morpheus.ChartTool.getVectorInfo(colorBy);
-    var sizeByInfo = morpheus.ChartTool.getVectorInfo(sizeBy);
+    var colorByInfo = phantasus.ChartTool.getVectorInfo(colorBy);
+    var sizeByInfo = phantasus.ChartTool.getVectorInfo(sizeBy);
     var colorModel = !colorByInfo.isColumns ? this.project.getRowColorModel()
       : this.project.getColumnColorModel();
-    var axisLabelInfo = morpheus.ChartTool.getVectorInfo(axisLabel);
+    var axisLabelInfo = phantasus.ChartTool.getVectorInfo(axisLabel);
     var axisLabelVector = axisLabelInfo.isColumns ? dataset.getColumnMetadata().getByName(axisLabelInfo.field) : dataset.getRowMetadata().getByName(
       axisLabelInfo.field);
     var sizeByVector = sizeByInfo.isColumns ? dataset.getColumnMetadata().getByName(sizeByInfo.field) : dataset.getRowMetadata().getByName(
@@ -13589,7 +13590,7 @@ morpheus.ChartTool.prototype = {
     var columnIds = [undefined];
     var sizeByScale = null;
     if (sizeByVector) {
-      var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+      var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
       sizeByScale = d3.scale.linear().domain(
         [minMax.min, minMax.max]).range([3, 16])
         .clamp(true);
@@ -13601,7 +13602,7 @@ morpheus.ChartTool.prototype = {
       var myPlot = $chart[0];
       $chart.appendTo(this.$chart);
       if (chartType === 'column profile') {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       this
         ._createProfile({
@@ -13635,7 +13636,7 @@ morpheus.ChartTool.prototype = {
       var transpose = chartType === 'column scatter matrix';
       showPoints = showPoints && (dataset.getRowCount() * dataset.getColumnCount()) <= 100000;
       if (transpose) {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       if (dataset.getRowCount() > 20) {
         $('<h4>Maximum chart size exceeded.</h4>')
@@ -13763,7 +13764,7 @@ morpheus.ChartTool.prototype = {
         }
       }
       showPoints = showPoints && items.length <= 100000;
-      var colorByInfo = morpheus.ChartTool.getVectorInfo(colorBy);
+      var colorByInfo = phantasus.ChartTool.getVectorInfo(colorBy);
       var colorByVector = colorByInfo.isColumns ? dataset.getColumnMetadata()
         .getByName(colorByInfo.field) : dataset.getRowMetadata()
         .getByName(colorByInfo.field);
@@ -13785,14 +13786,14 @@ morpheus.ChartTool.prototype = {
       };
       var sizeByScale = null;
       if (sizeByVector) {
-        var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+        var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
         sizeByScale = d3.scale.linear().domain([minMax.min, minMax.max])
           .range([3, 16]).clamp(true);
       }
       if (groupColumnsBy || groupRowsBy) {
-        var rowIdToArray = new morpheus.Map();
+        var rowIdToArray = new phantasus.Map();
         if (groupRowsBy) {
-          var groupRowsByInfo = morpheus.ChartTool
+          var groupRowsByInfo = phantasus.ChartTool
             .getVectorInfo(groupRowsBy);
           var vector = groupRowsByInfo.isColumns ? dataset
             .getColumnMetadata().getByName(groupRowsByInfo.field)
@@ -13805,7 +13806,7 @@ morpheus.ChartTool.prototype = {
             return vector.getValue(item.row);
           };
 
-          var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
+          var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
           for (var i = 0, nitems = items.length; i < nitems; i++) {
             var item = items[i];
             var value = getter(item);
@@ -13843,8 +13844,8 @@ morpheus.ChartTool.prototype = {
           } : function (item) {
             return vector.getValue(item.row);
           };
-          var isArray = morpheus.VectorUtil.getDataType(vector)[0] === '[';
-          var columnIdToIndex = new morpheus.Map();
+          var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
+          var columnIdToIndex = new phantasus.Map();
           var rowIndex = 0;
           rowIdToArray.forEach(function (array, id) {
             grid[rowIndex] = [];
@@ -13917,7 +13918,7 @@ morpheus.ChartTool.prototype = {
 
               }
             }
-            summary[i][j] = morpheus.Median(morpheus.VectorUtil.arrayAsVector(values));
+            summary[i][j] = phantasus.Median(phantasus.VectorUtil.arrayAsVector(values));
           }
         }
         // sort rows
@@ -13927,10 +13928,10 @@ morpheus.ChartTool.prototype = {
           for (var j = 0; j < gridColumnCount; j++) {
             values.push(summary[i][j]);
           }
-          rowMedians.push(morpheus.Median(morpheus.VectorUtil.arrayAsVector(values)));
+          rowMedians.push(phantasus.Median(phantasus.VectorUtil.arrayAsVector(values)));
         }
 
-        var newRowOrder = morpheus.Util.indexSort(rowMedians, false);
+        var newRowOrder = phantasus.Util.indexSort(rowMedians, false);
         var newRowIds = [];
         var newGrid = [];
         for (var i = 0; i < gridRowCount; i++) {
@@ -14144,7 +14145,7 @@ morpheus.ChartTool.prototype = {
   }
 };
 
-morpheus.ChartTool.newPlot = function (myPlot, traces, layout, config) {
+phantasus.ChartTool.newPlot = function (myPlot, traces, layout, config) {
   Plotly.newPlot(myPlot, traces, layout, config);
   var $a = $('<a data-toggle="tooltip" title="Toggle mode bar" href="#" style="fill: rgb(68,' +
     ' 122,' +
@@ -14162,26 +14163,26 @@ morpheus.ChartTool.newPlot = function (myPlot, traces, layout, config) {
   });
 };
 
-morpheus.CollapseDatasetTool = function () {
+phantasus.CollapseDatasetTool = function () {
 };
-morpheus.CollapseDatasetTool.Functions = [morpheus.Mean, morpheus.Median,
-  new morpheus.MaxPercentiles([25, 75]), morpheus.Min, morpheus.Max, morpheus.Sum];
-morpheus.CollapseDatasetTool.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.CollapseDatasetTool.Functions.length; i++) {
-    if (morpheus.CollapseDatasetTool.Functions[i].toString() === s) {
-      return morpheus.CollapseDatasetTool.Functions[i];
+phantasus.CollapseDatasetTool.Functions = [phantasus.Mean, phantasus.Median,
+  new phantasus.MaxPercentiles([25, 75]), phantasus.Min, phantasus.Max, phantasus.Sum];
+phantasus.CollapseDatasetTool.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.CollapseDatasetTool.Functions.length; i++) {
+    if (phantasus.CollapseDatasetTool.Functions[i].toString() === s) {
+      return phantasus.CollapseDatasetTool.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
-morpheus.CollapseDatasetTool.prototype = {
+phantasus.CollapseDatasetTool.prototype = {
   toString: function () {
     return 'Collapse';
   },
   init: function (project, form) {
     var setValue = function (val) {
       var isRows = val === 'Rows';
-      var names = morpheus.MetadataUtil.getMetadataNames(isRows ? project
+      var names = phantasus.MetadataUtil.getMetadataNames(isRows ? project
         .getFullDataset().getRowMetadata() : project
         .getFullDataset().getColumnMetadata());
       form.setOptions('collapse_to_fields', names);
@@ -14194,8 +14195,8 @@ morpheus.CollapseDatasetTool.prototype = {
   gui: function () {
     return [{
       name: 'collapse_method',
-      options: morpheus.CollapseDatasetTool.Functions,
-      value: morpheus.CollapseDatasetTool.Functions[1].toString(),
+      options: phantasus.CollapseDatasetTool.Functions,
+      value: phantasus.CollapseDatasetTool.Functions[1].toString(),
       type: 'select'
     }, {
       name: 'collapse',
@@ -14212,7 +14213,7 @@ morpheus.CollapseDatasetTool.prototype = {
   execute: function (options) {
     var project = options.project;
     var heatMap = options.heatMap;
-    var f = morpheus.CollapseDatasetTool.Functions
+    var f = phantasus.CollapseDatasetTool.Functions
       .fromString(options.input.collapse_method);
     var collapseToFields = options.input.collapse_to_fields;
     if (collapseToFields.length === 0) {
@@ -14221,15 +14222,15 @@ morpheus.CollapseDatasetTool.prototype = {
     var dataset = project.getFullDataset();
     var rows = options.input.collapse == 'Rows';
     if (!rows) {
-      dataset = new morpheus.TransposedDatasetView(dataset);
+      dataset = new phantasus.TransposedDatasetView(dataset);
     }
-    var allFields = morpheus.MetadataUtil.getMetadataNames(dataset
+    var allFields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getRowMetadata());
-    dataset = morpheus.CollapseDataset(dataset, collapseToFields, f, true);
+    dataset = phantasus.CollapseDataset(dataset, collapseToFields, f, true);
     if (!rows) {
-      dataset = new morpheus.TransposedDatasetView(dataset);
+      dataset = new phantasus.TransposedDatasetView(dataset);
     }
-    var set = new morpheus.Map();
+    var set = new phantasus.Map();
     _.each(allFields, function (field) {
       set.set(field, true);
     });
@@ -14242,13 +14243,13 @@ morpheus.CollapseDatasetTool.prototype = {
       heatMap.setTrackVisible(name, false, !rows);
     });
     project.setFullDataset(dataset, true);
-    morpheus.DatasetUtil.toESSessionPromise(dataset);
+    phantasus.DatasetUtil.toESSessionPromise(dataset);
   }
 };
 
-morpheus.CreateAnnotation = function () {
+phantasus.CreateAnnotation = function () {
 };
-morpheus.CreateAnnotation.prototype = {
+phantasus.CreateAnnotation.prototype = {
   toString: function () {
     return 'Create Calculated Annotation';
   },
@@ -14286,37 +14287,37 @@ morpheus.CreateAnnotation.prototype = {
       .getSelectedDataset()
       : __project.getSortedFilteredDataset();
     if (isColumns) {
-      __dataset = morpheus.DatasetUtil.transposedView(__dataset);
+      __dataset = phantasus.DatasetUtil.transposedView(__dataset);
     }
-    var __rowView = new morpheus.DatasetRowView(__dataset);
+    var __rowView = new phantasus.DatasetRowView(__dataset);
     var __vector = __dataset.getRowMetadata().add(
       options.input.annotation_name);
     var COUNT = function () {
-      return morpheus.CountNonNaN(__rowView);
+      return phantasus.CountNonNaN(__rowView);
     };
     var MAD = function () {
-      return morpheus.MAD(__rowView);
+      return phantasus.MAD(__rowView);
     };
     var MAX = function () {
-      return morpheus.Max(__rowView);
+      return phantasus.Max(__rowView);
     };
     var MEAN = function () {
-      return morpheus.Mean(__rowView);
+      return phantasus.Mean(__rowView);
     };
     var MEDIAN = function (p) {
-      return morpheus.Percentile(__rowView, 50);
+      return phantasus.Percentile(__rowView, 50);
     };
     var MIN = function () {
-      return morpheus.Min(__rowView);
+      return phantasus.Min(__rowView);
     };
     var PERCENTILE = function (p) {
-      return morpheus.Percentile(__rowView, p);
+      return phantasus.Percentile(__rowView, p);
     };
     var SUM = function () {
-      return morpheus.Sum(__rowView);
+      return phantasus.Sum(__rowView);
     };
     var VARIANCE = function () {
-      return morpheus.Variance(__rowView);
+      return phantasus.Variance(__rowView);
     };
     var __index = 0;
     var FIELD = function (field) {
@@ -14340,17 +14341,17 @@ morpheus.CreateAnnotation.prototype = {
   }
 };
 
-morpheus.DendrogramEnrichmentTool = function (isColumns) {
+phantasus.DendrogramEnrichmentTool = function (isColumns) {
   this.isColumns = isColumns;
 };
 
-morpheus.DendrogramEnrichmentTool.prototype = {
+phantasus.DendrogramEnrichmentTool.prototype = {
   toString: function () {
     return 'Dendrogram Enrichment';
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil
+    var fields = phantasus.MetadataUtil
       .getMetadataNames(this.isColumns ? dataset.getColumnMetadata()
         : dataset.getRowMetadata());
     return [{
@@ -14385,9 +14386,9 @@ morpheus.DendrogramEnrichmentTool.prototype = {
       options.input.field) : dataset.getRowMetadata().getByName(
       options.input.field);
 
-    var valueToIndices = morpheus.VectorUtil
+    var valueToIndices = phantasus.VectorUtil
       .createValueToIndicesMap(vector);
-    var valueToGlobalCount = new morpheus.Map();
+    var valueToGlobalCount = new phantasus.Map();
     var values = [];
     valueToIndices.forEach(function (indices, value) {
       valueToGlobalCount.set(value, indices.length);
@@ -14396,10 +14397,10 @@ morpheus.DendrogramEnrichmentTool.prototype = {
     var nvalues = values.length;
     var N = vector.size();
 
-    morpheus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
+    phantasus.DendrogramUtil.dfs(dendrogram.tree.rootNode,
       function (node) {
         delete node.info;
-        var valueToCount = new morpheus.Map();
+        var valueToCount = new phantasus.Map();
         for (var i = 0; i < nvalues; i++) {
           valueToCount.set(values[i], 0);
         }
@@ -14420,7 +14421,7 @@ morpheus.DendrogramEnrichmentTool.prototype = {
               var b = K - k;
               var c = n - k;
               var d = N + k - n - K;
-              var p = morpheus.FisherExact.fisherTest(a, b,
+              var p = phantasus.FisherExact.fisherTest(a, b,
                 c, d);
               if (p <= pValue) {
                 if (!node.info) {
@@ -14439,9 +14440,9 @@ morpheus.DendrogramEnrichmentTool.prototype = {
   }
 };
 
-morpheus.DevAPI = function () {
+phantasus.DevAPI = function () {
 };
-morpheus.DevAPI.prototype = {
+phantasus.DevAPI.prototype = {
   toString: function () {
     return 'API';
   },
@@ -14463,57 +14464,57 @@ morpheus.DevAPI.prototype = {
   }
 };
 
-morpheus.HClusterTool = function () {
+phantasus.HClusterTool = function () {
 };
-morpheus.HClusterTool.PRECOMPUTED_DIST = 'Matrix values (for a precomputed distance matrix)';
-morpheus.HClusterTool.PRECOMPUTED_SIM = 'Matrix values (for a precomputed similarity matrix)';
-morpheus.HClusterTool.Functions = [morpheus.Euclidean, morpheus.Jaccard,
-  new morpheus.OneMinusFunction(morpheus.Cosine),
-  new morpheus.OneMinusFunction(morpheus.KendallsCorrelation),
-  new morpheus.OneMinusFunction(morpheus.Pearson),
-  new morpheus.OneMinusFunction(morpheus.Spearman),
-  morpheus.HClusterTool.PRECOMPUTED_DIST,
-  morpheus.HClusterTool.PRECOMPUTED_SIM];
-morpheus.HClusterTool.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.HClusterTool.Functions.length; i++) {
-    if (morpheus.HClusterTool.Functions[i].toString() === s) {
-      return morpheus.HClusterTool.Functions[i];
+phantasus.HClusterTool.PRECOMPUTED_DIST = 'Matrix values (for a precomputed distance matrix)';
+phantasus.HClusterTool.PRECOMPUTED_SIM = 'Matrix values (for a precomputed similarity matrix)';
+phantasus.HClusterTool.Functions = [phantasus.Euclidean, phantasus.Jaccard,
+  new phantasus.OneMinusFunction(phantasus.Cosine),
+  new phantasus.OneMinusFunction(phantasus.KendallsCorrelation),
+  new phantasus.OneMinusFunction(phantasus.Pearson),
+  new phantasus.OneMinusFunction(phantasus.Spearman),
+  phantasus.HClusterTool.PRECOMPUTED_DIST,
+  phantasus.HClusterTool.PRECOMPUTED_SIM];
+phantasus.HClusterTool.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.HClusterTool.Functions.length; i++) {
+    if (phantasus.HClusterTool.Functions[i].toString() === s) {
+      return phantasus.HClusterTool.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
 
-morpheus.HClusterTool.createLinkageMethod = function (linkageString) {
+phantasus.HClusterTool.createLinkageMethod = function (linkageString) {
   var linkageMethod;
   if (linkageString === 'Average') {
-    linkageMethod = morpheus.AverageLinkage;
+    linkageMethod = phantasus.AverageLinkage;
   } else if (linkageString === 'Complete') {
-    linkageMethod = morpheus.CompleteLinkage;
+    linkageMethod = phantasus.CompleteLinkage;
   } else if (linkageString === 'Single') {
-    linkageMethod = morpheus.SingleLinkage;
+    linkageMethod = phantasus.SingleLinkage;
   } else {
     throw new Error('Unknown linkage method ' + linkageString);
   }
   return linkageMethod;
 };
 
-morpheus.HClusterTool.execute = function (dataset, input) {
+phantasus.HClusterTool.execute = function (dataset, input) {
   // note: in worker here
-  var linkageMethod = morpheus.HClusterTool
+  var linkageMethod = phantasus.HClusterTool
     .createLinkageMethod(input.linkage_method);
-  var f = morpheus.HClusterTool.Functions.fromString(input.metric);
-  if (f === morpheus.HClusterTool.PRECOMPUTED_DIST) {
+  var f = phantasus.HClusterTool.Functions.fromString(input.metric);
+  if (f === phantasus.HClusterTool.PRECOMPUTED_DIST) {
     f = 0;
-  } else if (f === morpheus.HClusterTool.PRECOMPUTED_SIM) {
+  } else if (f === phantasus.HClusterTool.PRECOMPUTED_SIM) {
     f = 1;
   }
   var rows = input.cluster == 'Rows' || input.cluster == 'Rows and columns';
   var columns = input.cluster == 'Columns'
     || input.cluster == 'Rows and columns';
   var doCluster = function (d, groupByFields) {
-    return (groupByFields && groupByFields.length > 0) ? new morpheus.HClusterGroupBy(
+    return (groupByFields && groupByFields.length > 0) ? new phantasus.HClusterGroupBy(
       d, groupByFields, f, linkageMethod)
-      : new morpheus.HCluster(morpheus.HCluster
+      : new phantasus.HCluster(phantasus.HCluster
       .computeDistanceMatrix(d, f), linkageMethod);
   };
 
@@ -14522,14 +14523,14 @@ morpheus.HClusterTool.execute = function (dataset, input) {
 
   if (rows) {
     rowsHcl = doCluster(
-      input.selectedColumnsToUseForClusteringRows ? new morpheus.SlicedDatasetView(dataset,
+      input.selectedColumnsToUseForClusteringRows ? new phantasus.SlicedDatasetView(dataset,
         null, input.selectedColumnsToUseForClusteringRows) : dataset,
       input.group_rows_by);
   }
   if (columns) {
     columnsHcl = doCluster(
-      morpheus.DatasetUtil
-        .transposedView(input.selectedRowsToUseForClusteringColumns ? new morpheus.SlicedDatasetView(
+      phantasus.DatasetUtil
+        .transposedView(input.selectedRowsToUseForClusteringColumns ? new phantasus.SlicedDatasetView(
           dataset, input.selectedRowsToUseForClusteringColumns, null)
           : dataset), input.group_columns_by);
 
@@ -14539,15 +14540,15 @@ morpheus.HClusterTool.execute = function (dataset, input) {
     columnsHcl: columnsHcl
   };
 };
-morpheus.HClusterTool.prototype = {
+phantasus.HClusterTool.prototype = {
   toString: function () {
     return 'Hierarchical Clustering';
   },
   init: function (project, form) {
-    form.setOptions('group_rows_by', morpheus.MetadataUtil
+    form.setOptions('group_rows_by', phantasus.MetadataUtil
       .getMetadataNames(project.getFullDataset().getRowMetadata()));
     form
-      .setOptions('group_columns_by', morpheus.MetadataUtil
+      .setOptions('group_columns_by', phantasus.MetadataUtil
         .getMetadataNames(project.getFullDataset()
           .getColumnMetadata()));
     form.setVisible('group_rows_by', false);
@@ -14581,8 +14582,8 @@ morpheus.HClusterTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.HClusterTool.Functions,
-      value: morpheus.HClusterTool.Functions[4].toString(),
+      options: phantasus.HClusterTool.Functions,
+      value: phantasus.HClusterTool.Functions[4].toString(),
       type: 'select'
     }, {
       name: 'linkage_method',
@@ -14653,7 +14654,7 @@ morpheus.HClusterTool.prototype = {
       }
     }
     if (options.input.background === false) {
-      var result = morpheus.HClusterTool.execute(dataset, options.input);
+      var result = phantasus.HClusterTool.execute(dataset, options.input);
       if (result.rowsHcl) {
         var modelOrder = [];
         for (var i = 0; i < result.rowsHcl.reorderedIndices.length; i++) {
@@ -14673,26 +14674,26 @@ morpheus.HClusterTool.prototype = {
       var subtitle = ['clustering '];
       if (rows) {
         subtitle.push(dataset.getRowCount() + ' row'
-          + morpheus.Util.s(dataset.getRowCount()));
+          + phantasus.Util.s(dataset.getRowCount()));
       }
       if (columns) {
         subtitle.push(rows ? ', ' : '');
         subtitle.push(dataset.getColumnCount() + ' column'
-          + morpheus.Util.s(dataset.getColumnCount()));
+          + phantasus.Util.s(dataset.getColumnCount()));
       }
 
       var blob = new Blob(
         ['self.onmessage = function(e) {'
         + 'importScripts(e.data.scripts);'
-        + 'self.postMessage(morpheus.HClusterTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+        + 'self.postMessage(phantasus.HClusterTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
         + '}']);
 
       var url = window.URL.createObjectURL(blob);
       var worker = new Worker(url);
 
       worker.postMessage({
-        scripts: morpheus.Util.getScriptPath(),
-        dataset: morpheus.Dataset.toJSON(dataset, {
+        scripts: phantasus.Util.getScriptPath(),
+        dataset: phantasus.Dataset.toJSON(dataset, {
           columnFields: options.input.group_columns_by || [],
           rowFields: options.input.group_rows_by || [],
           seriesIndices: [0]
@@ -14730,9 +14731,9 @@ morpheus.HClusterTool.prototype = {
 /**
  * Created by dzenkova on 11/18/16.
  */
-morpheus.KmeansTool = function () {
+phantasus.KmeansTool = function () {
 };
-morpheus.KmeansTool.prototype = {
+phantasus.KmeansTool.prototype = {
   toString: function () {
     return 'k-means';
   },
@@ -14755,15 +14756,15 @@ morpheus.KmeansTool.prototype = {
   },
   execute: function (options) {
     var project = options.project;
-    //console.log("morpheus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
+    //console.log("phantasus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
     var dataset = project.getSortedFilteredDataset();
-    var trueIndices = morpheus.Util.getTrueIndices(dataset);
+    var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
     var columnIndices = [];
     var rowIndices = [];
     if (options.input.use_selected_only) {
       var selectedDataset = project.getSelectedDataset();
-      var selectedIndices = morpheus.Util.getTrueIndices(selectedDataset);
+      var selectedIndices = phantasus.Util.getTrueIndices(selectedDataset);
       columnIndices = selectedIndices.columns.length > 0 ? selectedIndices.columns : trueIndices.columns;
       rowIndices = selectedIndices.rows.length > 0 ? selectedIndices.rows : trueIndices.rows;
     }
@@ -14804,14 +14805,14 @@ morpheus.KmeansTool.prototype = {
             v.setValue(i, clusters[i]);
           }
           //console.log(dataset.getRowMetadata().getByName("clusters"));
-          /*while (v instanceof morpheus.VectorAdapter || v instanceof morpheus.SlicedVector) {
+          /*while (v instanceof phantasus.VectorAdapter || v instanceof phantasus.SlicedVector) {
            v = v.v
            }*/
           //console.log(v);
           //v.setArray(clusters);
-          v.getProperties().set("morpheus.dataType", "string");
-          //console.log("morpheus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
-          //console.log("morpheus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(morpheus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
+          v.getProperties().set("phantasus.dataType", "string");
+          //console.log("phantasus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
+          //console.log("phantasus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
           project.trigger('trackChanged', {
             vectors: [v],
             render: ['color']
@@ -14822,9 +14823,9 @@ morpheus.KmeansTool.prototype = {
     });
   }
 };
-morpheus.LimmaTool = function () {
+phantasus.LimmaTool = function () {
 };
-morpheus.LimmaTool.prototype = {
+phantasus.LimmaTool.prototype = {
   toString: function () {
     return 'limma';
   },
@@ -14833,9 +14834,9 @@ morpheus.LimmaTool.prototype = {
     var updateAB = function (fieldNames) {
       var ids = [];
       if (fieldNames != null) {
-        var vectors = morpheus.MetadataUtil.getVectors(project
+        var vectors = phantasus.MetadataUtil.getVectors(project
           .getFullDataset().getColumnMetadata(), fieldNames);
-        var idToIndices = morpheus.VectorUtil
+        var idToIndices = phantasus.VectorUtil
           .createValuesToIndicesMap(vectors);
         idToIndices.forEach(function (indices, id) {
           ids.push(id);
@@ -14858,7 +14859,7 @@ morpheus.LimmaTool.prototype = {
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil.getMetadataNames(dataset
+    var fields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getColumnMetadata());
     return [{
       name: 'field',
@@ -14954,7 +14955,7 @@ morpheus.LimmaTool.prototype = {
 
     console.log(values);
 
-    var trueIndices = morpheus.Util.getTrueIndices(dataset);
+    var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
     es.then(function (essession) {
       var args = {
@@ -14972,7 +14973,7 @@ morpheus.LimmaTool.prototype = {
         session.getObject(function (success) {
           console.log(success);
           var r = new FileReader();
-          var filePath = morpheus.Util.getFilePath(session, success);
+          var filePath = phantasus.Util.getFilePath(session, success);
 
           r.onload = function (e) {
             var contents = e.target.result;
@@ -14987,8 +14988,8 @@ morpheus.LimmaTool.prototype = {
                 REXP = rexp.REXP,
                 rclass = REXP.RClass;
               var res = REXP.decode(contents);
-              var data = morpheus.Util.getRexpData(res, rclass);
-              var names = morpheus.Util.getFieldNames(res, rclass);
+              var data = phantasus.Util.getRexpData(res, rclass);
+              var names = phantasus.Util.getFieldNames(res, rclass);
               var vs = [];
               var rows = trueIndices.rows.length > 0 ? trueIndices.rows : dataset.rowIndices;
               console.log(trueIndices.rows);
@@ -15018,7 +15019,7 @@ morpheus.LimmaTool.prototype = {
               });
             })
           };
-          morpheus.BlobFromPath.getFileObject(filePath, function (file) {
+          phantasus.BlobFromPath.getFileObject(filePath, function (file) {
             r.readAsArrayBuffer(file);
           });
         })
@@ -15029,26 +15030,26 @@ morpheus.LimmaTool.prototype = {
     });
   }
 };
-morpheus.MarkerSelection = function () {
+phantasus.MarkerSelection = function () {
 
 };
 
 /**
  * @private
  */
-morpheus.MarkerSelection.Functions = [morpheus.FisherExact,
-  morpheus.FoldChange, morpheus.SignalToNoise,
-  morpheus.createSignalToNoiseAdjust(), morpheus.TTest];
+phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
+  phantasus.FoldChange, phantasus.SignalToNoise,
+  phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
-morpheus.MarkerSelection.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.MarkerSelection.Functions.length; i++) {
-    if (morpheus.MarkerSelection.Functions[i].toString() === s) {
-      return morpheus.MarkerSelection.Functions[i];
+phantasus.MarkerSelection.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.MarkerSelection.Functions.length; i++) {
+    if (phantasus.MarkerSelection.Functions[i].toString() === s) {
+      return phantasus.MarkerSelection.Functions[i];
     }
   }
   throw s + ' not found';
 };
-morpheus.MarkerSelection.execute = function (dataset, input) {
+phantasus.MarkerSelection.execute = function (dataset, input) {
   var aIndices = [];
   var bIndices = [];
   for (var i = 0; i < input.numClassA; i++) {
@@ -15058,8 +15059,8 @@ morpheus.MarkerSelection.execute = function (dataset, input) {
     bIndices[i] = i;
   }
 
-  var f = morpheus.MarkerSelection.Functions.fromString(input.metric);
-  var permutations = new morpheus.PermutationPValues(dataset, aIndices,
+  var f = phantasus.MarkerSelection.Functions.fromString(input.metric);
+  var permutations = new phantasus.PermutationPValues(dataset, aIndices,
     bIndices, input.npermutations, f);
   return {
     rowSpecificPValues: permutations.rowSpecificPValues,
@@ -15068,7 +15069,7 @@ morpheus.MarkerSelection.execute = function (dataset, input) {
     scores: permutations.scores
   };
 };
-morpheus.MarkerSelection.prototype = {
+phantasus.MarkerSelection.prototype = {
   toString: function () {
     return 'Marker Selection';
   },
@@ -15077,9 +15078,9 @@ morpheus.MarkerSelection.prototype = {
     var updateAB = function (fieldNames) {
       var ids = [];
       if (fieldNames != null) {
-        var vectors = morpheus.MetadataUtil.getVectors(project
+        var vectors = phantasus.MetadataUtil.getVectors(project
           .getFullDataset().getColumnMetadata(), fieldNames);
-        var idToIndices = morpheus.VectorUtil
+        var idToIndices = phantasus.VectorUtil
           .createValuesToIndicesMap(vectors);
         idToIndices.forEach(function (indices, id) {
           ids.push(id);
@@ -15112,13 +15113,13 @@ morpheus.MarkerSelection.prototype = {
   },
   gui: function (project) {
     var dataset = project.getSortedFilteredDataset();
-    var fields = morpheus.MetadataUtil.getMetadataNames(dataset
+    var fields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getColumnMetadata());
     return [
       {
         name: 'metric',
-        options: morpheus.MarkerSelection.Functions,
-        value: morpheus.SignalToNoise.toString(),
+        options: phantasus.MarkerSelection.Functions,
+        value: phantasus.SignalToNoise.toString(),
         type: 'select',
         help: ''
       },
@@ -15169,30 +15170,30 @@ morpheus.MarkerSelection.prototype = {
 
     for (var i = 0; i < classA.length; i++) {
       var val = classA[i];
-      if (!(val instanceof morpheus.Identifier)) {
-        classA[i] = new morpheus.Identifier(
-          morpheus.Util.isArray(val) ? val : [val]);
+      if (!(val instanceof phantasus.Identifier)) {
+        classA[i] = new phantasus.Identifier(
+          phantasus.Util.isArray(val) ? val : [val]);
       }
     }
     var classB = options.input.class_b;
     for (var i = 0; i < classB.length; i++) {
       var val = classB[i];
-      if (!(val instanceof morpheus.Identifier)) {
-        classB[i] = new morpheus.Identifier(
-          morpheus.Util.isArray(val) ? val : [val]);
+      if (!(val instanceof phantasus.Identifier)) {
+        classB[i] = new phantasus.Identifier(
+          phantasus.Util.isArray(val) ? val : [val]);
       }
     }
     var npermutations = parseInt(options.input.permutations);
     var fieldNames = options.input.field;
-    if (!morpheus.Util.isArray(fieldNames)) {
+    if (!phantasus.Util.isArray(fieldNames)) {
       fieldNames = [fieldNames];
     }
     var dataset = project.getSortedFilteredDataset();
-    var vectors = morpheus.MetadataUtil.getVectors(dataset
+    var vectors = phantasus.MetadataUtil.getVectors(dataset
       .getColumnMetadata(), fieldNames);
 
-    var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
-    var f = morpheus.MarkerSelection.Functions
+    var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
+    var f = phantasus.MarkerSelection.Functions
       .fromString(options.input.metric);
 
     var aIndices = [];
@@ -15232,26 +15233,26 @@ morpheus.MarkerSelection.prototype = {
         throw 'The sample was found in class A and class B';
       }
     }
-    var isFishy = f.toString() === morpheus.FisherExact.toString();
+    var isFishy = f.toString() === phantasus.FisherExact.toString();
     if (aIndices.length === 1 || bIndices.length === 1
-      && !(f instanceof morpheus.FisherExact)) {
-      f = morpheus.FoldChange;
+      && !(f instanceof phantasus.FisherExact)) {
+      f = phantasus.FoldChange;
     }
-    var list1 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+    var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
       dataset, null, aIndices));
-    var list2 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+    var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
       dataset, null, bIndices));
     // remove
     // other
     // marker
     // selection
     // fields
-    var markerSelectionFields = morpheus.MarkerSelection.Functions.map(
+    var markerSelectionFields = phantasus.MarkerSelection.Functions.map(
       function (f) {
         return f.toString();
       }).concat(['odds_ratio', 'FDR(BH)', 'p_value']);
     markerSelectionFields.forEach(function (name) {
-      var index = morpheus.MetadataUtil.indexOf(dataset.getRowMetadata(),
+      var index = phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(),
         name);
       if (index !== -1) {
         dataset.getRowMetadata().remove(index);
@@ -15276,25 +15277,25 @@ morpheus.MarkerSelection.prototype = {
       var rowFilters = project.getRowFilter().getFilters();
       // remove existing top n filters
       for (var i = 0; i < rowFilters.length; i++) {
-        if (rowFilters[i] instanceof morpheus.TopNFilter) {
+        if (rowFilters[i] instanceof phantasus.TopNFilter) {
           project.getRowFilter().remove(i, true);
           i--;
         }
       }
       if (!isFishy) {
         project.getRowFilter().add(
-          new morpheus.TopNFilter(
+          new phantasus.TopNFilter(
             parseInt(options.input.number_of_markers),
-            morpheus.TopNFilter.TOP_BOTTOM, vectors[0]
+            phantasus.TopNFilter.TOP_BOTTOM, vectors[0]
               .getName()), true);
       }
 
       project.setRowFilter(project.getRowFilter(), true);
-      project.setRowSortKeys([new morpheus.SortKey(vectors[0].getName(),
-        isFishy ? morpheus.SortKey.SortOrder.ASCENDING
-          : morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([new phantasus.SortKey(vectors[0].getName(),
+        isFishy ? phantasus.SortKey.SortOrder.ASCENDING
+          : phantasus.SortKey.SortOrder.DESCENDING)], true);
       // select samples used in comparison
-      var selectedColumnIndices = new morpheus.Set();
+      var selectedColumnIndices = new phantasus.Set();
       aIndices.forEach(function (index) {
         selectedColumnIndices.add(index);
       });
@@ -15303,8 +15304,8 @@ morpheus.MarkerSelection.prototype = {
       });
       project.getColumnSelectionModel().setViewIndices(selectedColumnIndices, true);
 
-      project.setColumnSortKeys([new morpheus.SortKey(comparisonVector
-        .getName(), morpheus.SortKey.SortOrder.ASCENDING)], true);
+      project.setColumnSortKeys([new phantasus.SortKey(comparisonVector
+        .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
 
       project.trigger('trackChanged', {
         vectors: vectors,
@@ -15328,7 +15329,7 @@ morpheus.MarkerSelection.prototype = {
         'contingency_table');
       var pvalues = [];
       for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
-        var abcd = morpheus.createContingencyTable(list1.setIndex(i),
+        var abcd = phantasus.createContingencyTable(list1.setIndex(i),
           list2.setIndex(i), groupingValue);
         contingencyTableVector.setValue(i, '[[' + abcd[0] + ', '
           + abcd[1] + '], [' + abcd[2] + ', ' + abcd[3] + ']]');
@@ -15337,11 +15338,11 @@ morpheus.MarkerSelection.prototype = {
           ratio = 0;
         }
         oddsRatioVector.setValue(i, ratio);
-        v.setValue(i, morpheus.FisherExact.fisherTest(abcd[0], abcd[1],
+        v.setValue(i, phantasus.FisherExact.fisherTest(abcd[0], abcd[1],
           abcd[2], abcd[3]));
         pvalues.push(v.getValue(i));
       }
-      var fdr = morpheus.FDR_BH(pvalues);
+      var fdr = phantasus.FDR_BH(pvalues);
       for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
         fdrVector.setValue(i, fdr[i]);
       }
@@ -15357,17 +15358,17 @@ morpheus.MarkerSelection.prototype = {
         var blob = new Blob(
           ['self.onmessage = function(e) {'
           + 'importScripts(e.data.scripts);'
-          + 'self.postMessage(morpheus.MarkerSelection.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+          + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
           + '}']);
 
         var url = window.URL.createObjectURL(blob);
         var worker = new Worker(url);
-        var subset = new morpheus.SlicedDatasetView(dataset, null,
+        var subset = new phantasus.SlicedDatasetView(dataset, null,
           aIndices.concat(bIndices));
 
         worker.postMessage({
-          scripts: morpheus.Util.getScriptPath(),
-          dataset: morpheus.Dataset.toJSON(subset, {
+          scripts: phantasus.Util.getScriptPath(),
+          dataset: phantasus.Dataset.toJSON(subset, {
             columnFields: [],
             rowFields: [],
             seriesIndices: [0]
@@ -15406,20 +15407,20 @@ morpheus.MarkerSelection.prototype = {
   }
 };
 
-morpheus.NearestNeighbors = function () {
+phantasus.NearestNeighbors = function () {
 };
-morpheus.NearestNeighbors.Functions = [morpheus.Cosine, morpheus.Euclidean,
-  morpheus.Jaccard, morpheus.KendallsCorrelation, morpheus.Pearson, morpheus.Spearman,
-  morpheus.WeightedMean];
-morpheus.NearestNeighbors.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.NearestNeighbors.Functions.length; i++) {
-    if (morpheus.NearestNeighbors.Functions[i].toString() === s) {
-      return morpheus.NearestNeighbors.Functions[i];
+phantasus.NearestNeighbors.Functions = [phantasus.Cosine, phantasus.Euclidean,
+  phantasus.Jaccard, phantasus.KendallsCorrelation, phantasus.Pearson, phantasus.Spearman,
+  phantasus.WeightedMean];
+phantasus.NearestNeighbors.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.NearestNeighbors.Functions.length; i++) {
+    if (phantasus.NearestNeighbors.Functions[i].toString() === s) {
+      return phantasus.NearestNeighbors.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
-morpheus.NearestNeighbors.prototype = {
+phantasus.NearestNeighbors.prototype = {
   toString: function () {
     return 'Nearest Neighbors';
   },
@@ -15452,7 +15453,7 @@ morpheus.NearestNeighbors.prototype = {
             // get numeric columns only
             for (var i = 0; i < metadata.getMetadataCount(); i++) {
               var v = metadata.get(i);
-              if (morpheus.VectorUtil.getDataType(v) === 'number') {
+              if (phantasus.VectorUtil.getDataType(v) === 'number') {
                 names.push(v.getName());
               }
             }
@@ -15473,8 +15474,8 @@ morpheus.NearestNeighbors.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.NearestNeighbors.Functions,
-      value: morpheus.Pearson.toString(),
+      options: phantasus.NearestNeighbors.Functions,
+      value: phantasus.Pearson.toString(),
       type: 'select'
     }, {
       name: 'compute_nearest_neighbors_of',
@@ -15494,13 +15495,13 @@ morpheus.NearestNeighbors.prototype = {
     var isColumns = options.input.compute_nearest_neighbors_of == 'selected columns' || options.input.compute_nearest_neighbors_of == 'row annotation';
     var isAnnotation = options.input.compute_nearest_neighbors_of == 'column annotation' || options.input.compute_nearest_neighbors_of == 'row annotation';
     var heatMap = options.heatMap;
-    var f = morpheus.NearestNeighbors.Functions
+    var f = phantasus.NearestNeighbors.Functions
       .fromString(options.input.metric);
     var dataset = project.getSortedFilteredDataset();
 
     if (isColumns) {
       // compute the nearest neighbors of row, so need to transpose
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var selectedIndices = (isColumns ? project.getColumnSelectionModel()
       : project.getRowSelectionModel()).getViewIndices().values();
@@ -15512,10 +15513,10 @@ morpheus.NearestNeighbors.prototype = {
     if (options.input.use_selected_only) {
       spaceIndices = (!isColumns ? project.getColumnSelectionModel()
         : project.getRowSelectionModel()).getViewIndices().values();
-      dataset = morpheus.DatasetUtil.slicedView(dataset, null,
+      dataset = phantasus.DatasetUtil.slicedView(dataset, null,
         spaceIndices);
     }
-    var d1 = morpheus.DatasetUtil
+    var d1 = phantasus.DatasetUtil
       .slicedView(dataset, selectedIndices, null);
     var list1;
     if (isAnnotation) {
@@ -15526,22 +15527,22 @@ morpheus.NearestNeighbors.prototype = {
     } else {
       if (d1.getRowCount() > 1) {
         // collapse each column in the dataset to a single value
-        var columnView = new morpheus.DatasetColumnView(d1);
-        var newDataset = new morpheus.Dataset({
+        var columnView = new phantasus.DatasetColumnView(d1);
+        var newDataset = new phantasus.Dataset({
           name: '',
           rows: 1,
           columns: d1.getColumnCount()
         });
         for (var j = 0, ncols = d1.getColumnCount(); j < ncols; j++) {
-          var v = morpheus.Percentile(columnView.setIndex(j), 50);
+          var v = phantasus.Percentile(columnView.setIndex(j), 50);
           newDataset.setValue(0, j, v);
         }
         d1 = newDataset;
       }
-      list1 = new morpheus.DatasetRowView(d1);
+      list1 = new phantasus.DatasetRowView(d1);
     }
 
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     var values = [];
     var v = dataset.getRowMetadata().getByName(f.toString());
     if (v == null) {
@@ -15551,11 +15552,11 @@ morpheus.NearestNeighbors.prototype = {
       v.setValue(i, f(list1, list2.setIndex(i)));
     }
     if (!isColumns) {
-      project.setRowSortKeys([new morpheus.SortKey(f.toString(),
-        morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([new phantasus.SortKey(f.toString(),
+        phantasus.SortKey.SortOrder.DESCENDING)], true);
     } else {
-      project.setColumnSortKeys([new morpheus.SortKey(f.toString(),
-        morpheus.SortKey.SortOrder.DESCENDING)], true);
+      project.setColumnSortKeys([new phantasus.SortKey(f.toString(),
+        phantasus.SortKey.SortOrder.DESCENDING)], true);
     }
     project.trigger('trackChanged', {
       vectors: [v],
@@ -15565,9 +15566,9 @@ morpheus.NearestNeighbors.prototype = {
   }
 };
 
-morpheus.NewHeatMapTool = function () {
+phantasus.NewHeatMapTool = function () {
 };
-morpheus.NewHeatMapTool.prototype = {
+phantasus.NewHeatMapTool.prototype = {
   toString: function () {
     return 'New Heat Map';
   },
@@ -15592,20 +15593,20 @@ morpheus.NewHeatMapTool.prototype = {
       selectedRows: true,
       selectedColumns: true
     });
-    morpheus.DatasetUtil.shallowCopy(dataset);
-    //morpheus.DatasetUtil.toESSessionPromise(dataset);
+    phantasus.DatasetUtil.shallowCopy(dataset);
+    //phantasus.DatasetUtil.toESSessionPromise(dataset);
     console.log(dataset);
     // TODO see if we can subset dendrograms
     // only handle contiguous selections for now
     // if (heatMap.columnDendrogram != null) {
     // var indices = project.getColumnSelectionModel().getViewIndices()
     // .toArray();
-    // morpheus.DendrogramUtil.leastCommonAncestor();
+    // phantasus.DendrogramUtil.leastCommonAncestor();
     // }
     // if (heatMap.rowDendrogram != null) {
     //
     // }
-    var heatmap = new morpheus.HeatMap({
+    var heatmap = new phantasus.HeatMap({
       name: heatMap.getName(),
       dataset: dataset,
       parent: heatMap,
@@ -15615,12 +15616,12 @@ morpheus.NewHeatMapTool.prototype = {
   }
 };
 
-morpheus.OpenDatasetTool = function () {
+phantasus.OpenDatasetTool = function () {
   this.customUrls = [];
 };
 
-morpheus.OpenDatasetTool.fileExtensionPrompt = function (file, callback) {
-  var ext = morpheus.Util.getExtension(morpheus.Util.getFileName(file));
+phantasus.OpenDatasetTool.fileExtensionPrompt = function (file, callback) {
+  var ext = phantasus.Util.getExtension(phantasus.Util.getFileName(file));
   var deferred;
   if (ext === 'seg' || ext === 'segtab') {
     this._promptSegtab(function (regions) {
@@ -15632,8 +15633,8 @@ morpheus.OpenDatasetTool.fileExtensionPrompt = function (file, callback) {
   }
 
 };
-morpheus.OpenDatasetTool._promptMaf = function (promptCallback) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.OpenDatasetTool._promptMaf = function (promptCallback) {
+  var formBuilder = new phantasus.FormBuilder();
   formBuilder
     .append({
       name: 'MAF_gene_symbols',
@@ -15642,15 +15643,15 @@ morpheus.OpenDatasetTool._promptMaf = function (promptCallback) {
       required: true,
       help: 'Enter one gene symbol per line to filter genes. Leave blank to show all genes.'
     });
-  morpheus.FormBuilder
+  phantasus.FormBuilder
     .showInModal({
       title: 'Gene Symbols',
       html: formBuilder.$form,
       close: 'OK',
       onClose: function () {
         var text = formBuilder.getValue('MAF_gene_symbols');
-        var lines = morpheus.Util.splitOnNewLine(text);
-        var mafGeneFilter = new morpheus.Map();
+        var lines = phantasus.Util.splitOnNewLine(text);
+        var mafGeneFilter = new phantasus.Map();
         for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
           var line = lines[i];
           if (line !== '') {
@@ -15664,8 +15665,8 @@ morpheus.OpenDatasetTool._promptMaf = function (promptCallback) {
       }
     });
 };
-morpheus.OpenDatasetTool._promptSegtab = function (promptCallback) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.OpenDatasetTool._promptSegtab = function (promptCallback) {
+  var formBuilder = new phantasus.FormBuilder();
   formBuilder
     .append({
       name: 'regions',
@@ -15674,14 +15675,14 @@ morpheus.OpenDatasetTool._promptSegtab = function (promptCallback) {
       required: true,
       help: 'Define the regions over which you want to define the CNAs. Enter one region per line. Each line should contain region_id, chromosome, start, and end separated by a tab. Leave blank to use all unique segments in the segtab file as regions.'
     });
-  morpheus.FormBuilder
+  phantasus.FormBuilder
     .showInModal({
       title: 'Regions',
       html: formBuilder.$form,
       close: 'OK',
       onClose: function () {
         var text = formBuilder.getValue('regions');
-        var lines = morpheus.Util.splitOnNewLine(text);
+        var lines = phantasus.Util.splitOnNewLine(text);
         var regions = [];
         var tab = /\t/;
         for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
@@ -15706,7 +15707,7 @@ morpheus.OpenDatasetTool._promptSegtab = function (promptCallback) {
       }
     });
 };
-morpheus.OpenDatasetTool.prototype = {
+phantasus.OpenDatasetTool.prototype = {
   toString: function () {
     return 'Open Dataset';
   },
@@ -15718,13 +15719,13 @@ morpheus.OpenDatasetTool.prototype = {
     var action = options.input.open_file_action;
     var dataset = project.getSortedFilteredDataset();
     deferred.fail(function (err) {
-      var message = ['Error opening ' + morpheus.Util.getFileName(file)
+      var message = ['Error opening ' + phantasus.Util.getFileName(file)
       + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
         message.push(err.message);
       }
-      morpheus.FormBuilder.showInModal({
+      phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message.join('')
       });
@@ -15732,9 +15733,9 @@ morpheus.OpenDatasetTool.prototype = {
     deferred
       .done(function (newDataset) {
 
-        var extension = morpheus.Util.getExtension(morpheus.Util
+        var extension = phantasus.Util.getExtension(phantasus.Util
           .getFileName(file));
-        var filename = morpheus.Util.getBaseFileName(morpheus.Util
+        var filename = phantasus.Util.getBaseFileName(phantasus.Util
           .getFileName(file));
         if (action === 'append' || action === 'append columns') {
 
@@ -15763,11 +15764,11 @@ morpheus.OpenDatasetTool.prototype = {
           if (heatMap.options.datasetReady) {
             heatMap.options.datasetReady(newDataset);
           }
-          var currentDatasetMetadataNames = morpheus.MetadataUtil
+          var currentDatasetMetadataNames = phantasus.MetadataUtil
             .getMetadataNames(!appendRows ? dataset
               .getRowMetadata() : dataset
               .getColumnMetadata());
-          var newDatasetMetadataNames = morpheus.MetadataUtil
+          var newDatasetMetadataNames = phantasus.MetadataUtil
             .getMetadataNames(!appendRows ? newDataset
               .getRowMetadata() : newDataset
               .getColumnMetadata());
@@ -15784,16 +15785,16 @@ morpheus.OpenDatasetTool.prototype = {
                   heatMap
                     .getProject()
                     .setFullDataset(
-                      appendRows ? new morpheus.JoinedDataset(
+                      appendRows ? new phantasus.JoinedDataset(
                         dataset,
                         newDataset,
                         appendOptions.current_dataset_annotation_name,
                         appendOptions.new_dataset_annotation_name)
-                        : new morpheus.TransposedDatasetView(
-                        new morpheus.JoinedDataset(
-                          new morpheus.TransposedDatasetView(
+                        : new phantasus.TransposedDatasetView(
+                        new phantasus.JoinedDataset(
+                          new phantasus.TransposedDatasetView(
                             dataset),
-                          new morpheus.TransposedDatasetView(
+                          new phantasus.TransposedDatasetView(
                             newDataset),
                           appendOptions.current_dataset_annotation_name,
                           appendOptions.new_dataset_annotation_name)),
@@ -15811,7 +15812,7 @@ morpheus.OpenDatasetTool.prototype = {
                       .setSeparateColorSchemeForRowMetadataField(
                         'Source');
 
-                    var sourcesSet = morpheus.VectorUtil
+                    var sourcesSet = phantasus.VectorUtil
                       .getSet(heatMap
                         .getProject()
                         .getFullDataset()
@@ -15822,7 +15823,7 @@ morpheus.OpenDatasetTool.prototype = {
                       .forEach(function (source) {
                         heatMap
                           .autoDisplay({
-                            extension: morpheus.Util
+                            extension: phantasus.Util
                               .getExtension(source),
                             filename: source
                           });
@@ -15837,7 +15838,7 @@ morpheus.OpenDatasetTool.prototype = {
                         .getFullDataset()
                         .getRowCount()
                       + ' row'
-                      + morpheus.Util
+                      + phantasus.Util
                         .s(heatMap
                           .getProject()
                           .getFullDataset()
@@ -15848,7 +15849,7 @@ morpheus.OpenDatasetTool.prototype = {
                         .getFullDataset()
                         .getColumnCount()
                       + ' column'
-                      + morpheus.Util
+                      + phantasus.Util
                         .s(heatMap
                           .getProject()
                           .getFullDataset()
@@ -15859,16 +15860,16 @@ morpheus.OpenDatasetTool.prototype = {
             heatMap
               .getProject()
               .setFullDataset(
-                appendRows ? new morpheus.JoinedDataset(
+                appendRows ? new phantasus.JoinedDataset(
                   dataset,
                   newDataset,
                   currentDatasetMetadataNames[0],
                   newDatasetMetadataNames[0])
-                  : new morpheus.TransposedDatasetView(
-                  new morpheus.JoinedDataset(
-                    new morpheus.TransposedDatasetView(
+                  : new phantasus.TransposedDatasetView(
+                  new phantasus.JoinedDataset(
+                    new phantasus.TransposedDatasetView(
                       dataset),
-                    new morpheus.TransposedDatasetView(
+                    new phantasus.TransposedDatasetView(
                       newDataset),
                     currentDatasetMetadataNames[0],
                     newDatasetMetadataNames[0])),
@@ -15883,14 +15884,14 @@ morpheus.OpenDatasetTool.prototype = {
                 .getColorScheme()
                 .setSeparateColorSchemeForRowMetadataField(
                   'Source');
-              var sourcesSet = morpheus.VectorUtil
+              var sourcesSet = phantasus.VectorUtil
                 .getSet(heatMap.getProject()
                   .getFullDataset()
                   .getRowMetadata().getByName(
                     'Source'));
               sourcesSet.forEach(function (source) {
                 heatMap.autoDisplay({
-                  extension: morpheus.Util
+                  extension: phantasus.Util
                     .getExtension(source),
                   filename: source
                 });
@@ -15900,7 +15901,7 @@ morpheus.OpenDatasetTool.prototype = {
               heatMap.getProject().getFullDataset()
                 .getRowCount()
               + ' row'
-              + morpheus.Util.s(heatMap
+              + phantasus.Util.s(heatMap
                 .getProject()
                 .getFullDataset()
                 .getRowCount())
@@ -15909,7 +15910,7 @@ morpheus.OpenDatasetTool.prototype = {
                 .getFullDataset()
                 .getColumnCount()
               + ' column'
-              + morpheus.Util.s(heatMap
+              + phantasus.Util.s(heatMap
                 .getProject()
                 .getFullDataset()
                 .getColumnCount()));
@@ -15919,21 +15920,21 @@ morpheus.OpenDatasetTool.prototype = {
         } else if (action === 'overlay') {
           _this
             ._matchOverlay(
-              morpheus.MetadataUtil
+              phantasus.MetadataUtil
                 .getMetadataNames(newDataset
                   .getColumnMetadata()),
-              morpheus.MetadataUtil
+              phantasus.MetadataUtil
                 .getMetadataNames(dataset
                   .getColumnMetadata()),
-              morpheus.MetadataUtil
+              phantasus.MetadataUtil
                 .getMetadataNames(newDataset
                   .getRowMetadata()),
-              morpheus.MetadataUtil
+              phantasus.MetadataUtil
                 .getMetadataNames(dataset
                   .getRowMetadata()),
               heatMap,
               function (appendOptions) {
-                morpheus.DatasetUtil.overlay({
+                phantasus.DatasetUtil.overlay({
                   dataset: dataset,
                   newDataset: newDataset,
                   rowAnnotationName: appendOptions.current_dataset_row_annotation_name,
@@ -15943,7 +15944,7 @@ morpheus.OpenDatasetTool.prototype = {
                 });
               });
         } else if (action === 'open') { // new tab
-          new morpheus.HeatMap({
+          new phantasus.HeatMap({
             dataset: newDataset,
             parent: heatMap,
             inheritFromParent: false
@@ -15959,14 +15960,14 @@ morpheus.OpenDatasetTool.prototype = {
   execute: function (options) {
     var file = options.input.file;
     var _this = this;
-    morpheus.OpenDatasetTool
+    phantasus.OpenDatasetTool
       .fileExtensionPrompt(file,
         function (readOptions) {
           if (!readOptions) {
             readOptions = {};
           }
           readOptions.interactive = true;
-          var deferred = morpheus.DatasetUtil.read(file,
+          var deferred = phantasus.DatasetUtil.read(file,
             readOptions);
           _this._read(options, deferred);
         });
@@ -15998,7 +15999,7 @@ morpheus.OpenDatasetTool.prototype = {
       });
       return items;
     };
-    morpheus.HeatMap.showTool(tool, heatMap, callback);
+    phantasus.HeatMap.showTool(tool, heatMap, callback);
   },
   _matchOverlay: function (newDatasetColumnMetadataNames,
                            currentDatasetColumnMetadataNames, newDatasetRowMetadataNames,
@@ -16042,21 +16043,21 @@ morpheus.OpenDatasetTool.prototype = {
       });
       return items;
     };
-    morpheus.HeatMap.showTool(tool, heatMap, callback);
+    phantasus.HeatMap.showTool(tool, heatMap, callback);
   }
 };
 
-morpheus.OpenDendrogramTool = function (file) {
+phantasus.OpenDendrogramTool = function (file) {
   this._file = file;
 };
-morpheus.OpenDendrogramTool.prototype = {
+phantasus.OpenDendrogramTool.prototype = {
   toString: function () {
     return 'Open Dendrogram';
   },
   init: function (project, form) {
     var setValue = function (val) {
       var isRows = val === 'Rows';
-      var names = morpheus.MetadataUtil.getMetadataNames(isRows ? project
+      var names = phantasus.MetadataUtil.getMetadataNames(isRows ? project
         .getFullDataset().getRowMetadata() : project
         .getFullDataset().getColumnMetadata());
       names.unshift('Newick file does not contain node ids');
@@ -16087,14 +16088,14 @@ morpheus.OpenDendrogramTool.prototype = {
       dendrogramField = null;
     }
     var heatMap = options.heatMap;
-    var dendrogramDeferred = morpheus.Util.getText(fileOrUrl);
+    var dendrogramDeferred = phantasus.Util.getText(fileOrUrl);
     dendrogramDeferred
       .done(function (text) {
         var dataset = options.project.getSortedFilteredDataset();
         if (isColumns) {
-          dataset = morpheus.DatasetUtil.transposedView(dataset);
+          dataset = phantasus.DatasetUtil.transposedView(dataset);
         }
-        var tree = morpheus.DendrogramUtil.parseNewick(text);
+        var tree = phantasus.DendrogramUtil.parseNewick(text);
         if (tree.leafNodes.length !== dataset.getRowCount()) {
           throw new Error('# leaf nodes in dendrogram '
             + tree.leafNodes.length + ' != '
@@ -16104,7 +16105,7 @@ morpheus.OpenDendrogramTool.prototype = {
         if (dendrogramField != null) {
           var vector = dataset.getRowMetadata().getByName(
             dendrogramField);
-          var valueToIndex = morpheus.VectorUtil.createValueToIndexMap(vector);
+          var valueToIndex = phantasus.VectorUtil.createValueToIndexMap(vector);
           for (var i = 0, length = tree.leafNodes.length; i < length; i++) {
             var newickId = tree.leafNodes[i].name;
             var index = valueToIndex.get(newickId);
@@ -16139,10 +16140,10 @@ morpheus.OpenDendrogramTool.prototype = {
   }
 };
 
-morpheus.OpenFileTool = function (options) {
+phantasus.OpenFileTool = function (options) {
   this.options = options || {};
 };
-morpheus.OpenFileTool.prototype = {
+phantasus.OpenFileTool.prototype = {
   toString: function () {
     return 'Open';
   },
@@ -16189,7 +16190,7 @@ morpheus.OpenFileTool.prototype = {
         value: '',
         type: 'file',
         required: true,
-        help: morpheus.DatasetUtil.DATASET_FILE_FORMATS
+        help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
       });
     }
     array.options = {
@@ -16207,18 +16208,18 @@ morpheus.OpenFileTool.prototype = {
         if (action === 'append columns' || action === 'append'
           || action === 'open' || action === 'overlay') {
           form.setHelpText('file',
-            morpheus.DatasetUtil.DATASET_FILE_FORMATS);
+            phantasus.DatasetUtil.DATASET_FILE_FORMATS);
           $preloaded.show();
         } else if (action === 'Open dendrogram') {
           form.setHelpText('file',
-            morpheus.DatasetUtil.DENDROGRAM_FILE_FORMATS);
+            phantasus.DatasetUtil.DENDROGRAM_FILE_FORMATS);
           $preloaded.hide();
         } else if (action === 'Open session') {
-          form.setHelpText('file', morpheus.DatasetUtil.SESSION_FILE_FORMAT);
+          form.setHelpText('file', phantasus.DatasetUtil.SESSION_FILE_FORMAT);
           $preloaded.hide();
         } else {
           form.setHelpText('file',
-            morpheus.DatasetUtil.ANNOTATION_FILE_FORMATS);
+            phantasus.DatasetUtil.ANNOTATION_FILE_FORMATS);
           $preloaded.hide();
         }
       });
@@ -16226,7 +16227,7 @@ morpheus.OpenFileTool.prototype = {
       $('<h4>Use your own file</h4>').insertAfter(
         form.$form.find('.form-group:first'));
       var _this = this;
-      var collapseId = _.uniqueId('morpheus');
+      var collapseId = _.uniqueId('phantasus');
       $('<h4><a role="button" data-toggle="collapse" href="#'
         + collapseId
         + '" aria-expanded="false" aria-controls="'
@@ -16234,7 +16235,7 @@ morpheus.OpenFileTool.prototype = {
       var $sampleDatasets = $('<div data-name="sampleData" id="' + collapseId + '" class="collapse"' +
         ' id="' + collapseId + '" style="overflow:auto;"></div>');
       $preloaded.appendTo(form.$form);
-      var sampleDatasets = new morpheus.SampleDatasets({
+      var sampleDatasets = new phantasus.SampleDatasets({
         $el: $sampleDatasets,
         callback: function (heatMapOptions) {
           _this.options.file = heatMapOptions.dataset;
@@ -16264,15 +16265,15 @@ morpheus.OpenFileTool.prototype = {
 
     var project = options.project;
     if (options.input.open_file_action === 'Open session') {
-      morpheus.Util.getText(options.input.file).done(function (text) {
+      phantasus.Util.getText(options.input.file).done(function (text) {
         var options = JSON.parse(text);
         options.tabManager = heatMap.getTabManager();
         options.focus = true;
         options.inheritFromParent = false;
         options.landingPage = heatMap.options.landingPage;
-        new morpheus.HeatMap(options);
+        new phantasus.HeatMap(options);
       }).fail(function (err) {
-        morpheus.FormBuilder.showMessageModal({
+        phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session'
         });
@@ -16281,37 +16282,37 @@ morpheus.OpenFileTool.prototype = {
       || options.input.open_file_action === 'append'
       || options.input.open_file_action === 'open'
       || options.input.open_file_action === 'overlay') {
-      new morpheus.OpenDatasetTool().execute(options);
+      new phantasus.OpenDatasetTool().execute(options);
     } else if (options.input.open_file_action === 'Open dendrogram') {
-      morpheus.HeatMap.showTool(new morpheus.OpenDendrogramTool(
+      phantasus.HeatMap.showTool(new phantasus.OpenDendrogramTool(
         options.input.file), options.heatMap);
     } else { // annotate rows or columns
 
       var isAnnotateColumns = options.input.open_file_action == 'Annotate Columns';
       var fileOrUrl = options.input.file;
       var dataset = project.getFullDataset();
-      var fileName = morpheus.Util.getFileName(fileOrUrl);
-      if (morpheus.Util.endsWith(fileName, '.cls')) {
-        var result = morpheus.Util.readLines(fileOrUrl);
+      var fileName = phantasus.Util.getFileName(fileOrUrl);
+      if (phantasus.Util.endsWith(fileName, '.cls')) {
+        var result = phantasus.Util.readLines(fileOrUrl);
         result.done(function (lines) {
           that.annotateCls(heatMap, dataset, fileName,
             isAnnotateColumns, lines);
         });
-      } else if (morpheus.Util.endsWith(fileName, '.gmt')) {
-        morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+      } else if (phantasus.Util.endsWith(fileName, '.gmt')) {
+        phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                        buf) {
           if (err) {
             throw new Error('Unable to read ' + fileOrUrl);
           }
-          var sets = new morpheus.GmtReader()
-            .read(new morpheus.ArrayBufferReader(new Uint8Array(
+          var sets = new phantasus.GmtReader()
+            .read(new phantasus.ArrayBufferReader(new Uint8Array(
               buf)));
           that.promptSets(dataset, heatMap, isAnnotateColumns,
-            sets, morpheus.Util.getBaseFileName(morpheus.Util.getFileName(fileOrUrl)));
+            sets, phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl)));
         });
 
       } else {
-        var result = morpheus.Util.readLines(fileOrUrl);
+        var result = phantasus.Util.readLines(fileOrUrl);
         result.done(function (lines) {
           that.prompt(lines, dataset, heatMap, isAnnotateColumns);
         });
@@ -16322,15 +16323,15 @@ morpheus.OpenFileTool.prototype = {
   },
   annotateCls: function (heatMap, dataset, fileName, isColumns, lines) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
-    var assignments = new morpheus.ClsReader().read(lines);
+    var assignments = new phantasus.ClsReader().read(lines);
     if (assignments.length !== dataset.getRowCount()) {
       throw new Error(
         'Number of samples in cls file does not match dataset.');
     }
     var vector = dataset.getRowMetadata().add(
-      morpheus.Util.getBaseFileName(fileName));
+      phantasus.Util.getBaseFileName(fileName));
     for (var i = 0; i < assignments.length; i++) {
       vector.setValue(i, assignments[i]);
     }
@@ -16346,10 +16347,10 @@ morpheus.OpenFileTool.prototype = {
   annotateSets: function (dataset, isColumns, sets,
                           datasetMetadataName, setSourceFileName) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var vector = dataset.getRowMetadata().getByName(datasetMetadataName);
-    var idToIndices = morpheus.VectorUtil.createValueToIndicesMap(vector);
+    var idToIndices = phantasus.VectorUtil.createValueToIndicesMap(vector);
     var setVector = dataset.getRowMetadata().add(setSourceFileName);
     sets.forEach(function (set) {
       var name = set.name;
@@ -16391,14 +16392,14 @@ morpheus.OpenFileTool.prototype = {
   annotate: function (lines, dataset, isColumns, sets, metadataName,
                       fileColumnName, fileColumnNamesToInclude) {
     if (isColumns) {
-      dataset = morpheus.DatasetUtil.transposedView(dataset);
+      dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
     var vector = dataset.getRowMetadata().getByName(metadataName);
     if (!vector) {
       throw new Error('vector ' + metadataName + ' not found.');
     }
     var vectors = [];
-    var idToIndices = morpheus.VectorUtil.createValueToIndicesMap(vector);
+    var idToIndices = phantasus.VectorUtil.createValueToIndicesMap(vector);
     if (!lines) {
       _
         .each(
@@ -16468,7 +16469,7 @@ morpheus.OpenFileTool.prototype = {
       }
     }
     for (var i = 0; i < vectors.length; i++) {
-      morpheus.VectorUtil.maybeConvertStringToNumber(vectors[i]);
+      phantasus.VectorUtil.maybeConvertStringToNumber(vectors[i]);
     }
     return vectors;
   },
@@ -16493,7 +16494,7 @@ morpheus.OpenFileTool.prototype = {
     promptTool.gui = function () {
       return [{
         name: 'dataset_field_name',
-        options: morpheus.MetadataUtil
+        options: phantasus.MetadataUtil
           .getMetadataNames(isColumns ? dataset
             .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
@@ -16502,7 +16503,7 @@ morpheus.OpenFileTool.prototype = {
       }];
 
     };
-    morpheus.HeatMap.showTool(promptTool, heatMap);
+    phantasus.HeatMap.showTool(promptTool, heatMap);
 
   },
   prompt: function (lines, dataset, heatMap, isColumns) {
@@ -16515,7 +16516,7 @@ morpheus.OpenFileTool.prototype = {
       var vectors = _this.annotate(lines, dataset, isColumns, null,
         metadataName, fileColumnName);
 
-      var nameToIndex = new morpheus.Map();
+      var nameToIndex = new phantasus.Map();
       var render = [];
       for (var i = 0; i < vectors.length; i++) {
         render.push(isColumns ? 'color' : 'text');
@@ -16542,7 +16543,7 @@ morpheus.OpenFileTool.prototype = {
     promptTool.gui = function () {
       var items = [{
         name: 'dataset_field_name',
-        options: morpheus.MetadataUtil
+        options: phantasus.MetadataUtil
           .getMetadataNames(isColumns ? dataset
             .getColumnMetadata() : dataset.getRowMetadata()),
         type: 'select',
@@ -16563,11 +16564,11 @@ morpheus.OpenFileTool.prototype = {
       }
       return items;
     };
-    morpheus.HeatMap.showTool(promptTool, heatMap);
+    phantasus.HeatMap.showTool(promptTool, heatMap);
   }
 };
 
-morpheus.PcaPlotTool = function (chartOptions) {
+phantasus.PcaPlotTool = function (chartOptions) {
   var _this = this;
   this.project = chartOptions.project;
   var project = this.project;
@@ -16580,7 +16581,7 @@ morpheus.PcaPlotTool = function (chartOptions) {
     + '<div class=""'
     + '</div></div>');
 
-  var formBuilder = new morpheus.FormBuilder({
+  var formBuilder = new phantasus.FormBuilder({
     vertical: true
   });
   this.formBuilder = formBuilder;
@@ -16634,10 +16635,10 @@ morpheus.PcaPlotTool = function (chartOptions) {
     }
 
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getRowMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -16653,10 +16654,10 @@ morpheus.PcaPlotTool = function (chartOptions) {
           });
         });
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getColumnMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -16767,7 +16768,7 @@ morpheus.PcaPlotTool = function (chartOptions) {
   this.draw();
 };
 
-morpheus.PcaPlotTool.getVectorInfo = function (value) {
+phantasus.PcaPlotTool.getVectorInfo = function (value) {
   var field = value.substring(0, value.length - 2);
   var isColumns = value.substring(value.length - 2) === '_c';
   return {
@@ -16775,10 +16776,10 @@ morpheus.PcaPlotTool.getVectorInfo = function (value) {
     isColumns: isColumns
   };
 };
-morpheus.PcaPlotTool.prototype = {
+phantasus.PcaPlotTool.prototype = {
   annotate: function (options) {
     var _this = this;
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -16789,7 +16790,7 @@ morpheus.PcaPlotTool.prototype = {
       type: 'text',
       required: true
     });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate Selection',
         content: formBuilder.$form,
@@ -16838,22 +16839,22 @@ morpheus.PcaPlotTool.prototype = {
             }
           }
           if (isRows) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(rowVector);
             _this.project.trigger('trackChanged', {
               vectors: [rowVector],
               render: existingRowVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: false
             });
           }
           if (isColumns) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(columnVector);
             _this.project.trigger('trackChanged', {
               vectors: [columnVector],
               render: existingColumnVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: true
             });
           }
@@ -16863,7 +16864,7 @@ morpheus.PcaPlotTool.prototype = {
   },
   draw: function () {
     var _this = this;
-    var plotlyDefaults = morpheus.ChartTool.getPlotlyDefaults();
+    var plotlyDefaults = phantasus.ChartTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
     var chartWidth = 400;
@@ -16876,9 +16877,9 @@ morpheus.PcaPlotTool.prototype = {
 
       var dataset = _this.project.getSortedFilteredDataset();
 
-      console.log("PCAPlot :: dataset:", dataset, "trueIndices:", morpheus.Util.getTrueIndices(dataset));
+      console.log("PCAPlot :: dataset:", dataset, "trueIndices:", phantasus.Util.getTrueIndices(dataset));
 
-      var indices = morpheus.Util.getTrueIndices(dataset);
+      var indices = phantasus.Util.getTrueIndices(dataset);
 
       _this.dataset = dataset;
 
@@ -16911,7 +16912,7 @@ morpheus.PcaPlotTool.prototype = {
 
       var data = [];
       if (sizeByVector) {
-        var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+        var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
         sizeFunction = d3.scale.linear().domain(
           [minMax.min, minMax.max]).range([6, 19])
           .clamp(true);
@@ -16955,7 +16956,7 @@ morpheus.PcaPlotTool.prototype = {
         for (var cat = 1; cat < catNum; cat++) {
           var curText = [];
           var curSize = sizeByVector ? [] : size;
-          var curColor = morpheus.VectorColorModel.CATEGORY_ALL[(cat - 1) % 60];
+          var curColor = phantasus.VectorColorModel.CATEGORY_ALL[(cat - 1) % 60];
           for (var i = 0; i < categoriesIndices.get(cat).length; i++) {
             curText.push(text[categoriesIndices.get(cat)[i]]);
             if (sizeByVector) {
@@ -16998,9 +16999,9 @@ morpheus.PcaPlotTool.prototype = {
 
       var expressionSetPromise = dataset.getESSession();
 
-      //console.log("morpheus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
+      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
 
-      //console.log("morpheus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
+      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
 
       expressionSetPromise.then(function (essession) {
         var args = {
@@ -17063,7 +17064,7 @@ morpheus.PcaPlotTool.prototype = {
         //console.log(arguments);
 
         var req = ocpu.call("pcaPlot", args, function (session) {
-          //console.log("morpheus.PcaPlotTool.prototype.draw ::", "successful", session);
+          //console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
           session.getObject(function (success) {
             //console.log(success);
             _this.pca = JSON.parse(success);
@@ -17074,7 +17075,7 @@ morpheus.PcaPlotTool.prototype = {
              var data = json.x.data;
              var layout = json.x.layout;
              Plotly.newPlot(myPlot, data, layout, {showLink: false});*/
-            //console.log("morpheus.PcaPlotTool.prototype.draw ::", "plot json", json);
+            //console.log("phantasus.PcaPlotTool.prototype.draw ::", "plot json", json);
           });
           /*var txt = session.txt.split("\n");
            var imageLocationAr = txt[txt.length - 2].split("/"0);
@@ -17106,9 +17107,9 @@ morpheus.PcaPlotTool.prototype = {
 
 
 
-morpheus.SaveDatasetTool = function () {
+phantasus.SaveDatasetTool = function () {
 };
-morpheus.SaveDatasetTool.prototype = {
+phantasus.SaveDatasetTool.prototype = {
   toString: function () {
     return 'Save Dataset';
   },
@@ -17164,20 +17165,20 @@ morpheus.SaveDatasetTool.prototype = {
     var dataset = options.input.save_selection_only ? project.getSelectedDataset() : project.getSortedFilteredDataset();
     var writer;
     if (format === '1.2') {
-      writer = new morpheus.GctWriter12();
+      writer = new phantasus.GctWriter12();
     } else if (format === '1.3') {
-      writer = new morpheus.GctWriter();
+      writer = new phantasus.GctWriter();
     }
 
     if (series != null) {
-      var seriesIndex = morpheus.DatasetUtil.getSeriesIndex(dataset, series);
+      var seriesIndex = phantasus.DatasetUtil.getSeriesIndex(dataset, series);
       if (seriesIndex === -1) {
         seriesIndex = 0;
       }
-      dataset = seriesIndex === 0 ? dataset : new morpheus.DatasetSeriesView(dataset, [seriesIndex]);
+      dataset = seriesIndex === 0 ? dataset : new phantasus.DatasetSeriesView(dataset, [seriesIndex]);
     }
     var ext = writer.getExtension ? writer.getExtension() : '';
-    if (ext !== '' && !morpheus.Util.endsWith(fileName.toLowerCase(), '.' + ext)) {
+    if (ext !== '' && !phantasus.Util.endsWith(fileName.toLowerCase(), '.' + ext)) {
       fileName += '.' + ext;
     }
 
@@ -17207,10 +17208,10 @@ morpheus.SaveDatasetTool.prototype = {
   }
 };
 
-morpheus.SaveImageTool = function () {
+phantasus.SaveImageTool = function () {
 
 };
-morpheus.SaveImageTool.prototype = {
+phantasus.SaveImageTool.prototype = {
 
   toString: function () {
     return 'Save Image';
@@ -17237,7 +17238,7 @@ morpheus.SaveImageTool.prototype = {
       fileName = 'image';
     }
     var format = options.input.format;
-    if (!morpheus.Util.endsWith(fileName.toLowerCase(), '.' + format)) {
+    if (!phantasus.Util.endsWith(fileName.toLowerCase(), '.' + format)) {
       fileName += '.' + format;
     }
     var heatMap = options.heatMap;
@@ -17245,9 +17246,9 @@ morpheus.SaveImageTool.prototype = {
   }
 };
 
-morpheus.SaveSessionTool = function () {
+phantasus.SaveSessionTool = function () {
 };
-morpheus.SaveSessionTool.prototype = {
+phantasus.SaveSessionTool.prototype = {
   toString: function () {
     return 'Save Session';
   },
@@ -17267,7 +17268,7 @@ morpheus.SaveSessionTool.prototype = {
     if (fileName === '') {
       fileName = 'session.json';
     }
-    if (!morpheus.Util.endsWith(fileName.toLowerCase(), '.json')) {
+    if (!phantasus.Util.endsWith(fileName.toLowerCase(), '.json')) {
       fileName += '.json';
     }
     var heatMap = options.heatMap;
@@ -17280,7 +17281,7 @@ morpheus.SaveSessionTool.prototype = {
         normalArray.constructor === Array;
       };
     var blob = new Blob([JSON.stringify(json, function (key, value) {
-      if (morpheus.Util.isArray(value)) {
+      if (phantasus.Util.isArray(value)) {
         return value instanceof Array ? value : nativeArrayToArray(value);
       }
       return value;
@@ -17289,27 +17290,27 @@ morpheus.SaveSessionTool.prototype = {
   }
 };
 
-morpheus.SimilarityMatrixTool = function () {
+phantasus.SimilarityMatrixTool = function () {
 };
 
-morpheus.SimilarityMatrixTool.Functions = [morpheus.Euclidean,
-  morpheus.Jaccard, morpheus.Cosine, morpheus.KendallsCorrelation, morpheus.Pearson, morpheus.Spearman];
-morpheus.SimilarityMatrixTool.Functions.fromString = function (s) {
-  for (var i = 0; i < morpheus.SimilarityMatrixTool.Functions.length; i++) {
-    if (morpheus.SimilarityMatrixTool.Functions[i].toString() === s) {
-      return morpheus.SimilarityMatrixTool.Functions[i];
+phantasus.SimilarityMatrixTool.Functions = [phantasus.Euclidean,
+  phantasus.Jaccard, phantasus.Cosine, phantasus.KendallsCorrelation, phantasus.Pearson, phantasus.Spearman];
+phantasus.SimilarityMatrixTool.Functions.fromString = function (s) {
+  for (var i = 0; i < phantasus.SimilarityMatrixTool.Functions.length; i++) {
+    if (phantasus.SimilarityMatrixTool.Functions[i].toString() === s) {
+      return phantasus.SimilarityMatrixTool.Functions[i];
     }
   }
   throw new Error(s + ' not found');
 };
-morpheus.SimilarityMatrixTool.execute = function (dataset, input) {
+phantasus.SimilarityMatrixTool.execute = function (dataset, input) {
   var isColumnMatrix = input.compute_matrix_for == 'Columns';
-  var f = morpheus.SimilarityMatrixTool.Functions.fromString(input.metric);
-  return morpheus.HCluster.computeDistanceMatrix(
-    isColumnMatrix ? new morpheus.TransposedDatasetView(dataset)
+  var f = phantasus.SimilarityMatrixTool.Functions.fromString(input.metric);
+  return phantasus.HCluster.computeDistanceMatrix(
+    isColumnMatrix ? new phantasus.TransposedDatasetView(dataset)
       : dataset, f);
 };
-morpheus.SimilarityMatrixTool.prototype = {
+phantasus.SimilarityMatrixTool.prototype = {
   toString: function () {
     return 'Similarity Matrix';
   },
@@ -17319,8 +17320,8 @@ morpheus.SimilarityMatrixTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.SimilarityMatrixTool.Functions,
-      value: morpheus.SimilarityMatrixTool.Functions[4].toString(),
+      options: phantasus.SimilarityMatrixTool.Functions,
+      value: phantasus.SimilarityMatrixTool.Functions[4].toString(),
       type: 'select'
     }, {
       name: 'compute_matrix_for',
@@ -17333,21 +17334,21 @@ morpheus.SimilarityMatrixTool.prototype = {
     var project = options.project;
     var heatMap = options.heatMap;
     var isColumnMatrix = options.input.compute_matrix_for == 'Columns';
-    var f = morpheus.SimilarityMatrixTool.Functions
+    var f = phantasus.SimilarityMatrixTool.Functions
       .fromString(options.input.metric);
     var dataset = project.getSortedFilteredDataset();
     var blob = new Blob(
       ['self.onmessage = function(e) {'
       + 'importScripts(e.data.scripts);'
-      + 'self.postMessage(morpheus.SimilarityMatrixTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+      + 'self.postMessage(phantasus.SimilarityMatrixTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
       + '}']);
 
     var url = window.URL.createObjectURL(blob);
     var worker = new Worker(url);
 
     worker.postMessage({
-      scripts: morpheus.Util.getScriptPath(),
-      dataset: morpheus.Dataset.toJSON(dataset, {
+      scripts: phantasus.Util.getScriptPath(),
+      dataset: phantasus.Dataset.toJSON(dataset, {
         columnFields: [],
         rowFields: [],
         seriesIndices: [0]
@@ -17360,14 +17361,14 @@ morpheus.SimilarityMatrixTool.prototype = {
       var matrix = e.data;
       var n = isColumnMatrix ? dataset.getColumnCount() : dataset
         .getRowCount();
-      var d = new morpheus.Dataset({
+      var d = new phantasus.Dataset({
         name: name,
         rows: n,
         columns: n
       });
       // set the diagonal
-      var isDistance = f.toString() === morpheus.Euclidean.toString()
-        || f.toString() === morpheus.Jaccard.toString();
+      var isDistance = f.toString() === phantasus.Euclidean.toString()
+        || f.toString() === phantasus.Jaccard.toString();
       for (var i = 1; i < n; i++) {
         for (var j = 0; j < i; j++) {
           var value = matrix[i][j];
@@ -17384,8 +17385,8 @@ morpheus.SimilarityMatrixTool.prototype = {
       }
       var metadata = isColumnMatrix ? dataset.getColumnMetadata()
         : dataset.getRowMetadata();
-      d.rowMetadataModel = morpheus.MetadataUtil.shallowCopy(metadata);
-      d.columnMetadataModel = morpheus.MetadataUtil.shallowCopy(metadata);
+      d.rowMetadataModel = phantasus.MetadataUtil.shallowCopy(metadata);
+      d.columnMetadataModel = phantasus.MetadataUtil.shallowCopy(metadata);
       var colorScheme;
       if (!isDistance) {
         colorScheme = {
@@ -17408,12 +17409,12 @@ morpheus.SimilarityMatrixTool.prototype = {
             value: 0,
             color: 'white'
           }, {
-            value: morpheus.DatasetUtil.max(d),
+            value: phantasus.DatasetUtil.max(d),
             color: 'red'
           }]
         };
       }
-      new morpheus.HeatMap({
+      new phantasus.HeatMap({
         colorScheme: colorScheme,
         name: name,
         dataset: d,
@@ -17430,21 +17431,21 @@ morpheus.SimilarityMatrixTool.prototype = {
   }
 };
 
-morpheus.TransposeTool = function () {
+phantasus.TransposeTool = function () {
 };
-morpheus.TransposeTool.prototype = {
+phantasus.TransposeTool.prototype = {
   toString: function () {
     return 'Transpose';
   },
   execute: function (options) {
     var project = options.project;
     var heatMap = options.heatMap;
-    var dataset = new morpheus.TransposedDatasetView(project
+    var dataset = new phantasus.TransposedDatasetView(project
       .getSortedFilteredDataset());
     // make a shallow copy of the dataset, metadata is immutable via the UI
-    var rowMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+    var rowMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
       .getRowMetadata());
-    var columnMetadataModel = morpheus.MetadataUtil.shallowCopy(dataset
+    var columnMetadataModel = phantasus.MetadataUtil.shallowCopy(dataset
       .getColumnMetadata());
     dataset.getRowMetadata = function () {
       return rowMetadataModel;
@@ -17458,13 +17459,13 @@ morpheus.TransposeTool.prototype = {
     // if (heatMap.columnDendrogram != null) {
     // var indices = project.getColumnSelectionModel().getViewIndices()
     // .toArray();
-    // morpheus.DendrogramUtil.leastCommonAncestor();
+    // phantasus.DendrogramUtil.leastCommonAncestor();
     // }
     // if (heatMap.rowDendrogram != null) {
     //
     // }
     var name = options.input.name || heatMap.getName();
-    new morpheus.HeatMap({
+    new phantasus.HeatMap({
       name: name,
       dataset: dataset,
       inheritFromParentOptions: {
@@ -17476,27 +17477,27 @@ morpheus.TransposeTool.prototype = {
   }
 };
 
-morpheus.TsneTool = function () {
+phantasus.TsneTool = function () {
 };
 
-morpheus.TsneTool.execute = function (dataset, input) {
+phantasus.TsneTool.execute = function (dataset, input) {
   // note: in worker here
   var matrix = [];
   var rows = input.project == 'Rows';
   if (!rows) {
-    dataset = new morpheus.TransposedDatasetView(dataset);
+    dataset = new phantasus.TransposedDatasetView(dataset);
   }
   var N = dataset.getRowCount();
-  var f = morpheus.HClusterTool.Functions.fromString(input.metric);
-  if (f === morpheus.TsneTool.PRECOMPUTED_DIST) {
+  var f = phantasus.HClusterTool.Functions.fromString(input.metric);
+  if (f === phantasus.TsneTool.PRECOMPUTED_DIST) {
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       for (var j = i + 1; j < N; j++) {
         matrix[i][j] = dataset.getValue(i, j);
       }
     }
-  } else if (f === morpheus.TsneTool.PRECOMPUTED_SIM) {
-    var max = morpheus.DatasetUtil.max(dataset);
+  } else if (f === phantasus.TsneTool.PRECOMPUTED_SIM) {
+    var max = phantasus.DatasetUtil.max(dataset);
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       for (var j = i + 1; j < N; j++) {
@@ -17504,8 +17505,8 @@ morpheus.TsneTool.execute = function (dataset, input) {
       }
     }
   } else {
-    var list1 = new morpheus.DatasetRowView(dataset);
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list1 = new phantasus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       list1.setIndex(i);
@@ -17529,7 +17530,7 @@ morpheus.TsneTool.execute = function (dataset, input) {
 
 }
 ;
-morpheus.TsneTool.prototype = {
+phantasus.TsneTool.prototype = {
   toString: function () {
     return 't-SNE';
   },
@@ -17539,8 +17540,8 @@ morpheus.TsneTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.HClusterTool.Functions,
-      value: morpheus.HClusterTool.Functions[3].toString(),
+      options: phantasus.HClusterTool.Functions,
+      value: phantasus.HClusterTool.Functions[3].toString(),
       type: 'select'
     }, {
       name: 'project',
@@ -17569,15 +17570,15 @@ morpheus.TsneTool.prototype = {
     var blob = new Blob(
       ['self.onmessage = function(e) {'
       + 'e.data.scripts.forEach(function (s) { importScripts(s); });'
-      + 'self.postMessage(morpheus.TsneTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+      + 'self.postMessage(phantasus.TsneTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
       + '}']);
 
     var url = URL.createObjectURL(blob);
     var worker = new Worker(url);
 
     worker.postMessage({
-      scripts: [morpheus.Util.getScriptPath()],
-      dataset: morpheus.Dataset.toJSON(dataset, {
+      scripts: [phantasus.Util.getScriptPath()],
+      dataset: phantasus.Dataset.toJSON(dataset, {
         columnFields: [],
         rowFields: [],
         seriesIndices: [0]
@@ -17587,11 +17588,11 @@ morpheus.TsneTool.prototype = {
 
     worker.onmessage = function (e) {
       if (rows) {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       var result = e.data.solution;
 
-      var newDataset = new morpheus.Dataset({
+      var newDataset = new phantasus.Dataset({
         name: 't-SNE',
         rows: dataset.getColumnCount(),
         columns: 2
@@ -17604,10 +17605,10 @@ morpheus.TsneTool.prototype = {
       var idVector = newDataset.getColumnMetadata().add('id');
       idVector.setValue(0, 'P1');
       idVector.setValue(1, 'P2');
-      newDataset.setRowMetadata(morpheus.MetadataUtil.shallowCopy(dataset.getColumnMetadata()));
-      var min = morpheus.DatasetUtil.min(newDataset);
-      var max = morpheus.DatasetUtil.max(newDataset);
-      new morpheus.HeatMap({
+      newDataset.setRowMetadata(phantasus.MetadataUtil.shallowCopy(dataset.getColumnMetadata()));
+      var min = phantasus.DatasetUtil.min(newDataset);
+      var max = phantasus.DatasetUtil.max(newDataset);
+      new phantasus.HeatMap({
         inheritFromParentOptions: {transpose: !rows},
         name: 't-SNE',
         dataset: newDataset,
@@ -17634,7 +17635,7 @@ morpheus.TsneTool.prototype = {
   }
 };
 
-morpheus.WordCloudTool = function () {
+phantasus.WordCloudTool = function () {
 
 };
 
@@ -17657,7 +17658,7 @@ morpheus.WordCloudTool = function () {
  * @param options.maxSize
  *            max word size
  */
-morpheus.WordCloudTool.draw = function (options) {
+phantasus.WordCloudTool.draw = function (options) {
   var width = options.width;
   var height = options.height;
   var words = options.words;
@@ -17718,7 +17719,7 @@ morpheus.WordCloudTool.draw = function (options) {
 
   }
 };
-morpheus.WordCloudTool.drawTable = function (options) {
+phantasus.WordCloudTool.drawTable = function (options) {
   var width = options.width;
   var maxSize = options.maxSize;
   var minSize = options.minSize;
@@ -17755,28 +17756,28 @@ morpheus.WordCloudTool.drawTable = function (options) {
   });
   sub.append('title').text(
     function (d) {
-      return d.text + ' p value: ' + morpheus.Util.nf(d.p)
+      return d.text + ' p value: ' + phantasus.Util.nf(d.p)
         + ', selected count: ' + d.count
         + ' selected, total count: ' + d.fullCount;
     });
 
 };
-morpheus.WordCloudTool.prototype = {
+phantasus.WordCloudTool.prototype = {
   toString: function () {
     return 'Word Cloud';
   },
   init: function (project, form) {
-    form.setOptions('field', morpheus.MetadataUtil.getMetadataNames(project
+    form.setOptions('field', phantasus.MetadataUtil.getMetadataNames(project
       .getFullDataset().getRowMetadata()));
     form.$form.find('[name=generate_word_cloud_for]').on(
       'change',
       function (e) {
         var val = $(this).val();
         form.setOptions('field',
-          val === 'selected rows' ? morpheus.MetadataUtil
+          val === 'selected rows' ? phantasus.MetadataUtil
             .getMetadataNames(project.getFullDataset()
               .getRowMetadata())
-            : morpheus.MetadataUtil
+            : phantasus.MetadataUtil
             .getMetadataNames(project
               .getFullDataset()
               .getColumnMetadata()));
@@ -17802,9 +17803,9 @@ morpheus.WordCloudTool.prototype = {
     var selectedDataset = project.getSortedFilteredDataset();
     var fullDataset = project.getFullDataset();
     if (isColumns) {
-      selectedDataset = morpheus.DatasetUtil
+      selectedDataset = phantasus.DatasetUtil
         .transposedView(selectedDataset);
-      fullDataset = morpheus.DatasetUtil.transposedView(fullDataset);
+      fullDataset = phantasus.DatasetUtil.transposedView(fullDataset);
     }
     var selectedIndices = (isColumns ? project.getColumnSelectionModel()
       : project.getRowSelectionModel()).getViewIndices().values();
@@ -17812,15 +17813,15 @@ morpheus.WordCloudTool.prototype = {
       throw new Error('No ' + (isColumns ? 'columns' : 'rows')
         + ' selected');
     }
-    selectedDataset = new morpheus.SlicedDatasetView(selectedDataset,
+    selectedDataset = new phantasus.SlicedDatasetView(selectedDataset,
       selectedIndices, null);
     var vector = selectedDataset.getRowMetadata().getByName(field);
-    var valueToCount = morpheus.VectorUtil.createValueToCountMap(vector);
+    var valueToCount = phantasus.VectorUtil.createValueToCountMap(vector);
     var totalSelected = 0;
     valueToCount.forEach(function (count, value) {
       totalSelected += count;
     });
-    var fullValueToCount = morpheus.VectorUtil
+    var fullValueToCount = phantasus.VectorUtil
       .createValueToCountMap(fullDataset.getRowMetadata().getByName(
         field));
     var fullTotal = 0;
@@ -17833,14 +17834,14 @@ morpheus.WordCloudTool.prototype = {
     var words = [];
     valueToCount.forEach(function (count, value) {
       var fullCount = fullValueToCount.get(value);
-      var p = morpheus.FisherExact.fisherTest(count, totalSelected,
+      var p = phantasus.FisherExact.fisherTest(count, totalSelected,
         fullCount, fullTotal);
       words.push({
         count: count,
         fullCount: fullCount,
         p: p,
         text: value,
-        size: -morpheus.Log2(p)
+        size: -phantasus.Log2(p)
       });
     });
     var maxSize = -Number.MAX_VALUE;
@@ -17861,7 +17862,7 @@ morpheus.WordCloudTool.prototype = {
       height: height + 30,
       width: width + 30
     });
-    morpheus.WordCloudTool.draw({
+    phantasus.WordCloudTool.draw({
       minSize: minSize,
       maxSize: maxSize,
       isColumns: isColumns,
@@ -17872,7 +17873,7 @@ morpheus.WordCloudTool.prototype = {
       words: words,
       fill: fill
     });
-    morpheus.WordCloudTool.drawTable({
+    phantasus.WordCloudTool.drawTable({
       minSize: minSize,
       maxSize: maxSize,
       isColumns: isColumns,
@@ -17885,11 +17886,11 @@ morpheus.WordCloudTool.prototype = {
   }
 };
 
-morpheus.AbstractCanvas = function (offscreen) {
-  this.canvas = morpheus.CanvasUtil.createCanvas();
+phantasus.AbstractCanvas = function (offscreen) {
+  this.canvas = phantasus.CanvasUtil.createCanvas();
   this.lastClip = null;
   if (offscreen) {
-    this.offscreenCanvas = morpheus.CanvasUtil.createCanvas();
+    this.offscreenCanvas = phantasus.CanvasUtil.createCanvas();
   }
   this.offset = {
     x: 0,
@@ -17897,7 +17898,7 @@ morpheus.AbstractCanvas = function (offscreen) {
   };
 };
 
-morpheus.AbstractCanvas.prototype = {
+phantasus.AbstractCanvas.prototype = {
   visible: true,
   invalid: true,
   scrollX: 0,
@@ -17939,7 +17940,7 @@ morpheus.AbstractCanvas.prototype = {
     this.invalid = invalid;
   },
   setBounds: function (bounds) {
-    var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+    var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
     var canvases = [this.canvas];
     if (this.offscreenCanvas) {
       canvases.push(this.offscreenCanvas);
@@ -17973,20 +17974,20 @@ morpheus.AbstractCanvas.prototype = {
   paint: function (clip) {
     var canvas = this.canvas;
     var context = canvas.getContext('2d');
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     var width = this.getUnscaledWidth();
     var height = this.getUnscaledHeight();
     context.clearRect(0, 0, width, height);
     if (this.prePaint) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(this.offset.x, this.offset.y);
       this.prePaint(clip, context);
     }
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     if (this.offscreenCanvas) {
       if (this.invalid) {
         var oc = this.offscreenCanvas.getContext('2d');
-        morpheus.CanvasUtil.resetTransform(oc);
+        phantasus.CanvasUtil.resetTransform(oc);
         context.translate(this.offset.x, this.offset.y);
         oc.clearRect(0, 0, width, height);
         this.draw(clip, oc);
@@ -17996,7 +17997,7 @@ morpheus.AbstractCanvas.prototype = {
       this.draw(clip, context);
     }
     if (this.postPaint) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(this.offset.x, this.offset.y);
       this.postPaint(clip, context);
     }
@@ -18039,10 +18040,10 @@ morpheus.AbstractCanvas.prototype = {
     }
   },
   getUnscaledWidth: function () {
-    return this.canvas.width / morpheus.CanvasUtil.BACKING_SCALE;
+    return this.canvas.width / phantasus.CanvasUtil.BACKING_SCALE;
   },
   getUnscaledHeight: function () {
-    return this.canvas.height / morpheus.CanvasUtil.BACKING_SCALE;
+    return this.canvas.height / phantasus.CanvasUtil.BACKING_SCALE;
   },
   getWidth: function () {
     return this.canvas.width;
@@ -18052,23 +18053,23 @@ morpheus.AbstractCanvas.prototype = {
   }
 };
 
-morpheus.AbstractColorSupplier = function () {
+phantasus.AbstractColorSupplier = function () {
   this.fractions = [0, 0.5, 1];
   this.colors = ['#0000ff', '#ffffff', '#ff0000'];
   this.names = null; // optional color stop names
   this.min = 0;
   this.max = 1;
   this.missingColor = '#c0c0c0';
-  this.scalingMode = morpheus.HeatMapColorScheme.ScalingMode.RELATIVE;
+  this.scalingMode = phantasus.HeatMapColorScheme.ScalingMode.RELATIVE;
   this.stepped = false;
-  this.sizer = new morpheus.HeatMapSizer();
-  this.conditions = new morpheus.HeatMapConditions();
+  this.sizer = new phantasus.HeatMapSizer();
+  this.conditions = new phantasus.HeatMapConditions();
   this.transformValues = 0;// z-score, robust z-score
 };
-morpheus.AbstractColorSupplier.Z_SCORE = 1;
-morpheus.AbstractColorSupplier.ROBUST_Z_SCORE = 2;
+phantasus.AbstractColorSupplier.Z_SCORE = 1;
+phantasus.AbstractColorSupplier.ROBUST_Z_SCORE = 2;
 
-morpheus.AbstractColorSupplier.toJSON = function (cs) {
+phantasus.AbstractColorSupplier.toJSON = function (cs) {
   var json = {
     fractions: cs.fractions,
     colors: cs.colors,
@@ -18092,16 +18093,16 @@ morpheus.AbstractColorSupplier.toJSON = function (cs) {
   }
   return json;
 };
-morpheus.AbstractColorSupplier.fromJSON = function (json) {
-  var cs = json.stepped ? new morpheus.SteppedColorSupplier()
-    : new morpheus.GradientColorSupplier();
+phantasus.AbstractColorSupplier.fromJSON = function (json) {
+  var cs = json.stepped ? new phantasus.SteppedColorSupplier()
+    : new phantasus.GradientColorSupplier();
   cs.setScalingMode(json.scalingMode);
   cs.setMin(json.min);
   cs.setMax(json.max);
   if (json.missingColor != null) {
     cs.setMissingColor(json.missingColor);
   }
-  if (morpheus.HeatMapColorScheme.ScalingMode.RELATIVE !== json.scalingMode) {
+  if (phantasus.HeatMapColorScheme.ScalingMode.RELATIVE !== json.scalingMode) {
     cs.setTransformValues(json.transformValues);
   }
 
@@ -18171,7 +18172,7 @@ morpheus.AbstractColorSupplier.fromJSON = function (json) {
   return cs;
 };
 
-morpheus.AbstractColorSupplier.prototype = {
+phantasus.AbstractColorSupplier.prototype = {
   getTransformValues: function () {
     return this.transformValues;
   },
@@ -18207,7 +18208,7 @@ morpheus.AbstractColorSupplier.prototype = {
     c.min = this.min;
     c.max = this.max;
     c.missingColor = this.missingColor;
-    if (this.scalingMode !== morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.scalingMode !== phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       c.transformValues = this.transformValues;
     }
 
@@ -18224,7 +18225,7 @@ morpheus.AbstractColorSupplier.prototype = {
   },
   setScalingMode: function (scalingMode) {
     if (scalingMode !== this.scalingMode) {
-      if (scalingMode === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+      if (scalingMode === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
         this.min = 0;
         this.max = 1;
       }
@@ -18269,15 +18270,15 @@ morpheus.AbstractColorSupplier.prototype = {
    *            Array of stop names
    */
   setFractions: function (options) {
-    var index = morpheus.Util.indexSort(options.fractions, true);
-    this.fractions = morpheus.Util.reorderArray(options.fractions, index);
-    this.colors = morpheus.Util.reorderArray(options.colors, index);
-    this.names = options.names ? morpheus.Util.reorderArray(options.names,
+    var index = phantasus.Util.indexSort(options.fractions, true);
+    this.fractions = phantasus.Util.reorderArray(options.fractions, index);
+    this.colors = phantasus.Util.reorderArray(options.colors, index);
+    this.names = options.names ? phantasus.Util.reorderArray(options.names,
       index) : null;
   }
 };
 
-morpheus.AbstractComponent = function () {
+phantasus.AbstractComponent = function () {
   this.lastClip = null;
   var c = document.createElement('div');
   c.setAttribute('tabindex', '0');
@@ -18287,7 +18288,7 @@ morpheus.AbstractComponent = function () {
   this.el = c;
   this.$el = $(c);
 };
-morpheus.AbstractComponent.prototype = {
+phantasus.AbstractComponent.prototype = {
   visible: true,
   invalid: true,
   prefWidth: undefined,
@@ -18387,13 +18388,13 @@ morpheus.AbstractComponent.prototype = {
  The root has the largest height, leaves the smallest height.
 
  */
-morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
+phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                                         type) {
-  morpheus.AbstractCanvas.call(this, true);
+  phantasus.AbstractCanvas.call(this, true);
 
   this._overviewHighlightColor = '#d8b365';
   this._searchHighlightColor = '#e41a1c';
-  this._selectedNodeColor = type === morpheus.AbstractDendrogram.Type.COLUMN ? '#377eb8'
+  this._selectedNodeColor = type === phantasus.AbstractDendrogram.Type.COLUMN ? '#377eb8'
     : '#984ea3';
   this.tree = tree;
   this.type = type;
@@ -18420,8 +18421,8 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
   this.defaultStroke = 'rgb(0,0,0)';
   this.mouseMoveNodes = null;
   var mouseMove = function (event) {
-    if (!morpheus.CanvasUtil.dragging) {
-      var position = morpheus.CanvasUtil.getMousePosWithScroll(
+    if (!phantasus.CanvasUtil.dragging) {
+      var position = phantasus.CanvasUtil.getMousePosWithScroll(
         event.target, event, _this.lastClip.x, _this.lastClip.y);
       if (_this.isDragHotSpot(position)) { // dendrogram cutter
         _this.canvas.style.cursor = _this.getResizeCursor();
@@ -18443,7 +18444,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
           var tipOptions = {
             event: event
           };
-          tipOptions[type === morpheus.AbstractDendrogram.Type.COLUMN ? 'columnNodes'
+          tipOptions[type === phantasus.AbstractDendrogram.Type.COLUMN ? 'columnNodes'
             : 'rowNodes'] = nodes;
           _this.heatMap.setToolTip(-1, -1, tipOptions);
           _this.canvas.style.cursor = 'pointer';
@@ -18455,12 +18456,12 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
     }
   };
   var mouseExit = function (e) {
-    if (!morpheus.CanvasUtil.dragging) {
+    if (!phantasus.CanvasUtil.dragging) {
       _this.mouseMoveNodes = null;
       _this.canvas.style.cursor = 'default';
     }
   };
-  if (type !== morpheus.AbstractDendrogram.Type.RADIAL) {
+  if (type !== phantasus.AbstractDendrogram.Type.RADIAL) {
 
     $(this.canvas)
       .on(
@@ -18469,12 +18470,12 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
           e.preventDefault();
           e.stopPropagation();
           e.stopImmediatePropagation();
-          var position = morpheus.CanvasUtil
+          var position = phantasus.CanvasUtil
             .getMousePosWithScroll(e.target,
               e, _this.lastClip.x,
               _this.lastClip.y);
           var selectedNode = _this.getNode(position);
-          morpheus.Popup
+          phantasus.Popup
             .showPopup(
               [{
                 name: 'Flip',
@@ -18510,13 +18511,13 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
               e.target,
               function (menuItem, item) {
                 if (item === 'Save') {
-                  var formBuilder = new morpheus.FormBuilder();
+                  var formBuilder = new phantasus.FormBuilder();
                   formBuilder.append({
                     name: 'file_name',
                     type: 'text',
                     required: true,
                   });
-                  morpheus.FormBuilder.showOkCancel({
+                  phantasus.FormBuilder.showOkCancel({
                     title: 'Save Dendrogram',
                     content: formBuilder.$form,
                     okCallback: function () {
@@ -18525,18 +18526,18 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                         fileName = 'dendrogram.txt';
                       }
                       var out = [];
-                      morpheus.DendrogramUtil.writeNewick(tree.rootNode, out);
+                      phantasus.DendrogramUtil.writeNewick(tree.rootNode, out);
                       var blob = new Blob([out.join('')], {type: 'text/plain;charset=charset=utf-8'});
                       saveAs(blob, fileName, true);
                     }
                   });
                 } else if (item === 'Flip') {
                   if (selectedNode != null) {
-                    var isColumns = morpheus.AbstractDendrogram.Type.COLUMN === _this.type;
+                    var isColumns = phantasus.AbstractDendrogram.Type.COLUMN === _this.type;
                     var min = selectedNode.minIndex;
                     var max = selectedNode.maxIndex;
 
-                    // morpheus.DendrogramUtil.dfs(selectedNode, function (n) {
+                    // phantasus.DendrogramUtil.dfs(selectedNode, function (n) {
                     //   if (n.children) {
                     //     n.children.reverse();
                     //   }
@@ -18587,7 +18588,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       currentOrder[j] = currentOrder[i];
                       currentOrder[i] = tmp;
                     }
-                    var key = new morpheus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
+                    var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
                     if (isColumns) {
                       heatMap.getProject().setColumnSortKeys([key], true);
                     } else {
@@ -18598,7 +18599,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
 
                 } else if (item === 'Branch Color') {
                   if (selectedNode != null) {
-                    var formBuilder = new morpheus.FormBuilder();
+                    var formBuilder = new phantasus.FormBuilder();
                     formBuilder.append({
                       name: 'color',
                       type: 'color',
@@ -18610,13 +18611,13 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       'change',
                       function () {
                         var color = $(this).val();
-                        morpheus.DendrogramUtil.dfs(selectedNode, function (n) {
+                        phantasus.DendrogramUtil.dfs(selectedNode, function (n) {
                           n.color = color;
                           return true;
                         });
                         _this.setSelectedNode(null);
                       });
-                    morpheus.FormBuilder.showInModal({
+                    phantasus.FormBuilder.showInModal({
                       title: 'Color',
                       close: 'Close',
                       html: formBuilder.$form,
@@ -18625,16 +18626,16 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
 
                   }
                 } else if (item === 'Annotate...') {
-                  morpheus.HeatMap
+                  phantasus.HeatMap
                     .showTool(
-                      new morpheus.AnnotateDendrogramTool(
-                        type === morpheus.AbstractDendrogram.Type.COLUMN),
+                      new phantasus.AnnotateDendrogramTool(
+                        type === phantasus.AbstractDendrogram.Type.COLUMN),
                       _this.heatMap);
                 } else if (item === 'Enrichment...') {
-                  morpheus.HeatMap
+                  phantasus.HeatMap
                     .showTool(
-                      new morpheus.DendrogramEnrichmentTool(
-                        type === morpheus.AbstractDendrogram.Type.COLUMN),
+                      new phantasus.DendrogramEnrichmentTool(
+                        type === phantasus.AbstractDendrogram.Type.COLUMN),
                       _this.heatMap);
                 } else if (item === 'Squish Singleton Clusters') {
                   _this.squishEnabled = !_this.squishEnabled;
@@ -18647,7 +18648,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                   _this.heatMap
                     .setDendrogram(
                       null,
-                      type === morpheus.AbstractDendrogram.Type.COLUMN);
+                      type === phantasus.AbstractDendrogram.Type.COLUMN);
                 }
               });
           return false;
@@ -18659,14 +18660,14 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
   }
   var dragStartScaledCutHeight = 0;
   this.cutTreeHotSpot = false;
-  if (type !== morpheus.AbstractDendrogram.Type.RADIAL) {
-    this.hammer = morpheus.Util
+  if (type !== phantasus.AbstractDendrogram.Type.RADIAL) {
+    this.hammer = phantasus.Util
       .hammer(this.canvas, ['pan', 'tap'])
       .on(
         'tap',
         this.tap = function (event) {
-          if (!morpheus.CanvasUtil.dragging) {
-            var position = morpheus.CanvasUtil
+          if (!phantasus.CanvasUtil.dragging) {
+            var position = phantasus.CanvasUtil
               .getMousePosWithScroll(event.target,
                 event, _this.lastClip.x,
                 _this.lastClip.y);
@@ -18679,21 +18680,21 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
             if (node != null && node.parent === undefined) {
               node = null; // can't select root
             }
-            var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+            var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
               : event.srcEvent.ctrlKey;
             _this.setSelectedNode(node,
               event.srcEvent.shiftKey || commandKey);
           }
         })
       .on('panend', this.panend = function (event) {
-        morpheus.CanvasUtil.dragging = false;
+        phantasus.CanvasUtil.dragging = false;
         _this.canvas.style.cursor = 'default';
         _this.cutTreeHotSpot = true;
       })
       .on(
         'panstart',
         this.panstart = function (event) {
-          var position = morpheus.CanvasUtil
+          var position = phantasus.CanvasUtil
             .getMousePosWithScroll(event.target, event,
               _this.lastClip.x, _this.lastClip.y,
               true);
@@ -18701,7 +18702,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
             .isDragHotSpot(position);
           if (_this.cutTreeHotSpot) { // make sure start event
             // was on hotspot
-            morpheus.CanvasUtil.dragging = true;
+            phantasus.CanvasUtil.dragging = true;
             _this.canvas.style.cursor = _this
               .getResizeCursor();
             dragStartScaledCutHeight = _this
@@ -18713,7 +18714,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
         this.panmove = function (event) {
           if (_this.cutTreeHotSpot) {
             var cutHeight;
-            if (_this.type === morpheus.AbstractDendrogram.Type.COLUMN) {
+            if (_this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
               var delta = event.deltaY;
               cutHeight = Math
                 .max(
@@ -18724,7 +18725,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       _this.scale
                         .invert(dragStartScaledCutHeight
                           + delta)));
-            } else if (_this.type === morpheus.AbstractDendrogram.Type.ROW) {
+            } else if (_this.type === phantasus.AbstractDendrogram.Type.ROW) {
               var delta = event.deltaX;
               cutHeight = Math
                 .max(
@@ -18736,7 +18737,7 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
                         .invert(dragStartScaledCutHeight
                           + delta)));
             } else {
-              var point = morpheus.CanvasUtil
+              var point = phantasus.CanvasUtil
                 .getMousePos(event.target, event);
               point.x = _this.radius - point.x;
               point.y = _this.radius - point.y;
@@ -18760,28 +18761,28 @@ morpheus.AbstractDendrogram = function (heatMap, tree, positions, project,
         });
   }
 };
-morpheus.AbstractDendrogram.Type = {
+phantasus.AbstractDendrogram.Type = {
   COLUMN: 0,
   ROW: 1,
   RADIAL: 2
 };
-morpheus.AbstractDendrogram.prototype = {
+phantasus.AbstractDendrogram.prototype = {
   setSelectedNode: function (node, add) {
     var _this = this;
     var viewIndices;
-    var selectionModel = this.type === morpheus.AbstractDendrogram.Type.COLUMN ? this.project
+    var selectionModel = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? this.project
       .getColumnSelectionModel()
       : this.project.getRowSelectionModel();
     if (node == null) {
       // clear selection
       _this.selectedNodeIds = {};
       _this.selectedRootNodeIdToNode = {};
-      viewIndices = new morpheus.Set();
+      viewIndices = new phantasus.Set();
     } else {
       if (add) { // add to selection
         viewIndices = selectionModel.getViewIndices();
       } else {
-        viewIndices = new morpheus.Set();
+        viewIndices = new phantasus.Set();
         _this.selectedNodeIds = {};
         _this.selectedRootNodeIdToNode = {};
       }
@@ -18799,7 +18800,7 @@ morpheus.AbstractDendrogram.prototype = {
           }
         } else {
           _this.selectedRootNodeIdToNode[node.id] = node;
-          morpheus.DendrogramUtil.dfs(node, function (d) {
+          phantasus.DendrogramUtil.dfs(node, function (d) {
             _this.selectedNodeIds[d.id] = true;
             return true;
           });
@@ -18844,7 +18845,7 @@ morpheus.AbstractDendrogram.prototype = {
   },
   resetCutHeight: function () {
     this.positions.setSquishedIndices(null);
-    if (this.type === morpheus.AbstractDendrogram.Type.COLUMN) {
+    if (this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
       this.project.setGroupColumns([], true);
     } else {
       this.project.setGroupRows([], true);
@@ -18852,7 +18853,7 @@ morpheus.AbstractDendrogram.prototype = {
     this.$label.text('');
     this.$squishedLabel.text('');
     var dataset = this.project.getSortedFilteredDataset();
-    var clusterIdVector = this.type === morpheus.AbstractDendrogram.Type.COLUMN ? dataset
+    var clusterIdVector = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? dataset
       .getColumnMetadata().getByName('dendrogram_cut')
       : dataset.getRowMetadata().getByName('dendrogram_cut');
     if (clusterIdVector) {
@@ -18868,17 +18869,17 @@ morpheus.AbstractDendrogram.prototype = {
     var nsquished = 0;
 
     var squishEnabled = this.squishEnabled;
-    var roots = morpheus.DendrogramUtil.cutAtHeight(this.tree.rootNode,
+    var roots = phantasus.DendrogramUtil.cutAtHeight(this.tree.rootNode,
       this.cutHeight);
     var dataset = this.project.getSortedFilteredDataset();
-    var clusterIdVector = this.type === morpheus.AbstractDendrogram.Type.COLUMN ? dataset
+    var clusterIdVector = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? dataset
       .getColumnMetadata().add('dendrogram_cut')
       : dataset.getRowMetadata().add('dendrogram_cut');
     for (var i = 0, nroots = roots.length; i < nroots; i++) {
       var root = roots[i];
-      var minChild = morpheus.DendrogramUtil.getDeepestChild(root,
+      var minChild = phantasus.DendrogramUtil.getDeepestChild(root,
         true);
-      var maxChild = morpheus.DendrogramUtil.getDeepestChild(root,
+      var maxChild = phantasus.DendrogramUtil.getDeepestChild(root,
         false);
       var clusterId;
       if (squishEnabled && minChild.index === maxChild.index) {
@@ -18895,7 +18896,7 @@ morpheus.AbstractDendrogram.prototype = {
 
     }
     this.$label.text((clusterNumber) + ' cluster'
-      + morpheus.Util.s(clusterNumber));
+      + phantasus.Util.s(clusterNumber));
     if (nsquished > 0) {
       this.$squishedLabel.text(nsquished + ' squished');
     } else {
@@ -18905,28 +18906,28 @@ morpheus.AbstractDendrogram.prototype = {
       this.positions.setSquishedIndices(squishedIndices);
     }
     if (this.heatMap.getTrackIndex(clusterIdVector.getName(),
-        this.type === morpheus.AbstractDendrogram.Type.COLUMN) === -1) {
+        this.type === phantasus.AbstractDendrogram.Type.COLUMN) === -1) {
       var settings = {
         discrete: true,
         discreteAutoDetermined: true,
         render: {}
       };
-      settings.render[morpheus.VectorTrack.RENDER.COLOR] = true;
+      settings.render[phantasus.VectorTrack.RENDER.COLOR] = true;
       this.heatMap.addTrack(clusterIdVector.getName(),
-        this.type === morpheus.AbstractDendrogram.Type.COLUMN,
+        this.type === phantasus.AbstractDendrogram.Type.COLUMN,
         settings);
     }
 
-    if (this.type === morpheus.AbstractDendrogram.Type.COLUMN) {
-      this.project.setGroupColumns([new morpheus.SortKey(clusterIdVector
-        .getName(), morpheus.SortKey.SortOrder.UNSORTED)], true);
+    if (this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
+      this.project.setGroupColumns([new phantasus.SortKey(clusterIdVector
+        .getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
     } else {
-      this.project.setGroupRows([new morpheus.SortKey(clusterIdVector
-        .getName(), morpheus.SortKey.SortOrder.UNSORTED)], true);
+      this.project.setGroupRows([new phantasus.SortKey(clusterIdVector
+        .getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
     }
   },
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.$label.remove();
     this.$squishedLabel.remove();
     this.hammer.off('panend', this.panend).off('panstart',
@@ -18982,7 +18983,7 @@ morpheus.AbstractDendrogram.prototype = {
     // brute force search
     var hit = null;
     try {
-      morpheus.DendrogramUtil.dfs(this.tree.rootNode, function (node) {
+      phantasus.DendrogramUtil.dfs(this.tree.rootNode, function (node) {
         var xy = _this.toPix(node);
         if (Math.abs(xy[0] - p.x) < 4 && Math.abs(xy[1] - p.y) < 4) {
           hit = node;
@@ -18997,9 +18998,9 @@ morpheus.AbstractDendrogram.prototype = {
     return hit;
   },
   getResizeCursor: function () {
-    if (this.type === morpheus.AbstractDendrogram.Type.COLUMN) {
+    if (this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
       return 'ns-resize';
-    } else if (this.type === morpheus.AbstractDendrogram.Type.ROW) {
+    } else if (this.type === phantasus.AbstractDendrogram.Type.ROW) {
       return 'ew-resize';
     }
     return 'nesw-resize';
@@ -19094,7 +19095,7 @@ morpheus.AbstractDendrogram.prototype = {
   drawNode: function (context, node) {
   },
   drawDFS: function (context, node, minIndex, maxIndex) {
-    if (this.type !== morpheus.AbstractDendrogram.Type.RADIAL) {
+    if (this.type !== phantasus.AbstractDendrogram.Type.RADIAL) {
       if ((node.maxIndex < minIndex) || (node.minIndex > maxIndex)) {
         return;
       }
@@ -19116,8 +19117,8 @@ morpheus.AbstractDendrogram.prototype = {
   }
 };
 
-morpheus.Util.extend(morpheus.AbstractDendrogram, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.AbstractDendrogram, morpheus.Events);
+phantasus.Util.extend(phantasus.AbstractDendrogram, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.AbstractDendrogram, phantasus.Events);
 
 /**
  * Action object contains
@@ -19129,8 +19130,8 @@ morpheus.Util.extend(morpheus.AbstractDendrogram, morpheus.Events);
  * @param options.accept Additional function to test whether to accept shortcut
  * @param options.icon Optional icon to display
  */
-morpheus.ActionManager = function () {
-  this.actionNameToAction = new morpheus.Map();
+phantasus.ActionManager = function () {
+  this.actionNameToAction = new phantasus.Map();
   this.actions = [];
   // TODO copy all row/column metadata
   // pin/unpin tab,
@@ -19138,7 +19139,7 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Sort',
     cb: function (options) {
-      new morpheus.SortDialog(options.heatMap.getProject());
+      new phantasus.SortDialog(options.heatMap.getProject());
     },
     icon: 'fa fa-sort-alpha-asc',
   });
@@ -19149,7 +19150,7 @@ morpheus.ActionManager = function () {
     cb: function (options) {
       if ($filterModal == null) {
         var filterModal = [];
-        var filterLabelId = _.uniqueId('morpheus');
+        var filterLabelId = _.uniqueId('phantasus');
         filterModal
           .push('<div class="modal" tabindex="1" role="dialog" aria-labelledby="'
             + filterLabelId + '">');
@@ -19180,14 +19181,14 @@ morpheus.ActionManager = function () {
 
         var $filterChooser = $(filterHtml.join(''));
         $filterChooser.appendTo($filter);
-        var columnFilterUI = new morpheus.FilterUI(options.heatMap.getProject(), true);
-        var rowFilterUI = new morpheus.FilterUI(options.heatMap.getProject(), false);
+        var columnFilterUI = new phantasus.FilterUI(options.heatMap.getProject(), true);
+        var rowFilterUI = new phantasus.FilterUI(options.heatMap.getProject(), false);
         // options.heatMap.getProject().getRowFilter().on('focus', function (e) {
         //   $filterChooser.find('[value=rows]').prop('checked', true);
         //   columnFilterUI.$div.hide();
         //   rowFilterUI.$div.show();
         //   $filterModal.modal('show');
-        //   morpheus.Util.trackEvent({
+        //   phantasus.Util.trackEvent({
         //     eventCategory: '',
         //     eventAction: 'rowFilter'
         //   });
@@ -19198,7 +19199,7 @@ morpheus.ActionManager = function () {
         //   columnFilterUI.$div.show();
         //   rowFilterUI.$div.hide();
         //   $filterModal.modal('show');
-        //   morpheus.Util.trackEvent({
+        //   phantasus.Util.trackEvent({
         //     eventCategory: '',
         //     eventAction: 'columnFilter'
         //   });
@@ -19255,13 +19256,13 @@ morpheus.ActionManager = function () {
       var height = bounds.height;
       var width = bounds.width;
       var canvas = $('<canvas></canvas>')[0];
-      var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+      var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
       canvas.height = backingScale * height;
       canvas.style.height = height + 'px';
       canvas.width = backingScale * width;
       canvas.style.width = width + 'px';
       var context = canvas.getContext('2d');
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       options.heatMap.snapshot(context);
       var url = canvas.toDataURL();
       // canvas.toBlob(function (blob) {
@@ -19272,7 +19273,7 @@ morpheus.ActionManager = function () {
       // 		'<img src="' + url + '">');
       // });
 
-      morpheus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([{
         format: 'text/html',
         data: '<img src="' + url + '">'
       }], true);
@@ -19302,7 +19303,7 @@ morpheus.ActionManager = function () {
     },
 
     cb: function (options) {
-      morpheus.HeatMap.showTool(new morpheus.NewHeatMapTool(),
+      phantasus.HeatMap.showTool(new phantasus.NewHeatMapTool(),
         options.heatMap);
     }
   });
@@ -19323,7 +19324,7 @@ morpheus.ActionManager = function () {
     global: true,
     name: 'Open',
     cb: function (options) {
-      morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+      phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
         customUrls: options.heatMap._customUrls
       }), options.heatMap);
     },
@@ -19335,10 +19336,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Image',
     gui: function () {
-      return new morpheus.SaveImageTool();
+      return new phantasus.SaveImageTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(),
+      phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
     which: [83],
@@ -19350,10 +19351,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Dataset',
     gui: function () {
-      return new morpheus.SaveDatasetTool();
+      return new phantasus.SaveDatasetTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(),
+      phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
     shiftKey: true,
@@ -19366,10 +19367,10 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Save Session',
     gui: function () {
-      return new morpheus.SaveSessionTool();
+      return new phantasus.SaveSessionTool();
     },
     cb: function (options) {
-      morpheus.HeatMap.showTool(this.gui(), options.heatMap);
+      phantasus.HeatMap.showTool(this.gui(), options.heatMap);
     },
     icon: 'fa fa-anchor'
   });
@@ -19378,7 +19379,7 @@ morpheus.ActionManager = function () {
     this.add({
       name: 'Chart',
       cb: function (options) {
-        new morpheus.ChartTool({
+        new phantasus.ChartTool({
           project: options.heatMap.getProject(),
           getVisibleTrackNames: _.bind(
             options.heatMap.getVisibleTrackNames, options.heatMap)
@@ -19389,7 +19390,7 @@ morpheus.ActionManager = function () {
     this.add({
       name: 'PCA Plot',
       cb: function (options) {
-        new morpheus.PcaPlotTool({
+        new phantasus.PcaPlotTool({
           project: options.heatMap.getProject()
         });
       },
@@ -19568,14 +19569,14 @@ morpheus.ActionManager = function () {
     name: 'Tutorial',
     cb: function () {
       window
-        .open('https://clue.io/morpheus/tutorial.html');
+        .open('https://clue.io/phantasus/tutorial.html');
     }
   });
   this.add({
     icon: 'fa fa-code',
     name: 'Source Code',
     cb: function () {
-      window.open('https://github.com/cmap/morpheus.js');
+      window.open('https://github.com/cmap/phantasus.js');
     }
   });
   var $findModal;
@@ -19589,7 +19590,7 @@ morpheus.ActionManager = function () {
     cb: function (options) {
       if ($findModal == null) {
         var findModal = [];
-        var id = _.uniqueId('morpheus');
+        var id = _.uniqueId('phantasus');
         findModal
           .push('<div class="modal" tabindex="1" role="dialog" aria-labelledby="'
             + id + '">');
@@ -19621,7 +19622,7 @@ morpheus.ActionManager = function () {
             }
           }
         });
-        morpheus.Util.autosuggest({
+        phantasus.Util.autosuggest({
           $el: $search,
           multi: false,
           suggestWhenEmpty: false,
@@ -19629,7 +19630,7 @@ morpheus.ActionManager = function () {
           filter: function (tokens, response) {
             var token = tokens[0].trim();
             var matches = [];
-            var replaceRegex = new RegExp('(' + morpheus.Util.escapeRegex(token) + ')', 'i');
+            var replaceRegex = new RegExp('(' + phantasus.Util.escapeRegex(token) + ')', 'i');
             for (var i = 0; i < allActions.length; i++) {
               if (allActions[i].cb) {
                 var name = allActions[i].name;
@@ -19671,7 +19672,7 @@ morpheus.ActionManager = function () {
   this.add({
     name: 'Keymap Reference',
     cb: function () {
-      new morpheus.HeatMapKeyListener({
+      new phantasus.HeatMapKeyListener({
         $tabPanel: $()
       }).showKeyMapReference();
     }
@@ -19681,16 +19682,16 @@ morpheus.ActionManager = function () {
     name: 'Linking',
     cb: function () {
       window
-        .open('https://clue.io/morpheus/linking.html');
+        .open('https://clue.io/phantasus/linking.html');
     }
   });
   this.add({
     name: 'Contact',
     icon: 'fa fa-envelope-o',
     cb: function (options) {
-      morpheus.FormBuilder.showInModal({
+      phantasus.FormBuilder.showInModal({
         title: 'Contact',
-        html: 'Please email us at morpheus@broadinstitute.org',
+        html: 'Please email us at phantasus@broadinstitute.org',
         focus: options.heatMap.getFocusEl()
       });
     }
@@ -19713,7 +19714,7 @@ morpheus.ActionManager = function () {
         .getSortedFilteredDataset().getRowCount() : options.heatMap
         .getProject().getSortedFilteredDataset()
         .getColumnCount();
-      var indices = new morpheus.Set();
+      var indices = new phantasus.Set();
       for (var i = 0; i < count; i++) {
         indices.add(i);
       }
@@ -19724,7 +19725,7 @@ morpheus.ActionManager = function () {
   var invertAction = function (options, isColumns) {
     var model = isColumns ? options.heatMap.getProject().getColumnSelectionModel() : options.heatMap.getProject().getRowSelectionModel();
     var viewIndices = model.getViewIndices();
-    var inverse = new morpheus.Set();
+    var inverse = new phantasus.Set();
     var n = n = isColumns ? options.heatMap.getProject().getSortedFilteredDataset().getColumnCount() : options.heatMap.getProject().getSortedFilteredDataset().getRowCount();
     for (var i = 0; i < n; i++) {
       if (!viewIndices.has(i)) {
@@ -19749,7 +19750,7 @@ morpheus.ActionManager = function () {
     var model = isColumns ? options.heatMap.getProject()
       .getColumnSelectionModel() : options.heatMap.getProject()
       .getRowSelectionModel();
-    model.setViewIndices(new morpheus.Set(), true);
+    model.setViewIndices(new phantasus.Set(), true);
   };
   this.add({
     name: 'Clear Selected Rows',
@@ -19783,12 +19784,12 @@ morpheus.ActionManager = function () {
     for (var i = 0, n = viewIndices.length; i < n; i++) {
       modelIndices.push(converter(viewIndices[i]));
     }
-    var sortKey = new morpheus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
+    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
       ' top', isColumns);
     if (isColumns) {
       project
         .setColumnSortKeys(
-          morpheus.SortKey
+          phantasus.SortKey
             .keepExistingSortKeys(
               [sortKey],
               project
@@ -19797,7 +19798,7 @@ morpheus.ActionManager = function () {
     } else {
       project
         .setRowSortKeys(
-          morpheus.SortKey
+          phantasus.SortKey
             .keepExistingSortKeys(
               [sortKey],
               project
@@ -19827,7 +19828,7 @@ morpheus.ActionManager = function () {
       .getRowCount() : project
       .getSortedFilteredDataset()
       .getColumnCount();
-    var indices = new morpheus.Set();
+    var indices = new phantasus.Set();
     for (var i = 0; i < count; i++) {
       indices.add(i);
     }
@@ -19867,10 +19868,10 @@ morpheus.ActionManager = function () {
     var text = [];
     selectionModel.getViewIndices().forEach(
       function (index) {
-        text.push(morpheus.Util.toString(v
+        text.push(phantasus.Util.toString(v
           .getValue(index)));
       });
-    morpheus.Util.setClipboardData([{
+    phantasus.Util.setClipboardData([{
       format: 'text/plain',
       data: text.join('\n')
     }]);
@@ -19896,7 +19897,7 @@ morpheus.ActionManager = function () {
       : project
       .getRowSelectionModel();
     if (selectionModel.count() === 0) {
-      morpheus.FormBuilder
+      phantasus.FormBuilder
         .showMessageModal({
           title: 'Annotate Selection',
           html: 'No ' + (isColumns ? 'columns' : 'rows') + ' selected.',
@@ -19904,7 +19905,7 @@ morpheus.ActionManager = function () {
         });
       return;
     }
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -19915,7 +19916,7 @@ morpheus.ActionManager = function () {
       type: 'text',
       required: true
     });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate',
         content: formBuilder.$form,
@@ -19930,9 +19931,9 @@ morpheus.ActionManager = function () {
           var fullDataset = project
             .getFullDataset();
           if (isColumns) {
-            dataset = morpheus.DatasetUtil
+            dataset = phantasus.DatasetUtil
               .transposedView(dataset);
-            fullDataset = morpheus.DatasetUtil
+            fullDataset = phantasus.DatasetUtil
               .transposedView(fullDataset);
           }
 
@@ -19953,7 +19954,7 @@ morpheus.ActionManager = function () {
                     index,
                     value);
               });
-          morpheus.VectorUtil
+          phantasus.VectorUtil
             .maybeConvertStringToNumber(v);
           project
             .trigger(
@@ -19961,7 +19962,7 @@ morpheus.ActionManager = function () {
               {
                 vectors: [v],
                 render: existingVector != null ? []
-                  : [morpheus.VectorTrack.RENDER.TEXT],
+                  : [phantasus.VectorTrack.RENDER.TEXT],
                 columns: isColumns
               });
         }
@@ -19994,13 +19995,13 @@ morpheus.ActionManager = function () {
         .getVisibleTrackNames(true);
       var columnFieldIndices = [];
       _.each(visibleColumnFields, function (name) {
-        var index = morpheus.MetadataUtil.indexOf(
+        var index = phantasus.MetadataUtil.indexOf(
           columnMetadata, name);
         if (index !== -1) {
           columnFieldIndices.push(index);
         }
       });
-      columnMetadata = new morpheus.MetadataModelColumnView(
+      columnMetadata = new phantasus.MetadataModelColumnView(
         columnMetadata, columnFieldIndices);
       var rowMetadata = dataset.getRowMetadata();
       // only copy visible tracks
@@ -20008,18 +20009,18 @@ morpheus.ActionManager = function () {
         .getVisibleTrackNames(false);
       var rowFieldIndices = [];
       _.each(visibleRowFields, function (name) {
-        var index = morpheus.MetadataUtil.indexOf(
+        var index = phantasus.MetadataUtil.indexOf(
           rowMetadata, name);
         if (index !== -1) {
           rowFieldIndices.push(index);
         }
       });
-      rowMetadata = new morpheus.MetadataModelColumnView(
+      rowMetadata = new phantasus.MetadataModelColumnView(
         rowMetadata, rowFieldIndices);
 
-      var text = new morpheus.GctWriter()
+      var text = new phantasus.GctWriter()
         .write(dataset);
-      morpheus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([{
         format: 'text/plain',
         data: text
       }]);
@@ -20028,11 +20029,11 @@ morpheus.ActionManager = function () {
   });
   var _this = this;
   console.log(_this);
-  [new morpheus.HClusterTool(), new morpheus.MarkerSelection(),
-    new morpheus.NearestNeighbors(), new morpheus.AdjustDataTool(),
-    new morpheus.CollapseDatasetTool(), new morpheus.CreateAnnotation(), new morpheus.SimilarityMatrixTool(),
-    new morpheus.TransposeTool(), new morpheus.TsneTool(), new morpheus.DevAPI(),
-    new morpheus.KmeansTool(), new morpheus.LimmaTool()].forEach(function (tool) {
+  [new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
+    new phantasus.NearestNeighbors(), new phantasus.AdjustDataTool(),
+    new phantasus.CollapseDatasetTool(), new phantasus.CreateAnnotation(), new phantasus.SimilarityMatrixTool(),
+    new phantasus.TransposeTool(), new phantasus.TsneTool(), new phantasus.DevAPI(),
+    new phantasus.KmeansTool(), new phantasus.LimmaTool()].forEach(function (tool) {
     _this.add({
 
       name: tool.toString(),
@@ -20040,13 +20041,13 @@ morpheus.ActionManager = function () {
         return tool;
       },
       cb: function (options) {
-        morpheus.HeatMap.showTool(tool, options.heatMap);
+        phantasus.HeatMap.showTool(tool, options.heatMap);
       }
     });
   });
 
 };
-morpheus.ActionManager.prototype = {
+phantasus.ActionManager.prototype = {
   getActions: function () {
     return this.actions;
   },
@@ -20061,7 +20062,7 @@ morpheus.ActionManager.prototype = {
 
     args.heatMap = this.heatMap;
     action.cb(args);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: '',
       eventAction: name
     });
@@ -20072,13 +20073,13 @@ morpheus.ActionManager.prototype = {
   }
 };
 
-morpheus.CanvasUtil = function () {
+phantasus.CanvasUtil = function () {
 };
-morpheus.CanvasUtil.dragging = false;
+phantasus.CanvasUtil.dragging = false;
 
-morpheus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-morpheus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
-morpheus.CanvasUtil.getPreferredSize = function (c) {
+phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+phantasus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
+phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
   var prefWidth = c.getPrefWidth();
   var prefHeight = c.getPrefHeight();
@@ -20091,15 +20092,15 @@ morpheus.CanvasUtil.getPreferredSize = function (c) {
   }
   return size;
 };
-morpheus.CanvasUtil.BACKING_SCALE = 1;
+phantasus.CanvasUtil.BACKING_SCALE = 1;
 if (typeof window !== 'undefined' && 'devicePixelRatio' in window) {
   if (window.devicePixelRatio > 1) {
-    morpheus.CanvasUtil.BACKING_SCALE = window.devicePixelRatio;
+    phantasus.CanvasUtil.BACKING_SCALE = window.devicePixelRatio;
   }
 }
 
-morpheus.CanvasUtil.setBounds = function (canvas, bounds) {
-  var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+phantasus.CanvasUtil.setBounds = function (canvas, bounds) {
+  var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
 
   if (bounds.height != null) {
     canvas.height = bounds.height * backingScale;
@@ -20117,7 +20118,7 @@ morpheus.CanvasUtil.setBounds = function (canvas, bounds) {
   }
 };
 
-morpheus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
+phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
   if (size2 < 0) {
     return;
   }
@@ -20199,20 +20200,20 @@ morpheus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
   context.stroke();
 
 };
-morpheus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {
+phantasus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {
   context.beginPath();
   context.moveTo(x1, y1);
   context.lineTo(x2, y2);
   context.stroke();
 };
-morpheus.CanvasUtil.resetTransform = function (context) {
+phantasus.CanvasUtil.resetTransform = function (context) {
   context.setTransform(1, 0, 0, 1, 0, 0);
-  if (morpheus.CanvasUtil.BACKING_SCALE !== 1) {
-    context.scale(morpheus.CanvasUtil.BACKING_SCALE,
-      morpheus.CanvasUtil.BACKING_SCALE);
+  if (phantasus.CanvasUtil.BACKING_SCALE !== 1) {
+    context.scale(phantasus.CanvasUtil.BACKING_SCALE,
+      phantasus.CanvasUtil.BACKING_SCALE);
   }
 };
-morpheus.CanvasUtil.bezierCurveTo = function (context, start, end) {
+phantasus.CanvasUtil.bezierCurveTo = function (context, start, end) {
   var m1 = (start[1] + end[1]) / 2;
   context.beginPath();
   context.moveTo(start[0], start[1]);
@@ -20220,7 +20221,7 @@ morpheus.CanvasUtil.bezierCurveTo = function (context, start, end) {
   context.bezierCurveTo(start[0], m1, end[0], m1, end[0], end[1]);
   context.stroke();
 };
-morpheus.CanvasUtil.createCanvas = function () {
+phantasus.CanvasUtil.createCanvas = function () {
   var $c = $('<canvas></canvas>');
   $c.attr('tabindex', '0');
   $c.css({
@@ -20232,11 +20233,11 @@ morpheus.CanvasUtil.createCanvas = function () {
   });
   return $c[0];
 };
-morpheus.CanvasUtil.getHeaderStringWidth = function (context, s) {
-  context.font = '14px ' + morpheus.CanvasUtil.FONT_NAME;
+phantasus.CanvasUtil.getHeaderStringWidth = function (context, s) {
+  context.font = '14px ' + phantasus.CanvasUtil.FONT_NAME;
   return context.measureText(s).width + 18;
 };
-morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
+phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
                                                      end) {
   if (positions.getSize() < 6) {
     return 0;
@@ -20246,9 +20247,9 @@ morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
     return 0;
   }
 
-  context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+  context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
 
-  var toString = morpheus.VectorTrack.vectorToString(vector);
+  var toString = phantasus.VectorTrack.vectorToString(vector);
   var maxWidth = 0;
   // var maxWidth2 = 0;
   var n = end <= 0 ? vector.size() : Math.min(end, vector.size());
@@ -20269,7 +20270,7 @@ morpheus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
   }
   return maxWidth > 0 ? (maxWidth + 2) : maxWidth;
 };
-morpheus.CanvasUtil.clipString = function (context, string, availTextWidth) {
+phantasus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   var textWidth = context.measureText(string).width;
   if (textWidth <= availTextWidth) {
     return string;
@@ -20290,7 +20291,7 @@ morpheus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   }
   return string + clipString;
 };
-morpheus.CanvasUtil.toSVG = function (drawable, file) {
+phantasus.CanvasUtil.toSVG = function (drawable, file) {
   var totalSize = {
     width: drawable.getWidth(),
     height: drawable.getHeight()
@@ -20310,12 +20311,12 @@ morpheus.CanvasUtil.toSVG = function (drawable, file) {
   });
   saveAs(blob, file);
 };
-morpheus.CanvasUtil.getMousePos = function (element, event, useDelta) {
-  return morpheus.CanvasUtil.getMousePosWithScroll(element, event, 0, 0,
+phantasus.CanvasUtil.getMousePos = function (element, event, useDelta) {
+  return phantasus.CanvasUtil.getMousePosWithScroll(element, event, 0, 0,
     useDelta);
 };
 
-morpheus.CanvasUtil.getClientXY = function (event, useDelta) {
+phantasus.CanvasUtil.getClientXY = function (event, useDelta) {
   var clientX;
   var clientY;
   if (event.pointers) {
@@ -20335,13 +20336,13 @@ morpheus.CanvasUtil.getClientXY = function (event, useDelta) {
     y: clientY
   };
 };
-morpheus.CanvasUtil.getMousePosWithScroll = function (element, event, scrollX,
+phantasus.CanvasUtil.getMousePosWithScroll = function (element, event, scrollX,
                                                       scrollY, useDelta) {
-  return morpheus.CanvasUtil._getMousePosWithScroll(element, scrollX,
-    scrollY, morpheus.CanvasUtil.getClientXY(event, useDelta));
+  return phantasus.CanvasUtil._getMousePosWithScroll(element, scrollX,
+    scrollY, phantasus.CanvasUtil.getClientXY(event, useDelta));
 };
 
-morpheus.CanvasUtil._getMousePosWithScroll = function (element, scrollX,
+phantasus.CanvasUtil._getMousePosWithScroll = function (element, scrollX,
                                                        scrollY, clientXY) {
   var rect = element.getBoundingClientRect();
   return {
@@ -20351,13 +20352,13 @@ morpheus.CanvasUtil._getMousePosWithScroll = function (element, scrollX,
 };
 
 /**
- * @param {morpheus.Set} [] -
+ * @param {phantasus.Set} [] -
  *            options.set set of selected items
- * @see morpheus.Table
+ * @see phantasus.Table
  */
-morpheus.CheckBoxList = function (options) {
+phantasus.CheckBoxList = function (options) {
   var _this = this;
-  var set = options.set || new morpheus.Set();
+  var set = options.set || new phantasus.Set();
   options = $.extend(true, {}, {
     height: '150px',
     showHeader: false,
@@ -20368,14 +20369,14 @@ morpheus.CheckBoxList = function (options) {
       var header = [];
       // header
       // .push('<div style="overflow: hidden;text-overflow: ellipsis;"
-      // class="morpheus-hover">');
+      // class="phantasus-hover">');
       header.push('<span><input name="toggle" type="checkbox" '
         + (set.has(_this.getter(item)) ? ' checked' : '') + '/> ');
       header.push('</span>');
       // header
       // .push('<button
       // style="background-color:inherit;position:absolute;top:0;right:0;line-height:inherit;padding:0px;margin-top:4px;"
-      // class="btn btn-link morpheus-hover-show">only</button>');
+      // class="btn btn-link phantasus-hover-show">only</button>');
       // header.push('</div>');
       return header.join('');
       // return '<span><input name="toggle"
@@ -20384,7 +20385,7 @@ morpheus.CheckBoxList = function (options) {
       // + '/> </span>'
     }
   }, options);
-  options = morpheus.Table.createOptions(options);
+  options = phantasus.Table.createOptions(options);
   if (options.columns.length === 1) {
     options.maxWidth = 583;
   }
@@ -20399,7 +20400,7 @@ morpheus.CheckBoxList = function (options) {
   this.getter = idColumn.getter;
   var html = [];
 
-  var table = new morpheus.Table(options);
+  var table = new phantasus.Table(options);
   if (options.columns.length === 1) {
     options.$el.find('.slick-table-header').find('[name=right]').remove();
   }
@@ -20497,7 +20498,7 @@ morpheus.CheckBoxList = function (options) {
 
   this.set = set;
   this.table = table;
-  $selection.html(morpheus.Util.intFormat(set.size()) + '/' + morpheus.Util.intFormat(table.getAllItemCount()));
+  $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
 
   var priorCount = 0;
   this.table.on('checkBoxSelectionChanged', function () {
@@ -20531,7 +20532,7 @@ morpheus.CheckBoxList = function (options) {
       }
     }
 
-    $selection.html(morpheus.Util.intFormat(set.size()) + '/' + morpheus.Util.intFormat(table.getAllItemCount()));
+    $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
 
     _this.table.redraw();
   });
@@ -20541,7 +20542,7 @@ morpheus.CheckBoxList = function (options) {
       var $target = $(e.target);
       var item = table.getItems()[e.row];
       var value = _this.getter(item);
-      if ($target.is('.morpheus-hover-show')) { // only
+      if ($target.is('.phantasus-hover-show')) { // only
         set.clear();
         set.add(value);
         _this.table.trigger('checkBoxSelectionChanged', {
@@ -20565,7 +20566,7 @@ morpheus.CheckBoxList = function (options) {
     });
 
 };
-morpheus.CheckBoxList.prototype = {
+phantasus.CheckBoxList.prototype = {
   searchWithPredicates: function (predicates) {
     this.table.searchWithPredicates(predicates);
   },
@@ -20619,7 +20620,7 @@ morpheus.CheckBoxList.prototype = {
   setSelectedValues: function (values) {
     this.set.clear();
 
-    if (morpheus.Util.isArray(values)) {
+    if (phantasus.Util.isArray(values)) {
       for (var i = 0; i < values.length; i++) {
         this.set.add(values[i]);
       }
@@ -20640,7 +20641,7 @@ morpheus.CheckBoxList.prototype = {
   },
   setItems: function (items) {
     // remove items in selection that are not in new items
-    var newItems = new morpheus.Set();
+    var newItems = new phantasus.Set();
     var getter = this.getter;
     for (var i = 0; i < items.length; i++) {
       newItems.add(getter(items[i]));
@@ -20661,11 +20662,11 @@ morpheus.CheckBoxList.prototype = {
   }
 };
 
-morpheus.ColumnDendrogram = function (heatMap, tree, positions, project) {
-  morpheus.AbstractDendrogram.call(this, heatMap, tree, positions,
-    project, morpheus.AbstractDendrogram.Type.COLUMN);
+phantasus.ColumnDendrogram = function (heatMap, tree, positions, project) {
+  phantasus.AbstractDendrogram.call(this, heatMap, tree, positions,
+    project, phantasus.AbstractDendrogram.Type.COLUMN);
 };
-morpheus.ColumnDendrogram.prototype = {
+phantasus.ColumnDendrogram.prototype = {
   drawNode: function (context, node) {
     var radius = this.getNodeRadius(node);
     var pix = this.toPix(node);
@@ -20697,7 +20698,7 @@ morpheus.ColumnDendrogram.prototype = {
   },
   paintMouseOver: function (clip, context) {
     if (this.project.getHoverColumnIndex() !== -1) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(-clip.x, 0);
       this.drawColumnBorder(context, this.positions, this.project
         .getHoverColumnIndex(), this.getUnscaledWidth());
@@ -20717,10 +20718,10 @@ morpheus.ColumnDendrogram.prototype = {
     context.stroke();
   },
   getMaxIndex: function (clip) {
-    return morpheus.Positions.getRight(clip, this.positions);
+    return phantasus.Positions.getRight(clip, this.positions);
   },
   getMinIndex: function (clip) {
-    return morpheus.Positions.getLeft(clip, this.positions);
+    return phantasus.Positions.getLeft(clip, this.positions);
   },
   getPreferredSize: function (context) {
     return {
@@ -20781,15 +20782,15 @@ morpheus.ColumnDendrogram.prototype = {
     context.stroke();
   }
 };
-morpheus.Util.extend(morpheus.ColumnDendrogram, morpheus.AbstractDendrogram);
+phantasus.Util.extend(phantasus.ColumnDendrogram, phantasus.AbstractDendrogram);
 
-morpheus.ConditionalRenderingUI = function (heatmap) {
+phantasus.ConditionalRenderingUI = function (heatmap) {
   var _this = this;
   this.heatmap = heatmap;
   var $div = $('<div class="container-fluid" style="min-width:180px;"></div>');
   $div.on('click', '[data-name=add]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     // add after
     var index = $row.index();
     var condition = {
@@ -20811,7 +20812,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
   });
   $div.on('click', '[data-name=delete]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     heatmap.heatmap.getColorScheme().getConditions().remove(index);
     heatmap.revalidate();
@@ -20820,7 +20821,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
   });
   var html = [];
   html
-    .push('<div class="morpheus-entry">');
+    .push('<div class="phantasus-entry">');
   html.push('<div class="row">');
   html
     .push('<div style="padding-bottom:20px;" class="col-xs-8"><a class="btn btn-default btn-xs"' +
@@ -20839,7 +20840,7 @@ morpheus.ConditionalRenderingUI = function (heatmap) {
 
 };
 
-morpheus.ConditionalRenderingUI.prototype = {
+phantasus.ConditionalRenderingUI.prototype = {
   add: function (condition) {
     var _this = this;
     // shape: shapes and line
@@ -20849,7 +20850,7 @@ morpheus.ConditionalRenderingUI.prototype = {
     // value >= x and <= x
     var html = [];
     html.push('<div style="border-top:1px solid LightGrey;padding-bottom:6px;padding-top:6px;"' +
-      ' class="morpheus-entry">');
+      ' class="phantasus-entry">');
     html.push('<form class="form-horizontal">');
     // series
     html.push('<div class="form-group">');
@@ -20857,8 +20858,8 @@ morpheus.ConditionalRenderingUI.prototype = {
       .push('<label class="col-xs-2">Series</label>');
     html.push('<div class="col-xs-6">');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="cond_series">');
-    html.push(morpheus.Util.createOptions(morpheus.DatasetUtil
+      .push('<select class="form-control phantasus-form-control-inline" name="cond_series">');
+    html.push(phantasus.Util.createOptions(phantasus.DatasetUtil
       .getSeriesNames(this.heatmap.getProject().getFullDataset())));
     html.push('</select>');
     html.push('</div>');
@@ -20869,21 +20870,21 @@ morpheus.ConditionalRenderingUI.prototype = {
     html.push('<label class="col-xs-2">Condition</label>');
     html.push('<div class="col-xs-6">');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="lower"><option value="gte">&gt;=</option><option value="gt">&gt;</option></select>');
+      .push('<select class="form-control phantasus-form-control-inline" name="lower"><option value="gte">&gt;=</option><option value="gt">&gt;</option></select>');
     html
-      .push('<input class="form-control morpheus-form-control-inline" name="v1" size="5" type="text">');
+      .push('<input class="form-control phantasus-form-control-inline" name="v1" size="5" type="text">');
     html.push('<span style="margin-right:1em;">and</span>');
     html
-      .push('<select class="form-control morpheus-form-control-inline" name="upper"><option value="lte">&lt;=</option><option value="lt">&lt;</option></select>');
+      .push('<select class="form-control phantasus-form-control-inline" name="upper"><option value="lte">&lt;=</option><option value="lt">&lt;</option></select>');
     html
-      .push('<input class="form-control morpheus-form-control-inline" name="v2" size="5" type="text">');
+      .push('<input class="form-control phantasus-form-control-inline" name="v2" size="5" type="text">');
     html.push('</div>');
     html.push('</div>');
 
     // shape
     html.push('<div class="form-group">');
     html.push('<label class="col-xs-2">Shape</label>');
-    var shapeField = new morpheus.ShapeField(['circle', 'square',
+    var shapeField = new phantasus.ShapeField(['circle', 'square',
       'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
       'triangle-right']);
     html.push('<div class="col-xs-4">');
@@ -20912,7 +20913,7 @@ morpheus.ConditionalRenderingUI.prototype = {
       .push('<a class="btn btn-default btn-xs" role="button" data-name="delete"' +
         ' href="#">Delete Condition</a>');
     html.push('</div></div>');
-    html.push('</div>'); // morpheus-entry
+    html.push('</div>'); // phantasus-entry
     var $el = $(html.join(''));
     shapeField.$el.appendTo($el.find('[data-name=shapeHolder]'));
     var $color = $el.find('[name=color]');
@@ -21006,8 +21007,8 @@ morpheus.ConditionalRenderingUI.prototype = {
   }
 };
 
-morpheus.DendrogramUtil = {};
-morpheus.DendrogramUtil.setIndices = function (root, counter) {
+phantasus.DendrogramUtil = {};
+phantasus.DendrogramUtil.setIndices = function (root, counter) {
   counter = counter || 0;
   var setIndex = function (node) {
     var children = node.children;
@@ -21051,7 +21052,7 @@ morpheus.DendrogramUtil.setIndices = function (root, counter) {
     return true;
   });
 };
-morpheus.DendrogramUtil.convertEdgeLengthsToHeights = function (rootNode) {
+phantasus.DendrogramUtil.convertEdgeLengthsToHeights = function (rootNode) {
   var maxHeight = 0;
 
   function setHeights(node, height) {
@@ -21070,7 +21071,7 @@ morpheus.DendrogramUtil.convertEdgeLengthsToHeights = function (rootNode) {
 
   setHeights(rootNode, 0);
   var counter = 0;
-  morpheus.DendrogramUtil.dfs(rootNode, function (node) {
+  phantasus.DendrogramUtil.dfs(rootNode, function (node) {
     node.id = counter;
     counter++;
     node.height = maxHeight - node.height;
@@ -21081,7 +21082,7 @@ morpheus.DendrogramUtil.convertEdgeLengthsToHeights = function (rootNode) {
     n: counter
   };
 };
-morpheus.DendrogramUtil.writeNewick = function (node, out) {
+phantasus.DendrogramUtil.writeNewick = function (node, out) {
   if (node.children != null && node.children.length > 0) {
     // indent
     out.push('(');
@@ -21089,7 +21090,7 @@ morpheus.DendrogramUtil.writeNewick = function (node, out) {
       if (i > 0) {
         out.push(',');
       }
-      morpheus.DendrogramUtil.writeNewick(node.children[i], out);
+      phantasus.DendrogramUtil.writeNewick(node.children[i], out);
     }
     out.push(')');
   }
@@ -21099,7 +21100,7 @@ morpheus.DendrogramUtil.writeNewick = function (node, out) {
   out.push(parentHeight - node.height);
 
 };
-morpheus.DendrogramUtil.parseNewick = function (text) {
+phantasus.DendrogramUtil.parseNewick = function (text) {
   var rootNode = Newick.parse(text);
   var counter = 0;
   var leafNodes = [];
@@ -21123,10 +21124,10 @@ morpheus.DendrogramUtil.parseNewick = function (text) {
   }
 
   visit(rootNode);
-  var maxHeight = morpheus.DendrogramUtil
+  var maxHeight = phantasus.DendrogramUtil
     .convertEdgeLengthsToHeights(rootNode).maxHeight;
-  morpheus.DendrogramUtil.setNodeDepths(rootNode);
-  morpheus.DendrogramUtil.setIndices(rootNode);
+  phantasus.DendrogramUtil.setNodeDepths(rootNode);
+  phantasus.DendrogramUtil.setIndices(rootNode);
   return {
     maxHeight: rootNode.height,
     rootNode: rootNode,
@@ -21134,9 +21135,9 @@ morpheus.DendrogramUtil.parseNewick = function (text) {
     nLeafNodes: leafNodes.length
   };
 };
-morpheus.DendrogramUtil.cutAtHeight = function (rootNode, h) {
+phantasus.DendrogramUtil.cutAtHeight = function (rootNode, h) {
   var roots = [];
-  morpheus.DendrogramUtil.dfs(rootNode, function (node) {
+  phantasus.DendrogramUtil.dfs(rootNode, function (node) {
     if (node.height < h) {
       roots.push(node);
       return false;
@@ -21148,7 +21149,7 @@ morpheus.DendrogramUtil.cutAtHeight = function (rootNode, h) {
   });
   return roots;
 };
-morpheus.DendrogramUtil.getDeepestChild = function (node, isMin) {
+phantasus.DendrogramUtil.getDeepestChild = function (node, isMin) {
   while (true) {
     if (node.children === undefined) {
       return node;
@@ -21169,7 +21170,7 @@ morpheus.DendrogramUtil.getDeepestChild = function (node, isMin) {
  * Pre-order depth first traversal 1. Visit the root. 2. Traverse the left
  * subtree. 3. Traverse the right subtree.
  */
-morpheus.DendrogramUtil.dfs = function (node, callback, childrenAccessor) {
+phantasus.DendrogramUtil.dfs = function (node, callback, childrenAccessor) {
   if (childrenAccessor === undefined) {
     childrenAccessor = function (n) {
       return n.children;
@@ -21181,13 +21182,13 @@ morpheus.DendrogramUtil.dfs = function (node, callback, childrenAccessor) {
     if (children && (n = children.length)) {
       var i = -1;
       while (++i < n) {
-        morpheus.DendrogramUtil.dfs(children[i], callback,
+        phantasus.DendrogramUtil.dfs(children[i], callback,
           childrenAccessor);
       }
     }
   }
 };
-morpheus.DendrogramUtil.copyTree = function (tree) {
+phantasus.DendrogramUtil.copyTree = function (tree) {
   var counter = 0;
 
   function recurse(node) {
@@ -21220,9 +21221,9 @@ morpheus.DendrogramUtil.copyTree = function (tree) {
     rootNode: rootNode
   };
 };
-morpheus.DendrogramUtil.collapseAtDepth = function (rootNode, maxDepth) {
+phantasus.DendrogramUtil.collapseAtDepth = function (rootNode, maxDepth) {
   // restore collapsed children
-  morpheus.DendrogramUtil.dfs(rootNode, function (d) {
+  phantasus.DendrogramUtil.dfs(rootNode, function (d) {
     if (d.collapsedChildren) {
       d.children = d.collapsedChildren;
       d.collapsedChildren = undefined;
@@ -21230,7 +21231,7 @@ morpheus.DendrogramUtil.collapseAtDepth = function (rootNode, maxDepth) {
     return true;
   });
   // collapse nodes below specified depth
-  morpheus.DendrogramUtil.dfs(rootNode, function (d) {
+  phantasus.DendrogramUtil.dfs(rootNode, function (d) {
     var depth = d.depth;
     if (depth > maxDepth) {
       d.collapsedChildren = d.children;
@@ -21240,7 +21241,7 @@ morpheus.DendrogramUtil.collapseAtDepth = function (rootNode, maxDepth) {
     return true;
   });
 };
-morpheus.DendrogramUtil.setNodeDepths = function (rootNode) {
+phantasus.DendrogramUtil.setNodeDepths = function (rootNode) {
   var max = 0;
 
   function recurse(node, depth) {
@@ -21261,7 +21262,7 @@ morpheus.DendrogramUtil.setNodeDepths = function (rootNode) {
   recurse(rootNode, 0);
   return max;
 };
-morpheus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
+phantasus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
                                                    project, summaryFunction) {
   summaryFunction = summaryFunction || function (array) {
       var min = Number.MAX_VALUE;
@@ -21285,12 +21286,12 @@ morpheus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
   setWeights(root);
   // sort children by weight
   var nodeIdToModelIndex = {};
-  var leafNodes = morpheus.DendrogramUtil.getLeafNodes(root);
+  var leafNodes = phantasus.DendrogramUtil.getLeafNodes(root);
   _.each(leafNodes, function (node) {
     nodeIdToModelIndex[node.id] = project
       .convertViewColumnIndexToModel(node.index);
   });
-  morpheus.DendrogramUtil.dfs(root, function (node) {
+  phantasus.DendrogramUtil.dfs(root, function (node) {
     if (node.children) {
       node.children.sort(function (a, b) {
         return (a.weight === b.weight ? 0 : (a.weight < b.weight ? -1
@@ -21299,7 +21300,7 @@ morpheus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
     }
     return true;
   });
-  morpheus.DendrogramUtil.setIndices(root);
+  phantasus.DendrogramUtil.setIndices(root);
   var sortOrder = [];
   _.each(leafNodes, function (node) {
     var oldModelIndex = nodeIdToModelIndex[node.id];
@@ -21308,9 +21309,9 @@ morpheus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
   });
   return sortOrder;
 };
-morpheus.DendrogramUtil.leastCommonAncestor = function (leafNodes) {
+phantasus.DendrogramUtil.leastCommonAncestor = function (leafNodes) {
   function getPathToRoot(node) {
-    var path = new morpheus.Map();
+    var path = new phantasus.Map();
     while (node != null) {
       path.set(node.id, node);
       node = node.parent;
@@ -21338,24 +21339,24 @@ morpheus.DendrogramUtil.leastCommonAncestor = function (leafNodes) {
   });
   return maxNode;
 };
-// morpheus.DendrogramUtil.computePositions = function(rootNode, positions)
+// phantasus.DendrogramUtil.computePositions = function(rootNode, positions)
 // {
 // if (rootNode == null) {
 // return;
 // }
-// morpheus.DendrogramUtil._computePositions(rootNode, positions);
+// phantasus.DendrogramUtil._computePositions(rootNode, positions);
 // };
 // /**
 // * position is (left+right)/2
 // */
-// morpheus.DendrogramUtil._computePositions = function(node, positions) {
+// phantasus.DendrogramUtil._computePositions = function(node, positions) {
 // if (node.children !== undefined) {
 // var children = node.children;
 // var left = children[0];
 // var right = children[1];
-// morpheus.DendrogramUtil._computePositions(left, positions);
-// morpheus.DendrogramUtil._computePositions(right, positions);
-// morpheus.DendrogramUtil.setIndex(node);
+// phantasus.DendrogramUtil._computePositions(left, positions);
+// phantasus.DendrogramUtil._computePositions(right, positions);
+// phantasus.DendrogramUtil.setIndex(node);
 // node.position = (left.position + right.position) / 2;
 // } else {
 // node.position = positions.getItemSize(node.index) / 2
@@ -21371,27 +21372,27 @@ morpheus.DendrogramUtil.leastCommonAncestor = function (leafNodes) {
  *            'exact' or 'contains'
  * @param options.matchAllPredicates Whether to match all predicates
  */
-morpheus.DendrogramUtil.search = function (options) {
+phantasus.DendrogramUtil.search = function (options) {
   var searchText = options.text;
   var rootNode = options.rootNode;
-  var tokens = morpheus.Util.getAutocompleteTokens(searchText);
+  var tokens = phantasus.Util.getAutocompleteTokens(searchText);
   var predicates;
   var nmatches = 0;
   var matchAllPredicates = options.matchAllPredicates === true;
 
   if (tokens == null || tokens.length == 0) {
-    morpheus.DendrogramUtil.dfs(rootNode, function (node) {
+    phantasus.DendrogramUtil.dfs(rootNode, function (node) {
       node.search = false;
       return true;
     });
     nmatches = -1;
   } else {
-    predicates = morpheus.Util.createSearchPredicates({
+    predicates = phantasus.Util.createSearchPredicates({
       tokens: tokens,
       defaultMatchMode: options.defaultMatchMode
     });
     var npredicates = predicates.length;
-    morpheus.DendrogramUtil
+    phantasus.DendrogramUtil
       .dfs(
         rootNode,
         function (node) {
@@ -21463,7 +21464,7 @@ morpheus.DendrogramUtil.search = function (options) {
   return nmatches;
 }
 ;
-morpheus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
+phantasus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
                                                            isColumns) {
   if (isColumns) {
     heatMap.getHeatMapElementComponent().getColumnPositions().setSize(13);
@@ -21473,7 +21474,7 @@ morpheus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
   var expandedLeafNodes = {};
   var dendrogram = isColumns ? heatMap.columnDendrogram
     : heatMap.rowDendrogram;
-  morpheus.DendrogramUtil.dfs(dendrogram.tree.rootNode, function (node) {
+  phantasus.DendrogramUtil.dfs(dendrogram.tree.rootNode, function (node) {
     for (var i = node.minIndex; i <= node.maxIndex; i++) {
       if (node.search) {
         expandedLeafNodes[i] = true;
@@ -21504,17 +21505,17 @@ morpheus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
     heatMap.getHeatMapElementComponent().getColumnPositions()
       .setSquishedIndices(squishedIndices);
     heatMap.getProject().setGroupColumns(
-      [new morpheus.SpecifiedGroupByKey(clusterIds)], false);
+      [new phantasus.SpecifiedGroupByKey(clusterIds)], false);
   } else {
     heatMap.getHeatMapElementComponent().getRowPositions()
       .setSquishedIndices(squishedIndices);
     heatMap.getProject().setGroupRows(
-      [new morpheus.SpecifiedGroupByKey(clusterIds)], false);
+      [new phantasus.SpecifiedGroupByKey(clusterIds)], false);
   }
 };
-morpheus.DendrogramUtil.getLeafNodes = function (rootNode) {
+phantasus.DendrogramUtil.getLeafNodes = function (rootNode) {
   var leafNodes = [];
-  morpheus.DendrogramUtil.dfs(rootNode, function (node) {
+  phantasus.DendrogramUtil.dfs(rootNode, function (node) {
     if (node.children === undefined) {
       leafNodes.push(node);
     }
@@ -21523,8 +21524,8 @@ morpheus.DendrogramUtil.getLeafNodes = function (rootNode) {
   return leafNodes;
 };
 
-morpheus.DiscreteColorSchemeChooser = function (options) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.DiscreteColorSchemeChooser = function (options) {
+  var formBuilder = new phantasus.FormBuilder();
   var map = options.colorScheme.scale;
   var html = ['<select name="colorPicker" class="selectpicker" data-live-search="true">'];
   map.forEach(function (val, key) {
@@ -21567,29 +21568,29 @@ morpheus.DiscreteColorSchemeChooser = function (options) {
   });
   this.$div = formBuilder.$form;
 };
-morpheus.DiscreteColorSchemeChooser.prototype = {
+phantasus.DiscreteColorSchemeChooser.prototype = {
   dispose: function () {
   }
 };
-morpheus.Util.extend(morpheus.DiscreteColorSchemeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.DiscreteColorSchemeChooser, phantasus.Events);
 
-morpheus.DiscreteColorSupplier = function () {
-  this.colorMap = new morpheus.Map();
+phantasus.DiscreteColorSupplier = function () {
+  this.colorMap = new phantasus.Map();
   this.hiddenValue = 0;
-  this.hiddenValues = new morpheus.Set();
-  morpheus.AbstractColorSupplier.call(this);
-  this.scalingMode = morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+  this.hiddenValues = new phantasus.Set();
+  phantasus.AbstractColorSupplier.call(this);
+  this.scalingMode = phantasus.HeatMapColorScheme.ScalingMode.FIXED;
 };
 
-morpheus.DiscreteColorSupplier.prototype = {
+phantasus.DiscreteColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.DiscreteColorSupplier();
+    return new phantasus.DiscreteColorSupplier();
   },
   /**
    * @param.array Array of name, value, color pairs
    */
   setColorMap: function (array) {
-    this.colorMap = new morpheus.Map();
+    this.colorMap = new phantasus.Map();
     this.colors = [];
     this.fractions = [];
     this.names = [];
@@ -21607,7 +21608,7 @@ morpheus.DiscreteColorSupplier.prototype = {
   copy: function () {
     var c = this.createInstance();
     c.names = this.names.slice(0);
-    c.colorMap = new morpheus.Map();
+    c.colorMap = new phantasus.Map();
     this.colorMap.forEach(function (color, value) {
       c.colorMap.set(value, color);
     });
@@ -21635,11 +21636,11 @@ morpheus.DiscreteColorSupplier.prototype = {
     return this.colorMap.get(value);
   }
 };
-morpheus.Util.extend(morpheus.DiscreteColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.DiscreteColorSupplier,
+  phantasus.AbstractColorSupplier);
 
-morpheus.Divider = function (vertical) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.Divider = function (vertical) {
+  phantasus.AbstractCanvas.call(this, false);
   this.vertical = vertical;
   var that = this;
   var canvas = this.canvas;
@@ -21657,10 +21658,10 @@ morpheus.Divider = function (vertical) {
       width: 15
     });
   }
-  this.hammer = morpheus.Util.hammer(canvas, ['pan']).on('panstart',
+  this.hammer = phantasus.Util.hammer(canvas, ['pan']).on('panstart',
     this.panstart = function (event) {
       that.trigger('resizeStart');
-      morpheus.CanvasUtil.dragging = true;
+      phantasus.CanvasUtil.dragging = true;
     }).on('panmove', this.panmove = function (event) {
     if (that.vertical) {
       that.trigger('resize', {
@@ -21672,15 +21673,15 @@ morpheus.Divider = function (vertical) {
       });
     }
   }).on('panend', this.panend = function (event) {
-    morpheus.CanvasUtil.dragging = false;
+    phantasus.CanvasUtil.dragging = false;
     that.trigger('resizeEnd');
   });
   this.paint();
 
 };
-morpheus.Divider.prototype = {
+phantasus.Divider.prototype = {
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('panstart', this.panstart).off('panmove', this.panmove).off('panend', this.panend);
     this.hammer.destroy();
   },
@@ -21708,10 +21709,10 @@ morpheus.Divider.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.Divider, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.Divider, morpheus.Events);
+phantasus.Util.extend(phantasus.Divider, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.Divider, phantasus.Events);
 
-morpheus.DualList = function (leftOptions, rightOptions) {
+phantasus.DualList = function (leftOptions, rightOptions) {
   var html = [];
   html.push('<div class="container-fluid">');
   html.push('<div class="row">');
@@ -21757,7 +21758,7 @@ morpheus.DualList = function (leftOptions, rightOptions) {
   }
 };
 
-morpheus.DualList.prototype = {
+phantasus.DualList.prototype = {
   addSelected: function () {
     var left = this.left;
     var right = this.right;
@@ -21819,7 +21820,7 @@ morpheus.DualList.prototype = {
     for (var i = 0; i < selectedOptions.length; i++) {
       indices.push(selectedOptions[i].index);
     }
-    var index = morpheus.Util.indexSort(indices, false);
+    var index = phantasus.Util.indexSort(indices, false);
     for (var i = 0; i < selectedOptions.length; i++) {
       var sel = selectedOptions[index[i]].index;
       var optHTML = right.options[sel].innerHTML;
@@ -21839,7 +21840,7 @@ morpheus.DualList.prototype = {
     for (var i = 0; i < selectedOptions.length; i++) {
       indices.push(selectedOptions[i].index);
     }
-    var index = morpheus.Util.indexSort(indices, false);
+    var index = phantasus.Util.indexSort(indices, false);
     for (var i = 0; i < selectedOptions.length; i++) {
       var sel = selectedOptions[index[i]].index;
       var optHTML = right.options[sel].innerHTML;
@@ -21853,7 +21854,7 @@ morpheus.DualList.prototype = {
   }
 };
 
-morpheus.FilterUI = function (project, isColumns) {
+phantasus.FilterUI = function (project, isColumns) {
   var _this = this;
   this.project = project;
   this.isColumns = isColumns;
@@ -21873,10 +21874,10 @@ morpheus.FilterUI = function (project, isColumns) {
 
   $div.on('click', '[data-name=add]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     // add after
     var index = $row.index();
-    var newFilter = new morpheus.AlwaysTrueFilter();
+    var newFilter = new phantasus.AlwaysTrueFilter();
     (isColumns ? project.getColumnFilter() : project.getRowFilter())
       .insert(index, newFilter);
     $row.after(_this.add(newFilter));
@@ -21884,7 +21885,7 @@ morpheus.FilterUI = function (project, isColumns) {
   });
   $div.on('click', '[data-name=delete]', function (e) {
     var $this = $(this);
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     (isColumns ? project.getColumnFilter() : project.getRowFilter())
       .remove(index);
@@ -21901,7 +21902,7 @@ morpheus.FilterUI = function (project, isColumns) {
   $div.on('change', '[name=by]', function (e) {
     var $this = $(this);
     var fieldName = $this.val();
-    var $row = $this.closest('.morpheus-entry');
+    var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
     _this.createFilter({
       fieldName: fieldName,
@@ -21929,7 +21930,7 @@ morpheus.FilterUI = function (project, isColumns) {
     });
     combinedFilter.on('remove', function (e) {
       // offset of 1 for header
-      var $row = $div.find('.morpheus-entry')[1 + e.index].remove();
+      var $row = $div.find('.phantasus-entry')[1 + e.index].remove();
     });
     combinedFilter.on('and', function (e) {
       $filterMode.prop('checked', e.source.isAnd());
@@ -21938,7 +21939,7 @@ morpheus.FilterUI = function (project, isColumns) {
   }
 };
 
-morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter) {
+phantasus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter) {
   $ui.empty();
   var html = [];
   html.push('<label>Range of values</label><br />');
@@ -21954,7 +21955,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
       'click',
       function (e) {
         e.preventDefault();
-        var newFilter = morpheus.FilterUI.topFilter(project,
+        var newFilter = phantasus.FilterUI.topFilter(project,
           name, isColumns, $ui);
         var index = -1;
         var filters = isColumns ? project.getColumnFilter()
@@ -21978,7 +21979,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
   var $min = $ui.find('[name=min]');
   var $max = $ui.find('[name=max]');
   if (!filter) {
-    filter = new morpheus.RangeFilter(-Number.MAX_VALUE, Number.MAX_VALUE,
+    filter = new phantasus.RangeFilter(-Number.MAX_VALUE, Number.MAX_VALUE,
       name, isColumns);
   } else {
     $min.val(filter.min);
@@ -22001,7 +22002,7 @@ morpheus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter)
   return filter;
 
 };
-morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
+phantasus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
   $ui.empty();
   var html = [];
   html.push('<label>Top</label><br />');
@@ -22019,7 +22020,7 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
       'click',
       function (e) {
         e.preventDefault();
-        var newFilter = morpheus.FilterUI.rangeFilter(project,
+        var newFilter = phantasus.FilterUI.rangeFilter(project,
           name, isColumns, $ui);
         var index = -1;
         var filters = isColumns ? project.getColumnFilter()
@@ -22041,12 +22042,12 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
           .setRowFilter(project.getRowFilter(), true);
       });
   if (!filter) {
-    filter = new morpheus.TopNFilter(NaN, morpheus.TopNFilter.TOP, name, isColumns);
+    filter = new phantasus.TopNFilter(NaN, phantasus.TopNFilter.TOP, name, isColumns);
   } else {
     var dirVal;
-    if (filter.direction === morpheus.TopNFilter.TOP) {
+    if (filter.direction === phantasus.TopNFilter.TOP) {
       dirVal = 'Top';
-    } else if (filter.direction === morpheus.TopNFilter.BOTTOM) {
+    } else if (filter.direction === phantasus.TopNFilter.BOTTOM) {
       dirVal = 'Bottom';
     } else {
       dirVal = 'TopBottom';
@@ -22059,11 +22060,11 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
     var dir = $(this).val();
     var dirVal;
     if (dir === 'Top') {
-      dirVal = morpheus.TopNFilter.TOP;
+      dirVal = phantasus.TopNFilter.TOP;
     } else if (dir === 'Bottom') {
-      dirVal = morpheus.TopNFilter.BOTTOM;
+      dirVal = phantasus.TopNFilter.BOTTOM;
     } else {
-      dirVal = morpheus.TopNFilter.TOP_BOTTOM;
+      dirVal = phantasus.TopNFilter.TOP_BOTTOM;
     }
     filter.setDirection(dirVal);
 
@@ -22079,7 +22080,7 @@ morpheus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) {
 
   return filter;
 };
-morpheus.FilterUI.prototype = {
+phantasus.FilterUI.prototype = {
   /**
    *
    * @param options
@@ -22101,7 +22102,7 @@ morpheus.FilterUI.prototype = {
       $add.appendTo(this.$div);
       $ui = $add.find('[data-name=ui]');
     } else { // existing $div
-      var $row = $div.closest('.morpheus-entry');
+      var $row = $div.closest('.phantasus-entry');
       index = $row.index() - 1;
       $ui = $row.find('[data-name=ui]');
     }
@@ -22111,28 +22112,28 @@ morpheus.FilterUI.prototype = {
       .getColumnMetadata() : this.project.getFullDataset()
       .getRowMetadata()).getByName(fieldName);
 
-    if (filter instanceof morpheus.RangeFilter) {
-      morpheus.FilterUI.rangeFilter(project, fieldName, isColumns, $ui,
+    if (filter instanceof phantasus.RangeFilter) {
+      phantasus.FilterUI.rangeFilter(project, fieldName, isColumns, $ui,
         filter);
-    } else if (filter instanceof morpheus.TopNFilter) {
-      morpheus.FilterUI.topFilter(project, fieldName, isColumns, $ui,
+    } else if (filter instanceof phantasus.TopNFilter) {
+      phantasus.FilterUI.topFilter(project, fieldName, isColumns, $ui,
         filter);
-    } else if (filter == null && morpheus.VectorUtil.isNumber(vector)
-      && morpheus.VectorUtil.containsMoreThanNValues(vector, 9)) {
-      filter = morpheus.FilterUI.rangeFilter(project, fieldName,
+    } else if (filter == null && phantasus.VectorUtil.isNumber(vector)
+      && phantasus.VectorUtil.containsMoreThanNValues(vector, 9)) {
+      filter = phantasus.FilterUI.rangeFilter(project, fieldName,
         isColumns, $ui, filter);
     } else {
-      var set = morpheus.VectorUtil.getSet(vector);
+      var set = phantasus.VectorUtil.getSet(vector);
       var array = set.values();
-      array.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+      array.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
       if (!filter) {
-        filter = new morpheus.VectorFilter(new morpheus.Set(), set
+        filter = new phantasus.VectorFilter(new phantasus.Set(), set
           .size(), fieldName, isColumns);
       } else {
         filter.maxSetSize = array.length;
       }
 
-      var checkBoxList = new morpheus.CheckBoxList({
+      var checkBoxList = new phantasus.CheckBoxList({
         responsive: false,
         $el: $ui,
         items: array,
@@ -22152,7 +22153,7 @@ morpheus.FilterUI.prototype = {
           .set(index, filter);
       } else {
         (isColumns ? project.getColumnFilter() : project.getRowFilter())
-          .set(index, new morpheus.AlwaysTrueFilter());
+          .set(index, new phantasus.AlwaysTrueFilter());
       }
     }
     return filter;
@@ -22161,7 +22162,7 @@ morpheus.FilterUI.prototype = {
   addBase: function () {
     var html = [];
     html
-      .push('<div style="padding-bottom:2px;border-bottom:1px solid #eee" class="morpheus-entry">');
+      .push('<div style="padding-bottom:2px;border-bottom:1px solid #eee" class="phantasus-entry">');
     html.push('<div class="row">');
     html
       .push('<div class="col-xs-12">'
@@ -22181,11 +22182,11 @@ morpheus.FilterUI.prototype = {
   add: function (filter) {
     var project = this.project;
     var isColumns = this.isColumns;
-    var fields = morpheus.MetadataUtil.getMetadataNames(isColumns ? project
+    var fields = phantasus.MetadataUtil.getMetadataNames(isColumns ? project
       .getFullDataset().getColumnMetadata() : project
       .getFullDataset().getRowMetadata());
     var html = [];
-    html.push('<div class="morpheus-entry">');
+    html.push('<div class="phantasus-entry">');
 
     html.push('<div class="form-group">');
     html.push('<label>Field</label>');
@@ -22226,12 +22227,12 @@ morpheus.FilterUI.prototype = {
     html.push('</div>');
 
     html.push('</div>'); // row
-    html.push('</div>'); // morpheus-entry
+    html.push('</div>'); // phantasus-entry
     return html.join('');
   }
 };
 
-morpheus.FormBuilder = function (options) {
+phantasus.FormBuilder = function (options) {
   var that = this;
   this.prefix = _.uniqueId('form');
   this.$form = $('<form></form>');
@@ -22311,7 +22312,7 @@ morpheus.FormBuilder = function (options) {
   // this.fieldColumnDef = '8';
 };
 
-morpheus.FormBuilder.showProgressBar = function (options) {
+phantasus.FormBuilder.showProgressBar = function (options) {
   var content = [];
   content.push('<div class="container-fluid">');
   content.push('<div class="row">');
@@ -22337,12 +22338,12 @@ morpheus.FormBuilder.showProgressBar = function (options) {
     options.stop();
     e.preventDefault();
   });
-  return morpheus.FormBuilder.showInDraggableDiv({
+  return phantasus.FormBuilder.showInDraggableDiv({
     title: options.title,
     $content: $content
   });
 };
-morpheus.FormBuilder.showInDraggableDiv = function (options) {
+phantasus.FormBuilder.showInDraggableDiv = function (options) {
   var width = options.width || '300px';
   var html = [];
   html
@@ -22377,8 +22378,8 @@ morpheus.FormBuilder.showInDraggableDiv = function (options) {
   return $div;
 };
 
-morpheus.FormBuilder.showMessageModal = function (options) {
-  var $div = morpheus.FormBuilder
+phantasus.FormBuilder.showMessageModal = function (options) {
+  var $div = phantasus.FormBuilder
     ._showInModal({
       modalClass: options.modalClass,
       title: options.title,
@@ -22400,7 +22401,7 @@ morpheus.FormBuilder.showMessageModal = function (options) {
   // }
 };
 
-morpheus.FormBuilder._showInModal = function (options) {
+phantasus.FormBuilder._showInModal = function (options) {
   var html = [];
   options = $.extend({}, {
     size: '',
@@ -22467,8 +22468,8 @@ morpheus.FormBuilder._showInModal = function (options) {
  * @param options.focus Element to return focus to when modal is hidden
  * @param options.modalClass
  */
-morpheus.FormBuilder.showInModal = function (options) {
-  return morpheus.FormBuilder
+phantasus.FormBuilder.showInModal = function (options) {
+  return phantasus.FormBuilder
     ._showInModal({
       modalClass: options.modalClass,
       title: options.title,
@@ -22501,7 +22502,7 @@ morpheus.FormBuilder.showInModal = function (options) {
  * @param options.okFocus
  *
  */
-morpheus.FormBuilder.showOkCancel = function (options) {
+phantasus.FormBuilder.showOkCancel = function (options) {
   options = $.extend({}, {
     ok: true,
     cancel: true
@@ -22519,7 +22520,7 @@ morpheus.FormBuilder.showOkCancel = function (options) {
     footer
       .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
   }
-  var $div = morpheus.FormBuilder._showInModal({
+  var $div = phantasus.FormBuilder._showInModal({
     title: options.title,
     html: options.content,
     footer: footer.join(''),
@@ -22557,20 +22558,20 @@ morpheus.FormBuilder.showOkCancel = function (options) {
   return $div;
 };
 
-morpheus.FormBuilder.hasChanged = function (object, keyToUIElement) {
+phantasus.FormBuilder.hasChanged = function (object, keyToUIElement) {
   var keys = _.keys(keyToUIElement);
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     var value = object[key];
     var $element = keyToUIElement[key];
-    if (value !== morpheus.FormBuilder.getValue($element)) {
+    if (value !== phantasus.FormBuilder.getValue($element)) {
       return true;
     }
   }
   return false;
 };
-morpheus.FormBuilder.getValue = function ($element) {
-  var list = $element.data('morpheus.checkbox-list');
+phantasus.FormBuilder.getValue = function ($element) {
+  var list = $element.data('phantasus.checkbox-list');
   if (list != null) {
     return list.val();
   }
@@ -22583,7 +22584,7 @@ morpheus.FormBuilder.getValue = function ($element) {
   return $element.attr('type') === 'checkbox' ? $element.prop('checked') : $element.val();
 };
 
-morpheus.FormBuilder.prototype = {
+phantasus.FormBuilder.prototype = {
   appendContent: function ($content) {
     this.$form.append($content);
   },
@@ -23009,7 +23010,7 @@ morpheus.FormBuilder.prototype = {
   append: function (fields) {
     var html = [];
     var that = this;
-    var isArray = morpheus.Util.isArray(fields);
+    var isArray = phantasus.Util.isArray(fields);
     if (!isArray) {
       fields = [fields];
     }
@@ -23027,14 +23028,14 @@ morpheus.FormBuilder.prototype = {
       _.each(fields, function (field) {
         // needs to already be in dom
         if (field.type === 'checkbox-list') {
-          var list = new morpheus.CheckBoxList({
+          var list = new phantasus.CheckBoxList({
             responsive: false,
             $el: $(checkBoxLists[checkBoxIndex]),
             items: field.options
           });
 
           $(checkBoxLists[checkBoxIndex]).data(
-            'morpheus.checkbox-list', list);
+            'phantasus.checkbox-list', list);
           checkBoxIndex++;
         }
       });
@@ -23053,11 +23054,11 @@ morpheus.FormBuilder.prototype = {
     if ($v.length === 0) {
       $v = this.$form.find('[name=' + name + '_picker]');
     }
-    return morpheus.FormBuilder.getValue($v);
+    return phantasus.FormBuilder.getValue($v);
   },
   setOptions: function (name, options, selectFirst) {
     var $select = this.$form.find('[name=' + name + ']');
-    var checkBoxList = $select.data('morpheus.checkbox-list');
+    var checkBoxList = $select.data('phantasus.checkbox-list');
     if (checkBoxList) {
       checkBoxList.setItems(options);
     } else {
@@ -23109,7 +23110,7 @@ morpheus.FormBuilder.prototype = {
       }
     }
     var type = v.attr('type');
-    var list = v.data('morpheus.checkbox-list');
+    var list = v.data('phantasus.checkbox-list');
     if (list) {
       list.setValue(value);
     } else {
@@ -23150,15 +23151,15 @@ morpheus.FormBuilder.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.FormBuilder, morpheus.Events);
+phantasus.Util.extend(phantasus.FormBuilder, phantasus.Events);
 
-morpheus.GradientColorSupplier = function () {
-  morpheus.AbstractColorSupplier.call(this);
+phantasus.GradientColorSupplier = function () {
+  phantasus.AbstractColorSupplier.call(this);
   this._updateScale();
 };
-morpheus.GradientColorSupplier.prototype = {
+phantasus.GradientColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.GradientColorSupplier();
+    return new phantasus.GradientColorSupplier();
   },
   getColor: function (row, column, value) {
     if (isNaN(value)) {
@@ -23172,12 +23173,12 @@ morpheus.GradientColorSupplier.prototype = {
     } else if (value >= max) {
       return colors[colors.length - 1];
     }
-    var fraction = morpheus.SteppedColorSupplier.linearScale(value, min,
+    var fraction = phantasus.SteppedColorSupplier.linearScale(value, min,
         max, 0, 100) / 100;
     return this.colorScale(fraction);
   },
   setFractions: function (options) {
-    morpheus.AbstractColorSupplier.prototype.setFractions.call(this,
+    phantasus.AbstractColorSupplier.prototype.setFractions.call(this,
       options);
     this._updateScale();
   },
@@ -23186,10 +23187,10 @@ morpheus.GradientColorSupplier.prototype = {
       this.colors).clamp(true);
   }
 };
-morpheus.Util.extend(morpheus.GradientColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.GradientColorSupplier,
+  phantasus.AbstractColorSupplier);
 
-morpheus.Grid = function (options) {
+phantasus.Grid = function (options) {
   this.options = options;
   var _this = this;
   var grid;
@@ -23205,7 +23206,7 @@ morpheus.Grid = function (options) {
     return column.getter(item);
   }
 
-  this.filter = new morpheus.CombinedGridFilter();
+  this.filter = new phantasus.CombinedGridFilter();
   var model = {
     getLength: function () {
       return _this.viewOrder != null ? _this.viewOrder.length
@@ -23231,8 +23232,8 @@ morpheus.Grid = function (options) {
     dataItemColumnValueExtractor: getItemColumnValue,
     defaultFormatter: function (row, cell, value, columnDef, dataContext) {
       if (_.isNumber(value)) {
-        return morpheus.Util.nf(value);
-      } else if (morpheus.Util.isArray(value)) {
+        return phantasus.Util.nf(value);
+      } else if (phantasus.Util.isArray(value)) {
         var s = [];
         for (var i = 0, length = value.length; i < length; i++) {
           if (i > 0) {
@@ -23250,7 +23251,7 @@ morpheus.Grid = function (options) {
 
   grid = new Slick.Grid(options.$el, model, options.columns, gridOptions);
   this.grid = grid;
-  grid.registerPlugin(new morpheus.AutoTooltips2());
+  grid.registerPlugin(new phantasus.AutoTooltips2());
 
   grid.onCellChange.subscribe(function (e, args) {
     _this.trigger('edit', args);
@@ -23323,7 +23324,7 @@ morpheus.Grid = function (options) {
   this.grid.invalidate();
 
 };
-morpheus.Grid.prototype = {
+phantasus.Grid.prototype = {
   columnsAutosized: false,
   setSortColumns: function (gridSortColumns) {
     this.grid.setSortColumns(gridSortColumns);
@@ -23460,7 +23461,7 @@ morpheus.Grid.prototype = {
       this.viewOrder.sort(function (index1, index2) {
         for (var i = 0; i < ncols; i++) {
           var getter = cols[i].sortCol.getter;
-          var comparator = cols[i].sortAsc ? morpheus.SortKey.ASCENDING_COMPARATOR : morpheus.SortKey.DESCENDING_COMPARATOR;
+          var comparator = cols[i].sortAsc ? phantasus.SortKey.ASCENDING_COMPARATOR : phantasus.SortKey.DESCENDING_COMPARATOR;
           var value1 = getter(items[index1]);
           var value2 = getter(items[index2]);
           var result = comparator(value1, value2);
@@ -23472,7 +23473,7 @@ morpheus.Grid.prototype = {
       });
     }
     if (this.viewOrder != null) {
-      this.modelToView = new morpheus.Map();
+      this.modelToView = new phantasus.Map();
       for (var i = 0, length = this.viewOrder.length; i < length; i++) {
         this.modelToView.set(this.viewOrder[i], i);
       }
@@ -23579,7 +23580,7 @@ morpheus.Grid.prototype = {
   }
 };
 
-morpheus.Util.extend(morpheus.Grid, morpheus.Events);
+phantasus.Util.extend(phantasus.Grid, phantasus.Events);
 
 /**
  * AutoTooltips2 plugin to show/hide tooltips when columns are too narrow to fit
@@ -23587,7 +23588,7 @@ morpheus.Util.extend(morpheus.Grid, morpheus.Events);
  *
  * @constructor
  */
-morpheus.AutoTooltips2 = function (options) {
+phantasus.AutoTooltips2 = function (options) {
   var _grid;
   var _self = this;
   var tip;
@@ -23734,10 +23735,10 @@ morpheus.AutoTooltips2 = function (options) {
 
 };
 
-morpheus.CombinedGridFilter = function () {
+phantasus.CombinedGridFilter = function () {
   this.filters = [];
 };
-morpheus.CombinedGridFilter.prototype = {
+phantasus.CombinedGridFilter.prototype = {
   add: function (filter) {
     this.filters.push(filter);
   },
@@ -23773,12 +23774,12 @@ morpheus.CombinedGridFilter.prototype = {
   }
 };
 
-morpheus.HeatMapColorSchemeChooser = function (options) {
+phantasus.HeatMapColorSchemeChooser = function (options) {
   var _this = this;
   this.$div = $('<div></div>');
   this.currentValue = null;
-  this.legend = new morpheus.LegendWithStops();
-  this.colorScheme = options.colorScheme || new morpheus.HeatMapColorScheme(new morpheus.Project(new morpheus.Dataset({
+  this.legend = new phantasus.LegendWithStops();
+  this.colorScheme = options.colorScheme || new phantasus.HeatMapColorScheme(new phantasus.Project(new phantasus.Dataset({
       rows: 0,
       columns: 0
     })));
@@ -23825,7 +23826,7 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
   $row.appendTo(this.$div);
 
   $(this.legend.canvas).appendTo($row);
-  var formBuilder = new morpheus.FormBuilder();
+  var formBuilder = new phantasus.FormBuilder();
   var items = [];
   items = items.concat({
     name: 'selected_color',
@@ -23868,10 +23869,10 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
         value: 0
       }, {
         name: 'Subtract row mean, divide by row standard deviation',
-        value: morpheus.AbstractColorSupplier.Z_SCORE
+        value: phantasus.AbstractColorSupplier.Z_SCORE
       }, {
         name: 'Subtract row median, divide by row median absolute deviation',
-        value: morpheus.AbstractColorSupplier.ROBUST_Z_SCORE
+        value: phantasus.AbstractColorSupplier.ROBUST_Z_SCORE
       }]
     });
   }
@@ -23980,8 +23981,8 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
           function (e) {
             _this.legend.selectedIndex = -1;
             // FIXME set fixed min and max
-            var scalingMode = $(this).prop('checked') ? morpheus.HeatMapColorScheme.ScalingMode.RELATIVE
-              : morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+            var scalingMode = $(this).prop('checked') ? phantasus.HeatMapColorScheme.ScalingMode.RELATIVE
+              : phantasus.HeatMapColorScheme.ScalingMode.FIXED;
             _this.colorScheme
               .setScalingMode(scalingMode);
             _this.setColorScheme(_this.colorScheme);
@@ -23991,7 +23992,7 @@ morpheus.HeatMapColorSchemeChooser = function (options) {
   // selection: delete, color, value
   // general: add, min, max, relative or global
 };
-morpheus.HeatMapColorSchemeChooser.prototype = {
+phantasus.HeatMapColorSchemeChooser.prototype = {
   deleteSelectedStop: function () {
     var fractions = this.colorScheme.getFractions();
     fractions.splice(this.legend.selectedIndex, 1);
@@ -24045,7 +24046,7 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
     this.draw();
   },
   setMinMax: function () {
-    if (this.colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       this.colorScheme.setMin(0);
       this.colorScheme.setMax(1);
     }
@@ -24077,16 +24078,16 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
     this.formBuilder
       .setValue(
         'relative_color_scheme',
-        colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE ? true
+        colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE ? true
           : false);
     this.formBuilder.setValue('transform_values', colorScheme.getTransformValues());
-    this.formBuilder.setEnabled('transform_values', colorScheme.getScalingMode() !== morpheus.HeatMapColorScheme.ScalingMode.RELATIVE);
+    this.formBuilder.setEnabled('transform_values', colorScheme.getScalingMode() !== phantasus.HeatMapColorScheme.ScalingMode.RELATIVE);
 
     this.formBuilder.$form
       .find('[name=minimum],[name=maximum]')
       .prop(
         'disabled',
-        colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE);
+        colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE);
     this.formBuilder.setValue('minimum', this.colorScheme.getMin());
     this.formBuilder.setValue('maximum', this.colorScheme.getMax());
     this.formBuilder.setValue('stepped_colors', this.colorScheme
@@ -24108,7 +24109,7 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
   },
   draw: function () {
     var colorScheme = this.colorScheme;
-    if (colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       colorScheme.setMin(0);
       colorScheme.setMax(1);
     }
@@ -24119,9 +24120,9 @@ morpheus.HeatMapColorSchemeChooser.prototype = {
       fractionToStopPix);
   }
 };
-morpheus.Util.extend(morpheus.HeatMapColorSchemeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.HeatMapColorSchemeChooser, phantasus.Events);
 
-morpheus.HeatMapColorSchemeLegend = function (heatMap, $keyContent) {
+phantasus.HeatMapColorSchemeLegend = function (heatMap, $keyContent) {
   var colorScheme = heatMap.heatmap.getColorScheme();
   var colorByValues = colorScheme.getColorByValues();
   var totalHeight;
@@ -24137,7 +24138,7 @@ morpheus.HeatMapColorSchemeLegend = function (heatMap, $keyContent) {
           $keyContent.append($label);
           totalHeight += $label.height();
         }
-        var trackLegend = new morpheus.ColorSupplierLegend(
+        var trackLegend = new phantasus.ColorSupplierLegend(
           colorScheme, value);
         $(trackLegend.canvas).css('position', '');
         trackLegend.repaint();
@@ -24160,7 +24161,7 @@ morpheus.HeatMapColorSchemeLegend = function (heatMap, $keyContent) {
   $edit.find('[data-name=options]').on('click', function (e) {
     e.preventDefault();
     heatMap.showOptions();
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'options'
     });
@@ -24175,20 +24176,20 @@ morpheus.HeatMapColorSchemeLegend = function (heatMap, $keyContent) {
   });
 };
 
-morpheus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
+phantasus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
                                                               colorScheme, width, printing, hideText, legendHeight) {
   if (!legendHeight) {
     legendHeight = 12;
   }
-  context.font = '11px ' + morpheus.CanvasUtil.FONT_NAME;
+  context.font = '11px ' + phantasus.CanvasUtil.FONT_NAME;
   var names = colorScheme.getNames();
   var hasNames = names != null;
   // if hasNames that we draw vertically to ensure space for names
   if (hasNames) {
-    morpheus.HeatMapColorSchemeLegend.drawColorSchemeVertically(context,
+    phantasus.HeatMapColorSchemeLegend.drawColorSchemeVertically(context,
       colorScheme, colorScheme.getHiddenValues(), printing);
   } else {
-    morpheus.HeatMapColorSchemeLegend.draw(context, colorScheme
+    phantasus.HeatMapColorSchemeLegend.draw(context, colorScheme
         .getFractions(), colorScheme.getColors(), width, legendHeight,
       colorScheme.isStepped());
     context.strokeStyle = 'LightGrey';
@@ -24204,7 +24205,7 @@ morpheus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
     context.textBaseline = 'top';
     context.fillStyle = 'black';
 
-    if (colorScheme.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (colorScheme.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       context.fillText('row min', 0, 14);
       context.fillText('row max', width, legendHeight + 2);
     } else {
@@ -24221,7 +24222,7 @@ morpheus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
           text = names[i] != '' ? (names[i] + ' ('
           + fractionToValue(fractions[i]) + ')') : names[i];
         } else {
-          text = morpheus.Util.nf(fractionToValue(fractions[i]));
+          text = phantasus.Util.nf(fractionToValue(fractions[i]));
         }
         var textWidth = context.measureText(text).width;
         if (pix > lastTextPixEnd) {
@@ -24237,7 +24238,7 @@ morpheus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
           text = names[i] != '' ? (names[i] + ' ('
           + fractionToValue(fractions[i]) + ')') : names[i];
         } else {
-          text = morpheus.Util.nf(fractionToValue(fractions[i]));
+          text = phantasus.Util.nf(fractionToValue(fractions[i]));
         }
 
         var textWidth = context.measureText(text).width;
@@ -24250,7 +24251,7 @@ morpheus.HeatMapColorSchemeLegend.drawColorScheme = function (context,
     }
   }
 };
-morpheus.HeatMapColorSchemeLegend.drawColorSchemeVertically = function (context,
+phantasus.HeatMapColorSchemeLegend.drawColorSchemeVertically = function (context,
                                                                         colorScheme, hiddenValues, printing) {
   var fractionToValue = d3.scale.linear().domain([0, 1]).range(
     [colorScheme.getMin(), colorScheme.getMax()]).clamp(true);
@@ -24264,14 +24265,14 @@ morpheus.HeatMapColorSchemeLegend.drawColorSchemeVertically = function (context,
   var xpix = 0;
   var ypix = 0;
 
-  context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+  context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
   for (var i = 0; i < colors.length; i++) {
     var name = names[i];
     if (name != null) {
       context.fillStyle = colors[i];
       context.fillRect(xpix, ypix, 12, 12);
       context.strokeRect(xpix, ypix, 12, 12);
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
       if (hiddenValues && !printing) {
         var value = fractionToValue(fractions[i]);
         context.font = '12px FontAwesome';
@@ -24281,14 +24282,14 @@ morpheus.HeatMapColorSchemeLegend.drawColorSchemeVertically = function (context,
         // else {
         // context.fillText("\uf096", -14, ypix); // unchecked
         // }
-        context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+        context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
       }
       context.fillText(name, xpix + 16, ypix);
     }
     ypix += 14;
   }
 };
-morpheus.HeatMapColorSchemeLegend.draw = function (context, fractions, colors,
+phantasus.HeatMapColorSchemeLegend.draw = function (context, fractions, colors,
                                                    width, height, stepped) {
   if (!stepped) {
     var gradient = context.createLinearGradient(0, 0, width, height);
@@ -24312,8 +24313,8 @@ morpheus.HeatMapColorSchemeLegend.draw = function (context, fractions, colors,
   }
 };
 
-morpheus.ColorSupplierLegend = function (colorScheme, value) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.ColorSupplierLegend = function (colorScheme, value) {
+  phantasus.AbstractCanvas.call(this, false);
   var _this = this;
   this.value = value;
   this.colorScheme = colorScheme;
@@ -24357,7 +24358,7 @@ morpheus.ColorSupplierLegend = function (colorScheme, value) {
   }
 };
 
-morpheus.ColorSupplierLegend.prototype = {
+phantasus.ColorSupplierLegend.prototype = {
   draw: function (clip, context) {
     var colorScheme = this.colorScheme;
     colorScheme.setCurrentValue(this.value);
@@ -24366,15 +24367,15 @@ morpheus.ColorSupplierLegend.prototype = {
     // .getUnscaledHeight());
     context.translate(this.hasNames ? 14
       : (this.getUnscaledWidth() - 200) / 2, 0);
-    morpheus.HeatMapColorSchemeLegend.drawColorScheme(context, colorScheme,
+    phantasus.HeatMapColorSchemeLegend.drawColorScheme(context, colorScheme,
       200);
 
   }
 
 };
-morpheus.Util.extend(morpheus.ColorSupplierLegend, morpheus.Events);
-morpheus.Util.extend(morpheus.ColorSupplierLegend,
-  morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.ColorSupplierLegend, phantasus.Events);
+phantasus.Util.extend(phantasus.ColorSupplierLegend,
+  phantasus.AbstractCanvas);
 
 
 
@@ -24387,7 +24388,7 @@ morpheus.Util.extend(morpheus.ColorSupplierLegend,
  * @param stops
  *            An array of objects with value and color
  */
-morpheus.HeatMapColorScheme = function (project, scheme) {
+phantasus.HeatMapColorScheme = function (project, scheme) {
   this.project = project;
   var that = this;
 
@@ -24398,7 +24399,7 @@ morpheus.HeatMapColorScheme = function (project, scheme) {
     if (scheme.valueToColorScheme) { // json representation
       this.fromJSON(scheme);
     } else {
-      this.rowValueToColorSupplier[null] = morpheus.HeatMapColorScheme
+      this.rowValueToColorSupplier[null] = phantasus.HeatMapColorScheme
         .createColorSupplier(scheme);
       this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     }
@@ -24411,8 +24412,8 @@ morpheus.HeatMapColorScheme = function (project, scheme) {
       });
   this.projectUpdated();
 };
-morpheus.HeatMapColorScheme.Predefined = {};
-morpheus.HeatMapColorScheme.Predefined.SUMMLY = function () {
+phantasus.HeatMapColorScheme.Predefined = {};
+phantasus.HeatMapColorScheme.Predefined.SUMMLY = function () {
   return {
     name: '(-100, -97.5, -95, 95, 97.5, 100)',
     type: 'fixed',
@@ -24438,7 +24439,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
+phantasus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
   return {
     name: '(-100, -95, -90, 90, 95, 100)',
     type: 'fixed',
@@ -24464,7 +24465,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
+phantasus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
   return {
     type: 'fixed',
     map: [{
@@ -24495,7 +24496,7 @@ morpheus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
   };
 };
 
-morpheus.HeatMapColorScheme.Predefined.CN = function () {
+phantasus.HeatMapColorScheme.Predefined.CN = function () {
   return {
     type: 'fixed',
     map: [{
@@ -24513,7 +24514,7 @@ morpheus.HeatMapColorScheme.Predefined.CN = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.Predefined.BINARY = function () {
+phantasus.HeatMapColorScheme.Predefined.BINARY = function () {
   return {
     type: 'fixed',
     map: [{
@@ -24525,12 +24526,12 @@ morpheus.HeatMapColorScheme.Predefined.BINARY = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.Predefined.RELATIVE = function () {
+phantasus.HeatMapColorScheme.Predefined.RELATIVE = function () {
   return {
     type: 'relative'
   };
 };
-morpheus.HeatMapColorScheme.Predefined.MAF = function () {
+phantasus.HeatMapColorScheme.Predefined.MAF = function () {
   // coMut plot colors
 
   var canvas = document.createElement('canvas');
@@ -24577,7 +24578,7 @@ morpheus.HeatMapColorScheme.Predefined.MAF = function () {
     }]
   };
 };
-// morpheus.HeatMapColorScheme.Predefined.MAF_NEW = function() {
+// phantasus.HeatMapColorScheme.Predefined.MAF_NEW = function() {
 // // Synonymous 1
 // //In_frame_Indel 2
 // //Other_non_syn. 3
@@ -24623,7 +24624,7 @@ morpheus.HeatMapColorScheme.Predefined.MAF = function () {
 // } ]
 // };
 // };
-morpheus.HeatMapColorScheme.Predefined.ZS = function () {
+phantasus.HeatMapColorScheme.Predefined.ZS = function () {
   return {
     type: 'fixed',
     map: [{
@@ -24641,18 +24642,18 @@ morpheus.HeatMapColorScheme.Predefined.ZS = function () {
     }]
   };
 };
-morpheus.HeatMapColorScheme.ScalingMode = {
+phantasus.HeatMapColorScheme.ScalingMode = {
   RELATIVE: 0,
   FIXED: 1
 };
 
-morpheus.HeatMapConditions = function () {
+phantasus.HeatMapConditions = function () {
   this.array = [];
   // each condition is a object with: series, shape, color and
   // accept(val) function
 
 };
-morpheus.HeatMapConditions.prototype = {
+phantasus.HeatMapConditions.prototype = {
   insert: function (index, c) {
     this.array.splice(index, 0, c);
   },
@@ -24666,7 +24667,7 @@ morpheus.HeatMapConditions.prototype = {
     this.array.splice(index, 1);
   },
   copy: function () {
-    var c = new morpheus.HeatMapConditions();
+    var c = new phantasus.HeatMapConditions();
     this.array.forEach(function (cond) {
       c.array.push(_.clone(cond));
     });
@@ -24674,7 +24675,7 @@ morpheus.HeatMapConditions.prototype = {
   }
 };
 
-morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
+phantasus.HeatMapColorScheme.createColorSupplier = function (options) {
   var type = options.type;
   var stepped = options.stepped;
   var map = options.map;
@@ -24682,7 +24683,7 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
   var min = 0;
   var max = 1;
   if (type === 'fixed') {
-    scalingMode = morpheus.HeatMapColorScheme.ScalingMode.FIXED;
+    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.FIXED;
     if (map) { // get min/max
       min = Number.MAX_VALUE;
       max = -Number.MAX_VALUE;
@@ -24692,7 +24693,7 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
       }
     }
   } else {
-    scalingMode = morpheus.HeatMapColorScheme.ScalingMode.RELATIVE;
+    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.RELATIVE;
   }
 
   var fractions = [];
@@ -24735,9 +24736,9 @@ morpheus.HeatMapColorScheme.createColorSupplier = function (options) {
   if (options.size != null) {
     json.size = options.size;
   }
-  return morpheus.AbstractColorSupplier.fromJSON(json);
+  return phantasus.AbstractColorSupplier.fromJSON(json);
 };
-morpheus.HeatMapColorScheme.prototype = {
+phantasus.HeatMapColorScheme.prototype = {
   getColors: function () {
     return this.currentColorSupplier.getColors();
   },
@@ -24797,8 +24798,8 @@ morpheus.HeatMapColorScheme.prototype = {
   },
   setStepped: function (stepped) {
     var oldColorSupplier = this.currentColorSupplier;
-    var newColorSupplier = stepped ? new morpheus.SteppedColorSupplier()
-      : new morpheus.GradientColorSupplier();
+    var newColorSupplier = stepped ? new phantasus.SteppedColorSupplier()
+      : new phantasus.GradientColorSupplier();
     newColorSupplier.sizer = oldColorSupplier.getSizer();
     newColorSupplier.array = oldColorSupplier.getConditions();
     newColorSupplier.setScalingMode(oldColorSupplier.getScalingMode());
@@ -24820,7 +24821,7 @@ morpheus.HeatMapColorScheme.prototype = {
     json.valueToColorScheme = {};
     _.each(_.keys(this.rowValueToColorSupplier), function (key) {
       // save each scheme
-      json.valueToColorScheme[key] = morpheus.AbstractColorSupplier.toJSON(_this.rowValueToColorSupplier[key]);
+      json.valueToColorScheme[key] = phantasus.AbstractColorSupplier.toJSON(_this.rowValueToColorSupplier[key]);
     });
 
     return json;
@@ -24836,7 +24837,7 @@ morpheus.HeatMapColorScheme.prototype = {
     this.rowValueToColorSupplier = {};
     var obj = json.valueToColorScheme || json.colorSchemes;
     _.each(_.keys(obj), function (key) {
-      var colorSupplier = morpheus.AbstractColorSupplier
+      var colorSupplier = phantasus.AbstractColorSupplier
         .fromJSON(obj[key]);
       _this.rowValueToColorSupplier[key] = colorSupplier;
     });
@@ -24845,7 +24846,7 @@ morpheus.HeatMapColorScheme.prototype = {
   },
   copy: function (project) {
     var _this = this;
-    var c = new morpheus.HeatMapColorScheme(project);
+    var c = new phantasus.HeatMapColorScheme(project);
     c.separateColorSchemeForRowMetadataField = this.separateColorSchemeForRowMetadataField;
     if (c.separateColorSchemeForRowMetadataField != null) {
       c.vector = project.getSortedFilteredDataset().getRowMetadata()
@@ -24894,7 +24895,7 @@ morpheus.HeatMapColorScheme.prototype = {
         .getRowMetadata().getByName(
           this.separateColorSchemeForRowMetadataField);
     }
-    this.cachedRowStats = new morpheus.RowStats(dataset);
+    this.cachedRowStats = new phantasus.RowStats(dataset);
   },
   setColorSupplierForCurrentValue: function (colorSupplier) {
     this.rowValueToColorSupplier[this.value] = colorSupplier;
@@ -24915,7 +24916,7 @@ morpheus.HeatMapColorScheme.prototype = {
         this._ensureColorSupplierExists();
       }
     }
-    if (this.currentColorSupplier.getScalingMode() === morpheus.HeatMapColorScheme.ScalingMode.RELATIVE) {
+    if (this.currentColorSupplier.getScalingMode() === phantasus.HeatMapColorScheme.ScalingMode.RELATIVE) {
       if (this.cachedRowStats.maybeUpdateRelative(row)) {
         this.currentColorSupplier
           .setMin(this.cachedRowStats.rowCachedMin);
@@ -24934,7 +24935,7 @@ morpheus.HeatMapColorScheme.prototype = {
   _ensureColorSupplierExists: function () {
     this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     if (this.currentColorSupplier === undefined) {
-      var cs = morpheus.HeatMapColorScheme.createColorSupplier({
+      var cs = phantasus.HeatMapColorScheme.createColorSupplier({
         type: 'relative'
       });
       this.rowValueToColorSupplier[this.value] = cs;
@@ -24942,18 +24943,18 @@ morpheus.HeatMapColorScheme.prototype = {
     }
   }
 };
-morpheus.RowStats = function (dataset) {
-  this.datasetRowView = new morpheus.DatasetRowView(dataset);
+phantasus.RowStats = function (dataset) {
+  this.datasetRowView = new phantasus.DatasetRowView(dataset);
   this.cachedRow = -1;
   this.rowCachedMax = 0;
   this.rowCachedMin = 0;
   this.rowCachedStandardDeviation = -1;
   this.rowCachedMean = -1;
 };
-morpheus.RowStats.prototype = {
+phantasus.RowStats.prototype = {
   cacheTransformValues: function (row, transform) {
-    var meanFunction = transform === morpheus.AbstractColorSupplier.Z_SCORE ? morpheus.Mean : morpheus.Median;
-    var stdevFunction = transform === morpheus.AbstractColorSupplier.Z_SCORE ? morpheus.StandardDeviation : morpheus.MAD;
+    var meanFunction = transform === phantasus.AbstractColorSupplier.Z_SCORE ? phantasus.Mean : phantasus.Median;
+    var stdevFunction = transform === phantasus.AbstractColorSupplier.Z_SCORE ? phantasus.StandardDeviation : phantasus.MAD;
     this.datasetRowView.setIndex(row);
     this.rowCachedMean = meanFunction(this.datasetRowView);
     this.rowCachedStandardDeviation = stdevFunction(this.datasetRowView, this.rowCachedMean);
@@ -24982,10 +24983,10 @@ morpheus.RowStats.prototype = {
   }
 };
 
-morpheus.HeatMapSynchronizer = function () {
+phantasus.HeatMapSynchronizer = function () {
   this.controllers = [];
 };
-morpheus.HeatMapSynchronizer.prototype = {
+phantasus.HeatMapSynchronizer.prototype = {
   firing: false,
   getProject: function () {
     return this.controllers[0].getProject();
@@ -25020,14 +25021,14 @@ morpheus.HeatMapSynchronizer.prototype = {
   }
 };
 
-morpheus.HeatMapElementCanvas = function (project) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.HeatMapElementCanvas = function (project) {
+  phantasus.AbstractCanvas.call(this, true);
   var _this = this;
   this.colorScheme = null;
   this.project = project;
   this.dataset = null;
-  this.columnPositions = new morpheus.Positions();
-  this.rowPositions = new morpheus.Positions();
+  this.columnPositions = new phantasus.Positions();
+  this.rowPositions = new phantasus.Positions();
   this.lastPosition = {
     left: -1,
     right: -1,
@@ -25039,13 +25040,13 @@ morpheus.HeatMapElementCanvas = function (project) {
   project.getElementSelectionModel().on('selectionChanged', function (e) {
     _this.repaint();
   });
-  this.gridColor = morpheus.HeatMapElementCanvas.GRID_COLOR;
+  this.gridColor = phantasus.HeatMapElementCanvas.GRID_COLOR;
   this.gridThickness = 0.1;
   this.elementDrawCallback = null;
   this.drawCallback = null;
 };
-morpheus.HeatMapElementCanvas.GRID_COLOR = '#808080';
-morpheus.HeatMapElementCanvas.prototype = {
+phantasus.HeatMapElementCanvas.GRID_COLOR = '#808080';
+phantasus.HeatMapElementCanvas.prototype = {
   drawGrid: true,
   drawValues: false,
   setPropertiesFromParent: function (parentHeatMapElementCanvas) {
@@ -25055,13 +25056,13 @@ morpheus.HeatMapElementCanvas.prototype = {
     this.drawValues = parentHeatMapElementCanvas.drawValues;
   },
   updateRowSelectionCache: function (repaint) {
-    this.selectedRowElements = morpheus.HeatMapElementCanvas.getSelectedSpans(this.project.getRowSelectionModel().getViewIndices());
+    this.selectedRowElements = phantasus.HeatMapElementCanvas.getSelectedSpans(this.project.getRowSelectionModel().getViewIndices());
     if (repaint) {
       this.repaint();
     }
   },
   updateColumnSelectionCache: function (repaint) {
-    this.selectedColumnElements = morpheus.HeatMapElementCanvas.getSelectedSpans(this.project.getColumnSelectionModel().getViewIndices());
+    this.selectedColumnElements = phantasus.HeatMapElementCanvas.getSelectedSpans(this.project.getColumnSelectionModel().getViewIndices());
     if (repaint) {
       this.repaint();
     }
@@ -25127,10 +25128,10 @@ morpheus.HeatMapElementCanvas.prototype = {
     var lastPosition = this.lastPosition;
     var columnPositions = this.columnPositions;
     var rowPositions = this.rowPositions;
-    var left = morpheus.Positions.getLeft(clip, columnPositions);
-    var right = morpheus.Positions.getRight(clip, columnPositions);
-    var top = morpheus.Positions.getTop(clip, rowPositions);
-    var bottom = morpheus.Positions.getBottom(clip, rowPositions);
+    var left = phantasus.Positions.getLeft(clip, columnPositions);
+    var right = phantasus.Positions.getRight(clip, columnPositions);
+    var top = phantasus.Positions.getTop(clip, rowPositions);
+    var bottom = phantasus.Positions.getBottom(clip, rowPositions);
     if (this.invalid || left !== lastPosition.left
       || right !== lastPosition.right || top !== lastPosition.top
       || bottom !== lastPosition.bottom) {
@@ -25143,7 +25144,7 @@ morpheus.HeatMapElementCanvas.prototype = {
   },
   postPaint: function (clip, context) {
     // draw mouse over stuff
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     var project = this.project;
     context.strokeStyle = 'Grey';
     context.lineWidth = 1;
@@ -25188,10 +25189,10 @@ morpheus.HeatMapElementCanvas.prototype = {
 
       }
     }
-    var left = morpheus.Positions.getLeft(clip, columnPositions);
-    var right = morpheus.Positions.getRight(clip, columnPositions);
-    var top = morpheus.Positions.getTop(clip, rowPositions);
-    var bottom = morpheus.Positions.getBottom(clip, rowPositions);
+    var left = phantasus.Positions.getLeft(clip, columnPositions);
+    var right = phantasus.Positions.getRight(clip, columnPositions);
+    var top = phantasus.Positions.getTop(clip, rowPositions);
+    var bottom = phantasus.Positions.getBottom(clip, rowPositions);
 
     context.strokeStyle = 'rgb(0,0,0)';
     context.lineWidth = 2;
@@ -25256,10 +25257,10 @@ morpheus.HeatMapElementCanvas.prototype = {
   draw: function (clip, context) {
     var columnPositions = this.columnPositions;
     var rowPositions = this.rowPositions;
-    var left = morpheus.Positions.getLeft(clip, columnPositions);
-    var right = morpheus.Positions.getRight(clip, columnPositions);
-    var top = morpheus.Positions.getTop(clip, rowPositions);
-    var bottom = morpheus.Positions.getBottom(clip, rowPositions);
+    var left = phantasus.Positions.getLeft(clip, columnPositions);
+    var right = phantasus.Positions.getRight(clip, columnPositions);
+    var top = phantasus.Positions.getTop(clip, rowPositions);
+    var bottom = phantasus.Positions.getBottom(clip, rowPositions);
     if (this.dataset.getRowCount() === 0 || this.dataset.getColumnCount() === 0) {
       return context.fillText('No data', 0, 6);
     } else {
@@ -25310,10 +25311,10 @@ morpheus.HeatMapElementCanvas.prototype = {
         return '' + d;
       };
       var fontSize = rowPositions.getSize() - 2;
-      context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
       var textWidth = context.measureText('-9999.99').width;
       fontSize = ((  rowPositions.getSize() - 2) / textWidth) * fontSize;
-      context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     }
     var seriesNameToIndex = {};
     for (var i = 0; i < dataset.getSeriesCount(); i++) {
@@ -25380,7 +25381,7 @@ morpheus.HeatMapElementCanvas.prototype = {
               if (condition.inheritColor) {
                 var x = px + xoffset + cellRowSize / 2;
                 var y = py + yoffset + cellColumnSize / 2;
-                morpheus.CanvasUtil.drawShape(context, condition.shape,
+                phantasus.CanvasUtil.drawShape(context, condition.shape,
                   x, y, Math.min(cellColumnSize, cellRowSize) / 2);
                 context.fill();
               } else {
@@ -25390,7 +25391,7 @@ morpheus.HeatMapElementCanvas.prototype = {
                 var x = px + xoffset + cellRowSize / 2;
                 var y = py + yoffset + cellColumnSize / 2;
                 context.fillStyle = condition.color;
-                morpheus.CanvasUtil.drawShape(context, condition.shape,
+                phantasus.CanvasUtil.drawShape(context, condition.shape,
                   x, y, Math.min(cellColumnSize, cellRowSize) / 4);
                 context.fill();
               }
@@ -25439,9 +25440,9 @@ morpheus.HeatMapElementCanvas.prototype = {
     context.lineWidth = 1;
   }
 };
-morpheus.Util.extend(morpheus.HeatMapElementCanvas, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HeatMapElementCanvas, phantasus.AbstractCanvas);
 
-morpheus.HeatMapElementCanvas.getSelectedSpans = function (set) {
+phantasus.HeatMapElementCanvas.getSelectedSpans = function (set) {
   var array = [];
   if (set.size() > 0) {
     var index = 0;
@@ -25469,7 +25470,7 @@ morpheus.HeatMapElementCanvas.getSelectedSpans = function (set) {
   return array;
 };
 
-morpheus.KeyboardCharMap = [
+phantasus.KeyboardCharMap = [
   '', // [0]
   '', // [1]
   '', // [2]
@@ -25727,7 +25728,7 @@ morpheus.KeyboardCharMap = [
   'WIN_OEM_CLEAR', // [254]
   '' // [255]
 ];
-morpheus.HeatMapKeyListener = function (heatMap) {
+phantasus.HeatMapKeyListener = function (heatMap) {
   var allActions = heatMap.getActionManager().getActions();
   var actions = allActions.filter(function (a) {
     return a.cb != null && a.which != null;
@@ -25740,7 +25741,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
   var keydown = function (e) {
     var tagName = e.target.tagName;
     var found = false;
-    var commandKey = morpheus.Util.IS_MAC ? e.metaKey : e.ctrlKey;
+    var commandKey = phantasus.Util.IS_MAC ? e.metaKey : e.ctrlKey;
     var altKey = e.altKey;
     var shiftKey = e.shiftKey;
     var which = e.which;
@@ -25784,23 +25785,23 @@ morpheus.HeatMapKeyListener = function (heatMap) {
   var $keyelement = heatMap.$tabPanel;
   $keyelement.on('keydown', keydown);
 
-  $keyelement.on('dragover.morpheus dragenter.morpheus', function (e) {
+  $keyelement.on('dragover.phantasus dragenter.phantasus', function (e) {
     e.preventDefault();
     e.stopPropagation();
   }).on(
-    'drop.morpheus',
+    'drop.phantasus',
     function (e) {
       if (heatMap.options.menu.File && heatMap.options.menu.File.indexOf('Open') !== -1 && e.originalEvent.dataTransfer
         && e.originalEvent.dataTransfer.files.length) {
         e.preventDefault();
         e.stopPropagation();
         var files = e.originalEvent.dataTransfer.files;
-        morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+        phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
           file: files[0]
         }), heatMap);
       }
     });
-  $keyelement.on('paste.morpheus',
+  $keyelement.on('paste.phantasus',
     function (e) {
       if (heatMap.options.toolbar.openFile) {
         var tagName = e.target.tagName;
@@ -25814,7 +25815,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
           e.stopPropagation();
           var blob = new Blob([text]);
           var url = window.URL.createObjectURL(blob);
-          morpheus.HeatMap.showTool(new morpheus.OpenFileTool({
+          phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
             file: url
           }), heatMap);
         }
@@ -25855,12 +25856,12 @@ morpheus.HeatMapKeyListener = function (heatMap) {
     var s = ['<b>'];
 
     if (sc.commandKey) {
-      s.push(morpheus.Util.COMMAND_KEY);
+      s.push(phantasus.Util.COMMAND_KEY);
     }
     if (sc.shiftKey) {
       s.push('Shift+');
     }
-    s.push(morpheus.KeyboardCharMap[sc.which[0]]);
+    s.push(phantasus.KeyboardCharMap[sc.which[0]]);
 
     s.push('</b>');
     return s.join('');
@@ -25882,7 +25883,7 @@ morpheus.HeatMapKeyListener = function (heatMap) {
     });
 
     html.push('</table>');
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Keymap Reference',
       html: html.join(''),
       focus: document.activeElement
@@ -25890,14 +25891,14 @@ morpheus.HeatMapKeyListener = function (heatMap) {
   };
 };
 
-morpheus.HeatMapOptions = function (heatMap) {
+phantasus.HeatMapOptions = function (heatMap) {
   var items = [
     {
       name: 'color_by',
       required: true,
       help: 'Use a different color scheme for distinct row annotation values',
       type: 'select',
-      options: ['(None)'].concat(morpheus.MetadataUtil
+      options: ['(None)'].concat(phantasus.MetadataUtil
         .getMetadataNames(heatMap.getProject()
           .getFullDataset().getRowMetadata())),
       value: heatMap.heatmap.getColorScheme()
@@ -25930,10 +25931,10 @@ morpheus.HeatMapOptions = function (heatMap) {
         name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
         value: 'cn'
       }, {
-        name: 'fixed ' + morpheus.HeatMapColorScheme.Predefined.SUMMLY2().name,
+        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
         value: '100scale2'
       }, {
-        name: 'fixed ' + morpheus.HeatMapColorScheme.Predefined.SUMMLY().name,
+        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
         value: '100scale1'
       }]
     }, {
@@ -25948,7 +25949,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     name: 'size_by',
     required: true,
     type: 'select',
-    options: ['(None)'].concat(morpheus.DatasetUtil
+    options: ['(None)'].concat(phantasus.DatasetUtil
       .getSeriesNames(heatMap.getProject().getFullDataset()))
   });
   items.push({
@@ -25993,7 +25994,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap.getGridThickness())
+      value: phantasus.Util.nf(heatMap.heatmap.getGridThickness())
     },
     {
       name: 'grid_color',
@@ -26007,7 +26008,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap.getRowPositions()
+      value: phantasus.Util.nf(heatMap.heatmap.getRowPositions()
         .getSize())
     },
     {
@@ -26015,7 +26016,7 @@ morpheus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'text',
       col: 'col-xs-4',
-      value: morpheus.Util.nf(heatMap.heatmap
+      value: phantasus.Util.nf(heatMap.heatmap
         .getColumnPositions().getSize())
     }, {
       name: 'show_values',
@@ -26030,7 +26031,7 @@ morpheus.HeatMapOptions = function (heatMap) {
         required: true,
         type: 'text',
         col: 'col-xs-4',
-        value: morpheus.Util
+        value: phantasus.Util
           .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
             : 1)
       });
@@ -26042,7 +26043,7 @@ morpheus.HeatMapOptions = function (heatMap) {
         required: true,
         type: 'text',
         col: 'col-xs-4',
-        value: morpheus.Util
+        value: phantasus.Util
           .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
             : 1)
       });
@@ -26070,15 +26071,15 @@ morpheus.HeatMapOptions = function (heatMap) {
     value: heatMap.options.inlineTooltip
   });
 
-  var colorSchemeFormBuilder = new morpheus.FormBuilder();
+  var colorSchemeFormBuilder = new phantasus.FormBuilder();
   _.each(items, function (item) {
     colorSchemeFormBuilder.append(item);
   });
-  var displayFormBuilder = new morpheus.FormBuilder();
+  var displayFormBuilder = new phantasus.FormBuilder();
   _.each(displayItems, function (item) {
     displayFormBuilder.append(item);
   });
-  var colorSchemeChooser = new morpheus.HeatMapColorSchemeChooser({
+  var colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser({
     showRelative: true,
     colorScheme: heatMap.heatmap
       .getColorScheme()
@@ -26119,7 +26120,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     _.each(heatMap.getVisibleTrackNames(isColumns), function (name) {
       value[name] = true;
     });
-    _.each(morpheus.MetadataUtil.getMetadataNames(isColumns ? heatMap
+    _.each(phantasus.MetadataUtil.getMetadataNames(isColumns ? heatMap
         .getProject().getFullDataset().getColumnMetadata() : heatMap
         .getProject().getFullDataset().getRowMetadata()),
       function (name) {
@@ -26138,7 +26139,7 @@ morpheus.HeatMapOptions = function (heatMap) {
     return field;
   }
 
-  var annotationsBuilder = new morpheus.FormBuilder();
+  var annotationsBuilder = new phantasus.FormBuilder();
   annotationsBuilder.append(createMetadataField(false));
   annotationsBuilder.append(createMetadataField(true));
   function annotationsListener($select, isColumns) {
@@ -26176,9 +26177,9 @@ morpheus.HeatMapOptions = function (heatMap) {
   $ra.on('change', function (e) {
     annotationsListener($(this), false);
   });
-  var annotationOptionsTabId = _.uniqueId('morpheus');
-  var heatMapOptionsTabId = _.uniqueId('morpheus');
-  var displayOptionsTabId = _.uniqueId('morpheus');
+  var annotationOptionsTabId = _.uniqueId('phantasus');
+  var heatMapOptionsTabId = _.uniqueId('phantasus');
+  var displayOptionsTabId = _.uniqueId('phantasus');
 
   var $metadataDiv = $('<div class="tab-pane" id="' + annotationOptionsTabId
     + '"></div>');
@@ -26262,7 +26263,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   var separateSchemesField = heatMap.heatmap.getColorScheme()
     .getSeparateColorSchemeForRowMetadataField();
   if (separateSchemesField != null) {
-    $colorByValue.html(morpheus.Util.createOptions(morpheus.VectorUtil
+    $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
       .createValueToIndexMap(
         heatMap.project.getFullDataset().getRowMetadata()
           .getByName(separateSchemesField)).keys()));
@@ -26313,13 +26314,13 @@ morpheus.HeatMapOptions = function (heatMap) {
       'click',
       function (e) {
         e.preventDefault();
-        var conditionalRenderingUI = new morpheus.ConditionalRenderingUI(
+        var conditionalRenderingUI = new phantasus.ConditionalRenderingUI(
           heatMap);
-        morpheus.FormBuilder.showInModal({
+        phantasus.FormBuilder.showInModal({
           title: 'Conditional Rendering',
           html: conditionalRenderingUI.$div,
           close: 'Close',
-          modalClass: 'morpheus-sub-modal'
+          modalClass: 'phantasus-sub-modal'
         });
       });
 
@@ -26333,7 +26334,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   colorSchemeFormBuilder.on('change', function (e) {
     if (e.name === 'load_color_scheme') {
       if (e.value !== '' && e.value != null) {
-        morpheus.Util.getText(e.value).done(
+        phantasus.Util.getText(e.value).done(
           function (text) {
             var json = JSON.parse($.trim(text));
             heatMap.heatmap.getColorScheme().fromJSON(json);
@@ -26344,7 +26345,7 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap.repaint();
 
           }).fail(function () {
-          morpheus.FormBuilder.showInModal({
+          phantasus.FormBuilder.showInModal({
             title: 'Error',
             html: 'Unable to read saved color scheme.'
           });
@@ -26365,20 +26366,20 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .RELATIVE()));
           } else if (val === 'cn') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .CN()));
           } else if (val === 'wtcs') {
             heatMap.heatmap.getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
+                phantasus.HeatMapColorScheme
                   .createColorSupplier({
                     type: 'fixed',
                     map: [{
@@ -26399,30 +26400,30 @@ morpheus.HeatMapOptions = function (heatMap) {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .MAF()));
           } else if (val === 'binary') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .BINARY()));
           } else if (val === '100scale1') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .SUMMLY()));
 
           } else if (val === '100scale2') {
             heatMap.heatmap
               .getColorScheme()
               .setColorSupplierForCurrentValue(
-                morpheus.HeatMapColorScheme
-                  .createColorSupplier(morpheus.HeatMapColorScheme.Predefined
+                phantasus.HeatMapColorScheme
+                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
                     .SUMMLY2()));
 
           } else {
@@ -26454,8 +26455,8 @@ morpheus.HeatMapOptions = function (heatMap) {
             colorByField);
         if (colorByField != null) {
           $colorByValue
-            .html(morpheus.Util
-              .createOptions(morpheus.VectorUtil
+            .html(phantasus.Util
+              .createOptions(phantasus.VectorUtil
                 .createValueToIndexMap(
                   heatMap.project
                     .getFullDataset()
@@ -26546,7 +26547,7 @@ morpheus.HeatMapOptions = function (heatMap) {
   colorSchemeChooser.setColorScheme(heatMap.heatmap.getColorScheme());
   colorSchemeChooserUpdated();
   $ul.find('[role=tab]:eq(1)').tab('show');
-  morpheus.FormBuilder.showInModal({
+  phantasus.FormBuilder.showInModal({
     title: 'Options',
     html: $div,
     close: 'Close',
@@ -26561,16 +26562,16 @@ morpheus.HeatMapOptions = function (heatMap) {
   });
 };
 
-morpheus.HeatMapSizer = function () {
+phantasus.HeatMapSizer = function () {
   this.seriesName = null;
   this.sizeByScale = d3.scale.linear().domain([this.min, this.max])
     .range([0, 1]).clamp(true);
 };
-morpheus.HeatMapSizer.prototype = {
+phantasus.HeatMapSizer.prototype = {
   min: 0,
   max: 1,
   copy: function () {
-    var sizer = new morpheus.HeatMapSizer();
+    var sizer = new phantasus.HeatMapSizer();
     sizer.seriesName = this.seriesName;
     sizer.min = this.min;
     sizer.max = this.max;
@@ -26604,7 +26605,7 @@ morpheus.HeatMapSizer.prototype = {
   }
 };
 
-morpheus.HeatMapToolBar = function (heatMap) {
+phantasus.HeatMapToolBar = function (heatMap) {
   this.heatMap = heatMap;
   this.rowSearchResultModelIndices = [];
   this.columnSearchResultModelIndices = [];
@@ -26627,7 +26628,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
 
   // toogle search buttons
   searchHtml.push('<div title="Toggle' +
-    ' Search (' + morpheus.Util.COMMAND_KEY + '/)" class="btn-group"' +
+    ' Search (' + phantasus.Util.COMMAND_KEY + '/)" class="btn-group"' +
     ' data-toggle="buttons">');
   searchHtml.push('<label class="btn btn-default btn-xxs">');
   searchHtml
@@ -26747,9 +26748,9 @@ morpheus.HeatMapToolBar = function (heatMap) {
       minWidth = '0px';
     }
     var menu = [];
-    var dropdownId = _.uniqueId('morpheus');
-    menu.push('<div class="dropdown morpheus-menu">');
-    menu.push('<a class="dropdown-toggle morpheus-black-link morpheus-black-link-background" type="button"' +
+    var dropdownId = _.uniqueId('phantasus');
+    menu.push('<div class="dropdown phantasus-menu">');
+    menu.push('<a class="dropdown-toggle phantasus-black-link phantasus-black-link-background" type="button"' +
       ' id="' + dropdownId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">');
     menu.push(menuName);
 
@@ -26764,20 +26765,20 @@ morpheus.HeatMapToolBar = function (heatMap) {
           throw name;
         }
         menu.push('<li>');
-        menu.push('<a class="morpheus-menu-item" data-action="' + action.name + '" href="#">');
+        menu.push('<a class="phantasus-menu-item" data-action="' + action.name + '" href="#">');
         menu.push(action.name);
         if (action.icon) {
-          menu.push('<span class="' + action.icon + ' morpheus-menu-item-icon"></span> ');
+          menu.push('<span class="' + action.icon + ' phantasus-menu-item-icon"></span> ');
         }
         if (action.which) {
           menu.push('<span class="pull-right">');
           if (action.commandKey) {
-            menu.push(morpheus.Util.COMMAND_KEY);
+            menu.push(phantasus.Util.COMMAND_KEY);
           }
           if (action.shiftKey) {
             menu.push('Shift+');
           }
-          menu.push(morpheus.KeyboardCharMap[action.which[0]]);
+          menu.push(phantasus.KeyboardCharMap[action.which[0]]);
           menu.push('</span>');
         }
 
@@ -26815,7 +26816,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
   $menus.appendTo($lineOneColumn);
   $searchForm.appendTo($lineOneColumn);
   var toolbarHtml = ['<div style="display: inline;">'];
-  toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+  toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   // zoom
   if (heatMap.options.toolbar.zoom) {
     // toolbarHtml
@@ -26831,9 +26832,9 @@ morpheus.HeatMapToolBar = function (heatMap) {
     // .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="tooltip"' +
     //   ' title="Reset Zoom" name="Reset Zoom">100%</button>');
 
-    var dropdownId = _.uniqueId('morpheus');
+    var dropdownId = _.uniqueId('phantasus');
     toolbarHtml.push('<div style="display:inline-block;" class="dropdown">');
-    toolbarHtml.push('<a class="dropdown-toggle morpheus-black-link" type="button" id="' + dropdownId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">');
+    toolbarHtml.push('<a class="dropdown-toggle phantasus-black-link" type="button" id="' + dropdownId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">');
     // toolbarHtml.push('<input style="width:2em;height:21px;" id="' + dropdownId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">');
     toolbarHtml.push('<button type="button"' +
       ' class="btn btn-default btn-xxs"><span class="fa' +
@@ -26842,27 +26843,27 @@ morpheus.HeatMapToolBar = function (heatMap) {
     toolbarHtml.push('</button>');
     toolbarHtml.push('<ul class="dropdown-menu" aria-labelledby="' + dropdownId + '">');
     toolbarHtml
-      .push('<li><a class="morpheus-menu-item" href="#" data-action="Zoom Out">Zoom' +
+      .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom Out">Zoom' +
         ' Out<span' +
         ' class="fa' +
-        ' fa-minus morpheus-menu-item-icon"></span><span class="pull-right">-</span></a></li>');
+        ' fa-minus phantasus-menu-item-icon"></span><span class="pull-right">-</span></a></li>');
     toolbarHtml
-      .push('<li><a class="morpheus-menu-item" href="#" data-action="Zoom In">Zoom In<span class="fa' +
-        ' fa-plus morpheus-menu-item-icon"></span><span class="pull-right">+</span></a></li>');
+      .push('<li><a class="phantasus-menu-item" href="#" data-action="Zoom In">Zoom In<span class="fa' +
+        ' fa-plus phantasus-menu-item-icon"></span><span class="pull-right">+</span></a></li>');
     toolbarHtml
       .push('<li role="separator" class="divider"></li>');
     toolbarHtml
-      .push('<li><a class="morpheus-menu-item" href="#" data-action="Fit To Window">Fit To Window<span' +
+      .push('<li><a class="phantasus-menu-item" href="#" data-action="Fit To Window">Fit To Window<span' +
         ' class="fa' +
-        ' fa-compress morpheus-menu-item-icon"></span></a></li>');
+        ' fa-compress phantasus-menu-item-icon"></span></a></li>');
     toolbarHtml
       .push('<li role="separator" class="divider"></li>');
     toolbarHtml
-      .push('<li><a class="morpheus-menu-item" href="#" data-action="Reset Zoom">100%</a></li>');
+      .push('<li><a class="phantasus-menu-item" href="#" data-action="Reset Zoom">100%</a></li>');
     toolbarHtml.push('</ul>');
     toolbarHtml.push('</div>');
   }
-  toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+  toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   if (heatMap.options.toolbar.sort) {
     toolbarHtml
       .push('<button data-toggle="tooltip" title="Sort" name="Sort" type="button" class="btn' +
@@ -26875,23 +26876,23 @@ morpheus.HeatMapToolBar = function (heatMap) {
 
   }
 
-  toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+  toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   if (heatMap.options.toolbar.openFile) {
     toolbarHtml
       .push('<button data-action="Open File" data-toggle="tooltip" title="Open File ('
-        + morpheus.Util.COMMAND_KEY
+        + phantasus.Util.COMMAND_KEY
         + 'O)" type="button" class="btn btn-default btn-xxs"><span class="fa fa-folder-open-o"></span></button>');
   }
   if (heatMap.options.toolbar.saveImage) {
     toolbarHtml
       .push('<button data-action="Save Image" data-toggle="tooltip" title="Save Image ('
-        + morpheus.Util.COMMAND_KEY
+        + phantasus.Util.COMMAND_KEY
         + 'S)" type="button" class="btn btn-default btn-xxs"><span class="fa fa-file-image-o"></span></button>');
   }
   if (heatMap.options.toolbar.saveDataset) {
     toolbarHtml
       .push('<button data-action="Save Dataset" data-toggle="tooltip" title="Save Dataset ('
-        + morpheus.Util.COMMAND_KEY
+        + phantasus.Util.COMMAND_KEY
         + 'Shift+S)" type="button" class="btn btn-default btn-xxs"><span class="fa fa-floppy-o"></span></button>');
   }
   if (heatMap.options.toolbar.saveSession) {
@@ -26900,7 +26901,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
         ' class="btn btn-default btn-xxs"><span class="fa fa-anchor"></span></button>');
   }
 
-  toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+  toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   if (heatMap.options.toolbar.filter) {
     toolbarHtml
       .push('<button data-action="Filter" data-toggle="tooltip" title="Filter" type="button"' +
@@ -26914,13 +26915,13 @@ morpheus.HeatMapToolBar = function (heatMap) {
   }
   // legend
   if (heatMap.options.toolbar.colorKey) {
-    toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+    toolbarHtml.push('<div class="phantasus-button-divider"></div>');
     toolbarHtml.push('<div class="btn-group">');
     toolbarHtml
       .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="dropdown"><span title="Color Key" data-toggle="tooltip" class="fa fa-key"></span></button>');
     //toolbarHtml.push('<')
     toolbarHtml.push('</div>');
-    toolbarHtml.push('<div class="morpheus-button-divider"></div>');
+    toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   }
   toolbarHtml.push('</div>');
   var $toolbar = $(toolbarHtml.join(''));
@@ -26958,8 +26959,8 @@ morpheus.HeatMapToolBar = function (heatMap) {
   var $key = $el.find('[data-name=key]');
   var $keyContent = $el.find('[data-name=keyContent]');
   $key.dropdown().parent().on('show.bs.dropdown', function () {
-    new morpheus.HeatMapColorSchemeLegend(heatMap, $keyContent);
-    morpheus.Util.trackEvent({
+    new phantasus.HeatMapColorSchemeLegend(heatMap, $keyContent);
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'colorKey'
     });
@@ -27001,7 +27002,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
   var $searchHelp = $(searchHelpHtml.join(''));
   $el.find('[data-name=searchHelp]').on('click', function (e) {
     e.preventDefault();
-    morpheus.FormBuilder.showInModal({
+    phantasus.FormBuilder.showInModal({
       title: 'Search Help',
       html: $searchHelp,
       appendTo: heatMap.getContentEl()
@@ -27050,7 +27051,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
           ' fa-check');
         $span.addClass('dropdown-checkbox fa fa-check');
       }
-      morpheus.Util.trackEvent({
+      phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
         eventAction: 'searchMatchMode'
       });
@@ -27163,16 +27164,16 @@ morpheus.HeatMapToolBar = function (heatMap) {
   });
   var project = heatMap.getProject();
 
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: this.rowSearchObject.$search,
     filter: function (terms, cb) {
       var indices = [];
       var meta = project.getSortedFilteredDataset().getRowMetadata();
       heatMap.getVisibleTrackNames(false).forEach(function (name) {
-        indices.push(morpheus.MetadataUtil.indexOf(meta, name));
+        indices.push(phantasus.MetadataUtil.indexOf(meta, name));
       });
-      meta = new morpheus.MetadataModelColumnView(meta, indices);
-      morpheus.MetadataUtil.autocomplete(meta)(terms, cb);
+      meta = new phantasus.MetadataModelColumnView(meta, indices);
+      phantasus.MetadataUtil.autocomplete(meta)(terms, cb);
     },
     select: function () {
       _this.search(true);
@@ -27184,21 +27185,21 @@ morpheus.HeatMapToolBar = function (heatMap) {
       e.preventDefault();
     }
     _this.search(true);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'searchRows'
     });
   }, 500));
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: this.columnSearchObject.$search,
     filter: function (terms, cb) {
       var indices = [];
       var meta = project.getSortedFilteredDataset().getColumnMetadata();
       heatMap.getVisibleTrackNames(true).forEach(function (name) {
-        indices.push(morpheus.MetadataUtil.indexOf(meta, name));
+        indices.push(phantasus.MetadataUtil.indexOf(meta, name));
       });
-      meta = new morpheus.MetadataModelColumnView(meta, indices);
-      morpheus.MetadataUtil.autocomplete(meta)(terms, cb);
+      meta = new phantasus.MetadataModelColumnView(meta, indices);
+      phantasus.MetadataUtil.autocomplete(meta)(terms, cb);
     },
     select: function () {
       _this.search(false);
@@ -27209,7 +27210,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
       e.preventDefault();
     }
     _this.search(false);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'searchColumns'
     });
@@ -27217,7 +27218,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
 
   // dendrogram search
 
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: this.rowDendrogramSearchObject.$search,
     filter: function (tokens, cb) {
       var d = heatMap.getDendrogram(false);
@@ -27230,7 +27231,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
         if (token === '') {
           cb([]);
         } else {
-          morpheus.Util.autocompleteArrayMatcher(token, cb, d.searchTerms, null, 10);
+          phantasus.Util.autocompleteArrayMatcher(token, cb, d.searchTerms, null, 10);
         }
       }
     },
@@ -27244,13 +27245,13 @@ morpheus.HeatMapToolBar = function (heatMap) {
       e.preventDefault();
     }
     _this.searchDendrogram(false);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'searchRowDendrogram'
     });
   }, 500));
 
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: this.columnDendrogramSearchObject.$search,
     filter: function (tokens, cb) {
       var d = heatMap.getDendrogram(true);
@@ -27263,7 +27264,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
         if (token === '') {
           cb([]);
         } else {
-          morpheus.Util.autocompleteArrayMatcher(token, cb, d.searchTerms, null, 10);
+          phantasus.Util.autocompleteArrayMatcher(token, cb, d.searchTerms, null, 10);
         }
       }
     },
@@ -27277,7 +27278,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
       e.preventDefault();
     }
     _this.searchDendrogram(true);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'searchColumnDendrogram'
     });
@@ -27290,7 +27291,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
       $searchResultsLabel.html('');
       project.getElementSelectionModel().setViewIndices(null);
     } else {
-      var viewIndices = morpheus.DatasetUtil.searchValues({
+      var viewIndices = phantasus.DatasetUtil.searchValues({
         dataset: project
           .getSortedFilteredDataset(),
         text: text,
@@ -27304,10 +27305,10 @@ morpheus.HeatMapToolBar = function (heatMap) {
     }
   }
 
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: this.$valueTextField,
     filter: function (terms, cb) {
-      morpheus.DatasetUtil.autocompleteValues(
+      phantasus.DatasetUtil.autocompleteValues(
         project.getSortedFilteredDataset())(terms, cb);
     },
     select: function () {
@@ -27356,7 +27357,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
           isOnTop: $this.hasClass('btn-primary'),
           updateButtonStatus: false
         });
-        morpheus.Util.trackEvent({
+        phantasus.Util.trackEvent({
           eventCategory: 'ToolBar',
           eventAction: 'columnMatchesToTop'
         });
@@ -27373,12 +27374,12 @@ morpheus.HeatMapToolBar = function (heatMap) {
           isOnTop: $this.hasClass('btn-primary'),
           updateButtonStatus: false
         });
-        morpheus.Util.trackEvent({
+        phantasus.Util.trackEvent({
           eventCategory: 'ToolBar',
           eventAction: 'rowMatchesToTop'
         });
       });
-  project.on('rowSortOrderChanged.morpheus', function (e) {
+  project.on('rowSortOrderChanged.phantasus', function (e) {
     if (_this.searching) {
       return;
     }
@@ -27386,7 +27387,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
     _this.rowSearchObject.$matchesToTop.removeClass('btn-primary');
   });
 
-  project.on('columnSortOrderChanged.morpheus', function (e) {
+  project.on('columnSortOrderChanged.phantasus', function (e) {
     if (_this.searching) {
       return;
     }
@@ -27394,25 +27395,25 @@ morpheus.HeatMapToolBar = function (heatMap) {
     _this.columnSearchObject.$matchesToTop.removeClass('btn-primary');
   });
 
-  heatMap.getProject().on('rowFilterChanged.morpheus', function (e) {
+  heatMap.getProject().on('rowFilterChanged.phantasus', function (e) {
     _this.search(true);
     updateFilterStatus();
   });
-  heatMap.getProject().on('columnFilterChanged.morpheus', function (e) {
+  heatMap.getProject().on('columnFilterChanged.phantasus', function (e) {
     _this.search(false);
     updateFilterStatus();
   });
-  heatMap.getProject().on('datasetChanged.morpheus', function () {
+  heatMap.getProject().on('datasetChanged.phantasus', function () {
     _this.search(true);
     _this.search(false);
     updateFilterStatus();
   });
   heatMap.getProject().getRowSelectionModel().on(
-    'selectionChanged.morpheus', function () {
+    'selectionChanged.phantasus', function () {
       _this.updateSelectionLabel();
     });
   heatMap.getProject().getColumnSelectionModel().on(
-    'selectionChanged.morpheus', function () {
+    'selectionChanged.phantasus', function () {
       _this.updateSelectionLabel();
     });
   this.rowSearchResultViewIndicesSorted = null;
@@ -27433,7 +27434,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
             .getColumnPositions()
             .getPosition(
               _this.columnSearchResultViewIndicesSorted[_this.currentColumnSearchIndex]));
-        morpheus.Util.trackEvent({
+        phantasus.Util.trackEvent({
           eventCategory: 'ToolBar',
           eventAction: 'previousColumnMatch'
         });
@@ -27452,14 +27453,14 @@ morpheus.HeatMapToolBar = function (heatMap) {
             .getRowPositions()
             .getPosition(
               _this.rowSearchResultViewIndicesSorted[_this.currentRowSearchIndex]));
-        morpheus.Util.trackEvent({
+        phantasus.Util.trackEvent({
           eventCategory: 'ToolBar',
           eventAction: 'previousRowMatch'
         });
       });
   this.columnSearchObject.$nextMatch.on('click', function () {
     _this.next(true);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'nextColumnMatch'
     });
@@ -27467,7 +27468,7 @@ morpheus.HeatMapToolBar = function (heatMap) {
   });
   this.rowSearchObject.$nextMatch.on('click', function () {
     _this.next(false);
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
       eventAction: 'nextRowMatch'
     });
@@ -27476,15 +27477,15 @@ morpheus.HeatMapToolBar = function (heatMap) {
   this.updateSelectionLabel();
 }
 ;
-morpheus.HeatMapToolBar.HIGHLIGHT_SEARCH_MODE = 0;
-morpheus.HeatMapToolBar.FILTER_SEARCH_MODE = 1;
-morpheus.HeatMapToolBar.MATCHES_TO_TOP_SEARCH_MODE = 2;
-morpheus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE = 3;
-morpheus.HeatMapToolBar.prototype = {
+phantasus.HeatMapToolBar.HIGHLIGHT_SEARCH_MODE = 0;
+phantasus.HeatMapToolBar.FILTER_SEARCH_MODE = 1;
+phantasus.HeatMapToolBar.MATCHES_TO_TOP_SEARCH_MODE = 2;
+phantasus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE = 3;
+phantasus.HeatMapToolBar.prototype = {
   quickColumnFilter: false,
   searching: false,
-  rowSearchMode: morpheus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE,
-  columnSearchMode: morpheus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE,
+  rowSearchMode: phantasus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE,
+  columnSearchMode: phantasus.HeatMapToolBar.SELECT_MATCHES_SEARCH_MODE,
   _updateSearchIndices: function (isColumns) {
     var project = this.heatMap.getProject();
     if (isColumns) {
@@ -27545,13 +27546,13 @@ morpheus.HeatMapToolBar.prototype = {
     }
   },
   getSearchField: function (type) {
-    if (type === morpheus.HeatMapToolBar.COLUMN_SEARCH_FIELD) {
+    if (type === phantasus.HeatMapToolBar.COLUMN_SEARCH_FIELD) {
       return this.columnSearchObject.$search;
-    } else if (type === morpheus.HeatMapToolBar.ROW_SEARCH_FIELD) {
+    } else if (type === phantasus.HeatMapToolBar.ROW_SEARCH_FIELD) {
       return this.rowSearchObject.$search;
-    } else if (type === morpheus.HeatMapToolBar.COLUMN_DENDROGRAM_SEARCH_FIELD) {
+    } else if (type === phantasus.HeatMapToolBar.COLUMN_DENDROGRAM_SEARCH_FIELD) {
       return this.columnDendrogramSearchObject.$search;
-    } else if (type === morpheus.HeatMapToolBar.ROW_DENDROGRAM_SEARCH_FIELD) {
+    } else if (type === phantasus.HeatMapToolBar.ROW_DENDROGRAM_SEARCH_FIELD) {
       return this.rowDendrogramSearchObject.$search;
     }
   },
@@ -27579,22 +27580,22 @@ morpheus.HeatMapToolBar.prototype = {
     var p = this.heatMap.getProject();
     var d = p.getFullDataset();
     var f = p.getSortedFilteredDataset();
-    var text = 'showing ' + morpheus.Util.intFormat(f.getRowCount())
-      + '/' + morpheus.Util.intFormat(d.getRowCount()) + ' rows, '
-      + morpheus.Util.intFormat(f.getColumnCount()) + '/'
-      + morpheus.Util.intFormat(d.getColumnCount()) + ' columns';
+    var text = 'showing ' + phantasus.Util.intFormat(f.getRowCount())
+      + '/' + phantasus.Util.intFormat(d.getRowCount()) + ' rows, '
+      + phantasus.Util.intFormat(f.getColumnCount()) + '/'
+      + phantasus.Util.intFormat(d.getColumnCount()) + ' columns';
     this.$dimensionsLabel.html(text);
   },
   updateSelectionLabel: function () {
     var nc = this.heatMap.getProject().getColumnSelectionModel().count();
     var nr = this.heatMap.getProject().getRowSelectionModel().count();
     var text = [];
-    text.push(morpheus.Util.intFormat(nr) + ' row');
+    text.push(phantasus.Util.intFormat(nr) + ' row');
     if (nr !== 1) {
       text.push('s');
     }
     text.push(', ');
-    text.push(morpheus.Util.intFormat(nc) + ' column');
+    text.push(phantasus.Util.intFormat(nc) + ' column');
     if (nc !== 1) {
       text.push('s');
     }
@@ -27607,7 +27608,7 @@ morpheus.HeatMapToolBar.prototype = {
     var dendrogram = isColumns ? this.heatMap.columnDendrogram
       : this.heatMap.rowDendrogram;
     var $searchResults = searchObject.$searchResults;
-    var matches = morpheus.DendrogramUtil.search({
+    var matches = phantasus.DendrogramUtil.search({
       rootNode: dendrogram.tree.rootNode,
       text: text,
       matchAllPredicates: searchObject.matchAllPredicates,
@@ -27633,7 +27634,7 @@ morpheus.HeatMapToolBar.prototype = {
       positions.setSize(isColumns ? this.heatMap.getFitColumnSize()
         : this.heatMap.getFitRowSize());
     } else {
-      morpheus.DendrogramUtil.squishNonSearchedNodes(this.heatMap,
+      phantasus.DendrogramUtil.squishNonSearchedNodes(this.heatMap,
         isColumns);
     }
     this.heatMap.updateDataset(); // need to update spaces for group
@@ -27651,7 +27652,7 @@ morpheus.HeatMapToolBar.prototype = {
     var sortKeys = isRows ? project.getRowSortKeys() : project
       .getColumnSortKeys();
     sortKeys = sortKeys.filter(function (key) {
-      return !(key instanceof morpheus.MatchesOnTopSortKey && key.toString() === 'matches on top');
+      return !(key instanceof phantasus.MatchesOnTopSortKey && key.toString() === 'matches on top');
     });
 
     var dataset = project.getSortedFilteredDataset();
@@ -27663,13 +27664,13 @@ morpheus.HeatMapToolBar.prototype = {
       .getColumnMetadata();
     var visibleIndices = [];
     heatMap.getVisibleTrackNames(!isRows).forEach(function (name) {
-      visibleIndices.push(morpheus.MetadataUtil.indexOf(metadata, name));
+      visibleIndices.push(phantasus.MetadataUtil.indexOf(metadata, name));
     });
     var fullModel = metadata;
-    metadata = new morpheus.MetadataModelColumnView(metadata,
+    metadata = new phantasus.MetadataModelColumnView(metadata,
       visibleIndices);
 
-    var searchResultViewIndices = morpheus.MetadataUtil.search({
+    var searchResultViewIndices = phantasus.MetadataUtil.search({
       model: metadata,
       fullModel: fullModel,
       text: searchText,
@@ -27708,7 +27709,7 @@ morpheus.HeatMapToolBar.prototype = {
     }
 
     if (searchResultViewIndices !== null && isMatchesOnTop) {
-      var key = new morpheus.MatchesOnTopSortKey(project,
+      var key = new phantasus.MatchesOnTopSortKey(project,
         searchResultsModelIndices, 'matches on top', !isRows);
       // keep other sort keys
       searchResultViewIndices = key.indices; // matching indices
@@ -27721,7 +27722,7 @@ morpheus.HeatMapToolBar.prototype = {
         project.setColumnSortKeys(sortKeys, false);
       }
     }
-    var searchResultsViewIndicesSet = new morpheus.Set();
+    var searchResultsViewIndicesSet = new phantasus.Set();
     if (searchResultViewIndices != null) {
       for (var i = 0, length = searchResultViewIndices.length; i < length; i++) {
         var viewIndex = searchResultViewIndices[i];
@@ -27755,10 +27756,10 @@ morpheus.HeatMapToolBar.prototype = {
 
     if (isMatchesOnTop) { // resort
       if (isRows) {
-        project.setRowSortKeys(morpheus.SortKey.keepExistingSortKeys(
+        project.setRowSortKeys(phantasus.SortKey.keepExistingSortKeys(
           sortKeys, project.getRowSortKeys()), true);
       } else {
-        project.setColumnSortKeys(morpheus.SortKey
+        project.setColumnSortKeys(phantasus.SortKey
           .keepExistingSortKeys(sortKeys, project
             .getColumnSortKeys()), true);
       }
@@ -27786,10 +27787,10 @@ morpheus.HeatMapToolBar.prototype = {
     // remove existing matches on top key
     sortKeys = sortKeys
       .filter(function (key) {
-        return !(key instanceof morpheus.MatchesOnTopSortKey && key.name === 'matches on top');
+        return !(key instanceof phantasus.MatchesOnTopSortKey && key.name === 'matches on top');
       });
     if (options.isOnTop) { // bring to top
-      var key = new morpheus.MatchesOnTopSortKey(project,
+      var key = new phantasus.MatchesOnTopSortKey(project,
         options.isColumns ? this.columnSearchResultModelIndices : this.rowSearchResultModelIndices,
         'matches on top');
       sortKeys.splice(0, 0, key);
@@ -27810,12 +27811,12 @@ morpheus.HeatMapToolBar.prototype = {
 
   }
 };
-morpheus.HeatMapToolBar.COLUMN_SEARCH_FIELD = 'column';
-morpheus.HeatMapToolBar.ROW_SEARCH_FIELD = 'column';
-morpheus.HeatMapToolBar.COLUMN_DENDROGRAM_SEARCH_FIELD = 'column_dendrogram';
-morpheus.HeatMapToolBar.ROW_DENDROGRAM_SEARCH_FIELD = 'row_dendrogram';
+phantasus.HeatMapToolBar.COLUMN_SEARCH_FIELD = 'column';
+phantasus.HeatMapToolBar.ROW_SEARCH_FIELD = 'column';
+phantasus.HeatMapToolBar.COLUMN_DENDROGRAM_SEARCH_FIELD = 'column_dendrogram';
+phantasus.HeatMapToolBar.ROW_DENDROGRAM_SEARCH_FIELD = 'row_dendrogram';
 
-morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, options, separator, quick, tipText) {
+phantasus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, options, separator, quick, tipText) {
   var dataset = heatMap.project.getSortedFilteredDataset();
   if (!quick) {
     if (options.value) { // key value pairs for custom tooltip
@@ -27840,13 +27841,13 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
     }
   }
   if (rowIndex !== -1 && columnIndex !== -1) {
-    var tooltipSeriesIndices = options.tooltipSeriesIndices ? options.tooltipSeriesIndices : morpheus.Util.sequ32(dataset.getSeriesCount());
+    var tooltipSeriesIndices = options.tooltipSeriesIndices ? options.tooltipSeriesIndices : phantasus.Util.sequ32(dataset.getSeriesCount());
     for (var i = 0, nseries = tooltipSeriesIndices.length; i < nseries; i++) {
-      morpheus.HeatMapTooltipProvider._matrixValueToString(dataset,
+      phantasus.HeatMapTooltipProvider._matrixValueToString(dataset,
         rowIndex, columnIndex, tooltipSeriesIndices[i], tipText, separator,
         options.showSeriesNameInTooltip || i > 0);
       if (heatMap.options.symmetric && dataset.getValue(rowIndex, columnIndex, tooltipSeriesIndices[i]) !== dataset.getValue(columnIndex, rowIndex, tooltipSeriesIndices[i])) {
-        morpheus.HeatMapTooltipProvider._matrixValueToString(dataset,
+        phantasus.HeatMapTooltipProvider._matrixValueToString(dataset,
           columnIndex, rowIndex, tooltipSeriesIndices[i], tipText, separator, false);
       }
     }
@@ -27855,20 +27856,20 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
       var quickRowTracks = heatMap.rowTracks.filter(function (t) {
         return t.settings.inlineTooltip;
       });
-      morpheus.HeatMapTooltipProvider._tracksToString(quickRowTracks, dataset.getRowMetadata(), rowIndex, tipText, separator);
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(quickRowTracks, dataset.getRowMetadata(), rowIndex, tipText, separator);
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
         return t.settings.inlineTooltip;
       }), dataset.getColumnMetadata(), columnIndex, tipText, separator);
 
     }
   } else if (quick) {
     if (rowIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.rowTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.rowTracks.filter(function (t) {
         return t.settings.inlineTooltip && options.name !== t.getName();
       }), dataset.getRowMetadata(), rowIndex, tipText, separator);
     }
     if (columnIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
+      phantasus.HeatMapTooltipProvider._tracksToString(heatMap.columnTracks.filter(function (t) {
         return t.settings.inlineTooltip && options.name !== t.getName();
       }), dataset.getColumnMetadata(), columnIndex, tipText, separator);
     }
@@ -27876,12 +27877,12 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
 
   if (!quick) {
     if (rowIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._metadataToString(options,
+      phantasus.HeatMapTooltipProvider._metadataToString(options,
         heatMap.rowTracks, dataset.getRowMetadata(), rowIndex,
         tipText, separator);
     }
     if (columnIndex !== -1) {
-      morpheus.HeatMapTooltipProvider._metadataToString(options,
+      phantasus.HeatMapTooltipProvider._metadataToString(options,
         heatMap.columnTracks, dataset.getColumnMetadata(),
         columnIndex, tipText, separator);
     }
@@ -27892,7 +27893,7 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
     var colorByName = track != null ? track.settings.colorByField : null;
     var additionalVector = colorByName != null ? metadata
       .getByName(colorByName) : null;
-    morpheus.HeatMapTooltipProvider.vectorToString(vector,
+    phantasus.HeatMapTooltipProvider.vectorToString(vector,
       rowIndex !== -1 ? rowIndex : columnIndex, tipText, separator,
       additionalVector);
 
@@ -27936,16 +27937,16 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
       });
     }
   }
-  morpheus.HeatMapTooltipProvider._nodesToString(tipText, rowNodes, null, separator);
-  morpheus.HeatMapTooltipProvider._nodesToString(tipText, columnNodes, null, separator);
+  phantasus.HeatMapTooltipProvider._nodesToString(tipText, rowNodes, null, separator);
+  phantasus.HeatMapTooltipProvider._nodesToString(tipText, columnNodes, null, separator);
   if (!quick) {
     if (selectedRowNodes.length > 0) {
-      morpheus.HeatMapTooltipProvider._nodesToString(tipText,
+      phantasus.HeatMapTooltipProvider._nodesToString(tipText,
         selectedRowNodes, heatMap.rowDendrogram._selectedNodeColor,
         separator);
     }
     if (selectedColumnNodes.length > 0) {
-      morpheus.HeatMapTooltipProvider._nodesToString(tipText,
+      phantasus.HeatMapTooltipProvider._nodesToString(tipText,
         selectedColumnNodes,
         heatMap.columnDendrogram._selectedNodeColor, separator);
     }
@@ -27953,14 +27954,14 @@ morpheus.HeatMapTooltipProvider = function (heatMap, rowIndex, columnIndex, opti
 
 };
 
-morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowIndex, columnIndex, seriesIndex, tipText, separator, showSeriesNameInTooltip) {
+phantasus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowIndex, columnIndex, seriesIndex, tipText, separator, showSeriesNameInTooltip) {
   var val = dataset.getValue(rowIndex, columnIndex, seriesIndex);
   if (val != null) {
 
     if (val.toObject || !_.isNumber(val)) {
       var obj = val.toObject ? val.toObject() : val;
-      if (morpheus.Util.isArray(obj)) {
-        var v = morpheus.Util.toString(obj);
+      if (phantasus.Util.isArray(obj)) {
+        var v = phantasus.Util.toString(obj);
         if (tipText.length > 0) {
           tipText.push(separator);
         }
@@ -27974,7 +27975,7 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
       } else {
         var keys = _.keys(obj);
         if (keys.length === 0) {
-          var v = morpheus.Util.toString(obj);
+          var v = phantasus.Util.toString(obj);
           if (tipText.length > 0) {
             tipText.push(separator);
           }
@@ -27991,10 +27992,10 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
             if (key !== '__v') { // special value key
               var objVal = obj[key];
               var v;
-              if (morpheus.Util.isArray(objVal)) {
-                v = morpheus.Util.arrayToString(objVal, ', ');
+              if (phantasus.Util.isArray(objVal)) {
+                v = phantasus.Util.arrayToString(objVal, ', ');
               } else {
-                v = morpheus.Util.toString(objVal);
+                v = phantasus.Util.toString(objVal);
               }
               if (tipText.length > 0) {
                 tipText.push(separator);
@@ -28008,7 +28009,7 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
           if (_.isNumber(val)) {
             tipText.push(separator);
             tipText.push('Value: <b>');
-            tipText.push(morpheus.Util.nf(val));
+            tipText.push(phantasus.Util.nf(val));
             tipText.push('</b>');
           }
         }
@@ -28023,13 +28024,13 @@ morpheus.HeatMapTooltipProvider._matrixValueToString = function (dataset, rowInd
         tipText.push(': ');
       }
       tipText.push('<b>');
-      tipText.push(morpheus.Util.nf(val));
+      tipText.push(phantasus.Util.nf(val));
       tipText.push('</b>');
     }
   }
 };
 
-morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipText, separator, additionalVector) {
+phantasus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipText, separator, additionalVector) {
   var arrayValueToString = function (arrayFieldName, arrayVal) {
     if (arrayVal != null) {
       if (arrayFieldName != null) {
@@ -28050,13 +28051,13 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
             }
             tipText.push(key);
             tipText.push(': <b>');
-            tipText.push(morpheus.Util.toString(subVal));
+            tipText.push(phantasus.Util.toString(subVal));
             tipText.push('</b>');
           }
         });
       } else {
         tipText.push(': <b>');
-        tipText.push(morpheus.Util.toString(arrayVal));
+        tipText.push(phantasus.Util.toString(arrayVal));
         tipText.push('</b>');
       }
 
@@ -28066,16 +28067,16 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
     var primaryVal = vector.getValue(index);
     if (primaryVal != null && primaryVal != '') {
       var primaryFields = vector.getProperties().get(
-        morpheus.VectorKeys.FIELDS);
+        phantasus.VectorKeys.FIELDS);
       if (primaryFields != null) {
         var visibleFieldIndices = vector.getProperties().get(
-          morpheus.VectorKeys.VISIBLE_FIELDS);
+          phantasus.VectorKeys.VISIBLE_FIELDS);
         if (visibleFieldIndices === undefined) {
-          visibleFieldIndices = morpheus.Util
+          visibleFieldIndices = phantasus.Util
             .seq(primaryFields.length);
         }
         var additionalFieldNames = additionalVector != null ? additionalVector
-          .getProperties().get(morpheus.VectorKeys.FIELDS)
+          .getProperties().get(phantasus.VectorKeys.FIELDS)
           : null;
         var additionalVal = additionalFieldNames != null ? additionalVector
           .getValue(index)
@@ -28114,10 +28115,10 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
           if (key !== '__v') { // special value key
             var objVal = obj[key];
             var v;
-            if (morpheus.Util.isArray(objVal)) {
-              v = morpheus.Util.arrayToString(objVal, ', ');
+            if (phantasus.Util.isArray(objVal)) {
+              v = phantasus.Util.arrayToString(objVal, ', ');
             } else {
-              v = morpheus.Util.toString(objVal);
+              v = phantasus.Util.toString(objVal);
             }
             if (tipText.length > 0) {
               tipText.push(separator);
@@ -28135,21 +28136,21 @@ morpheus.HeatMapTooltipProvider.vectorToString = function (vector, index, tipTex
         }
         tipText.push(vector.getName());
         tipText.push(': <b>');
-        tipText.push(morpheus.Util.toString(primaryVal));
+        tipText.push(phantasus.Util.toString(primaryVal));
         tipText.push('</b>');
       }
 
     }
   }
 };
-morpheus.HeatMapTooltipProvider._tracksToString = function (tracks, metadata, index, tipText, separator) {
+phantasus.HeatMapTooltipProvider._tracksToString = function (tracks, metadata, index, tipText, separator) {
   for (var i = 0; i < tracks.length; i++) {
-    morpheus.HeatMapTooltipProvider.vectorToString(metadata.getByName(tracks[i].name), index, tipText,
+    phantasus.HeatMapTooltipProvider.vectorToString(metadata.getByName(tracks[i].name), index, tipText,
       separator);
 
   }
 };
-morpheus.HeatMapTooltipProvider._metadataToString = function (options, tracks, metadata, index,
+phantasus.HeatMapTooltipProvider._metadataToString = function (options, tracks, metadata, index,
                                                               tipText, separator) {
   var filtered = [];
   for (var i = 0, ntracks = tracks.length; i < ntracks; i++) {
@@ -28163,10 +28164,10 @@ morpheus.HeatMapTooltipProvider._metadataToString = function (options, tracks, m
     }
   }
 
-  morpheus.HeatMapTooltipProvider._tracksToString(filtered, metadata, index, tipText, separator);
+  phantasus.HeatMapTooltipProvider._tracksToString(filtered, metadata, index, tipText, separator);
 
 };
-morpheus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color, separator) {
+phantasus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color, separator) {
   var renderField = function (name, value) {
     if (value != null) {
       if (tipText.length > 0) {
@@ -28182,10 +28183,10 @@ morpheus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color
           if (i > 0) {
             tipText.push(', ');
           }
-          tipText.push(morpheus.Util.toString(value[i]));
+          tipText.push(phantasus.Util.toString(value[i]));
         }
       } else {
-        tipText.push(morpheus.Util.toString(value));
+        tipText.push(phantasus.Util.toString(value));
       }
       tipText.push('</b>');
       if (color) {
@@ -28210,13 +28211,13 @@ morpheus.HeatMapTooltipProvider._nodesToString = function (tipText, nodes, color
   });
 };
 
-morpheus.HeatMapTrackColorLegend = function (tracks, colorModel) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.HeatMapTrackColorLegend = function (tracks, colorModel) {
+  phantasus.AbstractCanvas.call(this, false);
   this.tracks = tracks;
   this.colorModel = colorModel;
   this.canvas.style.position = '';
 };
-morpheus.HeatMapTrackColorLegend.prototype = {
+phantasus.HeatMapTrackColorLegend.prototype = {
   getPreferredSize: function () {
     var tracks = this.tracks;
     var colorModel = this.colorModel;
@@ -28225,7 +28226,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     var maxYPix = 0;
     var canvas = this.canvas;
     var context = canvas.getContext('2d');
-    context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+    context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
     for (var i = 0; i < tracks.length; i++) {
       ypix = 0;
       var maxWidth = 0;
@@ -28261,8 +28262,8 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     for (var i = 0; i < tracks.length; i++) {
       var ypix = 0;
       var vector = tracks[i].getVector();
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
-      context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+      context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
       context.textAlign = 'left';
       // draw name
       context.textBaseline = 'top';
@@ -28280,7 +28281,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
       if (scheme != null) { // draw continuous color legend
         context.save();
         context.translate(xpix, ypix);
-        morpheus.HeatMapColorSchemeLegend.drawColorScheme(context,
+        phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
           scheme, 200);
         context.restore();
         maxWidth = Math.max(maxWidth, 220);
@@ -28288,7 +28289,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
       } else {
         var map = colorModel.getDiscreteColorScheme(vector);
         var values = map.keys().sort(
-          morpheus.SortKey.ASCENDING_COMPARATOR);
+          phantasus.SortKey.ASCENDING_COMPARATOR);
         values.forEach(function (key) {
           if (key != null) {
             var color = colorModel.getMappedValue(vector, key);
@@ -28299,7 +28300,7 @@ morpheus.HeatMapTrackColorLegend.prototype = {
             context.fillStyle = color;
             context.fillRect(xpix, ypix, 12, 12);
             context.strokeRect(xpix, ypix, 12, 12);
-            context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+            context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
             context.fillText(key, xpix + 16, ypix);
             ypix += 14;
           }
@@ -28309,15 +28310,15 @@ morpheus.HeatMapTrackColorLegend.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.HeatMapTrackColorLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HeatMapTrackColorLegend, phantasus.AbstractCanvas);
 
-morpheus.HeatMapTrackShapeLegend = function (tracks, shapeModel) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.HeatMapTrackShapeLegend = function (tracks, shapeModel) {
+  phantasus.AbstractCanvas.call(this, false);
   this.tracks = tracks;
   this.shapeModel = shapeModel;
   this.canvas.style.position = '';
 };
-morpheus.HeatMapTrackShapeLegend.prototype = {
+phantasus.HeatMapTrackShapeLegend.prototype = {
   getPreferredSize: function () {
     var tracks = this.tracks;
     var shapeModel = this.shapeModel;
@@ -28356,8 +28357,8 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
     var ypix = 0;
     context.textAlign = 'left';
     context.textBaseline = 'top';
-    context.font = '12px ' + morpheus.CanvasUtil.FONT_NAME;
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.strokeStyle = 'black';
     for (var i = 0; i < tracks.length; i++) {
       ypix = 0;
@@ -28368,14 +28369,14 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
         context.measureText(vector.getName()).width);
       ypix += 14;
       var map = shapeModel.getMap(vector.getName());
-      var values = map.keys().sort(morpheus.SortKey.ASCENDING_COMPARATOR);
+      var values = map.keys().sort(phantasus.SortKey.ASCENDING_COMPARATOR);
       values.forEach(function (key) {
         var shape = shapeModel.getMappedValue(vector, key);
         var width = context.measureText(key).width;
         if (!isNaN(width)) {
           maxWidth = Math.max(maxWidth, width);
         }
-        morpheus.CanvasUtil.drawShape(context, shape, xpix + 8,
+        phantasus.CanvasUtil.drawShape(context, shape, xpix + 8,
           ypix + 6, 6);
         context.fillText(key, xpix + 16, ypix);
         ypix += 14;
@@ -28385,15 +28386,15 @@ morpheus.HeatMapTrackShapeLegend.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.HeatMapTrackShapeLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HeatMapTrackShapeLegend, phantasus.AbstractCanvas);
 
 /**
  * rows and columns can contain field, renameTo, display, order
  *
  */
 
-morpheus.HeatMap = function (options) {
-  morpheus.Util.loadTrackingCode();
+phantasus.HeatMap = function (options) {
+  phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
   var parent = options.parent;
@@ -28612,7 +28613,7 @@ morpheus.HeatMap = function (options) {
         symmetric: false,
         keyboard: true,
         inlineTooltip: true,
-        $loadingImage: morpheus.Util.createLoadingEl(),
+        $loadingImage: phantasus.Util.createLoadingEl(),
         menu: {
           File: ['Open', 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename Tab'],
           Tools: ['New Heat Map', null, 'Hierarchical Clustering', 'Marker Selection', 'Nearest Neighbors',
@@ -28645,34 +28646,34 @@ morpheus.HeatMap = function (options) {
     options.menu = {};
   }
   this.options = options;
-  this.tooltipProvider = morpheus.HeatMapTooltipProvider;
+  this.tooltipProvider = phantasus.HeatMapTooltipProvider;
   if (!options.el) {
     this.$el = $('<div></div>');
   } else {
     this.$el = $(options.el);
   }
-  this.actionManager = new morpheus.ActionManager();
+  this.actionManager = new phantasus.ActionManager();
   this.actionManager.heatMap = this;
-  this.$el.addClass('morpheus');
+  this.$el.addClass('phantasus');
   if (!options.landingPage) {
-    options.landingPage = new morpheus.LandingPage();
+    options.landingPage = new phantasus.LandingPage();
     options.landingPage.$el.prependTo(this.$el);
   }
 
   if (this.options.dataset == null) {
-    var datasetFormBuilder = new morpheus.FormBuilder();
+    var datasetFormBuilder = new phantasus.FormBuilder();
     datasetFormBuilder.append({
       name: 'file',
       type: 'file'
     });
     this.options.dataset = $.Deferred();
-    morpheus.FormBuilder.showOkCancel({
+    phantasus.FormBuilder.showOkCancel({
       title: 'Dataset',
       appendTo: this.getContentEl(),
       content: datasetFormBuilder.$form,
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
-        morpheus.DatasetUtil.read(file).done(function (dataset) {
+        phantasus.DatasetUtil.read(file).done(function (dataset) {
           _this.options.dataset.resolve(dataset);
         }).fail(function (err) {
           _this.options.dataset.reject(err);
@@ -28684,8 +28685,8 @@ morpheus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    this.options.name = morpheus.Util
-      .getBaseFileName(morpheus.Util
+    this.options.name = phantasus.Util
+      .getBaseFileName(phantasus.Util
         .getFileName(this.options.dataset.file ? this.options.dataset.file
           : this.options.dataset));
   }
@@ -28694,7 +28695,7 @@ morpheus.HeatMap = function (options) {
   if (this.options.parent == null) {
 
     this.tabManager = this.options.tabManager != null ? this.options.tabManager
-      : new morpheus.TabManager({
+      : new phantasus.TabManager({
       landingPage: this.options.landingPage,
       autohideTabBar: this.options.autohideTabBar
     });
@@ -28737,8 +28738,8 @@ morpheus.HeatMap = function (options) {
     'overflow-y': 'visible'
   });
 
-  this.$content.on('remove.morpheus', function () {
-    _this.$content.off('remove.morpheus');
+  this.$content.on('remove.phantasus', function () {
+    _this.$content.off('remove.phantasus');
     _this.dispose();
   });
   var tab = this.tabManager.add({
@@ -28769,7 +28770,7 @@ morpheus.HeatMap = function (options) {
   this.whenLoaded = [];
 
   if (options.rowAnnotations) {
-    var rowDef = morpheus.DatasetUtil.annotate({
+    var rowDef = phantasus.DatasetUtil.annotate({
       annotations: options.rowAnnotations,
       isColumns: false
     });
@@ -28781,7 +28782,7 @@ morpheus.HeatMap = function (options) {
   }
   console.log("HeatMap creation ::", options.columnAnnotations);
   if (options.columnAnnotations) {
-    var columnDef = morpheus.DatasetUtil.annotate({
+    var columnDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
       isColumns: true
     });
@@ -28794,13 +28795,13 @@ morpheus.HeatMap = function (options) {
   if (options.rowDendrogram !== undefined
     && _.isString(options.rowDendrogram)) {
     if (options.rowDendrogram[0] === '(') {
-      _this.options.rowDendrogram = morpheus.DendrogramUtil
+      _this.options.rowDendrogram = phantasus.DendrogramUtil
         .parseNewick(options.rowDendrogram);
     } else {
-      var rowDendrogramDeferred = morpheus.Util
+      var rowDendrogramDeferred = phantasus.Util
         .getText(options.rowDendrogram);
       rowDendrogramDeferred.done(function (text) {
-        _this.options.rowDendrogram = morpheus.DendrogramUtil
+        _this.options.rowDendrogram = phantasus.DendrogramUtil
           .parseNewick(text);
       });
       promises.push(rowDendrogramDeferred);
@@ -28810,13 +28811,13 @@ morpheus.HeatMap = function (options) {
   if (options.columnDendrogram !== undefined
     && _.isString(options.columnDendrogram)) {
     if (options.columnDendrogram[0] === '(') {
-      _this.options.columnDendrogram = morpheus.DendrogramUtil
+      _this.options.columnDendrogram = phantasus.DendrogramUtil
         .parseNewick(options.columnDendrogram);
     } else {
-      var columnDendrogramDeferred = morpheus.Util
+      var columnDendrogramDeferred = phantasus.Util
         .getText(options.columnDendrogram);
       columnDendrogramDeferred.done(function (text) {
-        _this.options.columnDendrogram = morpheus.DendrogramUtil
+        _this.options.columnDendrogram = phantasus.DendrogramUtil
           .parseNewick(text);
       });
       promises.push(columnDendrogramDeferred);
@@ -28824,9 +28825,9 @@ morpheus.HeatMap = function (options) {
 
   }
   var heatMapLoaded = function () {
-    morpheus.DatasetUtil.toESSessionPromise(options.dataset);
+    phantasus.DatasetUtil.toESSessionPromise(options.dataset);
     if (typeof window !== 'undefined') {
-      $(window).on('orientationchange.morpheus resize.morpheus', _this.resizeListener = function () {
+      $(window).on('orientationchange.phantasus resize.phantasus', _this.resizeListener = function () {
         _this.revalidate();
       });
     }
@@ -28843,13 +28844,13 @@ morpheus.HeatMap = function (options) {
     }
     _this.$el.trigger('heatMapLoaded', _this);
   };
-  if (morpheus.Util.isArray(options.dataset)) {
-    var d = morpheus.DatasetUtil.readDatasetArray(options.dataset);
+  if (phantasus.Util.isArray(options.dataset)) {
+    var d = phantasus.DatasetUtil.readDatasetArray(options.dataset);
     d.fail(function (message) {
       if (_this.options.$loadingImage) {
         _this.options.$loadingImage.remove();
       }
-      morpheus.FormBuilder.showInModal({
+      phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message,
         appendTo: _this.getContentEl()
@@ -28878,24 +28879,24 @@ morpheus.HeatMap = function (options) {
                 _this.heatmap
                   .getColorScheme()
                   .setCurrentValue(
-                    morpheus.Util
-                      .getBaseFileName(morpheus.Util
+                    phantasus.Util
+                      .getBaseFileName(phantasus.Util
                         .getFileName(option.dataset)));
                 _this.heatmap
                   .getColorScheme()
                   .setColorSupplierForCurrentValue(
-                    morpheus.HeatMapColorScheme
+                    phantasus.HeatMapColorScheme
                       .createColorSupplier(option.colorScheme));
 
               } else {
                 try {
                   _this
                     .autoDisplay({
-                      extension: morpheus.Util
-                        .getExtension(morpheus.Util
+                      extension: phantasus.Util
+                        .getExtension(phantasus.Util
                           .getFileName(option.dataset)),
-                      filename: morpheus.Util
-                        .getBaseFileName(morpheus.Util
+                      filename: phantasus.Util
+                        .getBaseFileName(phantasus.Util
                           .getFileName(option.dataset))
                     });
                 }
@@ -28910,17 +28911,17 @@ morpheus.HeatMap = function (options) {
         heatMapLoaded();
       });
   } else {
-    var deferred = options.dataset.file ? morpheus.DatasetUtil.read(
+    var deferred = options.dataset.file ? phantasus.DatasetUtil.read(
       options.dataset.file, options.dataset.options)
-      : morpheus.DatasetUtil.read(options.dataset);
+      : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
       _this.options.dataset = dataset;
     });
     deferred.fail(function (err) {
       _this.options.$loadingImage.remove();
       var message = ['Error opening '
-      + (options.dataset.file ? morpheus.Util
-        .getFileName(options.dataset.file) : morpheus.Util
+      + (options.dataset.file ? phantasus.Util
+        .getFileName(options.dataset.file) : phantasus.Util
         .getFileName(options.dataset)) + '.'];
 
       if (err.message) {
@@ -28929,7 +28930,7 @@ morpheus.HeatMap = function (options) {
 
       }
 
-      morpheus.FormBuilder.showInModal({
+      phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message.join(''),
         appendTo: _this.getContentEl()
@@ -28939,9 +28940,9 @@ morpheus.HeatMap = function (options) {
     promises.push(deferred);
     var datasetOverlay = null;
     if (options.datasetOverlay) {
-      var d = options.datasetOverlay.file ? morpheus.DatasetUtil.read(
+      var d = options.datasetOverlay.file ? phantasus.DatasetUtil.read(
         options.datasetOverlay.file, options.datasetOverlay.options)
-        : morpheus.DatasetUtil.read(options.datasetOverlay);
+        : phantasus.DatasetUtil.read(options.datasetOverlay);
       d.done(function (dataset) {
         datasetOverlay = dataset;
       });
@@ -28957,7 +28958,7 @@ morpheus.HeatMap = function (options) {
       }
       _this._init();
       if (datasetOverlay) {
-        morpheus.DatasetUtil.overlay({
+        phantasus.DatasetUtil.overlay({
           dataset: _this.options.dataset,
           newDataset: datasetOverlay,
           rowAnnotationName: 'id',
@@ -28971,13 +28972,13 @@ morpheus.HeatMap = function (options) {
   }
 };
 
-morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS = 6;
+phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS = 6;
 
-morpheus.HeatMap.showTool = function (tool, heatMap, callback) {
+phantasus.HeatMap.showTool = function (tool, heatMap, callback) {
   console.log("HeatMap.showTool::", tool, heatMap);
   if (tool.gui) {
     var gui = tool.gui(heatMap.getProject());
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     _.each(gui, function (item) {
       formBuilder.append(item);
     });
@@ -29009,7 +29010,7 @@ morpheus.HeatMap.showTool = function (tool, heatMap, callback) {
       if (value instanceof Worker) {
         value.onerror = function (e) {
           task.worker.terminate();
-          morpheus.FormBuilder.showInModal({
+          phantasus.FormBuilder.showInModal({
             title: 'Error',
             html: e,
             close: 'Close',
@@ -29043,7 +29044,7 @@ morpheus.HeatMap.showTool = function (tool, heatMap, callback) {
     var guiOptions = $.extend({}, {
       ok: true
     }, gui.options);
-    $formDiv = morpheus.FormBuilder.showOkCancel({
+    $formDiv = phantasus.FormBuilder.showOkCancel({
       title: tool.toString(),
       apply: tool.apply,
       ok: guiOptions.ok,
@@ -29068,7 +29069,7 @@ morpheus.HeatMap.showTool = function (tool, heatMap, callback) {
   }
 };
 
-morpheus.HeatMap.getSpaces = function (groupByKeys, length, gapSize) {
+phantasus.HeatMap.getSpaces = function (groupByKeys, length, gapSize) {
   var previousArray = [];
   var nkeys = groupByKeys.length;
   for (var keyIndex = 0; keyIndex < nkeys; keyIndex++) {
@@ -29101,17 +29102,17 @@ morpheus.HeatMap.getSpaces = function (groupByKeys, length, gapSize) {
   }
   return spaces;
 };
-morpheus.HeatMap.createGroupBySpaces = function (dataset, groupByKeys, gapSize, isColumns) {
+phantasus.HeatMap.createGroupBySpaces = function (dataset, groupByKeys, gapSize, isColumns) {
   if (groupByKeys.length > 0) {
     var nkeys = groupByKeys.length;
     for (var keyIndex = 0; keyIndex < nkeys; keyIndex++) {
-      groupByKeys[keyIndex].init(groupByKeys[keyIndex].isColumns() ? new morpheus.TransposedDatasetView(dataset) : dataset);
+      groupByKeys[keyIndex].init(groupByKeys[keyIndex].isColumns() ? new phantasus.TransposedDatasetView(dataset) : dataset);
     }
-    return morpheus.HeatMap.getSpaces(groupByKeys, isColumns ? dataset.getColumnCount() : dataset.getRowCount(),
+    return phantasus.HeatMap.getSpaces(groupByKeys, isColumns ? dataset.getColumnCount() : dataset.getRowCount(),
       gapSize);
   }
 };
-morpheus.HeatMap.isDendrogramVisible = function (project, isColumns) {
+phantasus.HeatMap.isDendrogramVisible = function (project, isColumns) {
   var sortKeys = isColumns ? project.getColumnSortKeys() : project
     .getRowSortKeys();
   // var filter = isColumns ? this.project.getColumnFilter()
@@ -29119,13 +29120,13 @@ morpheus.HeatMap.isDendrogramVisible = function (project, isColumns) {
   // // FIXME compare filters
   var size = isColumns ? project.getSortedFilteredDataset().getColumnCount()
     : project.getSortedFilteredDataset().getRowCount();
-  return sortKeys.length === 1 && sortKeys[0] instanceof morpheus.SpecifiedModelSortOrder
+  return sortKeys.length === 1 && sortKeys[0] instanceof phantasus.SpecifiedModelSortOrder
     && sortKeys[0].name === 'dendrogram'
     && sortKeys[0].nvisible === size;
 
 };
 
-morpheus.HeatMap.prototype = {
+phantasus.HeatMap.prototype = {
   gapSize: 10,
   updatingScroll: false,
   getWhitespaceEl: function () {
@@ -29142,7 +29143,7 @@ morpheus.HeatMap.prototype = {
     if (options.extension === 'segtab' || options.extension === 'seg') {
       colorScheme = {
         type: 'fixed',
-        map: morpheus.HeatMapColorScheme.Predefined.CN().map
+        map: phantasus.HeatMapColorScheme.Predefined.CN().map
           .map(function (item) {
             return {
               value: Math.pow(2, 1 + item.value),
@@ -29151,17 +29152,17 @@ morpheus.HeatMap.prototype = {
           })
       };
     } else if (options.extension === 'maf') {
-      colorScheme = morpheus.HeatMapColorScheme.Predefined.MAF();
-      var colorMap = morpheus.HeatMapColorScheme.Predefined.MAF().map;
+      colorScheme = phantasus.HeatMapColorScheme.Predefined.MAF();
+      var colorMap = phantasus.HeatMapColorScheme.Predefined.MAF().map;
       var rowMutProfile = this.project.getFullDataset().getRowMetadata()
         .getByName('mutation_summary');
-      var fieldNames = rowMutProfile.getProperties().get(morpheus.VectorKeys.FIELDS);
+      var fieldNames = rowMutProfile.getProperties().get(phantasus.VectorKeys.FIELDS);
       var useMafColorMap = true;
-      if (fieldNames.length !== morpheus.MafFileReader.FIELD_NAMES.length) {
+      if (fieldNames.length !== phantasus.MafFileReader.FIELD_NAMES.length) {
         useMafColorMap = false;
       } else {
         for (var i = 0; i < fieldNames.length; i++) {
-          if (fieldNames[i] !== morpheus.MafFileReader.FIELD_NAMES[i]) {
+          if (fieldNames[i] !== phantasus.MafFileReader.FIELD_NAMES[i]) {
             useMafColorMap = false;
             break;
           }
@@ -29179,7 +29180,7 @@ morpheus.HeatMap.prototype = {
         for (var i = 0; i < fieldNames.length; i++) {
           colorScheme.map.push({
             value: i + 1,
-            color: morpheus.VectorColorModel.TWENTY_COLORS[i % morpheus.VectorColorModel.TWENTY_COLORS.length],
+            color: phantasus.VectorColorModel.TWENTY_COLORS[i % phantasus.VectorColorModel.TWENTY_COLORS.length],
             name: fieldNames[i]
           });
         }
@@ -29220,7 +29221,7 @@ morpheus.HeatMap.prototype = {
 
       }
     } else if (options.extension === 'gmt') {
-      colorScheme = morpheus.HeatMapColorScheme.Predefined.BINARY();
+      colorScheme = phantasus.HeatMapColorScheme.Predefined.BINARY();
     } else if (options.filename === 'all_lesions.conf_99'
       || options.filename === 'all_data_by_genes.txt' || options.filename.toLowerCase().indexOf('gistic') !== -1) {
       colorScheme = {
@@ -29272,7 +29273,7 @@ morpheus.HeatMap.prototype = {
     if (colorScheme && options.filename && this.heatmap.getColorScheme()) {
       this.heatmap.getColorScheme().setCurrentValue(options.filename);
       this.heatmap.getColorScheme().setColorSupplierForCurrentValue(
-        morpheus.HeatMapColorScheme
+        phantasus.HeatMapColorScheme
           .createColorSupplier(colorScheme));
     }
     return colorScheme;
@@ -29302,21 +29303,21 @@ morpheus.HeatMap.prototype = {
         : project.getColumnSortKeys();
       for (var i = 0, length = existingSortKeys.length; i < length; i++) {
         var key = existingSortKeys[i];
-        if (key instanceof morpheus.SortByValuesKey
-          && morpheus.Util.arrayEquals(key.modelIndices,
+        if (key instanceof phantasus.SortByValuesKey
+          && phantasus.Util.arrayEquals(key.modelIndices,
             modelIndices)) {
           priorSortKeyIndex = i;
-          if (key.getSortOrder() === morpheus.SortKey.SortOrder.UNSORTED) {
-            sortOrder = morpheus.SortKey.SortOrder.DESCENDING; // 1st
+          if (key.getSortOrder() === phantasus.SortKey.SortOrder.UNSORTED) {
+            sortOrder = phantasus.SortKey.SortOrder.DESCENDING; // 1st
             // click
-          } else if (key.getSortOrder() === morpheus.SortKey.SortOrder.DESCENDING) {
-            sortOrder = morpheus.SortKey.SortOrder.ASCENDING; // 2nd
+          } else if (key.getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) {
+            sortOrder = phantasus.SortKey.SortOrder.ASCENDING; // 2nd
             // click
-          } else if (key.getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
-            sortOrder = morpheus.SortKey.SortOrder.TOP_N; // 3rd
+          } else if (key.getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
+            sortOrder = phantasus.SortKey.SortOrder.TOP_N; // 3rd
             // click
-          } else if (key.getSortOrder() === morpheus.SortKey.SortOrder.TOP_N) {
-            sortOrder = morpheus.SortKey.SortOrder.UNSORTED; // 4th
+          } else if (key.getSortOrder() === phantasus.SortKey.SortOrder.TOP_N) {
+            sortOrder = phantasus.SortKey.SortOrder.UNSORTED; // 4th
             // click
           }
           break;
@@ -29326,7 +29327,7 @@ morpheus.HeatMap.prototype = {
     }
 
     if (sortOrder == null) {
-      sortOrder = morpheus.SortKey.SortOrder.DESCENDING;
+      sortOrder = phantasus.SortKey.SortOrder.DESCENDING;
     }
 
     var sortKeys;
@@ -29335,7 +29336,7 @@ morpheus.HeatMap.prototype = {
         .getRowSortKeys();
 
       if (priorSortKeyIndex !== -1) {
-        if (sortOrder === morpheus.SortKey.SortOrder.UNSORTED) {
+        if (sortOrder === phantasus.SortKey.SortOrder.UNSORTED) {
           // remove existing sort key
           sortKeys.splice(priorSortKeyIndex, 1);
         } else {
@@ -29343,22 +29344,22 @@ morpheus.HeatMap.prototype = {
         }
 
       } else {
-        if (sortOrder !== morpheus.SortKey.SortOrder.UNSORTED) {
-          sortKeys.push(new morpheus.SortByValuesKey(modelIndices,
+        if (sortOrder !== phantasus.SortKey.SortOrder.UNSORTED) {
+          sortKeys.push(new phantasus.SortByValuesKey(modelIndices,
             sortOrder, !isColumns));
         }
         // add new sort key
       }
 
-      sortKeys = morpheus.SortKey.keepExistingSortKeys(sortKeys,
+      sortKeys = phantasus.SortKey.keepExistingSortKeys(sortKeys,
         !isColumns ? project.getColumnSortKeys() : project
           .getRowSortKeys());
 
     } else {
-      var newSortKeys = sortOrder === morpheus.SortKey.SortOrder.UNSORTED ? []
-        : [new morpheus.SortByValuesKey(modelIndices, sortOrder,
+      var newSortKeys = sortOrder === phantasus.SortKey.SortOrder.UNSORTED ? []
+        : [new phantasus.SortByValuesKey(modelIndices, sortOrder,
         !isColumns)];
-      sortKeys = morpheus.SortKey.keepExistingSortKeys(newSortKeys,
+      sortKeys = phantasus.SortKey.keepExistingSortKeys(newSortKeys,
         !isColumns ? project.getColumnSortKeys() : project
           .getRowSortKeys());
     }
@@ -29370,7 +29371,7 @@ morpheus.HeatMap.prototype = {
       project.setRowSortKeys(sortKeys, true);
       this.scrollTop(0);
     }
-    morpheus.Util.trackEvent({
+    phantasus.Util.trackEvent({
       eventCategory: 'Tool',
       eventAction: isColumns ? 'sortRowsBasedOnSelection' : 'sortColumnsBasedOnSelection'
     });
@@ -29389,7 +29390,7 @@ morpheus.HeatMap.prototype = {
     return this.options.name;
   },
   showOptions: function () {
-    new morpheus.HeatMapOptions(this);
+    new phantasus.HeatMapOptions(this);
   },
   getProject: function () {
     return this.project;
@@ -29423,16 +29424,16 @@ morpheus.HeatMap.prototype = {
       };
     });
     // sort
-    json.rowSortBy = morpheus.SortKey.toJSON(this.getProject().getRowSortKeys());
-    json.columnSortBy = morpheus.SortKey.toJSON(this.getProject().getColumnSortKeys());
+    json.rowSortBy = phantasus.SortKey.toJSON(this.getProject().getRowSortKeys());
+    json.columnSortBy = phantasus.SortKey.toJSON(this.getProject().getColumnSortKeys());
 
     // group
-    json.rowGroupBy = morpheus.SortKey.toJSON(this.getProject().getGroupRows());
-    json.columnGroupBy = morpheus.SortKey.toJSON(this.getProject().getGroupColumns());
+    json.rowGroupBy = phantasus.SortKey.toJSON(this.getProject().getGroupRows());
+    json.columnGroupBy = phantasus.SortKey.toJSON(this.getProject().getGroupColumns());
 
     // filter
-    json.rowFilter = morpheus.CombinedFilter.toJSON(this.getProject().getRowFilter());
-    json.columnFilter = morpheus.CombinedFilter.toJSON(this.getProject().getColumnFilter());
+    json.rowFilter = phantasus.CombinedFilter.toJSON(this.getProject().getRowFilter());
+    json.columnFilter = phantasus.CombinedFilter.toJSON(this.getProject().getColumnFilter());
 
     // element size, symmetric
     json.symmetric = this.options.symmetric;
@@ -29447,24 +29448,24 @@ morpheus.HeatMap.prototype = {
     json.columnSelection = this.getProject().getColumnSelectionModel().toModelIndices();
 
     // search terms
-    json.rowSearchTerm = this.toolbar.getSearchField(morpheus.HeatMapToolBar.ROW_SEARCH_FIELD).val();
-    json.columnSearchTerm = this.toolbar.getSearchField(morpheus.HeatMapToolBar.COLUMN_SEARCH_FIELD).val();
+    json.rowSearchTerm = this.toolbar.getSearchField(phantasus.HeatMapToolBar.ROW_SEARCH_FIELD).val();
+    json.columnSearchTerm = this.toolbar.getSearchField(phantasus.HeatMapToolBar.COLUMN_SEARCH_FIELD).val();
 
     //  dendrogram
     if (this.rowDendrogram != null) {
       var out = [];
-      morpheus.DendrogramUtil.writeNewick(this.rowDendrogram.tree.rootNode, out);
+      phantasus.DendrogramUtil.writeNewick(this.rowDendrogram.tree.rootNode, out);
       json.rowDendrogram = out.join('');
       json.rowDendrogramField = null;
     }
     if (this.columnDendrogram != null) {
       var out = [];
-      morpheus.DendrogramUtil.writeNewick(this.columnDendrogram.tree.rootNode, out);
+      phantasus.DendrogramUtil.writeNewick(this.columnDendrogram.tree.rootNode, out);
       json.columnDendrogram = out.join('');
       json.columnDendrogramField = null;
     }
     if (options.dataset) {
-      json.dataset = morpheus.Dataset.toJSON(this.getProject().getFullDataset());
+      json.dataset = phantasus.Dataset.toJSON(this.getProject().getFullDataset());
     }
 
     return json;
@@ -29481,26 +29482,26 @@ morpheus.HeatMap.prototype = {
       dendrogram = null;
     }
     if (tree != null) {
-      //  var modelIndexSet = new morpheus.Set();
+      //  var modelIndexSet = new phantasus.Set();
       var size = isColumns ? this.project.getFullDataset()
         .getColumnCount() : this.project.getFullDataset()
         .getRowCount();
       if (isColumns) {
-        dendrogram = new morpheus.ColumnDendrogram(this, tree,
+        dendrogram = new phantasus.ColumnDendrogram(this, tree,
           this.heatmap.getColumnPositions(), this.project);
         dendrogram.filter = this.project.getColumnFilter()
           .shallowClone();
         this.columnDendrogram = dendrogram;
         this.project.setColumnSortKeys(
-          [new morpheus.SpecifiedModelSortOrder(modelOrder,
+          [new phantasus.SpecifiedModelSortOrder(modelOrder,
             modelOrder.length, 'dendrogram', true)], true);
       } else {
-        dendrogram = new morpheus.RowDendrogram(this, tree,
+        dendrogram = new phantasus.RowDendrogram(this, tree,
           this.heatmap.getRowPositions(), this.project);
         dendrogram.filter = this.project.getRowFilter().shallowClone();
         this.rowDendrogram = dendrogram;
         this.project.setRowSortKeys(
-          [new morpheus.SpecifiedModelSortOrder(modelOrder,
+          [new phantasus.SpecifiedModelSortOrder(modelOrder,
             modelOrder.length, 'dendrogram', false)], true);
       }
       dendrogram.appendTo(this.$parent);
@@ -29512,7 +29513,7 @@ morpheus.HeatMap.prototype = {
         : this.project.getRowSortKeys();
       // remove dendrogram sort key
       for (var i = 0; i < sortKeys.length; i++) {
-        if (sortKeys[i] instanceof morpheus.SpecifiedModelSortOrder
+        if (sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder
           && sortKeys[i].name === 'dendrogram') {
           sortKeys.splice(i, 1);
           i--;
@@ -29558,17 +29559,17 @@ morpheus.HeatMap.prototype = {
       selectedViewIndices.forEach(function (id) {
         var rowIndex = id.getArray()[0];
         var columnIndex = id.getArray()[1];
-        tipText.push(morpheus.Util.nf(dataset.getValue(rowIndex,
+        tipText.push(phantasus.Util.nf(dataset.getValue(rowIndex,
           columnIndex)));
         rowTracks.forEach(function (track) {
           tipText.push('\t');
-          tipText.push(morpheus.Util.toString(dataset
+          tipText.push(phantasus.Util.toString(dataset
             .getRowMetadata().getByName(track.name).getValue(
               rowIndex)));
         });
         columnTracks.forEach(function (track) {
           tipText.push('\t');
-          tipText.push(morpheus.Util.toString(dataset
+          tipText.push(phantasus.Util.toString(dataset
             .getColumnMetadata().getByName(track.name)
             .getValue(columnIndex)));
         });
@@ -29583,7 +29584,7 @@ morpheus.HeatMap.prototype = {
   },
   _init: function () {
     var _this = this;
-    morpheus.MetadataUtil.renameFields(this.options.dataset, this.options);
+    phantasus.MetadataUtil.renameFields(this.options.dataset, this.options);
     var dataset = this.options.dataset;
     var rowDendrogram = this.options.rowDendrogram;
     var columnDendrogram = this.options.columnDendrogram;
@@ -29597,35 +29598,35 @@ morpheus.HeatMap.prototype = {
       }
     }
 
-    this.project = new morpheus.Project(dataset);
+    this.project = new phantasus.Project(dataset);
 
     this.tabManager.setTabTitle(this.tabId, this.project.getFullDataset()
         .getRowCount()
       + ' row'
-      + morpheus.Util.s(this.project.getFullDataset().getRowCount())
+      + phantasus.Util.s(this.project.getFullDataset().getRowCount())
       + ' x '
       + this.project.getFullDataset().getColumnCount()
       + ' column'
-      + morpheus.Util.s(this.project.getFullDataset()
+      + phantasus.Util.s(this.project.getFullDataset()
         .getColumnCount()));
     if (this.options.inheritFromParent && this.options.parent != null) {
-      morpheus.HeatMap.copyFromParent(this.project, this.options);
+      phantasus.HeatMap.copyFromParent(this.project, this.options);
     }
 
     // filter ui will be initialized automatically
     if (this.options.rowFilter) {
-      morpheus.CombinedFilter.fromJSON(_this.project.getRowFilter(), this.options.rowFilter);
+      phantasus.CombinedFilter.fromJSON(_this.project.getRowFilter(), this.options.rowFilter);
       _this.project.setRowFilter(_this.project.getRowFilter(), true);
     }
     if (this.options.columnFilter) {
-      morpheus.CombinedFilter.fromJSON(_this.project.getColumnFilter(), this.options.columnFilter);
+      phantasus.CombinedFilter.fromJSON(_this.project.getColumnFilter(), this.options.columnFilter);
       _this.project.setColumnFilter(_this.project.getColumnFilter(), true);
     }
     this.whenLoaded = null;
     this.$parent = $('<div></div>').css('position', 'relative');
 
     this.$parent.appendTo(this.$content);
-    this.toolbar = new morpheus.HeatMapToolBar(this);
+    this.toolbar = new phantasus.HeatMapToolBar(this);
     if (this.options.customUrls) {
       this.setCustomUrls(this.options.customUrls);
     }
@@ -29634,7 +29635,7 @@ morpheus.HeatMap.prototype = {
     // TODO along bottom of row metadata, and along left of column metadata
     // the viewport is the size of the visible region, the view is the full
     // size of the heat map
-    this.vscroll = new morpheus.ScrollBar(true);
+    this.vscroll = new phantasus.ScrollBar(true);
     this.vscroll.appendTo(this.$parent);
     this.vscroll.on('scroll', function () {
       if (_this.updatingScroll) {
@@ -29649,7 +29650,7 @@ morpheus.HeatMap.prototype = {
     });
 
     // for resizing column dendrogram
-    this.beforeColumnTrackDivider = new morpheus.Divider(false);
+    this.beforeColumnTrackDivider = new phantasus.Divider(false);
     this.beforeColumnTrackDivider.appendTo(this.$parent);
     var dragStartHeight = 0;
     this.beforeColumnTrackDivider.on('resizeStart', function (e) {
@@ -29664,7 +29665,7 @@ morpheus.HeatMap.prototype = {
     });
 
     // for resizing row dendrogram
-    this.afterRowDendrogramDivider = new morpheus.Divider(true);
+    this.afterRowDendrogramDivider = new phantasus.Divider(true);
     this.afterRowDendrogramDivider.appendTo(this.$parent);
     var rowDendrogramStartWidth = 0;
     this.afterRowDendrogramDivider.on('resizeStart', function (e) {
@@ -29678,7 +29679,7 @@ morpheus.HeatMap.prototype = {
       rowDendrogramStartWidth = 0;
     });
 
-    this.afterVerticalScrollBarDivider = new morpheus.Divider(true);
+    this.afterVerticalScrollBarDivider = new phantasus.Divider(true);
     this.afterVerticalScrollBarDivider.appendTo(this.$parent);
     var resizeStartHeatMapWidth = 0;
     this.afterVerticalScrollBarDivider.on('resizeStart', function (e) {
@@ -29689,7 +29690,7 @@ morpheus.HeatMap.prototype = {
       _this.revalidate();
     });
     // horizontal scroll
-    this.hscroll = new morpheus.ScrollBar(false);
+    this.hscroll = new phantasus.ScrollBar(false);
     this.hscroll.appendTo(this.$parent);
     this.hscroll.on('scroll', function () {
       if (_this.updatingScroll) {
@@ -29704,7 +29705,7 @@ morpheus.HeatMap.prototype = {
     });
     this.$whitespace = $('<div style="position: absolute;"></div>');
     this.$whitespace.appendTo(this.$parent);
-    var heatmap = new morpheus.HeatMapElementCanvas(this.project);
+    var heatmap = new phantasus.HeatMapElementCanvas(this.project);
     if (this.options.drawCallback) {
       heatmap.setDrawCallback(this.options.drawCallback);
     }
@@ -29714,7 +29715,7 @@ morpheus.HeatMap.prototype = {
         'contextmenu',
         function (e) {
           var items = [];
-          morpheus.Popup
+          phantasus.Popup
             .showPopup(
               [
 
@@ -29723,7 +29724,7 @@ morpheus.HeatMap.prototype = {
                   class: 'copy'
                 },
                 {
-                  name: 'Save Image (' + morpheus.Util.COMMAND_KEY + 'S)'
+                  name: 'Save Image (' + phantasus.Util.COMMAND_KEY + 'S)'
                 },
                 {
                   separator: true
@@ -29750,7 +29751,7 @@ morpheus.HeatMap.prototype = {
               function (event, item) {
                 if (item === 'Show Inline Tooltip') {
                   _this.options.inlineTooltip = !_this.options.inlineTooltip;
-                } else if (item === ('Save Image (' + morpheus.Util.COMMAND_KEY + 'S)')) {
+                } else if (item === ('Save Image (' + phantasus.Util.COMMAND_KEY + 'S)')) {
                   _this.getActionManager().execute('Save Image');
                 } else if (item === 'Copy Selection') {
                   var text = _this
@@ -29787,7 +29788,7 @@ morpheus.HeatMap.prototype = {
         var vector = dataset.getRowMetadata().getByName(
           this.options.rowDendrogramField);
         rowIndices = [];
-        var map = new morpheus.Map();
+        var map = new phantasus.Map();
         var re = /[,:]/g;
         for (var j = 0, size = vector.size(); j < size; j++) {
           var key = vector.getValue(j);
@@ -29823,13 +29824,13 @@ morpheus.HeatMap.prototype = {
         //   }
         // }
       }
-      this.rowDendrogram = new morpheus.RowDendrogram(this, tree, heatmap
+      this.rowDendrogram = new phantasus.RowDendrogram(this, tree, heatmap
         .getRowPositions(), this.project, true);
       this.rowDendrogram.appendTo(this.$parent);
       this.rowDendrogram.$label.appendTo(this.$parent);
       this.rowDendrogram.$squishedLabel.appendTo(this.$parent);
       if (rowIndices != null) {
-        rowDendrogramSortKey = new morpheus.SpecifiedModelSortOrder(
+        rowDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           rowIndices, rowIndices.length, 'dendrogram');
       }
     }
@@ -29847,7 +29848,7 @@ morpheus.HeatMap.prototype = {
         columnIndices = [];
         var vector = dataset.getColumnMetadata().getByName(
           this.options.columnDendrogramField);
-        var map = new morpheus.Map();
+        var map = new phantasus.Map();
         var re = /[,:]/g;
         for (var j = 0, size = vector.size(); j < size; j++) {
           var key = vector.getValue(j);
@@ -29880,13 +29881,13 @@ morpheus.HeatMap.prototype = {
         //   }
         // }
       }
-      this.columnDendrogram = new morpheus.ColumnDendrogram(this, tree,
+      this.columnDendrogram = new phantasus.ColumnDendrogram(this, tree,
         heatmap.getColumnPositions(), this.project, true);
       this.columnDendrogram.appendTo(this.$parent);
       this.columnDendrogram.$label.appendTo(this.$parent);
       this.columnDendrogram.$squishedLabel.appendTo(this.$parent);
       if (columnIndices != null) {
-        columnDendrogramSortKey = new morpheus.SpecifiedModelSortOrder(
+        columnDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           columnIndices, columnIndices.length, 'dendrogram');
       }
     }
@@ -29911,54 +29912,54 @@ morpheus.HeatMap.prototype = {
       this.project.setColumnSortKeys([columnDendrogramSortKey]);
     }
     if (this.options.rowSortBy && this.options.rowSortBy.length > 0) {
-      this.project.setRowSortKeys(morpheus.SortKey.fromJSON(this.project, this.options.rowSortBy), false);
+      this.project.setRowSortKeys(phantasus.SortKey.fromJSON(this.project, this.options.rowSortBy), false);
     }
     if (this.options.columnSortBy && this.options.columnSortBy.length > 0) {
-      this.project.setColumnSortKeys(morpheus.SortKey.fromJSON(this.project, this.options.columnSortBy), false);
+      this.project.setColumnSortKeys(phantasus.SortKey.fromJSON(this.project, this.options.columnSortBy), false);
     }
     if (this.options.rowGroupBy != null && this.options.rowGroupBy.length > 0) {
-      var keys = morpheus.SortKey.fromJSON(this.project, this.options.rowGroupBy);
+      var keys = phantasus.SortKey.fromJSON(this.project, this.options.rowGroupBy);
       for (var i = 0; i < keys.length; i++) {
         this.project.groupRows.push(keys[i]);
       }
     }
     if (this.options.columnGroupBy != null && this.options.columnGroupBy.length > 0) {
-      var keys = morpheus.SortKey.fromJSON(this.project, this.options.columnGroupBy);
+      var keys = phantasus.SortKey.fromJSON(this.project, this.options.columnGroupBy);
       for (var i = 0; i < keys.length; i++) {
         this.project.groupColumns.push(keys[i]);
       }
     }
     if (this.options.rowSelection != null && this.options.rowSelection.length > 0) {
-      var indices = new morpheus.Set();
+      var indices = new phantasus.Set();
       for (var i = 0, length = this.options.rowSelection.length; i < length; i++) {
         indices.add(this.project.convertModelRowIndexToView(this.options.rowSelection[i]));
       }
       this.project.getRowSelectionModel().setViewIndices(indices, false);
     }
     if (this.options.columnSelection != null && this.options.columnSelection.length > 0) {
-      var indices = new morpheus.Set();
+      var indices = new phantasus.Set();
       for (var i = 0, length = this.options.columnSelection.length; i < length; i++) {
         indices.add(this.project.convertModelColumnIndexToView(this.options.columnSelection[i]));
       }
       this.project.getColumnSelectionModel().setViewIndices(indices, false);
     }
     // if (this.options.rowSearchTerm != null && this.options.rowSearchTerm !== '') {
-    //   this.toolbar.getSearchField(morpheus.HeatMapToolBar.ROW_SEARCH_FIELD).val(this.options.rowSearchTerm);
+    //   this.toolbar.getSearchField(phantasus.HeatMapToolBar.ROW_SEARCH_FIELD).val(this.options.rowSearchTerm);
     // }
     // if (this.options.columnSearchTerm != null && this.options.columnSearchTerm !== '') {
-    //   this.toolbar.getSearchField(morpheus.HeatMapToolBar.COLUMN_SEARCH_FIELD).val(this.options.columnSearchTerm);
+    //   this.toolbar.getSearchField(phantasus.HeatMapToolBar.COLUMN_SEARCH_FIELD).val(this.options.columnSearchTerm);
     // }
 
-    this.vSortByValuesIndicator = new morpheus.SortByValuesIndicator(
+    this.vSortByValuesIndicator = new phantasus.SortByValuesIndicator(
       this.project, true, heatmap.getRowPositions());
     this.vSortByValuesIndicator.appendTo(this.$parent);
-    this.hSortByValuesIndicator = new morpheus.SortByValuesIndicator(
+    this.hSortByValuesIndicator = new phantasus.SortByValuesIndicator(
       this.project, false, heatmap.getColumnPositions());
     this.hSortByValuesIndicator.appendTo(this.$parent);
-    this.verticalSearchBar = new morpheus.ScentedSearch(this.project
+    this.verticalSearchBar = new phantasus.ScentedSearch(this.project
         .getRowSelectionModel(), heatmap.getRowPositions(), true,
       this.vscroll, this);
-    this.horizontalSearchBar = new morpheus.ScentedSearch(this.project
+    this.horizontalSearchBar = new phantasus.ScentedSearch(this.project
         .getColumnSelectionModel(), heatmap.getColumnPositions(),
       false, this.hscroll, this);
     this.rowTracks = [];
@@ -29966,7 +29967,7 @@ morpheus.HeatMap.prototype = {
     this.columnTracks = [];
     this.columnTrackHeaders = [];
     var setInitialDisplay = function (isColumns, options) {
-      var nameToOption = new morpheus.Map();
+      var nameToOption = new phantasus.Map();
       // at
       // least
       // one
@@ -29984,7 +29985,7 @@ morpheus.HeatMap.prototype = {
         : dataset.getRowMetadata();
       // see if default fields found
       if (!displaySpecified) {
-        var defaultFieldsToShow = new morpheus.Set();
+        var defaultFieldsToShow = new phantasus.Set();
         //['pert_iname', 'moa', 'target', 'description', 'cell_id', 'pert_type'
         ['pert_iname', 'moa', 'target', 'cell_id', 'pert_type']
           .forEach(function (field) {
@@ -30009,21 +30010,21 @@ morpheus.HeatMap.prototype = {
         var v = displayMetadata.get(i);
         var name = v.getName();
         var option = nameToOption.get(name);
-        if (morpheus.MetadataUtil.DEFAULT_HIDDEN_FIELDS.has(name)
+        if (phantasus.MetadataUtil.DEFAULT_HIDDEN_FIELDS.has(name)
           && option == null) {
           continue;
         }
         var count = isColumns ? dataset.getColumnCount() : dataset
           .getRowCount();
         if (!option && !displaySpecified && count > 1
-          && !morpheus.VectorUtil.containsMoreThanOneValue(v)) {
+          && !phantasus.VectorUtil.containsMoreThanOneValue(v)) {
           continue;
         }
         if (option == null) {
           option = {};
         }
         if (option.title) {
-          v.getProperties().set(morpheus.VectorKeys.TITLE,
+          v.getProperties().set(phantasus.VectorKeys.TITLE,
             option.title);
         }
         if (option.display) {
@@ -30045,7 +30046,7 @@ morpheus.HeatMap.prototype = {
           }
           isFirst = false;
           var track = _this.addTrack(name, isColumns, display);
-          if (track.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+          if (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
             && option.color) {
             var m = isColumns ? _this.project.getColumnColorModel()
               : _this.project.getRowColorModel();
@@ -30080,7 +30081,7 @@ morpheus.HeatMap.prototype = {
               });
             }
           }
-          if (track.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)
+          if (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)
             && option.shape) {
             var m = isColumns ? _this.project.getColumnShapeModel()
               : _this.project.getRowShapeModel();
@@ -30143,12 +30144,12 @@ morpheus.HeatMap.prototype = {
     if (this.options.colorScheme == null) {
       var ext = '';
       if (this.options.dataSource) {
-        ext = morpheus.Util.getExtension(morpheus.Util
+        ext = phantasus.Util.getExtension(phantasus.Util
           .getFileName(this.options.dataSource));
       }
 
       var colorScheme = this.autoDisplay({
-        filename: morpheus.Util.getBaseFileName(morpheus.Util.getFileName(this.options.dataset)),
+        filename: phantasus.Util.getBaseFileName(phantasus.Util.getFileName(this.options.dataset)),
         extension: ext
       });
       if (colorScheme == null) {
@@ -30162,15 +30163,15 @@ morpheus.HeatMap.prototype = {
         var sortKeys = [];
         if (this.project.getFullDataset().getRowMetadata().getByName(
             'order')) {
-          sortKeys.push(new morpheus.SortKey('order',
-            morpheus.SortKey.SortOrder.ASCENDING));
+          sortKeys.push(new phantasus.SortKey('order',
+            phantasus.SortKey.SortOrder.ASCENDING));
         }
-        sortKeys.push(new morpheus.SortKey('id',
-          morpheus.SortKey.SortOrder.ASCENDING));
+        sortKeys.push(new phantasus.SortKey('id',
+          phantasus.SortKey.SortOrder.ASCENDING));
         this.project.setRowSortKeys(sortKeys, false);
 
       }
-      if (morpheus.DatasetUtil.getSeriesIndex(this.project
+      if (phantasus.DatasetUtil.getSeriesIndex(this.project
           .getFullDataset(), 'allelic_fraction') !== -1) {
         this.options.sizeBy = {
           seriesName: 'allelic_fraction',
@@ -30188,18 +30189,18 @@ morpheus.HeatMap.prototype = {
       heatmap.setColorScheme(this.options.parent.heatmap.getColorScheme()
         .copy(this.project));
     } else {
-      heatmap.setColorScheme(new morpheus.HeatMapColorScheme(
+      heatmap.setColorScheme(new phantasus.HeatMapColorScheme(
         this.project, this.options.colorScheme));
       if (this.options.dataset.getRowMetadata().getByName('Source') != null) {
         // separate color scheme for each source file
-        var sourcesSet = morpheus.VectorUtil
+        var sourcesSet = phantasus.VectorUtil
           .getSet(this.options.dataset.getRowMetadata()
             .getByName('Source'));
         this.heatmap.getColorScheme()
           .setSeparateColorSchemeForRowMetadataField('Source');
         sourcesSet.forEach(function (source) {
           _this.autoDisplay({
-            extension: morpheus.Util.getExtension(source),
+            extension: phantasus.Util.getExtension(source),
             filename: '' + source
           });
         });
@@ -30282,10 +30283,10 @@ morpheus.HeatMap.prototype = {
 
     this.options.parent = null; // avoid memory leak
     this.$tipFollow = $('<div style="display:none;"' +
-      ' class="morpheus-tip-inline"></div>');
+      ' class="phantasus-tip-inline"></div>');
     this.$tipFollow.appendTo(this.$parent);
 
-    this.$tipInfoWindow = $('<div class="morpheus-tip-dialog"></div>');
+    this.$tipInfoWindow = $('<div class="phantasus-tip-dialog"></div>');
     this.$tipInfoWindow.appendTo(this.$parent);
 
     this.$tipInfoWindow.dialog({
@@ -30382,17 +30383,17 @@ morpheus.HeatMap.prototype = {
           // repaint tracks that indicate selection
           for (var i = 0; i < _this.columnTracks.length; i++) {
             var track = _this.columnTracks[i];
-            if (track.getFullVector().getProperties().get(morpheus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION)) {
+            if (track.getFullVector().getProperties().get(phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION)) {
               var selectedDataset = _this.getProject().getSelectedDataset({
                 selectedRows: true,
                 selectedColumns: false,
                 emptyToAll: false
               });
               var vector = selectedDataset.getColumnMetadata().getByName(track.getName());
-              var f = morpheus.VectorUtil.jsonToFunction(vector, morpheus.VectorKeys.FUNCTION);
+              var f = phantasus.VectorUtil.jsonToFunction(vector, phantasus.VectorKeys.FUNCTION);
               if (typeof f === 'function') {
                 // iterate over each column
-                var view = new morpheus.DatasetColumnView(selectedDataset);
+                var view = new phantasus.DatasetColumnView(selectedDataset);
                 // TODO only set values that are currently visible
                 for (var j = 0, size = vector.size(); j < size; j++) {
                   view.setIndex(j);
@@ -30439,8 +30440,8 @@ morpheus.HeatMap.prototype = {
             var blob = new Blob([text], {type: 'text/plain'});
             url = URL.createObjectURL(blob);
           }
-          morpheus.HeatMap.showTool(
-            new morpheus.OpenFileTool({
+          phantasus.HeatMap.showTool(
+            new phantasus.OpenFileTool({
               file: url
             }), _this);
         }
@@ -30496,13 +30497,13 @@ morpheus.HeatMap.prototype = {
           .getVisibleTrackNames(true);
         var columnFieldIndices = [];
         _.each(visibleColumnFields, function (name) {
-          var index = morpheus.MetadataUtil.indexOf(
+          var index = phantasus.MetadataUtil.indexOf(
             columnMetadata, name);
           if (index !== -1) {
             columnFieldIndices.push(index);
           }
         });
-        columnMetadata = new morpheus.MetadataModelColumnView(
+        columnMetadata = new phantasus.MetadataModelColumnView(
           columnMetadata, columnFieldIndices);
         var rowMetadata = dataset.getRowMetadata();
         // only copy visible tracks
@@ -30510,13 +30511,13 @@ morpheus.HeatMap.prototype = {
           .getVisibleTrackNames(false);
         var rowFieldIndices = [];
         _.each(visibleRowFields, function (name) {
-          var index = morpheus.MetadataUtil.indexOf(
+          var index = phantasus.MetadataUtil.indexOf(
             rowMetadata, name);
           if (index !== -1) {
             rowFieldIndices.push(index);
           }
         });
-        rowMetadata = new morpheus.MetadataModelColumnView(
+        rowMetadata = new phantasus.MetadataModelColumnView(
           rowMetadata, rowFieldIndices);
         var text = [];
 
@@ -30524,7 +30525,7 @@ morpheus.HeatMap.prototype = {
           // as
           // gct
           // 1.3
-          text = new morpheus.GctWriter()
+          text = new phantasus.GctWriter()
             .write(dataset);
         } else {
           var text = [];
@@ -30538,7 +30539,7 @@ morpheus.HeatMap.prototype = {
               if (j > 0) {
                 text.push('\t');
               }
-              text.push(morpheus.Util.toString(v
+              text.push(phantasus.Util.toString(v
                 .getValue(i)));
             }
             text.push('\n');
@@ -30555,19 +30556,19 @@ morpheus.HeatMap.prototype = {
 
     if (typeof window !== 'undefined') {
       $(window)
-        .on('paste.morpheus', this.pasteListener)
-        .on('beforecopy.morpheus', this.beforeCopyListener)
-        .on('copy.morpheus', this.copyListener);
+        .on('paste.phantasus', this.pasteListener)
+        .on('beforecopy.phantasus', this.beforeCopyListener)
+        .on('copy.phantasus', this.copyListener);
     }
     if (this.options.keyboard) {
-      new morpheus.HeatMapKeyListener(this);
+      new phantasus.HeatMapKeyListener(this);
     }
     if (this.options.symmetric) {
       this.getProject().setSymmetric(this);
     }
     var dragStartScrollTop;
     var dragStartScrollLeft;
-    this.hammer = morpheus.Util
+    this.hammer = phantasus.Util
       .hammer(_this.heatmap.canvas, ['pan', 'pinch', 'tap'])
       .on('panmove', this.panmove = function (event) {
         _this.updatingScroll = true;
@@ -30599,14 +30600,14 @@ morpheus.HeatMap.prototype = {
       .on(
         'tap',
         this.tap = function (event) {
-          var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+          var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
             : event.srcEvent.ctrlKey;
-          if (morpheus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+          if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
             // on
             // Mac
             return;
           }
-          var position = morpheus.CanvasUtil
+          var position = phantasus.CanvasUtil
             .getMousePosWithScroll(event.target, event,
               _this.scrollLeft(), _this
                 .scrollTop());
@@ -30649,7 +30650,7 @@ morpheus.HeatMap.prototype = {
         mouseI = -1;
         mouseJ = -1;
       } else {
-        var position = morpheus.CanvasUtil.getMousePosWithScroll(
+        var position = phantasus.CanvasUtil.getMousePosWithScroll(
           event.target, event, _this.scrollLeft(), _this
             .scrollTop());
         mouseI = _this.heatmap.getRowPositions().getIndex(position.y,
@@ -30672,7 +30673,7 @@ morpheus.HeatMap.prototype = {
 
         var actionGui = action.gui();
         var gui = actionGui.gui(_this.getProject());
-        var formBuilder = new morpheus.FormBuilder();
+        var formBuilder = new phantasus.FormBuilder();
         _.each(gui, function (item) {
           formBuilder.append(item);
         });
@@ -30810,7 +30811,7 @@ morpheus.HeatMap.prototype = {
             var startPix = this.heatmap.rowPositions.getPosition(top);
             var endPix = startPix + this.heatmap.rowPositions.getItemSize(top);
             var heatMapHeight = endPix - startPix;
-            var canvas = morpheus.CanvasUtil.createCanvas();
+            var canvas = phantasus.CanvasUtil.createCanvas();
             var trackWidth = 0;
             for (var i = 0, ntracks = this.rowTracks.length; i < ntracks; i++) {
               var track = this.rowTracks[i];
@@ -30819,13 +30820,13 @@ morpheus.HeatMap.prototype = {
               }
             }
 
-            var canvasWidth = trackWidth + heatMapWidth + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
-            canvas.width = canvasWidth * morpheus.CanvasUtil.BACKING_SCALE;
+            var canvasWidth = trackWidth + heatMapWidth + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+            canvas.width = canvasWidth * phantasus.CanvasUtil.BACKING_SCALE;
             canvas.style.width = canvasWidth + 'px';
-            canvas.height = heatMapHeight * morpheus.CanvasUtil.BACKING_SCALE;
+            canvas.height = heatMapHeight * phantasus.CanvasUtil.BACKING_SCALE;
             canvas.style.height = heatMapHeight + 'px';
             var context = canvas.getContext('2d');
-            morpheus.CanvasUtil.resetTransform(context);
+            phantasus.CanvasUtil.resetTransform(context);
             context.save();
             context.translate(-this.heatmap.lastClip.x, -startPix);
             context.rect(this.heatmap.lastClip.x, startPix, this.heatmap.lastClip.width, this.heatmap.lastClip.height);
@@ -30838,7 +30839,7 @@ morpheus.HeatMap.prototype = {
               context: context
             });
             context.restore();
-            context.translate(heatMapWidth + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS, -startPix);
+            context.translate(heatMapWidth + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS, -startPix);
             trackWidth = 0;
             for (var i = 0, ntracks = this.rowTracks.length; i < ntracks; i++) {
               var track = this.rowTracks[i];
@@ -30909,7 +30910,7 @@ morpheus.HeatMap.prototype = {
             var startPix = this.heatmap.columnPositions.getPosition(left);
             var endPix = startPix + this.heatmap.columnPositions.getItemSize(left);
             var heatMapWidth = endPix - startPix;
-            var canvas = morpheus.CanvasUtil.createCanvas();
+            var canvas = phantasus.CanvasUtil.createCanvas();
             var trackHeight = 0;
             for (var i = 0, ntracks = this.columnTracks.length; i < ntracks; i++) {
               var track = this.columnTracks[i];
@@ -30917,18 +30918,18 @@ morpheus.HeatMap.prototype = {
                 trackHeight += track.getUnscaledHeight();
               }
             }
-            var canvasHeight = trackHeight + heatMapHeight + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
-            canvas.width = heatMapWidth * morpheus.CanvasUtil.BACKING_SCALE;
+            var canvasHeight = trackHeight + heatMapHeight + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+            canvas.width = heatMapWidth * phantasus.CanvasUtil.BACKING_SCALE;
             canvas.style.width = heatMapWidth + 'px';
-            canvas.height = canvasHeight * morpheus.CanvasUtil.BACKING_SCALE;
+            canvas.height = canvasHeight * phantasus.CanvasUtil.BACKING_SCALE;
             canvas.style.height = canvasHeight + 'px';
             var context = canvas.getContext('2d');
-            morpheus.CanvasUtil.resetTransform(context);
+            phantasus.CanvasUtil.resetTransform(context);
             context.translate(-startPix, 0);
             context.save();
-            context.rect(startPix, trackHeight + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS, this.heatmap.lastClip.width, this.heatmap.lastClip.height + trackHeight + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS);
+            context.rect(startPix, trackHeight + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS, this.heatmap.lastClip.width, this.heatmap.lastClip.height + trackHeight + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS);
             context.clip();
-            context.translate(0, trackHeight + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS - this.heatmap.lastClip.y);
+            context.translate(0, trackHeight + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS - this.heatmap.lastClip.y);
 
             this.heatmap._draw({
               top: this.heatmap.lastPosition.top,
@@ -30978,7 +30979,7 @@ morpheus.HeatMap.prototype = {
 
           var rect = this.$parent[0].getBoundingClientRect();
           this.$tipFollow.html($wrapper).css({
-            top: parseFloat(this.heatmap.canvas.style.top) - trackHeight - morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS - 1,
+            top: parseFloat(this.heatmap.canvas.style.top) - trackHeight - phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS - 1,
             left: (options.event.clientX - rect.left) - (wrapperWidth / 2),
             display: ''
           });
@@ -31123,20 +31124,20 @@ morpheus.HeatMap.prototype = {
     }
     if (renderSettings == null) {
       var metadata = isColumns ? this.project.getFullDataset().getColumnMetadata() : this.project.getFullDataset().getRowMetadata()
-      renderSettings = morpheus.VectorUtil.getDataType(metadata.getByName(name)) === '[number]' ? 'bar'
-        : morpheus.VectorTrack.RENDER.TEXT;
+      renderSettings = phantasus.VectorUtil.getDataType(metadata.getByName(name)) === '[number]' ? 'bar'
+        : phantasus.VectorTrack.RENDER.TEXT;
     }
 
     var positions = isColumns ? this.heatmap.getColumnPositions() : this.heatmap.getRowPositions();
-    var track = new morpheus.VectorTrack(this.project, name, positions, isColumns, this);
+    var track = new phantasus.VectorTrack(this.project, name, positions, isColumns, this);
     track.settingFromConfig(renderSettings);
     tracks.push(track);
     track.appendTo(this.$parent);
-    var header = new morpheus.VectorTrackHeader(this.project, name, isColumns,
+    var header = new phantasus.VectorTrackHeader(this.project, name, isColumns,
       this);
     headers.push(header);
     header.appendTo(this.$parent);
-    track._selection = new morpheus.TrackSelection(track, positions, isColumns ? this.project.getColumnSelectionModel() : this.project.getRowSelectionModel(),
+    track._selection = new phantasus.TrackSelection(track, positions, isColumns ? this.project.getColumnSelectionModel() : this.project.getRowSelectionModel(),
       isColumns, this);
     return track;
   }
@@ -31181,10 +31182,10 @@ morpheus.HeatMap.prototype = {
     this.horizontalSearchBar.update();
 
     this.heatmap.setDataset(dataset);
-    this.heatmap.getRowPositions().spaces = morpheus.HeatMap
+    this.heatmap.getRowPositions().spaces = phantasus.HeatMap
       .createGroupBySpaces(dataset, this.project.getGroupRows(),
         this.gapSize, false);
-    this.heatmap.getColumnPositions().spaces = morpheus.HeatMap
+    this.heatmap.getColumnPositions().spaces = phantasus.HeatMap
       .createGroupBySpaces(
         dataset, this.project.getGroupColumns(), this.gapSize, true);
     this.trigger('change', {
@@ -31354,9 +31355,9 @@ morpheus.HeatMap.prototype = {
     this.hammer.destroy();
     if (typeof window !== 'undefined') {
       $(window)
-        .off('paste.morpheus', this.pasteListener)
-        .off('beforecopy.morpheus', this.beforeCopyListener)
-        .off('copy.morpheus', this.copyListener).off('orientationchange.morpheus resize.morpheus', this.resizeListener);
+        .off('paste.phantasus', this.pasteListener)
+        .off('beforecopy.phantasus', this.beforeCopyListener)
+        .off('copy.phantasus', this.copyListener).off('orientationchange.phantasus resize.phantasus', this.resizeListener);
     }
   }
   ,
@@ -31407,7 +31408,7 @@ morpheus.HeatMap.prototype = {
   isDendrogramVisible: function (isColumns) {
     var dendrogram = isColumns ? this.columnDendrogram : this.rowDendrogram;
     if (dendrogram !== undefined) {
-      return morpheus.HeatMap
+      return phantasus.HeatMap
         .isDendrogramVisible(this.project, isColumns);
     }
   }
@@ -31601,7 +31602,7 @@ morpheus.HeatMap.prototype = {
     var _this = this;
     var bounds = this.getTotalSize();
     if (format === 'pdf') {
-      // var context = new morpheus.PdfGraphics();
+      // var context = new phantasus.PdfGraphics();
       // this.snapshot(context);
       // context.toBlob(function (blob) {
       // 	saveAs(blob, file, true);
@@ -31625,13 +31626,13 @@ morpheus.HeatMap.prototype = {
       var canvas = $('<canvas></canvas>')[0];
       var height = bounds.height;
       var width = bounds.width;
-      var backingScale = morpheus.CanvasUtil.BACKING_SCALE;
+      var backingScale = phantasus.CanvasUtil.BACKING_SCALE;
       canvas.height = backingScale * height;
       canvas.style.height = height + 'px';
       canvas.width = backingScale * width;
       canvas.style.width = width + 'px';
       var context = canvas.getContext('2d');
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       this.snapshot(context);
       // var stack = context.stack();
       // var s = [];
@@ -31672,7 +31673,7 @@ morpheus.HeatMap.prototype = {
       // }), 'canvas.txt', true);
       canvas.toBlob(function (blob) {
         if (blob == null || blob.size === 0) {
-          morpheus.FormBuilder.showInModal({
+          phantasus.FormBuilder.showInModal({
             title: 'Save Image',
             html: 'Image is too large to save.',
             appendTo: _this.getContentEl()
@@ -31696,10 +31697,10 @@ morpheus.HeatMap.prototype = {
       height: heatmapPrefSize.height
     };
     if (this.isDendrogramVisible(false)) { // row dendrogram
-      totalSize.width += this.rowDendrogram.getUnscaledWidth() + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+      totalSize.width += this.rowDendrogram.getUnscaledWidth() + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     }
     if (this.isDendrogramVisible(true)) {
-      totalSize.height += this.columnDendrogram.getUnscaledHeight() + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+      totalSize.height += this.columnDendrogram.getUnscaledHeight() + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     }
     var maxRowHeaderHeight = 0;
     for (var i = 0, length = this.rowTracks.length; i < length; i++) {
@@ -31721,8 +31722,8 @@ morpheus.HeatMap.prototype = {
           this.columnTrackHeaders[i].getPrintSize().width);
       }
     }
-    totalSize.height += Math.max(columnTrackHeightSum, maxRowHeaderHeight) + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
-    totalSize.width += maxColumnHeaderWidth + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+    totalSize.height += Math.max(columnTrackHeightSum, maxRowHeaderHeight) + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+    totalSize.width += maxColumnHeaderWidth + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     // color legend
     if (options.legend) {
       var totalLegendWidth = 15;
@@ -31746,32 +31747,32 @@ morpheus.HeatMap.prototype = {
       totalSize.height = totalSize.height + maxLegendHeight;
       totalSize.width = Math.max(totalSize.width, totalLegendWidth);
     }
-    var trackLegendSize = new morpheus.HeatMapTrackColorLegend(
+    var trackLegendSize = new phantasus.HeatMapTrackColorLegend(
       _
         .filter(
           this.columnTracks,
           function (track) {
             return track.isVisible()
               && (track
-                .isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || track
-                .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR));
+                .isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track
+                .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
           }), this.getProject().getColumnColorModel())
       .getPreferredSize();
     totalSize.height += trackLegendSize.height;
     totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
-    trackLegendSize = new morpheus.HeatMapTrackColorLegend(
+    trackLegendSize = new phantasus.HeatMapTrackColorLegend(
       _
         .filter(
           this.rowTracks,
           function (track) {
             return track.isVisible()
               && (track
-                .isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || track
-                .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR));
+                .isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track
+                .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
           }), this.getProject().getRowColorModel())
       .getPreferredSize();
-    totalSize.height += morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + trackLegendSize.height;
-    totalSize.width = morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + Math.max(totalSize.width, trackLegendSize.width);
+    totalSize.height += phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + trackLegendSize.height;
+    totalSize.width = phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + Math.max(totalSize.width, trackLegendSize.width);
     return totalSize;
   }
   ,
@@ -31801,7 +31802,7 @@ morpheus.HeatMap.prototype = {
             // $keyContent.append($label);
             // totalHeight += $label.height();
           }
-          var trackLegend = new morpheus.ColorSupplierLegend(
+          var trackLegend = new phantasus.ColorSupplierLegend(
             this.heatmap.getColorScheme(), value);
           trackLegend.draw({}, context);
           legendHeight = Math.max(legendHeight, trackLegend.getUnscaledHeight());
@@ -31811,7 +31812,7 @@ morpheus.HeatMap.prototype = {
       }
       legendHeight += 10; // spacer
 
-      // morpheus.HeatMapColorSchemeLegend.drawColorScheme(context,
+      // phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
       //   this.heatmap.getColorScheme(), 200, true);
       context.restore();
       // legendHeight = this.heatmap.getColorScheme().getNames() != null ? this.heatmap
@@ -31821,15 +31822,15 @@ morpheus.HeatMap.prototype = {
     context.save();
     context.translate(4, legendHeight);
     // column color legend
-    var columnTrackLegend = new morpheus.HeatMapTrackColorLegend(
+    var columnTrackLegend = new phantasus.HeatMapTrackColorLegend(
       _
         .filter(
           this.columnTracks,
           function (track) {
             return track.isVisible()
               && (track
-                .isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || track
-                .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR));
+                .isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track
+                .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
           }), this.getProject().getColumnColorModel());
     columnTrackLegend.draw({}, context);
     context.restore();
@@ -31837,15 +31838,15 @@ morpheus.HeatMap.prototype = {
     var columnTrackLegendSize = columnTrackLegend.getPreferredSize();
     context.save();
     context.translate(4 + columnTrackLegendSize.width, legendHeight);
-    var rowTrackLegend = new morpheus.HeatMapTrackColorLegend(
+    var rowTrackLegend = new phantasus.HeatMapTrackColorLegend(
       _
         .filter(
           this.rowTracks,
           function (track) {
             return track.isVisible()
               && (track
-                .isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || track
-                .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR));
+                .isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track
+                .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
           }), this.getProject().getRowColorModel());
     rowTrackLegend.draw({}, context);
     context.restore();
@@ -31853,11 +31854,11 @@ morpheus.HeatMap.prototype = {
       columnTrackLegendSize.height);
 
     var heatmapY = this.isDendrogramVisible(true) ? (this.columnDendrogram
-      .getUnscaledHeight() + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS) : 0;
+      .getUnscaledHeight() + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS) : 0;
     heatmapY += legendHeight;
     var columnTrackY = heatmapY;
     var heatmapX = this.isDendrogramVisible(false) ? (this.rowDendrogram
-      .getUnscaledWidth() + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS) : 0;
+      .getUnscaledWidth() + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS) : 0;
     var isColumnTrackVisible = false;
     for (var i = 0, length = this.columnTracks.length; i < length; i++) {
       var track = this.columnTracks[i];
@@ -31869,7 +31870,7 @@ morpheus.HeatMap.prototype = {
       }
     }
     if (isColumnTrackVisible) {
-      heatmapY += morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+      heatmapY += phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     }
 
     // check if row headers are taller than column tracks
@@ -31950,7 +31951,7 @@ morpheus.HeatMap.prototype = {
       var track = this.rowTracks[i];
       if (track.isVisible()) {
         context.save();
-        var tx = morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + heatmapX + heatmapPrefSize.width + rowTrackWidthSum;
+        var tx = phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + heatmapX + heatmapPrefSize.width + rowTrackWidthSum;
         var ty = heatmapY;
         var trackClip = {
           x: 0,
@@ -32114,11 +32115,11 @@ morpheus.HeatMap.prototype = {
     var columnDendrogramHeight = 0;
     var rowDendrogramWidth = 0;
     if (this.columnDendrogram) {
-      columnDendrogramHeight = morpheus.CanvasUtil
+      columnDendrogramHeight = phantasus.CanvasUtil
         .getPreferredSize(this.columnDendrogram).height;
     }
     if (this.rowDendrogram) {
-      rowDendrogramWidth = morpheus.CanvasUtil
+      rowDendrogramWidth = phantasus.CanvasUtil
         .getPreferredSize(this.rowDendrogram).width;
     }
     var rowTrackWidthSum = 0;
@@ -32126,9 +32127,9 @@ morpheus.HeatMap.prototype = {
       if (this.rowTracks[i].isVisible()) {
         rowTrackWidthSum += Math
           .max(
-            morpheus.CanvasUtil
+            phantasus.CanvasUtil
               .getPreferredSize(this.rowTrackHeaders[i]).width,
-            morpheus.CanvasUtil
+            phantasus.CanvasUtil
               .getPreferredSize(this.rowTracks[i]).width);
       }
     }
@@ -32136,7 +32137,7 @@ morpheus.HeatMap.prototype = {
     var maxHeaderWidth = 0;
     for (var i = 0, length = this.columnTracks.length; i < length; i++) {
       if (this.columnTracks[i].isVisible()) {
-        var width = morpheus.CanvasUtil
+        var width = phantasus.CanvasUtil
           .getPreferredSize(this.columnTrackHeaders[i]).width;
         maxHeaderWidth = Math.max(maxHeaderWidth, width);
       }
@@ -32145,7 +32146,7 @@ morpheus.HeatMap.prototype = {
     var heatMapWidth = heatmapPrefSize.width;
     var maxHeatMapWidth = Math.max(50, availableWidth - rowTrackWidthSum
       - xpos
-      - morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS);
+      - phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS);
     if (maxHeatMapWidth > 0 && heatMapWidth > maxHeatMapWidth) {
       heatMapWidth = maxHeatMapWidth;
       heatMapWidth = Math.min(heatMapWidth, heatmapPrefSize.width); // can't
@@ -32188,8 +32189,8 @@ morpheus.HeatMap.prototype = {
     for (var i = 0, length = this.columnTracks.length; i < length; i++) {
       var track = this.columnTracks[i];
       if (track.isVisible()) {
-        var size = morpheus.CanvasUtil.getPreferredSize(track);
-        var headerSize = morpheus.CanvasUtil
+        var size = phantasus.CanvasUtil.getPreferredSize(track);
+        var headerSize = phantasus.CanvasUtil
           .getPreferredSize(this.columnTrackHeaders[i]);
         size.height = Math.max(size.height, headerSize.height);
         track.setBounds({
@@ -32209,7 +32210,7 @@ morpheus.HeatMap.prototype = {
     }
     this.$whitespace[0].style.left = Math.ceil(xpos + heatMapWidth + 10) + 'px';
     this.$whitespace[0].style.top = '0px';
-    ypos += morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
+    ypos += phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS;
     var heatMapHeight = heatmapPrefSize.height;
     if (heatMapHeight > (availableHeight - ypos)) {
       heatMapHeight = Math.max(100, Math.min(heatmapPrefSize.height,
@@ -32277,7 +32278,7 @@ morpheus.HeatMap.prototype = {
     });
     if (nvisibleRowTracks > 0) {
       xpos = xpos
-        + morpheus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS; // leave
+        + phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS; // leave
       // space
       // after
       // afterVerticalScrollBarDivider
@@ -32286,8 +32287,8 @@ morpheus.HeatMap.prototype = {
     for (var i = 0, length = this.rowTracks.length; i < length; i++) {
       var track = this.rowTracks[i];
       if (track.isVisible()) {
-        var size = morpheus.CanvasUtil.getPreferredSize(track);
-        var headerSize = morpheus.CanvasUtil
+        var size = phantasus.CanvasUtil.getPreferredSize(track);
+        var headerSize = phantasus.CanvasUtil
           .getPreferredSize(this.rowTrackHeaders[i]);
         size.width = Math.max(headerSize.width, size.width);
         size.height = heatMapHeight;
@@ -32358,7 +32359,7 @@ morpheus.HeatMap.prototype = {
     });
   }
 };
-morpheus.HeatMap.copyFromParent = function (project, options) {
+phantasus.HeatMap.copyFromParent = function (project, options) {
   // TODO persist sort order, grouping, dendrogram
 
   project.rowColorModel = options.parent.getProject().getRowColorModel()
@@ -32426,9 +32427,9 @@ morpheus.HeatMap.copyFromParent = function (project, options) {
     }
   }
 };
-morpheus.Util.extend(morpheus.HeatMap, morpheus.Events);
+phantasus.Util.extend(phantasus.HeatMap, phantasus.Events);
 
-morpheus.HelpMenu = function () {
+phantasus.HelpMenu = function () {
   var html = [];
   html.push('<div class="btn-group">');
   html.push('<button type="button" class="btn btn-default btn-xxs' +
@@ -32453,8 +32454,8 @@ morpheus.HelpMenu = function () {
 
 };
 
-morpheus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
+  phantasus.AbstractCanvas.call(this, true);
   this.colorScheme = colorScheme;
   this.metadataValue = metadataValue;
   this.dataset = dataset;
@@ -32468,7 +32469,7 @@ morpheus.HistogramLegend = function (dataset, colorScheme, metadataValue) {
   this.canvas.style.border = '1px solid LightGrey';
 };
 
-morpheus.HistogramLegend.prototype = {
+phantasus.HistogramLegend.prototype = {
   binSize: 0,
   maxCount: 0,
   total: 0,
@@ -32491,7 +32492,7 @@ morpheus.HistogramLegend.prototype = {
     }
     var vector =
       dataset.getRowMetadata().getByName(colorScheme.getSeparateColorSchemeForRowMetadataField());
-    // var numberOfBins = Math.ceil(morpheus.Log2(dataset.getRowCount() * dataset.getColumnCount()) + 1);
+    // var numberOfBins = Math.ceil(phantasus.Log2(dataset.getRowCount() * dataset.getColumnCount()) + 1);
     // var binSize = (max - min) / numberOfBins;
     var numberOfBins = Math.ceil((max - min) / binSize);
     var binNumberToOccurences = new Uint32Array(numberOfBins);
@@ -32545,7 +32546,7 @@ morpheus.HistogramLegend.prototype = {
     var y0 = countToPosition(0);
 
     if (this.name != null) {
-      context.font = '11px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = '11px ' + phantasus.CanvasUtil.FONT_NAME;
       context.fillStyle = 'black';
       context.lineWidth = 1;
       //  context.textBaseline = 'top';
@@ -32596,27 +32597,27 @@ morpheus.HistogramLegend.prototype = {
     //
     context.translate(0, histogramHeight + 1);
     context.fillStyle = 'black';
-    morpheus.HeatMapColorSchemeLegend.drawColorScheme(context,
+    phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
       this.colorScheme, canvasWidth, false, false, 6);
   }
 }
 ;
 
-morpheus.Util.extend(morpheus.HistogramLegend, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.HistogramLegend, phantasus.AbstractCanvas);
 
-morpheus.LegendWithStops = function () {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.LegendWithStops = function () {
+  phantasus.AbstractCanvas.call(this, false);
   this.setBounds({
     width: 300,
     height: 40
   });
   var that = this;
-  this.hammer = morpheus.Util.hammer(this.canvas, ['pan', 'tap', 'press'])
+  this.hammer = phantasus.Util.hammer(this.canvas, ['pan', 'tap', 'press'])
     .on(
       'panmove',
       this.panmove = function (event) {
         if (that.panStartSelectedIndex !== -1) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           var fraction = that.fractionToStopPix
             .invert(position.x);
@@ -32630,14 +32631,14 @@ morpheus.LegendWithStops = function () {
       'panstart',
       this.panstart = function (event) {
         that.panStartSelectedIndex = that
-          .findIndexForPosition(morpheus.CanvasUtil
+          .findIndexForPosition(phantasus.CanvasUtil
             .getMousePos(event.target, event, true));
       }).on('panend', this.panend = function (event) {
       that.panStartSelectedIndex = -1;
     }).on(
       'tap',
       this.tap = function (event) {
-        var position = morpheus.CanvasUtil.getMousePos(
+        var position = phantasus.CanvasUtil.getMousePos(
           event.target, event);
         if (event.tapCount > 1) {
           // don't add on double-click
@@ -32664,7 +32665,7 @@ morpheus.LegendWithStops = function () {
     }
   });
 };
-morpheus.LegendWithStops.prototype = {
+phantasus.LegendWithStops.prototype = {
   selectedIndex: -1,
   border: 7,
   stopHalfSize: 5,
@@ -32698,11 +32699,11 @@ morpheus.LegendWithStops.prototype = {
     this.stepped = stepped;
     this.fractionToStopPix = fractionToStopPix;
     var context = this.canvas.getContext('2d');
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
     context.translate(this.border, 0);
-    morpheus.HeatMapColorSchemeLegend.draw(context, fractions, colors, this
+    phantasus.HeatMapColorSchemeLegend.draw(context, fractions, colors, this
         .getUnscaledWidth()
       - 2 * this.border, this.getUnscaledHeight() - 20, stepped);
     context.translate(-this.border, 0);
@@ -32730,57 +32731,57 @@ morpheus.LegendWithStops.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.LegendWithStops, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.LegendWithStops, morpheus.Events);
+phantasus.Util.extend(phantasus.LegendWithStops, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.LegendWithStops, phantasus.Events);
 
-morpheus.Popup = {};
-morpheus.Popup.initted = false;
-morpheus.Popup.init = function () {
-  if (morpheus.Popup.initted) {
+phantasus.Popup = {};
+phantasus.Popup.initted = false;
+phantasus.Popup.init = function () {
+  if (phantasus.Popup.initted) {
     return;
   }
 
-  morpheus.Popup.initted = true;
-  morpheus.Popup.$popupDiv = $(document.createElement('div'));
-  morpheus.Popup.$popupDiv.css('position', 'absolute').css('zIndex', 1050).css('overflow', 'auto').addClass('dropdown clearfix');
-  morpheus.Popup.$contextMenu = $(document.createElement('ul'));
-  morpheus.Popup.$contextMenu.addClass('dropdown-menu').css('display',
+  phantasus.Popup.initted = true;
+  phantasus.Popup.$popupDiv = $(document.createElement('div'));
+  phantasus.Popup.$popupDiv.css('position', 'absolute').css('zIndex', 1050).css('overflow', 'auto').addClass('dropdown clearfix');
+  phantasus.Popup.$contextMenu = $(document.createElement('ul'));
+  phantasus.Popup.$contextMenu.addClass('dropdown-menu').css('display',
     'block').css('position', 'static').css('margin-bottom', '5px');
-  morpheus.Popup.$contextMenu.appendTo(morpheus.Popup.$popupDiv);
-  morpheus.Popup.$contextMenu.on('click', 'a', function (e) {
+  phantasus.Popup.$contextMenu.appendTo(phantasus.Popup.$popupDiv);
+  phantasus.Popup.$contextMenu.on('click', 'a', function (e) {
     e.preventDefault();
     var $this = $(this);
     // if (!$this.hasClass('copy')) {
-    morpheus.Popup.popupCallback(e, $this.data('name'));
-    morpheus.Popup.hide();
+    phantasus.Popup.popupCallback(e, $this.data('name'));
+    phantasus.Popup.hide();
     // }
 
   });
 };
 
-morpheus.Popup.popupInDom = false;
-morpheus.Popup.hidePopupMenu = function (e) {
-  if (morpheus.Popup.component == e.target) {
+phantasus.Popup.popupInDom = false;
+phantasus.Popup.hidePopupMenu = function (e) {
+  if (phantasus.Popup.component == e.target) {
     e.preventDefault();
     e.stopPropagation();
   }
-  morpheus.Popup.hide();
+  phantasus.Popup.hide();
 };
-morpheus.Popup.hide = function () {
-  morpheus.Popup.$popupDiv.hide();
-  $(document.body).off('mousedown', morpheus.Popup.hidePopupMenu);
-  morpheus.Popup.popupCallback = null;
-  morpheus.Popup.component = null;
+phantasus.Popup.hide = function () {
+  phantasus.Popup.$popupDiv.hide();
+  $(document.body).off('mousedown', phantasus.Popup.hidePopupMenu);
+  phantasus.Popup.popupCallback = null;
+  phantasus.Popup.component = null;
 };
 
-morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
-  morpheus.Popup.init();
-  if (morpheus.Popup.component == component) {
-    morpheus.Popup.hide();
+phantasus.Popup.showPopup = function (menuItems, position, component, callback) {
+  phantasus.Popup.init();
+  if (phantasus.Popup.component == component) {
+    phantasus.Popup.hide();
     return;
   }
-  morpheus.Popup.popupCallback = callback;
-  morpheus.Popup.component = component;
+  phantasus.Popup.popupCallback = callback;
+  phantasus.Popup.component = component;
   var html = [];
   for (var i = 0, length = menuItems.length; i < length; i++) {
     var item = menuItems[i];
@@ -32814,17 +32815,17 @@ morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
       html.push('</li>');
     }
   }
-  morpheus.Popup.$contextMenu.html(html.join(''));
-  if (!morpheus.Popup.popupInDom) {
-    morpheus.Popup.popupInDom = true;
-    morpheus.Popup.$popupDiv.appendTo($(document.body));
+  phantasus.Popup.$contextMenu.html(html.join(''));
+  if (!phantasus.Popup.popupInDom) {
+    phantasus.Popup.popupInDom = true;
+    phantasus.Popup.$popupDiv.appendTo($(document.body));
   }
   var $body = $(document.body);
   var $window = $(window);
   var windowWidth = $window.width();
   var windowHeight = $window.height();
-  var popupWidth = morpheus.Popup.$popupDiv.width();
-  var popupHeight = morpheus.Popup.$popupDiv.height();
+  var popupWidth = phantasus.Popup.$popupDiv.width();
+  var popupHeight = phantasus.Popup.$popupDiv.height();
   var left = position.x;
   var top = position.y;
   // default is bottom-right
@@ -32837,31 +32838,31 @@ morpheus.Popup.showPopup = function (menuItems, position, component, callback) {
     top = Math.max(4, top);
   }
 
-  morpheus.Popup.$popupDiv.css({
+  phantasus.Popup.$popupDiv.css({
     height: popupHeight + 'px',
     display: 'block',
     left: left,
     top: top
   });
 
-  morpheus.Popup.$popupDiv.show();
+  phantasus.Popup.$popupDiv.show();
 
-  $body.off('mousedown', morpheus.Popup.hidePopupMenu);
+  $body.off('mousedown', phantasus.Popup.hidePopupMenu);
   window.setTimeout(function () {
     $body.on('mousedown', function (e) {
       var $target = $(e.target);
-      if ($target[0] !== morpheus.Popup.$popupDiv[0] && $target.data('type') !== 'popup-item') {
-        morpheus.Popup.hidePopupMenu(e);
+      if ($target[0] !== phantasus.Popup.$popupDiv[0] && $target.data('type') !== 'popup-item') {
+        phantasus.Popup.hidePopupMenu(e);
       }
     });
   }, 1);
 };
 
-morpheus.RowDendrogram = function (heatMap, tree, positions, project) {
-  morpheus.AbstractDendrogram.call(this, heatMap, tree, positions,
-    project, morpheus.AbstractDendrogram.Type.ROW);
+phantasus.RowDendrogram = function (heatMap, tree, positions, project) {
+  phantasus.AbstractDendrogram.call(this, heatMap, tree, positions,
+    project, phantasus.AbstractDendrogram.Type.ROW);
 };
-morpheus.RowDendrogram.prototype = {
+phantasus.RowDendrogram.prototype = {
   drawNode: function (context, node) {
     var radius = this.getNodeRadius(node);
     var pix = this.toPix(node);
@@ -32897,7 +32898,7 @@ morpheus.RowDendrogram.prototype = {
   },
   paintMouseOver: function (clip, context) {
     if (this.project.getHoverRowIndex() !== -1) {
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       context.translate(0, -clip.y);
       this.drawRowBorder(context, this.positions, this.project
         .getHoverRowIndex(), this.getUnscaledWidth());
@@ -32921,10 +32922,10 @@ morpheus.RowDendrogram.prototype = {
       [this.getUnscaledWidth(), 0]);
   },
   getMaxIndex: function (clip) {
-    return morpheus.Positions.getBottom(clip, this.positions);
+    return phantasus.Positions.getBottom(clip, this.positions);
   },
   getMinIndex: function (clip) {
-    return morpheus.Positions.getTop(clip, this.positions);
+    return phantasus.Positions.getTop(clip, this.positions);
   },
   toPix: function (node) {
     var min = this.positions.getPosition(node.minIndex)
@@ -32977,14 +32978,14 @@ morpheus.RowDendrogram.prototype = {
     context.stroke();
   }
 };
-morpheus.Util.extend(morpheus.RowDendrogram, morpheus.AbstractDendrogram);
+phantasus.Util.extend(phantasus.RowDendrogram, phantasus.AbstractDendrogram);
 
 /**
- * @param model{morpheus.SelectionModel}
+ * @param model{phantasus.SelectionModel}
  */
-morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
+phantasus.ScentedSearch = function (model, positions, isVertical, scrollbar,
                                    heatMap) {
-  morpheus.AbstractCanvas.call(this, false);
+  phantasus.AbstractCanvas.call(this, false);
   this.model = model;
   this.positions = positions;
   this.isVertical = isVertical;
@@ -33026,7 +33027,7 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
     if (e.stopImmediatePropagation) {
       e.stopImmediatePropagation();
     }
-    morpheus.Popup
+    phantasus.Popup
       .showPopup(
         [
 
@@ -33038,7 +33039,7 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
               .count() === 0
           },
           {
-            name: 'New Heat Map (' + morpheus.Util.COMMAND_KEY + 'X)'
+            name: 'New Heat Map (' + phantasus.Util.COMMAND_KEY + 'X)'
           }],
         {
           x: e.pageX,
@@ -33053,26 +33054,26 @@ morpheus.ScentedSearch = function (model, positions, isVertical, scrollbar,
               updateButtonStatus: true
             });
           } else {
-            morpheus.HeatMap.showTool(new morpheus.NewHeatMapTool(),
+            phantasus.HeatMap.showTool(new phantasus.NewHeatMapTool(),
               heatMap);
           }
         });
     return false;
   };
-  $(scrollbar.canvas).on('mousemove.morpheus', mouseMove).on('mouseout.morpheus', mouseExit).on('contextmenu.morpheus', showPopup);
+  $(scrollbar.canvas).on('mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit).on('contextmenu.phantasus', showPopup);
 
 };
 
-morpheus.ScentedSearch.LINE_HEIGHT = 3.5;
-morpheus.ScentedSearch.prototype = {
+phantasus.ScentedSearch.LINE_HEIGHT = 3.5;
+phantasus.ScentedSearch.prototype = {
   mouseMovedIndex: -1,
   getIndex: function (event) {
-    var pix = morpheus.CanvasUtil.getMousePos(event.target, event);
+    var pix = phantasus.CanvasUtil.getMousePos(event.target, event);
     var val = pix[this.isVertical ? 'y' : 'x'];
     return this.getIndexForPix(val);
   },
   getSearchIndices: function (event) {
-    var pix = morpheus.CanvasUtil.getMousePos(event.target, event);
+    var pix = phantasus.CanvasUtil.getMousePos(event.target, event);
     var val = pix[this.isVertical ? 'y' : 'x'];
     return this.getSearchIndicesForPix(val);
   },
@@ -33082,7 +33083,7 @@ morpheus.ScentedSearch.prototype = {
       return [];
     }
     var scale = this.scale;
-    var tolerance = morpheus.ScentedSearch.LINE_HEIGHT;
+    var tolerance = phantasus.ScentedSearch.LINE_HEIGHT;
     var matches = [];
     for (var i = 0, length = indices.length; i < length; i++) {
       var midVal = this.positions.getPosition(indices[i]) * scale;
@@ -33097,7 +33098,7 @@ morpheus.ScentedSearch.prototype = {
     if (indices == null) {
       return -1;
     }
-    var tolerance = morpheus.ScentedSearch.LINE_HEIGHT;
+    var tolerance = phantasus.ScentedSearch.LINE_HEIGHT;
     if (this.mouseMovedIndex > 0) {
       var midVal = this.positions
           .getPosition(indices[this.mouseMovedIndex])
@@ -33157,18 +33158,18 @@ morpheus.ScentedSearch.prototype = {
     var width = this.scrollbar.getUnscaledWidth();
     var height = this.scrollbar.getUnscaledHeight();
     var availableLength = ((this.isVertical ? height : width))
-      - morpheus.ScentedSearch.LINE_HEIGHT;
+      - phantasus.ScentedSearch.LINE_HEIGHT;
     this.scale = availableLength
       / (this.positions.getPosition(this.positions.getLength() - 1) + this.positions
         .getItemSize(this.positions.getLength() - 1));
-    context.fillStyle = morpheus.ScentedSearch.TICK_COLOR;
+    context.fillStyle = phantasus.ScentedSearch.TICK_COLOR;
     context.lineWidth = 1;
     this.drawIndices(context, this.searchIndices);
     this.drawHoverMatchingValues(context);
   },
   drawHoverMatchingValues: function (context) {
     var heatmap = this.heatMap;
-    context.fillStyle = morpheus.ScentedSearch.MATCHING_VALUES_TICK_COLOR;
+    context.fillStyle = phantasus.ScentedSearch.MATCHING_VALUES_TICK_COLOR;
     if (heatmap.mousePositionOptions
       && heatmap.mousePositionOptions.name != null) {
       var isColumns = !this.isVertical;
@@ -33187,13 +33188,13 @@ morpheus.ScentedSearch.prototype = {
         var vector = track.getVector();
         var value = vector.getValue(hoverIndex);
         var valueToModelIndices = track.getFullVector().getProperties()
-          .get(morpheus.VectorKeys.VALUE_TO_INDICES);
+          .get(phantasus.VectorKeys.VALUE_TO_INDICES);
         if (!valueToModelIndices) {
           var fullVector = track.getFullVector();
-          valueToModelIndices = morpheus.VectorUtil
+          valueToModelIndices = phantasus.VectorUtil
             .createValueToIndicesMap(fullVector);
           fullVector.getProperties().set(
-            morpheus.VectorKeys.VALUE_TO_INDICES,
+            phantasus.VectorKeys.VALUE_TO_INDICES,
             valueToModelIndices);
 
         }
@@ -33220,10 +33221,10 @@ morpheus.ScentedSearch.prototype = {
           var pix = positions.getPosition(index) * scale;
           if (isVertical) {
             context.fillRect(0, pix, lineLength,
-              morpheus.ScentedSearch.LINE_HEIGHT);
+              phantasus.ScentedSearch.LINE_HEIGHT);
           } else {
             context.fillRect(pix, 0,
-              morpheus.ScentedSearch.LINE_HEIGHT, lineLength);
+              phantasus.ScentedSearch.LINE_HEIGHT, lineLength);
 
           }
         }
@@ -33244,13 +33245,13 @@ morpheus.ScentedSearch.prototype = {
       if (isVertical) {
         context.beginPath();
         context.rect(0, pix, lineLength,
-          morpheus.ScentedSearch.LINE_HEIGHT);
+          phantasus.ScentedSearch.LINE_HEIGHT);
         context.fill();
         //  context.stroke();
 
       } else {
         context.beginPath();
-        context.rect(pix, 0, morpheus.ScentedSearch.LINE_HEIGHT,
+        context.rect(pix, 0, phantasus.ScentedSearch.LINE_HEIGHT,
           lineLength);
         context.fill();
         //context.stroke();
@@ -33259,12 +33260,12 @@ morpheus.ScentedSearch.prototype = {
 
   }
 };
-morpheus.Util.extend(morpheus.ScentedSearch, morpheus.AbstractCanvas);
-morpheus.ScentedSearch.MATCHING_VALUES_TICK_COLOR = 'black';
-morpheus.ScentedSearch.TICK_COLOR = '#3182bd';
+phantasus.Util.extend(phantasus.ScentedSearch, phantasus.AbstractCanvas);
+phantasus.ScentedSearch.MATCHING_VALUES_TICK_COLOR = 'black';
+phantasus.ScentedSearch.TICK_COLOR = '#3182bd';
 
-morpheus.ScrollBar = function (isVertical) {
-  morpheus.AbstractCanvas.call(this);
+phantasus.ScrollBar = function (isVertical) {
+  phantasus.AbstractCanvas.call(this);
   this.isVertical = isVertical;
   $(this.canvas).css('border', '1px solid #d8d8d8');
   if (isVertical) {
@@ -33279,8 +33280,8 @@ morpheus.ScrollBar = function (isVertical) {
   this.field = this.isVertical ? 'y' : 'x';
   var that = this;
   var mouseMove = function (event) {
-    if (!morpheus.CanvasUtil.dragging) {
-      var position = morpheus.CanvasUtil.getMousePos(event.target, event,
+    if (!phantasus.CanvasUtil.dragging) {
+      var position = phantasus.CanvasUtil.getMousePos(event.target, event,
         true);
       var mouseOver = (position[that.field] >= that.thumbPos && position[that.field] <= (that.thumbPos + that.thumbExtent));
       if (that.thumbMouseOver !== mouseOver) {
@@ -33290,19 +33291,19 @@ morpheus.ScrollBar = function (isVertical) {
     }
   };
   var mouseExit = function (e) {
-    if (!morpheus.CanvasUtil.dragging && that.thumbMouseOver) {
+    if (!phantasus.CanvasUtil.dragging && that.thumbMouseOver) {
       that.thumbMouseOver = false;
       that.repaint();
     }
   };
   $(this.canvas).on('mousemove', mouseMove).on('mouseout', mouseExit).on(
     'mouseenter', mouseMove);
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(this.canvas, [this.isVertical ? 'panv' : 'panh', 'tap'])
     .on(
       'panstart',
       this.panstart = function (event) {
-        var position = morpheus.CanvasUtil.getMousePos(
+        var position = phantasus.CanvasUtil.getMousePos(
           event.target, event, true);
         if (position[that.field] >= that.thumbPos
           && position[that.field] <= (that.thumbPos + that.thumbExtent)) {
@@ -33319,7 +33320,7 @@ morpheus.ScrollBar = function (isVertical) {
       'panmove',
       this.panmove = function (event) {
         if (that.draggingThumb) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           var thumbPosPix = that.dragStartThumbPos
             + (that.isVertical ? event.deltaY
@@ -33339,7 +33340,7 @@ morpheus.ScrollBar = function (isVertical) {
       this.tap = function (event) {
         // ensure not clicked on the thumb
         if (!that.draggingThumb) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           if (!that.decorator.tap(position)) {
             // scroll up or down by thumbExtent
@@ -33353,7 +33354,7 @@ morpheus.ScrollBar = function (isVertical) {
         }
       });
 };
-morpheus.ScrollBar.prototype = {
+phantasus.ScrollBar.prototype = {
   thumbPos: 0, // the top of the thumb, from 0 to visibleExtent-thumbExtent
   thumbExtent: 0,
   extent: 0,
@@ -33365,7 +33366,7 @@ morpheus.ScrollBar.prototype = {
   draggingThumb: false,
   thumbMouseOver: false,
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('panend', this.panend).off('panstart',
       this.panstart).off('panmove', this.panmove).off('tap', this.tap).off('doubletap', this.tap);
     this.hammer.destroy();
@@ -33449,11 +33450,11 @@ morpheus.ScrollBar.prototype = {
     this.setValue(value, false);
   }
 };
-morpheus.Util.extend(morpheus.ScrollBar, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.ScrollBar, morpheus.Events);
+phantasus.Util.extend(phantasus.ScrollBar, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.ScrollBar, phantasus.Events);
 
-morpheus.ShapeChooser = function (options) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.ShapeChooser = function (options) {
+  var formBuilder = new phantasus.FormBuilder();
   var map = options.map;
   var html = ['<select name="valuePicker" class="selectpicker" data-live-search="true">'];
   map.forEach(function (val, key) {
@@ -33471,7 +33472,7 @@ morpheus.ShapeChooser = function (options) {
     value: html.join('')
   });
 
-  var shapeField = new morpheus.ShapeField();
+  var shapeField = new phantasus.ShapeField();
 
   formBuilder.append({
     col: 'col-xs-2',
@@ -33501,12 +33502,12 @@ morpheus.ShapeChooser = function (options) {
   this.$div = formBuilder.$form;
 };
 
-morpheus.ShapeChooser.prototype = {};
+phantasus.ShapeChooser.prototype = {};
 
-morpheus.Util.extend(morpheus.ShapeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.ShapeChooser, phantasus.Events);
 
-morpheus.ShapeField = function (shapes) {
-  shapes = shapes || morpheus.VectorShapeModel.SHAPES;
+phantasus.ShapeField = function (shapes) {
+  shapes = shapes || phantasus.VectorShapeModel.SHAPES;
   var _this = this;
   var html = [];
   var size2 = 8;
@@ -33520,7 +33521,7 @@ morpheus.ShapeField = function (shapes) {
   for (var i = 0; i < shapes.length; i++) {
     var context = new C2S(size2 * 2, size2 * 2);
     context.translate(4, 4);
-    morpheus.CanvasUtil.drawShape(context, shapes[i], x, y, size2);
+    phantasus.CanvasUtil.drawShape(context, shapes[i], x, y, size2);
     var svg = context.getSerializedSvg();
     html.push('<li><a data-name="' + shapes[i] + '" href="#">' + svg
       + '</a></li>');
@@ -33542,18 +33543,18 @@ morpheus.ShapeField = function (shapes) {
     } else {
       var context = new C2S(size2 * 2, size2 * 2);
       context.translate(4, 4);
-      morpheus.CanvasUtil.drawShape(context, val, x, y, size2);
+      phantasus.CanvasUtil.drawShape(context, val, x, y, size2);
       $header.html(context.getSerializedSvg());
     }
   };
   this.setShapeValue = setShapeValue;
   this.$el = $el;
 };
-morpheus.ShapeField.prototype = {};
-morpheus.Util.extend(morpheus.ShapeField, morpheus.Events);
+phantasus.ShapeField.prototype = {};
+phantasus.Util.extend(phantasus.ShapeField, phantasus.Events);
 
-morpheus.SortByValuesIndicator = function (project, isVertical, positions) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.SortByValuesIndicator = function (project, isVertical, positions) {
+  phantasus.AbstractCanvas.call(this, true);
   this.project = project;
   this.isVertical = isVertical;
   this.positions = positions;
@@ -33562,17 +33563,17 @@ morpheus.SortByValuesIndicator = function (project, isVertical, positions) {
     end: -1
   };
 };
-morpheus.SortByValuesIndicator.prototype = {
+phantasus.SortByValuesIndicator.prototype = {
   prePaint: function (clip, context) {
     var positions = this.positions;
     var start = 0;
     var end = positions.getLength();
     if (!this.isVertical) {
-      start = morpheus.Positions.getLeft(clip, positions);
-      end = morpheus.Positions.getRight(clip, positions);
+      start = phantasus.Positions.getLeft(clip, positions);
+      end = phantasus.Positions.getRight(clip, positions);
     } else {
-      start = morpheus.Positions.getTop(clip, positions);
-      end = morpheus.Positions.getBottom(clip, positions);
+      start = phantasus.Positions.getTop(clip, positions);
+      end = phantasus.Positions.getBottom(clip, positions);
     }
     if (this.invalid || start !== this.lastPosition.start
       || end !== this.lastPosition.end) {
@@ -33591,21 +33592,21 @@ morpheus.SortByValuesIndicator.prototype = {
     context.fillStyle = 'black';
     context.textBaseline = 'top';
     context.textAlign = 'left';
-    context.font = '8px ' + morpheus.CanvasUtil.FONT_NAME;
+    context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
     var start = 0;
     var end = positions.getLength();
     if (!isVertical) {
-      start = morpheus.Positions.getLeft(clip, positions);
-      end = morpheus.Positions.getRight(clip, positions);
+      start = phantasus.Positions.getLeft(clip, positions);
+      end = phantasus.Positions.getRight(clip, positions);
     } else {
-      start = morpheus.Positions.getTop(clip, positions);
-      end = morpheus.Positions.getBottom(clip, positions);
+      start = phantasus.Positions.getTop(clip, positions);
+      end = phantasus.Positions.getBottom(clip, positions);
     }
     var arrowWidth = 3;
     var arrowHeight = 4;
     for (var i = 0; i < sortKeys.length; i++) {
       var key = sortKeys[i];
-      if (key instanceof morpheus.SortByValuesKey) { // are we sorting
+      if (key instanceof phantasus.SortByValuesKey) { // are we sorting
         // columns by the
         // values in a row?
 
@@ -33626,12 +33627,12 @@ morpheus.SortByValuesIndicator.prototype = {
             }
             context.beginPath();
             // if (!isVertical) {
-            if (key.getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
+            if (key.getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
               // up arrow
               context.moveTo(0, 0);
               context.lineTo(arrowWidth, arrowHeight);
               context.lineTo(-arrowWidth, arrowHeight);
-            } else if (key.getSortOrder() === morpheus.SortKey.SortOrder.DESCENDING) { // down
+            } else if (key.getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
               // arrow
               context.moveTo(0, arrowHeight);
               context.lineTo(arrowWidth, 0);
@@ -33667,9 +33668,9 @@ morpheus.SortByValuesIndicator.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.SortByValuesIndicator, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.SortByValuesIndicator, phantasus.AbstractCanvas);
 
-morpheus.SortDialog = function (project) {
+phantasus.SortDialog = function (project) {
   var _this = this;
   // choose rows or columns
   var $chooserDiv = $('<div class="container-fluid"></div>');
@@ -33702,8 +33703,8 @@ morpheus.SortDialog = function (project) {
       var $this = $(this);
       var level = [];
       var $sibling = $this.closest('div.row');
-      _this.createLevel(level, new morpheus.SortKey('',
-        morpheus.SortKey.SortOrder.ASCENDING), _this.fields);
+      _this.createLevel(level, new phantasus.SortKey('',
+        phantasus.SortKey.SortOrder.ASCENDING), _this.fields);
       $sibling.after($(level.join('')));
       e.preventDefault();
     });
@@ -33717,7 +33718,7 @@ morpheus.SortDialog = function (project) {
   var $outer = $('<div></div>');
   $chooserDiv.appendTo($outer);
   $div.appendTo($outer);
-  morpheus.FormBuilder
+  phantasus.FormBuilder
     .showOkCancel({
       title: 'Sort',
       content: $outer,
@@ -33742,24 +33743,24 @@ morpheus.SortDialog = function (project) {
           .filter(
             existingSortKeys,
             function (key) {
-              return key instanceof morpheus.MatchesOnTopSortKey
-                || (key instanceof morpheus.SpecifiedModelSortOrder && key.name === 'dendrogram');
+              return key instanceof phantasus.MatchesOnTopSortKey
+                || (key instanceof phantasus.SpecifiedModelSortOrder && key.name === 'dendrogram');
             });
         if (keysToKeep.length > 0) {
           _.each(keysToKeep, function (key) {
             newSortKeys.push(key);
           });
         }
-        var newSortKeyFields = new morpheus.Set();
+        var newSortKeyFields = new phantasus.Set();
         for (var i = 0; i < sortBy.length; i++) {
           if (!newSortKeyFields.has(sortBy[i])) {
             newSortKeyFields.add(sortBy[i]);
             if (sortBy[i] === 'selection') {
-              newSortKeys.push(new morpheus.SortByValuesKey(
+              newSortKeys.push(new phantasus.SortByValuesKey(
                 modelIndices, sortOrder[i],
                 _this.isColumns));
             } else if (sortBy[i] !== '') {
-              newSortKeys.push(new morpheus.SortKey(
+              newSortKeys.push(new phantasus.SortKey(
                 sortBy[i], sortOrder[i]));
             }
           }
@@ -33767,29 +33768,29 @@ morpheus.SortDialog = function (project) {
         var newGroupKeys = [];
         if (groupBy != null) {
           for (var i = 0; i < groupBy.length; i++) {
-            newGroupKeys.push(new morpheus.SortKey(groupBy[i],
-              morpheus.SortKey.SortOrder.UNSORTED));
+            newGroupKeys.push(new phantasus.SortKey(groupBy[i],
+              phantasus.SortKey.SortOrder.UNSORTED));
           }
         }
 
         if (_this.isColumns) {
           project.setGroupColumns(newGroupKeys, true);
-          project.setColumnSortKeys(morpheus.SortKey
+          project.setColumnSortKeys(phantasus.SortKey
             .keepExistingSortKeys(newSortKeys, project
               .getColumnSortKeys()), true);
         } else {
           project.setGroupRows(newGroupKeys, true);
-          project.setRowSortKeys(morpheus.SortKey
+          project.setRowSortKeys(phantasus.SortKey
             .keepExistingSortKeys(newSortKeys, project
               .getRowSortKeys()), true);
         }
       }
     });
 };
-morpheus.SortDialog.prototype = {
+phantasus.SortDialog.prototype = {
   isColumns: false,
   build: function (project, isColumns) {
-    var fields = morpheus.MetadataUtil.getMetadataNames(isColumns ? project
+    var fields = phantasus.MetadataUtil.getMetadataNames(isColumns ? project
       .getFullDataset().getColumnMetadata() : project
       .getFullDataset().getRowMetadata());
     this.fields = fields;
@@ -33801,8 +33802,8 @@ morpheus.SortDialog.prototype = {
       // ignoring
       // MatchesOnTopSortKey and
       // dendrogram
-      if (!(sortKeys[i] instanceof morpheus.MatchesOnTopSortKey)
-        && !(sortKeys[i] instanceof morpheus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
+      if (!(sortKeys[i] instanceof phantasus.MatchesOnTopSortKey)
+        && !(sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
         this.createLevel(html, sortKeys[i], fields);
       }
     }
@@ -33858,7 +33859,7 @@ morpheus.SortDialog.prototype = {
     html.push('<select name="sortBy" class="form-control">');
     html.push('<option value=""></option>');
     html.push('<option value="selection"'
-      + (key instanceof morpheus.SortByValuesKey ? ' selected' : '')
+      + (key instanceof phantasus.SortByValuesKey ? ' selected' : '')
       + '>selection</option>');
     _.each(fields, function (field) {
       html.push('<option value="' + field + '"');
@@ -33874,12 +33875,12 @@ morpheus.SortDialog.prototype = {
     html.push('<div class="col-xs-5">');
     html
       .push('<div class="radio"><label><input type="radio" name="sortOrder" value="ascending"'
-        + (morpheus.SortKey.SortOrder.ASCENDING == key
+        + (phantasus.SortKey.SortOrder.ASCENDING == key
           .getSortOrder() ? ' checked' : '')
         + '>Ascending</label></div>');
     html
       .push('<div class="radio"><label><input type="radio" name="sortOrder" value="descending"'
-        + (morpheus.SortKey.SortOrder.DESCENDING == key
+        + (phantasus.SortKey.SortOrder.DESCENDING == key
           .getSortOrder() ? ' checked' : '')
         + '>Descending</label></div>');
     html.push('</div>');
@@ -33894,11 +33895,11 @@ morpheus.SortDialog.prototype = {
   }
 };
 
-morpheus.Spacer = function (width, height) {
+phantasus.Spacer = function (width, height) {
   this.width = width;
   this.height = height;
 };
-morpheus.Spacer.prototype = {
+phantasus.Spacer.prototype = {
   prefWidth: undefined,
   prefHeight: undefined,
   visible: true,
@@ -33940,10 +33941,10 @@ morpheus.Spacer.prototype = {
   }
 };
 
-morpheus.SteppedColorSupplier = function () {
-  morpheus.AbstractColorSupplier.call(this);
+phantasus.SteppedColorSupplier = function () {
+  phantasus.AbstractColorSupplier.call(this);
   this.hiddenValue = 0;
-  this.hiddenValues = new morpheus.Set();
+  this.hiddenValues = new phantasus.Set();
   this.stepped = true;
 };
 /**
@@ -33952,13 +33953,13 @@ morpheus.SteppedColorSupplier = function () {
  *
  * @return The converted value.
  */
-morpheus.SteppedColorSupplier.linearScale = function (value, input0, input1,
+phantasus.SteppedColorSupplier.linearScale = function (value, input0, input1,
                                                       pix0, pix1) {
   return (value - input0) / (input1 - input0) * (pix1 - pix0) + pix0;
 };
-morpheus.SteppedColorSupplier.prototype = {
+phantasus.SteppedColorSupplier.prototype = {
   createInstance: function () {
-    return new morpheus.SteppedColorSupplier();
+    return new phantasus.SteppedColorSupplier();
   },
   isStepped: function () {
     return true;
@@ -34000,20 +34001,20 @@ morpheus.SteppedColorSupplier.prototype = {
     } else if (value >= max) {
       return colors[colors.length - 1];
     }
-    var fraction = morpheus.SteppedColorSupplier.linearScale(value, min,
+    var fraction = phantasus.SteppedColorSupplier.linearScale(value, min,
         max, 0, 100) / 100;
     return colors[this.getIndexForFraction(fraction)];
   }
 };
-morpheus.Util.extend(morpheus.SteppedColorSupplier,
-  morpheus.AbstractColorSupplier);
+phantasus.Util.extend(phantasus.SteppedColorSupplier,
+  phantasus.AbstractColorSupplier);
 
 /**
  * @param options.autohideTabBar
  *            Whether to autohide the tab bar when only 1 tab showing
  * @param options.landingPage Landing page to show when all tabs are closed
  */
-morpheus.TabManager = function (options) {
+phantasus.TabManager = function (options) {
   this.options = $.extend({}, {
     autohideTabBar: false,
     rename: true
@@ -34021,14 +34022,14 @@ morpheus.TabManager = function (options) {
   var _this = this;
   this.activeTabObject = null;
   this.activeTabId = null;
-  this.idToTabObject = new morpheus.Map();
-  this.$nav = $('<ul class="nav nav-tabs compact morpheus-nav"></ul>');
+  this.idToTabObject = new phantasus.Map();
+  this.$nav = $('<ul class="nav nav-tabs compact phantasus-nav"></ul>');
   this.$nav.sortable({
     containment: 'parent',
     axis: 'x',
     helper: 'clone',
-    cancel: 'li:not(.morpheus-sortable)',
-    items: 'li.morpheus-sortable'
+    cancel: 'li:not(.phantasus-sortable)',
+    items: 'li.phantasus-sortable'
   });
   this.$nav.sortable('disable');
   this.$nav.on('click', 'li > a', function (e) {
@@ -34045,9 +34046,9 @@ morpheus.TabManager = function (options) {
   }
   if (options.dropTab) {
     var html = [];
-    html.push('<li class="morpheus-tab-addon dropdown pull-right tabdrop">');
+    html.push('<li class="phantasus-tab-addon dropdown pull-right tabdrop">');
     html.push('<div class="btn-group">');
-    html.push('<button type="button" class="morpheus-drop-tab-toggle btn btn-link' +
+    html.push('<button type="button" class="phantasus-drop-tab-toggle btn btn-link' +
       ' dropdown-toggle"' +
       ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
     html.push(' <span class="fa fa-angle-double-down"></span>');
@@ -34068,7 +34069,7 @@ morpheus.TabManager = function (options) {
       _this.$nav.find('> li').each(function () {
         var $li = $(this);
         var $a = $li.find('a');
-        if (!$li.hasClass('morpheus-tab-addon')) {
+        if (!$li.hasClass('phantasus-tab-addon')) {
           var title = $a.contents().first().text();
           var isActive = $li.hasClass('active');
           var href = $a.attr('href');
@@ -34103,51 +34104,51 @@ morpheus.TabManager = function (options) {
     e.preventDefault();
     var $a = $(this);
     var $li = $a.parent('li');
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
     _this.rename($a.data('link'));
 
   });
-  this.$nav.on('contextmenu.morpheus', 'li > a', function (e) {
+  this.$nav.on('contextmenu.phantasus', 'li > a', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
     var $a = $(this);
     var $li = $a.parent('li');
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
     var menuItems = [];
-    if ($a.data('morpheus-rename') && _this.options.rename) {
+    if ($a.data('phantasus-rename') && _this.options.rename) {
       menuItems.push({name: 'Rename'});
     }
-    if ($a.data('morpheus-pin')) { // pinned
+    if ($a.data('phantasus-pin')) { // pinned
       menuItems.push({name: 'Unpin tab'});
     } else {
       menuItems.push({name: 'Pin tab'});
     }
 
     if (menuItems.length > 0) {
-      morpheus.Popup.showPopup(menuItems, {
+      phantasus.Popup.showPopup(menuItems, {
         x: e.pageX,
         y: e.pageY
       }, e.target, function (event, item) {
         if (item === 'Rename') {
           _this.rename($a.data('link'));
         } else if (item === 'Pin tab') {
-          $a.data('morpheus-pin', true);
-          $li.removeClass('morpheus-sortable');
+          $a.data('phantasus-pin', true);
+          $li.removeClass('phantasus-sortable');
           $li.detach();
           _this.$nav.prepend($li);
           $a.find('.close').hide();    // hide close button
-          _this.$nav.sortable('option', 'items', 'li.morpheus-sortable');
+          _this.$nav.sortable('option', 'items', 'li.phantasus-sortable');
           _this.$nav.sortable('refresh');
         } else if (item === 'Unpin tab') {
-          $a.data('morpheus-pin', false);
-          $li.addClass('morpheus-sortable');
+          $a.data('phantasus-pin', false);
+          $li.addClass('phantasus-sortable');
           $a.find('.close').show(); // show close button
-          _this.$nav.sortable('option', 'items', 'li.morpheus-sortable');
+          _this.$nav.sortable('option', 'items', 'li.phantasus-sortable');
           _this.$nav.sortable('refresh');
 
         }
@@ -34190,7 +34191,7 @@ morpheus.TabManager = function (options) {
   });
 
 };
-morpheus.TabManager.prototype = {
+phantasus.TabManager.prototype = {
   getTabText: function (id) {
     return this.$nav.find('> li > a').filter('a[data-link=' + id + ']').contents().first().text();
   },
@@ -34249,11 +34250,11 @@ morpheus.TabManager.prototype = {
    */
   add: function (options) {
     this.adding = true;
-    var id = _.uniqueId('morpheus-tab');
+    var id = _.uniqueId('phantasus-tab');
     this.idToTabObject.set(id, options.object);
     var li = [];
-    li.push('<li class="morpheus-sortable" role="presentation">');
-    li.push('<a data-morpheus-rename="' + options.rename
+    li.push('<li class="phantasus-sortable" role="presentation">');
+    li.push('<a data-phantasus-rename="' + options.rename
       + '" data-toggle="tab" data-link="' + id + '" href="#' + id + '">');
     li.push(options.title);
     li.push('&nbsp;<i style="color:black;"></i>');
@@ -34398,20 +34399,20 @@ morpheus.TabManager.prototype = {
   rename: function (id) {
     var $a = this._getA(id);
     var $li = $a.parent();
-    if ($li.hasClass('morpheus-tab-addon')) {
+    if ($li.hasClass('phantasus-tab-addon')) {
       return;
     }
-    if (!$a.data('morpheus-rename') || !this.options.rename) {
+    if (!$a.data('phantasus-rename') || !this.options.rename) {
       return;
     }
     var _this = this;
-    var builder = new morpheus.FormBuilder();
+    var builder = new phantasus.FormBuilder();
     builder.append({
       name: 'name',
       type: 'text',
       value: $.trim($a.contents().first().text())
     });
-    morpheus.FormBuilder.showOkCancel({
+    phantasus.FormBuilder.showOkCancel({
       title: 'Rename Tab',
       content: builder.$form,
       okCallback: function () {
@@ -34428,7 +34429,7 @@ morpheus.TabManager.prototype = {
     // edit tab name
   }
 };
-morpheus.Util.extend(morpheus.TabManager, morpheus.Events);
+phantasus.Util.extend(phantasus.TabManager, phantasus.Events);
 
 /**
  * @param options.$el The jQuery element to render to. Must be in the DOM.
@@ -34448,8 +34449,8 @@ morpheus.Util.extend(morpheus.TabManager, morpheus.Events);
 
 
 
-morpheus.Table = function (options) {
-  options = morpheus.Table.createOptions(options);
+phantasus.Table = function (options) {
+  options = phantasus.Table.createOptions(options);
   this.options = options;
   if (!options.width) {
     options.width = options.$el.attr('class');
@@ -34470,7 +34471,7 @@ morpheus.Table = function (options) {
   var visibleColumns = columns.filter(function (c) {
     return c.visible;
   });
-  var grid = new morpheus.Grid({
+  var grid = new phantasus.Grid({
     gridOptions: {
       select: options.select,
       rowHeight: options.rowHeight,
@@ -34503,7 +34504,7 @@ morpheus.Table = function (options) {
   this.$header = $header;
   var $right = $header.find('.pull-right');
   if (options.search) {
-    var tableSearch = new morpheus.TableSearchUI({
+    var tableSearch = new phantasus.TableSearchUI({
       $el: $header.find('[name=top]'),
       $right: $right
     });
@@ -34553,7 +34554,7 @@ morpheus.Table = function (options) {
       grid.setColumns(visibleColumns);
 
       if (newColumns.length > oldColumns.length) {
-        var set = new morpheus.Set();
+        var set = new phantasus.Set();
         for (var i = 0; i < newColumns.length; i++) {
           set.add(newColumns[i]);
         }
@@ -34717,12 +34718,12 @@ morpheus.Table = function (options) {
 }
 ;
 
-morpheus.Table.defaultRenderer = function (item, value) {
+phantasus.Table.defaultRenderer = function (item, value) {
   if (value == null) {
     return '';
   } else if (_.isNumber(value)) {
-    return morpheus.Util.nf(value);
-  } else if (morpheus.Util.isArray(value)) {
+    return phantasus.Util.nf(value);
+  } else if (phantasus.Util.isArray(value)) {
     var s = [];
     for (var i = 0, length = value.length; i < length; i++) {
       if (i > 0) {
@@ -34737,7 +34738,7 @@ morpheus.Table.defaultRenderer = function (item, value) {
   }
 };
 
-morpheus.Table.prototype = {
+phantasus.Table.prototype = {
   toText: function () {
     var text = [];
     var items = this.getItems();
@@ -34758,7 +34759,7 @@ morpheus.Table.prototype = {
           text.push('\t');
         }
         var value = columns[j].getter(item);
-        text.push(morpheus.Util.toString(value));
+        text.push(phantasus.Util.toString(value));
       }
       text.push('\n');
     }
@@ -34821,7 +34822,7 @@ morpheus.Table.prototype = {
     }
     var field = null;
     var semi = token.indexOf(':');
-    var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+    var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
     if (semi > 0) { // field search?
       if (token.charCodeAt(semi - 1) !== 92) { // \:
         var possibleField = $.trim(token.substring(0, semi));
@@ -34830,7 +34831,7 @@ morpheus.Table.prototype = {
           possibleField = possibleField.substring(1,
             possibleField.length - 1);
         }
-        var columnNameToColumn = new morpheus.Map();
+        var columnNameToColumn = new phantasus.Map();
         var columnNames = columns.map(function (c) {
           return c.name;
         });
@@ -34846,7 +34847,7 @@ morpheus.Table.prototype = {
       }
 
     } else if (ncolumns > 1) {
-      var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+      var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
       for (var j = 0; j < ncolumns; j++) {
         var field = columns[j].name;
         if (regex.test(field)) {
@@ -34859,8 +34860,8 @@ morpheus.Table.prototype = {
         }
       }
     }
-    var set = new morpheus.Set();
-    var regex = new RegExp('^' + morpheus.Util.escapeRegex(token), 'i');
+    var set = new phantasus.Set();
+    var regex = new RegExp('^' + phantasus.Util.escapeRegex(token), 'i');
     var items = this.getItems();
     var dataTypes = [];
     // filter numeric columns
@@ -34870,7 +34871,7 @@ morpheus.Table.prototype = {
       for (var i = 0, nitems = items.length; i < nitems; i++) {
         var value = c.getter(items[i]);
         if (value != null) {
-          dataType = morpheus.Util.getDataType(value);
+          dataType = phantasus.Util.getDataType(value);
           break;
         }
       }
@@ -34948,7 +34949,7 @@ morpheus.Table.prototype = {
     var columns = this.columns.filter(function (c) {
       return (c.searchable && c.visible) || c.alwaysSearch;
     });
-    var columnNameToColumn = new morpheus.Map();
+    var columnNameToColumn = new phantasus.Map();
     var columnNames = columns.map(function (c) {
       return c.name;
     });
@@ -34984,7 +34985,7 @@ morpheus.Table.prototype = {
         }
         for (var j = 0, ncolumns = searchColumns.length; j < ncolumns; j++) {
           var value = searchColumns[j].getter(item);
-          if (morpheus.Util.isArray(value)) {
+          if (phantasus.Util.isArray(value)) {
             var nvalues = value.length;
             for (var i = 0; i < nvalues; i++) {
               if (predicate.accept(value[i])) {
@@ -35015,14 +35016,14 @@ morpheus.Table.prototype = {
         .setFilter(this.grid
           .getFilter());
     } else {
-      var tokens = morpheus.Util.getAutocompleteTokens(text);
+      var tokens = phantasus.Util.getAutocompleteTokens(text);
       var columns = this.columns.filter(function (c) {
         return (c.searchable && c.visible) || c.alwaysSearch;
       });
       var columnNames = columns.map(function (c) {
         return c.name;
       });
-      var predicates = morpheus.Util.createSearchPredicates({
+      var predicates = phantasus.Util.createSearchPredicates({
         tokens: tokens,
         fields: columnNames
       });
@@ -35081,7 +35082,7 @@ morpheus.Table.prototype = {
   }
 };
 
-morpheus.Table.createOptions = function (options) {
+phantasus.Table.createOptions = function (options) {
   options = $.extend(true, {}, {
     items: [],
     height: '564px',
@@ -35104,7 +35105,7 @@ morpheus.Table.createOptions = function (options) {
     var column = $.extend(true, {}, {
       id: i,
       tooltip: function (dataContext, value) {
-        return morpheus.Table.defaultRenderer(dataContext, value);
+        return phantasus.Table.defaultRenderer(dataContext, value);
       },
       formatter: function (row, cell, value, columnDef, dataContext) {
 
@@ -35143,7 +35144,7 @@ morpheus.Table.createOptions = function (options) {
       searchable: true,
       width: null,
       name: c.name,
-      renderer: morpheus.Table.defaultRenderer
+      renderer: phantasus.Table.defaultRenderer
     }, c);
 
     if (column.visible === undefined) {
@@ -35174,7 +35175,7 @@ morpheus.Table.createOptions = function (options) {
   return options;
 };
 
-morpheus.TableSearchUI = function (options) {
+phantasus.TableSearchUI = function (options) {
   var _this = this;
   var $search = $('<input name="search" type="text" class="form-control input-sm"' +
     ' placeholder="Search" autocomplete="off">');
@@ -35195,7 +35196,7 @@ morpheus.TableSearchUI = function (options) {
   $search.on('keyup', _.debounce(function () {
     _this.table.search($.trim($(this).val()));
   }, 100));
-  morpheus.Util.autosuggest({
+  phantasus.Util.autosuggest({
     $el: $search,
     suggestWhenEmpty: true,
     filter: function (tokens, response) {
@@ -35207,9 +35208,9 @@ morpheus.TableSearchUI = function (options) {
   });
 };
 
-morpheus.TableSearchUI.prototype = {
+phantasus.TableSearchUI.prototype = {
   updateSearchLabel: function () {
-    var text = 'Showing: ' + morpheus.Util.intFormat(this.table.getFilteredItemCount()) + ' / ' + morpheus.Util.intFormat(this.table.getAllItemCount());
+    var text = 'Showing: ' + phantasus.Util.intFormat(this.table.getFilteredItemCount()) + ' / ' + phantasus.Util.intFormat(this.table.getAllItemCount());
     this.$searchResults.html(text);
   },
   setTable: function (table) {
@@ -35225,7 +35226,7 @@ morpheus.TableSearchUI.prototype = {
 };
 
 
-morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
+phantasus.TrackSelection = function (track, positions, selectionModel, isColumns,
                                     heatMap) {
   var canvas = track.canvas;
   var startIndex = -1;
@@ -35238,14 +35239,14 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
       var squishFactor = total
         / (isColumns ? track.getUnscaledWidth() : track
           .getUnscaledHeight());
-      var clientXY = morpheus.CanvasUtil.getClientXY(event, useDelta);
-      var p = morpheus.CanvasUtil.getMousePosWithScroll(event.target,
+      var clientXY = phantasus.CanvasUtil.getClientXY(event, useDelta);
+      var p = phantasus.CanvasUtil.getMousePosWithScroll(event.target,
         event, 0, 0, useDelta);
       p[coord] *= squishFactor;
       return p;
 
     } else {
-      return morpheus.CanvasUtil.getMousePosWithScroll(event.target,
+      return phantasus.CanvasUtil.getMousePosWithScroll(event.target,
         event, heatMap.scrollLeft(), heatMap.scrollTop(),
         useDelta);
     }
@@ -35254,7 +35255,7 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
 
   var panning = false;
 
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(canvas, ['pan', 'tap', 'longpress'])
     .on('longpress', this.longpress = function (event) {
       event.preventDefault();
@@ -35271,10 +35272,10 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
         var position = getPosition(event);
         var endIndex = positions.getIndex(position[coord],
           false);
-        var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+        var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
           : event.srcEvent.ctrlKey;
         var viewIndices = commandKey ? selectionModel
-          .getViewIndices() : new morpheus.Set();
+          .getViewIndices() : new phantasus.Set();
         var _startIndex = startIndex;
         if (startIndex > endIndex) {
           var tmp = endIndex;
@@ -35328,9 +35329,9 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
             event.srcEvent.shiftKey);
         } else {
           heatMap.setSelectedTrack(track.name, isColumns);
-          var commandKey = morpheus.Util.IS_MAC ? event.srcEvent.metaKey
+          var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
             : event.srcEvent.ctrlKey;
-          if (morpheus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+          if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
             // on
             // Mac
             return;
@@ -35364,14 +35365,14 @@ morpheus.TrackSelection = function (track, positions, selectionModel, isColumns,
               }
             }
           } else {
-            viewIndices = new morpheus.Set();
+            viewIndices = new phantasus.Set();
             viewIndices.add(index);
           }
           selectionModel.setViewIndices(viewIndices, true);
         }
       });
 };
-morpheus.TrackSelection.prototype = {
+phantasus.TrackSelection.prototype = {
   dispose: function () {
     this.hammer.off('longpress', this.longpress).off('panstart',
       this.panstart).off('panmove', this.panmove).off('panend', this.panend).off('tap', this.tap).off('doubletap', this.tap);
@@ -35379,8 +35380,8 @@ morpheus.TrackSelection.prototype = {
   }
 };
 
-morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
-  morpheus.AbstractCanvas.call(this);
+phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
+  phantasus.AbstractCanvas.call(this);
   this.project = project;
   this.name = name;
   this.isColumns = isColumns;
@@ -35388,9 +35389,9 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.heatMap = heatMap;
   var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
     : project.getFullDataset().getRowMetadata()).getByName(name);
-  if (vector && vector.getProperties().has(morpheus.VectorKeys.TITLE)) {
+  if (vector && vector.getProperties().has(phantasus.VectorKeys.TITLE)) {
     this.canvas.setAttribute('title', vector.getProperties().get(
-      morpheus.VectorKeys.TITLE));
+      phantasus.VectorKeys.TITLE));
     $(this.canvas).tooltip();
   }
 
@@ -35398,7 +35399,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
 
   this.setBounds({
     height: this.defaultFontHeight
-    + morpheus.VectorTrackHeader.FONT_OFFSET
+    + phantasus.VectorTrackHeader.FONT_OFFSET
   });
 
   function getResizeCursor(pos) {
@@ -35438,8 +35439,8 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   }
 
   var mouseMove = function (event) {
-    if (!morpheus.CanvasUtil.dragging) {
-      var pos = morpheus.CanvasUtil.getMousePos(event.target, event);
+    if (!phantasus.CanvasUtil.dragging) {
+      var pos = phantasus.CanvasUtil.getMousePos(event.target, event);
       var resizeCursor = getResizeCursor(pos);
       canvas.style.cursor = resizeCursor == null ? 'default' : resizeCursor.cursor;
       //document.body.style.cursor = !cursor ? 'default' : cursor;
@@ -35449,7 +35450,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
 
   };
   var mouseExit = function (e) {
-    if (!morpheus.CanvasUtil.dragging) {
+    if (!phantasus.CanvasUtil.dragging) {
       canvas.style.cursor = 'default';
     }
     _this.isMouseOver = false;
@@ -35474,10 +35475,10 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.selectedBackgroundColor = '#c8c8c8';
   this.backgroundColor = '#f9f9f9';
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
-    'mousemove.morpheus', mouseMove).on('mouseout.morpheus', mouseExit)
-    .on('mouseenter.morpheus', mouseMove);
+    'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
+    .on('mouseenter.phantasus', mouseMove);
 
-  $(this.canvas).on('contextmenu.morpheus', showPopup);
+  $(this.canvas).on('contextmenu.phantasus', showPopup);
 
   var resizeCursor;
   var dragStartWidth = 0;
@@ -35492,7 +35493,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   // }
   // }, 100);
   // $(canvas).on('mouseout', throttled).on('mousemove', throttled);
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(canvas, ['pan', 'tap', 'longpress'])
     .on('longpress', this.longpress = function (event) {
       event.preventDefault();
@@ -35504,7 +35505,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
       'panend',
       this.panend = function (event) {
         _this.isMouseOver = false;
-        morpheus.CanvasUtil.dragging = false;
+        phantasus.CanvasUtil.dragging = false;
         canvas.style.cursor = 'default';
         var index = heatMap.getTrackIndex(_this.name,
           isColumns);
@@ -35521,14 +35522,14 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
       'panstart',
       this.panstart = function (event) {
         _this.isMouseOver = false;
-        if (morpheus.CanvasUtil.dragging) {
+        if (phantasus.CanvasUtil.dragging) {
           return;
         }
-        resizeCursor = getResizeCursor(morpheus.CanvasUtil
+        resizeCursor = getResizeCursor(phantasus.CanvasUtil
           .getMousePos(event.target, event, true));
         if (resizeCursor != null) { // make sure start event was on
           // hotspot
-          morpheus.CanvasUtil.dragging = true;
+          phantasus.CanvasUtil.dragging = true;
           canvas.style.cursor = resizeCursor.cursor;
           if (resizeCursor.isPrevious) {
             var index = heatMap.getTrackIndex(_this.name,
@@ -35564,7 +35565,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
           dragStartPosition = $canvas.position();
           $canvas.css('z-index', '100');
           $(header.canvas).css('z-index', '100');
-          morpheus.CanvasUtil.dragging = true;
+          phantasus.CanvasUtil.dragging = true;
           resizeCursor = undefined;
           reorderingTrack = true;
         }
@@ -35644,7 +35645,7 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
     .on(
       'tap',
       this.tap = function (event) {
-        if (morpheus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
+        if (phantasus.Util.IS_MAC && event.srcEvent.ctrlKey) { // right-click
           return;
         }
         _this.isMouseOver = false;
@@ -35666,26 +35667,26 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         var sortKey;
         var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
           : project.getFullDataset().getRowMetadata()).getByName(name);
-        var dataType = morpheus.VectorUtil.getDataType(vector);
+        var dataType = phantasus.VectorUtil.getDataType(vector);
         if (existingSortKeyIndex != -1) {
           sortKey = _this.getSortKeys()[existingSortKeyIndex];
-          if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.UNSORTED) {
-            sortOrder = morpheus.SortKey.SortOrder.ASCENDING; // 1st
+          if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.UNSORTED) {
+            sortOrder = phantasus.SortKey.SortOrder.ASCENDING; // 1st
             // click
-          } else if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
-            sortOrder = morpheus.SortKey.SortOrder.DESCENDING; // 2nd
+          } else if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
+            sortOrder = phantasus.SortKey.SortOrder.DESCENDING; // 2nd
             // click
-          } else if (sortKey.getSortOrder() === morpheus.SortKey.SortOrder.TOP_N) {
-            sortOrder = morpheus.SortKey.SortOrder.UNSORTED;
+          } else if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.TOP_N) {
+            sortOrder = phantasus.SortKey.SortOrder.UNSORTED;
           } else {
-            sortOrder = dataType === 'number' || dataType === '[number]' ? morpheus.SortKey.SortOrder.TOP_N : morpheus.SortKey.SortOrder.UNSORTED; // 3rd
+            sortOrder = dataType === 'number' || dataType === '[number]' ? phantasus.SortKey.SortOrder.TOP_N : phantasus.SortKey.SortOrder.UNSORTED; // 3rd
             // click
           }
 
         } else {
-          sortKey = new morpheus.SortKey(_this.name,
-            morpheus.SortKey.SortOrder.ASCENDING);
-          sortOrder = morpheus.SortKey.SortOrder.ASCENDING;
+          sortKey = new phantasus.SortKey(_this.name,
+            phantasus.SortKey.SortOrder.ASCENDING);
+          sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
         }
         if (sortKey != null) {
           sortKey.setSortOrder(sortOrder);
@@ -35695,13 +35696,13 @@ morpheus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         // }
       });
 };
-morpheus.VectorTrackHeader.FONT_OFFSET = 2;
-morpheus.VectorTrackHeader.prototype = {
+phantasus.VectorTrackHeader.FONT_OFFSET = 2;
+phantasus.VectorTrackHeader.prototype = {
   selected: false,
   isMouseOver: false,
   defaultFontHeight: 11,
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('longpress', this.longpress).off('panend', this.panend).off('panstart',
       this.panstart).off('panmove', this.panmove).off('tap', this.tap);
     this.hammer.destroy();
@@ -35712,14 +35713,14 @@ morpheus.VectorTrackHeader.prototype = {
 
     if (!this.isColumns) {
       size.height = this.defaultFontHeight
-        + morpheus.VectorTrackHeader.FONT_OFFSET;
+        + phantasus.VectorTrackHeader.FONT_OFFSET;
     }
     // var vector = (this.isColumns ? this.project.getFullDataset()
     // .getColumnMetadata() : this.project.getFullDataset()
     // .getRowMetadata()).getByName(this.name);
     // if (vector
     // && vector.getProperties().get(
-    // morpheus.VectorKeys.SHOW_HEADER_SUMMARY)) {
+    // phantasus.VectorKeys.SHOW_HEADER_SUMMARY)) {
     // if (isNaN(size.height)) {
     // size.height = 0;
     // }
@@ -35735,12 +35736,12 @@ morpheus.VectorTrackHeader.prototype = {
   getPrintSize: function () {
     var context = this.canvas.getContext('2d');
     context.font = this.defaultFontHeight + 'px '
-      + morpheus.CanvasUtil.FONT_NAME;
+      + phantasus.CanvasUtil.FONT_NAME;
     var textWidth = 4 + context.measureText(this.name).width;
     return {
       width: textWidth,
       height: this.defaultFontHeight
-      + morpheus.VectorTrackHeader.FONT_OFFSET
+      + phantasus.VectorTrackHeader.FONT_OFFSET
     };
   },
   getSortKeys: function () {
@@ -35749,11 +35750,11 @@ morpheus.VectorTrackHeader.prototype = {
   },
   setOrder: function (sortKeys) {
     if (this.isColumns) {
-      this.project.setColumnSortKeys(morpheus.SortKey
+      this.project.setColumnSortKeys(phantasus.SortKey
         .keepExistingSortKeys(sortKeys, this.project
           .getColumnSortKeys()), false);
     } else {
-      this.project.setRowSortKeys(morpheus.SortKey.keepExistingSortKeys(
+      this.project.setRowSortKeys(phantasus.SortKey.keepExistingSortKeys(
         sortKeys, this.project.getRowSortKeys()), false);
     }
   },
@@ -35792,7 +35793,7 @@ morpheus.VectorTrackHeader.prototype = {
   },
   setSortingStatus: function (sortKeys, sortKey, additionalSort, isGroupBy) {
     if (!isGroupBy) {
-      if (sortKey.getSortOrder() == morpheus.SortKey.SortOrder.UNSORTED
+      if (sortKey.getSortOrder() == phantasus.SortKey.SortOrder.UNSORTED
         && !additionalSort) {
         this.setOrder([]);
       } else {
@@ -35841,14 +35842,14 @@ morpheus.VectorTrackHeader.prototype = {
     if (this.isColumns) {
       context.textAlign = 'right';
       context.font = Math.min(this.defaultFontHeight, clip.height
-          - morpheus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+          - phantasus.VectorTrackHeader.FONT_OFFSET)
+        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     } else {
       context.textAlign = 'left';
-      context.font = (clip.height - morpheus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+      context.font = (clip.height - phantasus.VectorTrackHeader.FONT_OFFSET)
+        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(this.name, 0, 0);
   },
   draw: function (clip, context) {
@@ -35856,7 +35857,7 @@ morpheus.VectorTrackHeader.prototype = {
     var name = this.name;
     var existingSortKeyIndex = this.getSortKeyIndexForColumnName(sortKeys,
       name);
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
 
@@ -35879,10 +35880,10 @@ morpheus.VectorTrackHeader.prototype = {
     }
     var fontHeight = Math.min(this.defaultFontHeight, this
         .getUnscaledHeight()
-      - morpheus.VectorTrackHeader.FONT_OFFSET);
+      - phantasus.VectorTrackHeader.FONT_OFFSET);
     var squished = this.heatMap.getTrack(this.name, this.isColumns).settings.squished;
     context.font = (squished ? 'Italic ' : '') + fontHeight + 'px '
-      + morpheus.CanvasUtil.FONT_NAME;
+      + phantasus.CanvasUtil.FONT_NAME;
     var textWidth = context.measureText(name).width;
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
@@ -35895,7 +35896,7 @@ morpheus.VectorTrackHeader.prototype = {
       }
     }
     var ypix = this.isColumns ? (this.getUnscaledHeight() / 2)
-      : (this.getUnscaledHeight() - (this.defaultFontHeight + morpheus.VectorTrackHeader.FONT_OFFSET) / 2);
+      : (this.getUnscaledHeight() - (this.defaultFontHeight + phantasus.VectorTrackHeader.FONT_OFFSET) / 2);
     context.textBaseline = 'middle';
     if (this.isMouseOver) {
       context.fillStyle = 'rgb(0,0,0)';
@@ -35907,25 +35908,25 @@ morpheus.VectorTrackHeader.prototype = {
         }
       }
     }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(name, xpix, ypix);
     // var vector = (this.isColumns ? this.project.getFullDataset()
     // .getColumnMetadata() : this.project.getFullDataset()
     // .getRowMetadata()).getByName(this.name);
     // if (vector
     // && vector.getProperties().get(
-    // morpheus.VectorKeys.SHOW_HEADER_SUMMARY)) {
+    // phantasus.VectorKeys.SHOW_HEADER_SUMMARY)) {
     // var summary = vector.getProperties().get(
-    // morpheus.VectorKeys.HEADER_SUMMARY);
+    // phantasus.VectorKeys.HEADER_SUMMARY);
     // var track = this.heatMap.getTrack(this.name, this.isColumns);
     // if (summary == null) {
     // var visibleFieldIndices = vector.getProperties().get(
-    // morpheus.VectorKeys.VISIBLE_FIELDS);
+    // phantasus.VectorKeys.VISIBLE_FIELDS);
     //
     // if (visibleFieldIndices == null) {
-    // visibleFieldIndices = morpheus.Util
+    // visibleFieldIndices = phantasus.Util
     // .seq(vector.getProperties().get(
-    // morpheus.VectorKeys.FIELDS).length);
+    // phantasus.VectorKeys.FIELDS).length);
     // }
     // var bigArray = [];
     // var min = Number.MAX_VALUE;
@@ -35944,7 +35945,7 @@ morpheus.VectorTrackHeader.prototype = {
     // }
     // }
     // }
-    // var nbins = Math.ceil(morpheus.Log2(bigArray.length) + 1);
+    // var nbins = Math.ceil(phantasus.Log2(bigArray.length) + 1);
     // var binSize = (max - min) / nbins;
     // var binNumberToOccurences = new Uint32Array(nbins);
     // var maxOccurences = 0;
@@ -35961,7 +35962,7 @@ morpheus.VectorTrackHeader.prototype = {
     // binNumberToOccurences[bin]);
     // }
     // summary = {
-    // box : morpheus.BoxPlotItem(morpheus.VectorUtil
+    // box : phantasus.BoxPlotItem(phantasus.VectorUtil
     // .arrayAsVector(bigArray)),
     // histogram : {
     // binSize : binSize,
@@ -35974,7 +35975,7 @@ morpheus.VectorTrackHeader.prototype = {
     //
     // };
     //
-    // vector.getProperties().set(morpheus.VectorKeys.HEADER_SUMMARY,
+    // vector.getProperties().set(phantasus.VectorKeys.HEADER_SUMMARY,
     // summary);
     // }
     // var box = summary.box;
@@ -36037,19 +36038,19 @@ morpheus.VectorTrackHeader.prototype = {
     //
     // context.restore();
     // }
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     if (existingSortKeyIndex !== -1) {
       context.beginPath();
       var x = this.isColumns ? xpix + 4 : xpix + textWidth + 6;
       var arrowHeight = Math.min(8, this.getUnscaledHeight() / 2 - 1);
       var arrowWidth = 3;
-      if (sortKeys[existingSortKeyIndex].getSortOrder() === morpheus.SortKey.SortOrder.ASCENDING) {
+      if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
         // up arrow
         context.translate(x, ypix - arrowHeight);
         context.moveTo(0, 0);
         context.lineTo(arrowWidth, arrowHeight);
         context.lineTo(-arrowWidth, arrowHeight);
-      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === morpheus.SortKey.SortOrder.DESCENDING) { // down
+      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
         // arrow
         context.translate(x, ypix);
         context.moveTo(0, arrowHeight);
@@ -36064,20 +36065,20 @@ morpheus.VectorTrackHeader.prototype = {
 
       }
       context.fill();
-      morpheus.CanvasUtil.resetTransform(context);
+      phantasus.CanvasUtil.resetTransform(context);
       if (sortKeys.length > 1) {
         context.textAlign = 'left';
-        context.font = '8px ' + morpheus.CanvasUtil.FONT_NAME;
+        context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
         context.fillText('' + (existingSortKeyIndex + 1), x + 4,
           ypix - 3);
       }
     }
   }
 };
-morpheus.Util.extend(morpheus.VectorTrackHeader, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.VectorTrackHeader, phantasus.AbstractCanvas);
 
-morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
+  phantasus.AbstractCanvas.call(this, true);
   this.preferredSize = {
     width: 0,
     height: 0
@@ -36093,7 +36094,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
   this.id = _.uniqueId();
   var _this = this;
   this.updateSpanMapFunction = function () {
-    _this.spanMap = morpheus.VectorUtil.createSpanMap(_this.getVector());
+    _this.spanMap = phantasus.VectorUtil.createSpanMap(_this.getVector());
   };
 
   this.lastPosition = {
@@ -36111,10 +36112,10 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
       var vector = _this.getVector();
       var val = vector.getValue(index);
       if (val != null && val !== '') {
-        var toString = morpheus.VectorTrack.vectorToString(vector);
+        var toString = phantasus.VectorTrack.vectorToString(vector);
         var fontSize = Math.min(24, _this.positions.getSize() - 2);
         var context = _this.canvas.getContext('2d');
-        context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+        context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
         return context.measureText(toString(val)).width > this.textWidth;
       }
     }
@@ -36122,7 +36123,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
   var mouseMoved = function (event) {
     var index = -1;
     if (event.type !== 'mouseout') {
-      var position = morpheus.CanvasUtil.getMousePosWithScroll(
+      var position = phantasus.CanvasUtil.getMousePosWithScroll(
         event.target, event, heatmap.scrollLeft(), heatmap
           .scrollTop());
       if (_this.settings.squished) {
@@ -36152,7 +36153,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
     }
   };
 
-  $(this.canvas).on('contextmenu.morpheus', function (e) {
+  $(this.canvas).on('contextmenu.phantasus', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -36189,9 +36190,9 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
     minMaxReversed: false
     // whether to reverse min and max when auto-setting min and max
   };
-  $(this.canvas).on('mousemove.morpheus mouseout.morpheus', mouseMoved);
+  $(this.canvas).on('mousemove.phantasus mouseout.phantasus', mouseMoved);
 };
-morpheus.VectorTrack.RENDER = {
+phantasus.VectorTrack.RENDER = {
   TEXT: 'text',
   COLOR: 'color',
   BAR: 'bar',
@@ -36202,19 +36203,19 @@ morpheus.VectorTrack.RENDER = {
   BOX_PLOT: 'box_plot',
   HEAT_MAP: 'heat_map'
 };
-morpheus.VectorTrack.vectorToString = function (vector) {
+phantasus.VectorTrack.vectorToString = function (vector) {
   var formatter = function (v) {
     return '' + v;
   };
-  var dataType = morpheus.VectorUtil.getDataType(vector);
+  var dataType = phantasus.VectorUtil.getDataType(vector);
   if (dataType === 'number') {
-    formatter = morpheus.Util.nf;
+    formatter = phantasus.Util.nf;
   } else if (dataType === '[number]') {
     formatter = function (v) {
       var s = [];
       if (v != null) {
         for (var i = 0, arrayLength = v.length; i < arrayLength; i++) {
-          s.push(morpheus.Util.nf(v[i]));
+          s.push(phantasus.Util.nf(v[i]));
         }
       }
       return s.join(', ');
@@ -36233,7 +36234,7 @@ morpheus.VectorTrack.vectorToString = function (vector) {
   return formatter;
 };
 
-morpheus.VectorTrack.prototype = {
+phantasus.VectorTrack.prototype = {
   settingFromConfig: function (conf) {
     var settings = this.settings;
     if (_.isString(conf)) {
@@ -36242,7 +36243,7 @@ morpheus.VectorTrack.prototype = {
       for (var i = 0, length = tokens.length; i < length; i++) {
         var method = $.trim(tokens[i]);
         method = method.toUpperCase();
-        var mapped = morpheus.VectorTrack.RENDER[method];
+        var mapped = phantasus.VectorTrack.RENDER[method];
         if (mapped !== undefined) {
           settings.render[mapped] = true;
         } else if (method === 'DISCRETE') {
@@ -36255,7 +36256,7 @@ morpheus.VectorTrack.prototype = {
           settings.highlightMatchingValues = true;
         } else if (method === 'STACKED_BAR') {
           settings.stackedBar = true;
-          settings.render[morpheus.VectorTrack.RENDER.BAR] = true;
+          settings.render[phantasus.VectorTrack.RENDER.BAR] = true;
         } else if (method === 'TOOLTIP') {
           settings.inlineTooltip = true;
         } else {
@@ -36271,7 +36272,7 @@ morpheus.VectorTrack.prototype = {
       if (conf.render) {
         for (var method in conf.render) {
           method = method.toUpperCase();
-          var mapped = morpheus.VectorTrack.RENDER[method];
+          var mapped = phantasus.VectorTrack.RENDER[method];
           if (mapped !== undefined) {
             this.settings.render[mapped] = true;
           }
@@ -36294,7 +36295,7 @@ morpheus.VectorTrack.prototype = {
     return this.settings.render[value];
   },
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     $(this.canvas).off();
     this._selection.dispose();
     this.project.off(this.events, this.updateSpanMapFunction);
@@ -36307,13 +36308,13 @@ morpheus.VectorTrack.prototype = {
     var vector = this.isColumns ? this.project.getSortedFilteredDataset()
       .getColumnMetadata().getByName(name) : this.project
       .getSortedFilteredDataset().getRowMetadata().getByName(name);
-    return !vector ? new morpheus.Vector(name, 0) : vector;
+    return !vector ? new phantasus.Vector(name, 0) : vector;
   },
   getFullVector: function () {
     var vector = this.isColumns ? this.project.getFullDataset()
       .getColumnMetadata().getByName(this.name) : this.project
       .getFullDataset().getRowMetadata().getByName(this.name);
-    return !vector ? new morpheus.Vector(this.name, 0) : vector;
+    return !vector ? new phantasus.Vector(this.name, 0) : vector;
   },
   _updatePreferredSize: function () {
     var size = this._computePreferredSize();
@@ -36324,11 +36325,11 @@ morpheus.VectorTrack.prototype = {
   _computePreferredSize: function (forPrint) {
     var width = 0;
     var height = 0;
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
       if (this.positions.getSize() >= 6) {
         var context = this.canvas.getContext('2d');
-        var textWidth = morpheus.CanvasUtil.getVectorStringWidth(
+        var textWidth = phantasus.CanvasUtil.getVectorStringWidth(
           context, this.getVector(), this.positions,
           forPrint ? -1 : (this.isColumns ? 120 : 100));
         if (!forPrint) {
@@ -36340,28 +36341,28 @@ morpheus.VectorTrack.prototype = {
         this.settings.maxTextWidth = 0; // text not drawn
       }
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
       width += this.settings.barSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
       width += this.settings.colorBarSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       width += this.settings.colorBarSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       width += 300;
     }
-    if (!forPrint && !this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (!forPrint && !this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       width = Math.min(300, width);
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)) {
       width += this.settings.arcSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       width += 100;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.HEAT_MAP)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.HEAT_MAP)) {
       width += 100;
     }
     // 2 pixel spacing between display types
@@ -36387,9 +36388,9 @@ morpheus.VectorTrack.prototype = {
     return this._computePreferredSize(true);
   },
   _createDiscreteValueMap: function () {
-    var values = morpheus.VectorUtil.getValues(this.getFullVector());
-    values.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
-    this.discreteValueMap = new morpheus.Map();
+    var values = phantasus.VectorUtil.getValues(this.getFullVector());
+    values.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
+    this.discreteValueMap = new phantasus.Map();
     for (var i = 0, length = values.length; i < length; i++) {
       this.discreteValueMap.set(values[i], i + 1);
     }
@@ -36398,10 +36399,10 @@ morpheus.VectorTrack.prototype = {
     this.settings.max = values.length;
   },
   _setChartMinMax: function () {
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       if (!this.settings.stackedBar && this.settings.discrete
-        && !this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+        && !this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
         if (!this.discreteValueMap) {
           this._createDiscreteValueMap();
         }
@@ -36410,7 +36411,7 @@ morpheus.VectorTrack.prototype = {
           || this.settings.mid == null) {
           var vector = this.getFullVector();
 
-          var minMax = morpheus.VectorUtil.getMinMax(vector);
+          var minMax = phantasus.VectorUtil.getMinMax(vector);
           var min = minMax.min;
           var max = minMax.max;
           if (this.settings.minMaxReversed) {
@@ -36436,35 +36437,35 @@ morpheus.VectorTrack.prototype = {
 
   _update: function () {
     if (!this.settings.discreteAutoDetermined
-      && (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || this
-        .isRenderAs(morpheus.VectorTrack.RENDER.BAR))) {
+      && (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || this
+        .isRenderAs(phantasus.VectorTrack.RENDER.BAR))) {
       if (this.getFullVector().getProperties().has(
-          morpheus.VectorKeys.FIELDS)
-        || morpheus.VectorUtil.getDataType(this.getFullVector()) === 'number' || morpheus.VectorUtil.getDataType(this.getFullVector()) === '[number]') {
+          phantasus.VectorKeys.FIELDS)
+        || phantasus.VectorUtil.getDataType(this.getFullVector()) === 'number' || phantasus.VectorUtil.getDataType(this.getFullVector()) === '[number]') {
         this.settings.discrete = false;
         this.settings.highlightMatchingValues = false;
       }
       this.settings.discreteAutoDetermined = true;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.project.off(this.events, this.updateSpanMapFunction);
     }
     this._setChartMinMax();
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.project.on(this.events, this.updateSpanMapFunction);
       if (!this.moleculeCache) {
         this.moleculeCache = {};
         var _this = this;
 
         var valueToModelIndices = this.getFullVector().getProperties()
-          .get(morpheus.VectorKeys.VALUE_TO_INDICES);
+          .get(phantasus.VectorKeys.VALUE_TO_INDICES);
         if (!valueToModelIndices) {
           var fullVector = this.getFullVector();
-          valueToModelIndices = morpheus.VectorUtil
+          valueToModelIndices = phantasus.VectorUtil
             .createValueToIndicesMap(fullVector);
           fullVector.getProperties().set(
-            morpheus.VectorKeys.VALUE_TO_INDICES,
+            phantasus.VectorKeys.VALUE_TO_INDICES,
             valueToModelIndices);
 
         }
@@ -36555,13 +36556,13 @@ morpheus.VectorTrack.prototype = {
       && this.heatmap.mousePositionOptions.name === viewVector
         .getName()) {
       var valueToModelIndices = this.getFullVector().getProperties().get(
-        morpheus.VectorKeys.VALUE_TO_INDICES);
+        phantasus.VectorKeys.VALUE_TO_INDICES);
       if (!valueToModelIndices) {
         var fullVector = this.getFullVector();
-        valueToModelIndices = morpheus.VectorUtil
+        valueToModelIndices = phantasus.VectorUtil
           .createValueToIndicesMap(fullVector);
         fullVector.getProperties().set(
-          morpheus.VectorKeys.VALUE_TO_INDICES,
+          phantasus.VectorKeys.VALUE_TO_INDICES,
           valueToModelIndices);
 
       }
@@ -36630,7 +36631,7 @@ morpheus.VectorTrack.prototype = {
       });
     } else {
       var width = this.getUnscaledWidth();
-      if (!this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+      if (!this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
         var viewIndices = project.getRowSelectionModel()
           .getViewIndices();
         viewIndices.forEach(function (i) {
@@ -36702,11 +36703,11 @@ morpheus.VectorTrack.prototype = {
     var height = clip.height;
     if (!settings.squished) {
       if (this.isColumns) {
-        start = morpheus.Positions.getLeft(clip, positions);
-        end = morpheus.Positions.getRight(clip, positions);
+        start = phantasus.Positions.getLeft(clip, positions);
+        end = phantasus.Positions.getRight(clip, positions);
       } else {
-        start = morpheus.Positions.getTop(clip, positions);
-        end = morpheus.Positions.getBottom(clip, positions);
+        start = phantasus.Positions.getTop(clip, positions);
+        end = phantasus.Positions.getBottom(clip, positions);
       }
     }
     if (settings.squished) {
@@ -36775,12 +36776,12 @@ morpheus.VectorTrack.prototype = {
       this._setChartMinMax();
     }
     context.textAlign = 'left';
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
 
     var fontSize = Math.min(24, positions.getSize() - 2);
     var size = 0;
-    context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
-    context.strokeStyle = morpheus.HeatMapElementCanvas.GRID_COLOR;
+    context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.strokeStyle = phantasus.HeatMapElementCanvas.GRID_COLOR;
     context.lineWidth = 0.1;
     // grid lines
     if (this.heatmap.heatmap.isDrawGrid() && !this.settings.squished) {
@@ -36797,7 +36798,7 @@ morpheus.VectorTrack.prototype = {
         }
         context.stroke();
       } else {
-        if (!this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+        if (!this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
           var gridSize = availableSpace;
           context.beginPath();
           for (var i = start; i < end; i++) {
@@ -36817,7 +36818,7 @@ morpheus.VectorTrack.prototype = {
     context.lineWidth = 1;
     var offset = 1;
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
       this.renderColor(context, vector, start, end, clip,
         this.isColumns ? availableSpace : 0,
         !this.settings.discrete);
@@ -36825,26 +36826,26 @@ morpheus.VectorTrack.prototype = {
       availableSpace -= offset;
     }
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       this.renderShape(context, vector, start, end, clip,
         this.isColumns ? availableSpace - offset : offset);
       offset += this.settings.colorBarSize + 2;
       availableSpace -= offset;
     }
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)) {
       this.renderArc(context, vector, start, end, clip,
         this.settings.arcSize);
       offset += this.settings.arcSize + 2;
       availableSpace -= offset;
     }
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.renderMolecule(context, vector, start, end, clip, offset,
         availableSpace);
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
         : this.settings.barSize;
       offset++;
       this.renderBoxPlot(context, vector, start, end, clip, offset,
@@ -36852,8 +36853,8 @@ morpheus.VectorTrack.prototype = {
       offset += barSize + 2;
       availableSpace -= offset;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.HEAT_MAP)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.HEAT_MAP)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
         : this.settings.barSize;
       offset++;
       this.renderHeatMap(context, vector, start, end, clip,
@@ -36862,19 +36863,19 @@ morpheus.VectorTrack.prototype = {
       availableSpace -= offset;
     }
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 1)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 1)
         : this.settings.barSize;
       if (this.settings.stackedBar) {
         this.renderStackedBar(context, vector, start, end, clip,
           offset, barSize);
       } else {
         var fields = vector.getProperties().get(
-          morpheus.VectorKeys.FIELDS);
+          phantasus.VectorKeys.FIELDS);
         var visibleFieldIndices = vector.getProperties().get(
-          morpheus.VectorKeys.VISIBLE_FIELDS);
+          phantasus.VectorKeys.VISIBLE_FIELDS);
         if (fields != null && visibleFieldIndices == null) {
-          visibleFieldIndices = morpheus.Util.seq(fields.length);
+          visibleFieldIndices = phantasus.Util.seq(fields.length);
         }
 
         if (fields != null) {
@@ -36890,8 +36891,8 @@ morpheus.VectorTrack.prototype = {
     }
 
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
       this.renderText(context, vector, true, start, end, clip, offset,
         this.isColumns ? fullAvailableSpace : 0);
       offset += this.settings.maxTextWidth + 2;
@@ -36899,10 +36900,10 @@ morpheus.VectorTrack.prototype = {
     }
     this.textWidth = 0;
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)) {
       this.textWidth = availableSpace;
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
-      var dataType = morpheus.VectorUtil.getDataType(vector);
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+      var dataType = phantasus.VectorUtil.getDataType(vector);
       if (dataType === 'url') {
         context.fillStyle = 'blue';
         this.canvas.style.cursor = 'pointer';
@@ -37031,15 +37032,15 @@ morpheus.VectorTrack.prototype = {
         disabled: !hasSelection
       });
     }
-    var dataType = morpheus.VectorUtil.getDataType(this.getFullVector());
+    var dataType = phantasus.VectorUtil.getDataType(this.getFullVector());
     var arrayFields = this.getFullVector().getProperties().get(
-      morpheus.VectorKeys.FIELDS);
+      phantasus.VectorKeys.FIELDS);
     var isArray = arrayFields !== undefined;
     var isNumber = dataType === 'number' || dataType === '[number]';
     if (isNumber || isArray) {
       sectionToItems.Display.push({
         name: DISPLAY_BAR,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
       });
     }
     if (isArray) {
@@ -37049,7 +37050,7 @@ morpheus.VectorTrack.prototype = {
       });
       sectionToItems.Display.push({
         name: DISPLAY_BOX_PLOT,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)
       });
       sectionToItems.Display.push({
         name: FIELDS,
@@ -37059,13 +37060,13 @@ morpheus.VectorTrack.prototype = {
     if (dataType !== 'url') {
       sectionToItems.Display.push({
         name: DISPLAY_TEXT,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
       });
       sectionToItems.Display.push({
         name: DISPLAY_COLOR,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
       });
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
         sectionToItems.Display.push({
           name: COLOR_BAR_SIZE
         });
@@ -37074,11 +37075,11 @@ morpheus.VectorTrack.prototype = {
     if (!isArray && dataType !== 'url') {
       sectionToItems.Display.push({
         name: DISPLAY_SHAPE,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)
       });
       // sectionToItems.Display.push({
       // name : DISPLAY_ARC,
-      // checked : this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)
+      // checked : this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)
       // });
 
     }
@@ -37087,7 +37088,7 @@ morpheus.VectorTrack.prototype = {
       && name.toLowerCase().indexOf('smile') !== -1) {
       sectionToItems.Display.push({
         name: DISPLAY_STRUCTURE,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)
       });
     }
 
@@ -37107,12 +37108,12 @@ morpheus.VectorTrack.prototype = {
         checked: this.settings.squished
       });
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       sectionToItems.Display.push({
         separator: true
       });
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
         sectionToItems.Display.push({
           name: 'Edit Bar Color...'
         });
@@ -37124,10 +37125,10 @@ morpheus.VectorTrack.prototype = {
         name: 'Custom Range...'
       });
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       sectionToItems.Display.push({
         separator: true
       });
@@ -37137,25 +37138,25 @@ morpheus.VectorTrack.prototype = {
           checked: !this.settings.discrete
         });
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
         || this
-          .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-        || (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR) && isArray)) {
+          .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+        || (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR) && isArray)) {
         sectionToItems.Display.push({
           name: 'Edit Colors...'
         });
 
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
         sectionToItems.Display.push({
           name: 'Edit Shapes...'
         });
 
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
         || this
-          .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-        || (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR) && isArray)) {
+          .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+        || (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR) && isArray)) {
         sectionToItems.Display.push({
           name: 'Color Key',
           icon: 'fa fa-key'
@@ -37163,7 +37164,7 @@ morpheus.VectorTrack.prototype = {
       }
 
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       sectionToItems.Display.push({
         name: 'Shape Key',
         icon: 'fa fa-key'
@@ -37218,7 +37219,7 @@ morpheus.VectorTrack.prototype = {
     if (items.length === 0) {
       return;
     }
-    morpheus.Popup
+    phantasus.Popup
       .showPopup(
         items,
         {
@@ -37235,7 +37236,7 @@ morpheus.VectorTrack.prototype = {
             var visibleFieldIndices = _this
               .getFullVector()
               .getProperties()
-              .get(morpheus.VectorKeys.VISIBLE_FIELDS);
+              .get(phantasus.VectorKeys.VISIBLE_FIELDS);
             var visibleFields;
             if (visibleFieldIndices == null) {
               visibleFields = arrayFields.slice(0);
@@ -37267,10 +37268,10 @@ morpheus.VectorTrack.prototype = {
                   visibleFields[i]));
             }
 
-            var list = new morpheus.DualList(leftOptions,
+            var list = new phantasus.DualList(leftOptions,
               rightOptions);
 
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Fields',
                 okCallback: function () {
@@ -37287,13 +37288,13 @@ morpheus.VectorTrack.prototype = {
                   fullVector
                     .getProperties()
                     .set(
-                      morpheus.VectorKeys.VISIBLE_FIELDS,
+                      phantasus.VectorKeys.VISIBLE_FIELDS,
                       visibleFieldIndices);
 
                   var summaryFunction = fullVector
                     .getProperties()
                     .get(
-                      morpheus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
+                      phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
                   if (summaryFunction) {
                     summaryFunction.indices = visibleFieldIndices;
                   }
@@ -37322,7 +37323,7 @@ morpheus.VectorTrack.prototype = {
                 content: list.$el
               });
           } else if (item === 'Edit Bar Color...') {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             formBuilder.append({
               name: 'bar_color',
               type: 'color',
@@ -37338,13 +37339,13 @@ morpheus.VectorTrack.prototype = {
                 _this.setInvalid(true);
                 _this.repaint();
               });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Bar Color',
               close: 'Close',
               html: formBuilder.$form
             });
           } else if (item === COLOR_BAR_SIZE) {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             formBuilder.append({
               name: 'size',
               type: 'text',
@@ -37363,7 +37364,7 @@ morpheus.VectorTrack.prototype = {
                   _this.repaint();
                 }
               });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Color Bar Size',
               close: 'Close',
               html: formBuilder.$form
@@ -37372,7 +37373,7 @@ morpheus.VectorTrack.prototype = {
             heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
             ' Selected Rows');
           } else if (item === DELETE) {
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Delete',
                 content: 'Are you sure you want to delete '
@@ -37385,7 +37386,7 @@ morpheus.VectorTrack.prototype = {
                     .getFullDataset()
                     .getRowMetadata();
                   metadata
-                    .remove(morpheus.MetadataUtil
+                    .remove(phantasus.MetadataUtil
                       .indexOf(
                         metadata,
                         _this.name));
@@ -37466,14 +37467,14 @@ morpheus.VectorTrack.prototype = {
             heatmap.getActionManager().execute(isColumns ? 'Move Selected Columns To Top' : 'Move' +
             ' Selected Rows To Top');
           } else if (item === SORT_ASC || item === SORT_DESC) {
-            var sortKey = new morpheus.SortKey(
+            var sortKey = new phantasus.SortKey(
               _this.name,
-              item === SORT_ASC ? morpheus.SortKey.SortOrder.ASCENDING
-                : morpheus.SortKey.SortOrder.DESCENDING);
+              item === SORT_ASC ? phantasus.SortKey.SortOrder.ASCENDING
+                : phantasus.SortKey.SortOrder.DESCENDING);
             if (_this.isColumns) {
               _this.project
                 .setColumnSortKeys(
-                  morpheus.SortKey
+                  phantasus.SortKey
                     .keepExistingSortKeys(
                       [sortKey],
                       project
@@ -37482,7 +37483,7 @@ morpheus.VectorTrack.prototype = {
             } else {
               _this.project
                 .setRowSortKeys(
-                  morpheus.SortKey
+                  phantasus.SortKey
                     .keepExistingSortKeys(
                       [sortKey],
                       project
@@ -37494,11 +37495,11 @@ morpheus.VectorTrack.prototype = {
             || item === SORT_SEL_TOP_N) {
             var sortOrder;
             if (item === SORT_SEL_ASC) {
-              sortOrder = morpheus.SortKey.SortOrder.ASCENDING;
+              sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
             } else if (item === SORT_SEL_DESC) {
-              sortOrder = morpheus.SortKey.SortOrder.DESCENDING;
+              sortOrder = phantasus.SortKey.SortOrder.DESCENDING;
             } else {
-              sortOrder = morpheus.SortKey.SortOrder.TOP_N;
+              sortOrder = phantasus.SortKey.SortOrder.TOP_N;
             }
             heatmap.sortBasedOnSelection(sortOrder,
               isColumns, e && e.shiftKey);
@@ -37511,7 +37512,7 @@ morpheus.VectorTrack.prototype = {
             _this._update();
             heatmap.revalidate();
           } else if (item === 'Custom Range...') {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             var items = [{
               name: 'min',
               required: true,
@@ -37531,7 +37532,7 @@ morpheus.VectorTrack.prototype = {
             _.each(items, function (item) {
               formBuilder.append(item);
             });
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Range',
                 content: formBuilder.$form,
@@ -37551,7 +37552,7 @@ morpheus.VectorTrack.prototype = {
             heatmap.revalidate();
           } else if (item === 'Color Key') {
 
-            var legend = new morpheus.HeatMapTrackColorLegend(
+            var legend = new phantasus.HeatMapTrackColorLegend(
               [_this], isColumns ? _this.project
                 .getColumnColorModel()
                 : _this.project
@@ -37560,12 +37561,12 @@ morpheus.VectorTrack.prototype = {
             legend.setBounds(size);
             legend.repaint();
 
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Color Key',
               html: legend.canvas
             });
           } else if (item === 'Shape Key') {
-            var legend = new morpheus.HeatMapTrackShapeLegend(
+            var legend = new phantasus.HeatMapTrackShapeLegend(
               [_this], isColumns ? _this.project
                 .getColumnShapeModel()
                 : _this.project
@@ -37574,16 +37575,16 @@ morpheus.VectorTrack.prototype = {
             legend.setBounds(size);
             legend.repaint();
 
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Shape Key',
               html: legend.canvas
             });
           } else if (item === 'Edit Shapes...') {
-            var shapeFormBuilder = new morpheus.FormBuilder();
+            var shapeFormBuilder = new phantasus.FormBuilder();
             var shapeModel = isColumns ? _this.project
               .getColumnShapeModel() : _this.project
               .getRowShapeModel();
-            var chooser = new morpheus.ShapeChooser({
+            var chooser = new phantasus.ShapeChooser({
               map: shapeModel.getMap(_this.name)
             });
 
@@ -37594,7 +37595,7 @@ morpheus.VectorTrack.prototype = {
               _this.setInvalid(true);
               _this.repaint();
             });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Edit Shapes',
               html: chooser.$div,
               close: 'Close'
@@ -37605,7 +37606,7 @@ morpheus.VectorTrack.prototype = {
               .getColumnColorModel() : _this.project
               .getRowColorModel();
             if (_this.settings.discrete) {
-              colorSchemeChooser = new morpheus.DiscreteColorSchemeChooser(
+              colorSchemeChooser = new phantasus.DiscreteColorSchemeChooser(
                 {
                   colorScheme: {
                     scale: colorModel
@@ -37621,7 +37622,7 @@ morpheus.VectorTrack.prototype = {
                 _this.repaint();
               });
             } else {
-              colorSchemeChooser = new morpheus.HeatMapColorSchemeChooser(
+              colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser(
                 {
                   showRelative: false,
                 });
@@ -37634,7 +37635,7 @@ morpheus.VectorTrack.prototype = {
                 _this.repaint();
               });
             }
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Edit Colors',
               html: colorSchemeChooser.$div,
               close: 'Close',
@@ -37696,21 +37697,21 @@ morpheus.VectorTrack.prototype = {
             heatmap.revalidate();
           } else {
             if (item === DISPLAY_BAR) {
-              item = morpheus.VectorTrack.RENDER.BAR;
+              item = phantasus.VectorTrack.RENDER.BAR;
             } else if (item === DISPLAY_COLOR) {
-              item = morpheus.VectorTrack.RENDER.COLOR;
+              item = phantasus.VectorTrack.RENDER.COLOR;
             } else if (item === DISPLAY_TEXT) {
-              item = morpheus.VectorTrack.RENDER.TEXT;
+              item = phantasus.VectorTrack.RENDER.TEXT;
             } else if (item === DISPLAY_TEXT_AND_COLOR) {
-              item = morpheus.VectorTrack.RENDER.TEXT_AND_COLOR;
+              item = phantasus.VectorTrack.RENDER.TEXT_AND_COLOR;
             } else if (item === DISPLAY_STRUCTURE) {
-              item = morpheus.VectorTrack.RENDER.MOLECULE;
+              item = phantasus.VectorTrack.RENDER.MOLECULE;
             } else if (item === DISPLAY_SHAPE) {
-              item = morpheus.VectorTrack.RENDER.SHAPE;
+              item = phantasus.VectorTrack.RENDER.SHAPE;
             } else if (item === DISPLAY_ARC) {
-              item = morpheus.VectorTrack.RENDER.ARC;
+              item = phantasus.VectorTrack.RENDER.ARC;
             } else if (item === DISPLAY_BOX_PLOT) {
-              item = morpheus.VectorTrack.RENDER.BOX_PLOT;
+              item = phantasus.VectorTrack.RENDER.BOX_PLOT;
             } else {
               console.log('Unknown item ' + item);
             }
@@ -37744,12 +37745,12 @@ morpheus.VectorTrack.prototype = {
     }
 
     if (vector.getProperties().get(
-        morpheus.VectorKeys.FIELDS) != null) {
+        phantasus.VectorKeys.FIELDS) != null) {
       var visibleFieldIndices = vector.getProperties().get(
-        morpheus.VectorKeys.VISIBLE_FIELDS);
+        phantasus.VectorKeys.VISIBLE_FIELDS);
       if (visibleFieldIndices == null) {
-        visibleFieldIndices = morpheus.Util.seq(vector.getProperties().get(
-          morpheus.VectorKeys.FIELDS).length);
+        visibleFieldIndices = phantasus.Util.seq(vector.getProperties().get(
+          phantasus.VectorKeys.FIELDS).length);
       }
       colorBarSize /= visibleFieldIndices.length;
       var nvisibleFieldIndices = visibleFieldIndices.length;
@@ -37830,7 +37831,7 @@ morpheus.VectorTrack.prototype = {
       var x = isColumns ? position + itemSize / 2 : offset + size2;
       var y = isColumns ? offset - size2 : position + itemSize / 2;
       size2 -= 0.5; // small border between cells
-      morpheus.CanvasUtil.drawShape(context, shape, x, y, size2);
+      phantasus.CanvasUtil.drawShape(context, shape, x, y, size2);
     }
     context.lineWidth = lineWidth;
   },
@@ -37957,7 +37958,7 @@ morpheus.VectorTrack.prototype = {
   renderMolecule: function (context, vector, start, end, clip, offset) {
     var isColumns = this.isColumns;
     var positions = this.positions;
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.strokeStyle = 'black';
     var width = this.getUnscaledWidth();
     var customUrlProvider = this.heatmap.options.structureUrlProvider !== undefined;
@@ -38061,7 +38062,7 @@ morpheus.VectorTrack.prototype = {
     context.translate(offset, 0);
     var scale = this.createChartScale(availableSpace);
     var visibleFieldIndices = vector.getProperties().get(
-      morpheus.VectorKeys.VISIBLE_FIELDS);
+      phantasus.VectorKeys.VISIBLE_FIELDS);
 
     var colorByVector = this.settings.colorByField != null ? this
       .getVector(this.settings.colorByField) : null;
@@ -38083,9 +38084,9 @@ morpheus.VectorTrack.prototype = {
         var lineHeight = Math.max(2, _itemSize - 8);
         var box = array.summary;
         if (box == null) {
-          var v = morpheus.VectorUtil.arrayAsVector(array);
-          box = morpheus
-            .BoxPlotItem(visibleFieldIndices != null ? new morpheus.SlicedVector(
+          var v = phantasus.VectorUtil.arrayAsVector(array);
+          box = phantasus
+            .BoxPlotItem(visibleFieldIndices != null ? new phantasus.SlicedVector(
               v, visibleFieldIndices)
               : v);
           array.summary = box;
@@ -38187,7 +38188,7 @@ morpheus.VectorTrack.prototype = {
         // 	positiveIndices.push(item.index);
         // });
         //
-        var positiveIndices = morpheus.Util.indexSortPairs(
+        var positiveIndices = phantasus.Util.indexSortPairs(
           positivePairs, false);
         for (var j = 0, length = positiveIndices.length; j < length; j++) {
           var index = positiveIndices[j];
@@ -38212,7 +38213,7 @@ morpheus.VectorTrack.prototype = {
             context.fill();
           }
         }
-        var negativeIndices = morpheus.Util.indexSortPairs(
+        var negativeIndices = phantasus.Util.indexSortPairs(
           negativePairs, true); // draw smaller (more negative)
         // values 1st
         for (var j = 0, length = negativeIndices.length; j < length; j++) {
@@ -38317,7 +38318,7 @@ morpheus.VectorTrack.prototype = {
     if (isColumns) {
       context.translate(clip.x, clip.y); // reset transform, needed for export to svg
     }
-    var toStringFunction = morpheus.VectorTrack.vectorToString(vector);
+    var toStringFunction = phantasus.VectorTrack.vectorToString(vector);
     for (var i = start; i < end; i++) {
       var size = this.positions.getItemSize(i);
       if (size < 6) {
@@ -38345,7 +38346,7 @@ morpheus.VectorTrack.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.VectorTrack, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.VectorTrack, phantasus.AbstractCanvas);
 
 /**
  * Performs clustering using pairwise average linking on the given distance
@@ -38354,7 +38355,7 @@ morpheus.Util.extend(morpheus.VectorTrack, morpheus.AbstractCanvas);
  * @return array of nodes. Each node object contains a left, right, and
  *         distance.
  */
-morpheus.AverageLinkage = function (nelements, distmatrix) {
+phantasus.AverageLinkage = function (nelements, distmatrix) {
   var j;
   var n;
   var clusterid;
@@ -38383,7 +38384,7 @@ morpheus.AverageLinkage = function (nelements, distmatrix) {
   var r = {};
   // result array contains array of int left, int right, float distance;
   for (n = nelements; n > 1; n--) {
-    morpheus.HCluster.findClosestPair(n, distmatrix, r);
+    phantasus.HCluster.findClosestPair(n, distmatrix, r);
     result[nelements - n] = {};
     result[nelements - n].distance = r.distance;
     var is = r.ip;
@@ -38424,7 +38425,7 @@ morpheus.AverageLinkage = function (nelements, distmatrix) {
   return result;
 };
 
-morpheus.CollapseDataset = function (dataset, collapseToFields,
+phantasus.CollapseDataset = function (dataset, collapseToFields,
                                      summarizeFunction, shallowCopy) {
   var vectors = [];
   for (var i = 0; i < collapseToFields.length; i++) {
@@ -38432,13 +38433,13 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
     if (!v) {
       throw collapseToFields[i]
       + ' not found. Available fields are '
-      + morpheus.MetadataUtil.getMetadataNames(dataset
+      + phantasus.MetadataUtil.getMetadataNames(dataset
         .getRowMetadata());
     }
     vectors.push(v);
   }
-  var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
-  var collapsedDataset = new morpheus.Dataset({
+  var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
+  var collapsedDataset = new phantasus.Dataset({
     name: dataset.getName(),
     rows: idToIndices.size(),
     columns: dataset.getColumnCount(),
@@ -38454,7 +38455,7 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
   if (shallowCopy) {
     collapsedDataset.setColumnMetadata(dataset.getColumnMetadata());
   } else {
-    morpheus.MetadataUtil.copy(dataset.getColumnMetadata(),
+    phantasus.MetadataUtil.copy(dataset.getColumnMetadata(),
       collapsedDataset.getColumnMetadata());
   }
   var nfields = collapseToFields.length;
@@ -38467,9 +38468,9 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
   idToIndices
     .forEach(function (rowIndices, key) {
       // collapse each column separately
-      var slice = morpheus.DatasetUtil.slicedView(dataset,
+      var slice = phantasus.DatasetUtil.slicedView(dataset,
         rowIndices, null);
-      var view = new morpheus.DatasetColumnView(slice);
+      var view = new phantasus.DatasetColumnView(slice);
       for (var series = 0; series < nseries; series++) {
         view.setSeriesIndex(series);
         for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
@@ -38489,7 +38490,7 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
   return collapsedDataset;
 };
 
-morpheus.CompleteLinkage = function (nelements, distmatrix) {
+phantasus.CompleteLinkage = function (nelements, distmatrix) {
   var j;
   var n;
   var clusterid = []; // new var[nelements];
@@ -38507,7 +38508,7 @@ morpheus.CompleteLinkage = function (nelements, distmatrix) {
   }
   var r = {};
   for (n = nelements; n > 1; n--) {
-    morpheus.HCluster.findClosestPair(n, distmatrix, r);
+    phantasus.HCluster.findClosestPair(n, distmatrix, r);
     result[nelements - n].distance = r.distance;
     var is = r.ip;
     var js = r.jp;
@@ -38536,11 +38537,11 @@ morpheus.CompleteLinkage = function (nelements, distmatrix) {
   return result;
 };
 
-morpheus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunction, linkageMethod) {
+phantasus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunction, linkageMethod) {
   var model = dataset.getRowMetadata();
-  var vectors = morpheus.MetadataUtil.getVectors(dataset.getRowMetadata(),
+  var vectors = phantasus.MetadataUtil.getVectors(dataset.getRowMetadata(),
     groupByFieldNames);
-  var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
+  var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
   var reorderedIndices = [];
   var offset = 0;
   var root = {
@@ -38557,19 +38558,19 @@ morpheus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunctio
   idToIndices
     .forEach(function (rowIndices, id) {
       var originalIndicesForGroup = idToIndices.get(id);
-      var subset = morpheus.DatasetUtil.slicedView(dataset,
+      var subset = phantasus.DatasetUtil.slicedView(dataset,
         originalIndicesForGroup, null);
       var hcl;
-      var distanceMatrix = morpheus.HCluster.computeDistanceMatrix(
+      var distanceMatrix = phantasus.HCluster.computeDistanceMatrix(
         subset, distanceFunction);
-      hcl = new morpheus.HCluster(distanceMatrix, linkageMethod);
+      hcl = new phantasus.HCluster(distanceMatrix, linkageMethod);
       var reorderedGroupIndices = hcl.reorderedIndices;
       for (var i = 0, rows = subset.getRowCount(); i < rows; i++) {
         var originalIndex = originalIndicesForGroup[reorderedGroupIndices[i]];
         reorderedIndices.push(originalIndex);
       }
 
-      morpheus.DendrogramUtil.dfs(hcl.tree.rootNode, function (node) {
+      phantasus.DendrogramUtil.dfs(hcl.tree.rootNode, function (node) {
         node.index += offset;
         node.minIndex += offset;
         node.maxIndex += offset;
@@ -38603,7 +38604,7 @@ morpheus.HClusterGroupBy = function (dataset, groupByFieldNames, distanceFunctio
  * @param linkageAlgorithm {Function}
  * @constructor
  */
-morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
+phantasus.HCluster = function (distmatrix, linkageAlgorithm) {
   var nelements = distmatrix.length;
   var nNodes = nelements - 1;
   if (nNodes === -1) {
@@ -38678,7 +38679,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
     nodeorder[i] = (counts1 * order1 + counts2 * order2)
       / (counts1 + counts2);
   }
-  var reorderedIndices = morpheus.HCluster.treeSort(nNodes, order, nodeorder,
+  var reorderedIndices = phantasus.HCluster.treeSort(nNodes, order, nodeorder,
     nodecounts, tree);
   var idToIndex = {};
   for (var i = 0, length = reorderedIndices.length; i < length; i++) {
@@ -38734,7 +38735,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
     leafNodes.push(leaf);
   }
 
-  morpheus.DendrogramUtil.setNodeDepths(node);
+  phantasus.DendrogramUtil.setNodeDepths(node);
 
   this.tree = {
     maxHeight: node.height,
@@ -38755,7 +38756,7 @@ morpheus.HCluster = function (distmatrix, linkageAlgorithm) {
  * 
  * @return The first and second indices of the pair with the shortest distance.
  */
-morpheus.HCluster.findClosestPair = function (n, distmatrix, r) {
+phantasus.HCluster.findClosestPair = function (n, distmatrix, r) {
   var i, j;
   var temp;
   var distance = distmatrix[1][0];
@@ -38786,7 +38787,7 @@ morpheus.HCluster.findClosestPair = function (n, distmatrix, r) {
  *            matrix.
  * @return the distance matrix
  */
-morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
+phantasus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
   /* Set up the ragged array */
   var matrix = [];
   var n = dataset.getRowCount();
@@ -38807,8 +38808,8 @@ morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
       }
     }
   } else {
-    var list1 = new morpheus.DatasetRowView(dataset);
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list1 = new phantasus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     /* Calculate the distances and save them in the ragged array */
     for (var i = 1; i < n; i++) {
       list1.setIndex(i);
@@ -38820,7 +38821,7 @@ morpheus.HCluster.computeDistanceMatrix = function (dataset, distanceFunction) {
 
   return matrix;
 };
-morpheus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
+phantasus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
                                        tree) {
   var nElements = nNodes + 1;
   var i;
@@ -38873,7 +38874,7 @@ morpheus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
       }
     }
   }
-  return morpheus.Util.indexSort(neworder, true);
+  return phantasus.Util.indexSort(neworder, true);
 };
 
 /**
@@ -38890,10 +38891,10 @@ morpheus.HCluster.treeSort = function (nNodes, order, nodeorder, nodecounts,
  * @param maxIterations The maximum number of iterations
  * @constructor
  */
-morpheus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction) {
+phantasus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction) {
 
   var distance = function (points1, points2) {
-    return distanceFunction(morpheus.VectorUtil.arrayAsVector(points1.getPoint()), morpheus.VectorUtil.arrayAsVector(points2.getPoint()));
+    return distanceFunction(phantasus.VectorUtil.arrayAsVector(points1.getPoint()), phantasus.VectorUtil.arrayAsVector(points2.getPoint()));
   };
 
   function nextInt(upperBound) {
@@ -39141,7 +39142,7 @@ morpheus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction)
           distances[i] = distance(points[i], center);
         }
 
-        var variance = morpheus.Variance(morpheus.VectorUtil.arrayAsVector(distances));
+        var variance = phantasus.Variance(phantasus.VectorUtil.arrayAsVector(distances));
         // select the cluster with the largest variance
         if (variance > maxVariance) {
           maxVariance = variance;
@@ -39257,27 +39258,27 @@ morpheus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction)
   this.cluster = cluster;
 };
 
-morpheus.PermutationPValues = function (dataset, aIndices, bIndices,
+phantasus.PermutationPValues = function (dataset, aIndices, bIndices,
                                         numPermutations, f) {
   var numRows = dataset.getRowCount();
   /** unpermuted scores */
   var scores = new Float32Array(numRows);
   /** Whether to smooth p values */
   var smoothPValues = true;
-  var list1 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+  var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
     dataset, null, aIndices));
-  var list2 = new morpheus.DatasetRowView(new morpheus.SlicedDatasetView(
+  var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
     dataset, null, bIndices));
 
   for (var i = 0; i < numRows; i++) {
     scores[i] = f(list1.setIndex(i), list2.setIndex(i));
   }
-  dataset = new morpheus.SlicedDatasetView(dataset, null, aIndices
+  dataset = new phantasus.SlicedDatasetView(dataset, null, aIndices
     .concat(bIndices));
   var rowSpecificPValues = new Float32Array(numRows);
-  var permuter = new morpheus.UnbalancedPermuter(aIndices.length,
+  var permuter = new phantasus.UnbalancedPermuter(aIndices.length,
     bIndices.length);
-  var permutationScore = new morpheus.TwoClassPermutationScore();
+  var permutationScore = new phantasus.TwoClassPermutationScore();
   permutationScore.init(dataset, f);
   for (var permutationIndex = 0; permutationIndex < numPermutations; permutationIndex++) {
     permutationScore.setPermutation(permuter.next());
@@ -39330,16 +39331,16 @@ morpheus.PermutationPValues = function (dataset, aIndices, bIndices,
   }
   this.rowSpecificPValues = rowSpecificPValues;
   this.k = kArray;
-  this.fdr = morpheus.FDR_BH(rowSpecificPValues);
+  this.fdr = phantasus.FDR_BH(rowSpecificPValues);
   this.scores = scores;
 };
-morpheus.PermutationPValues.prototype = {
+phantasus.PermutationPValues.prototype = {
   getBonferroni: function (index) {
     return Math.min(this.rowSpecificPValues[index] * this.numRows, 1);
   }
 };
 
-morpheus.UnbalancedPermuter = function (numClassZero, numClassOne) {
+phantasus.UnbalancedPermuter = function (numClassZero, numClassOne) {
   var assignments = new Uint32Array(numClassZero + numClassOne);
   var indices = new Uint32Array(numClassZero + numClassOne);
   for (var i = 0; i < indices.length; i++) {
@@ -39375,12 +39376,12 @@ morpheus.UnbalancedPermuter = function (numClassZero, numClassOne) {
   };
 };
 
-morpheus.TwoClassPermutationScore = function () {
+phantasus.TwoClassPermutationScore = function () {
   this.classZeroView = null;
   this.classOneView = null;
 
 };
-morpheus.TwoClassPermutationScore.prototype = {
+phantasus.TwoClassPermutationScore.prototype = {
   getScore: function (index) {
     this.classZeroView.setIndex(index);
     this.classOneView.setIndex(index);
@@ -39388,8 +39389,8 @@ morpheus.TwoClassPermutationScore.prototype = {
   },
   init: function (dataset, f) {
     this.dataset = dataset;
-    this.classZeroView = new morpheus.DatasetRowView(dataset);
-    this.classOneView = new morpheus.DatasetRowView(dataset);
+    this.classZeroView = new phantasus.DatasetRowView(dataset);
+    this.classOneView = new phantasus.DatasetRowView(dataset);
     this.f = f;
   },
   setPermutation: function (permutedAssignments) {
@@ -39403,16 +39404,16 @@ morpheus.TwoClassPermutationScore.prototype = {
       }
     }
 
-    this.classZeroView.setDataset(new morpheus.SlicedDatasetView(
+    this.classZeroView.setDataset(new phantasus.SlicedDatasetView(
       this.dataset, null, zeroIndices));
-    this.classOneView.setDataset(new morpheus.SlicedDatasetView(
+    this.classOneView.setDataset(new phantasus.SlicedDatasetView(
       this.dataset, null, oneIndices));
 
   }
 
 };
 
-morpheus.Ranking = function (values) {
+phantasus.Ranking = function (values) {
   var ranks = [];
   for (var i = 0, length = values.length; i < length; i++) {
     ranks.push({
@@ -39437,7 +39438,7 @@ morpheus.Ranking = function (values) {
       // tie sequence has ended (or had length 1)
       pos = i + 1;
       if (tiesTrace.length > 1) { // if seq is nontrivial, resolve
-        morpheus.Ranking.fillAverage(out, tiesTrace);
+        phantasus.Ranking.fillAverage(out, tiesTrace);
       }
       tiesTrace = [];
       tiesTrace.push(ranks[i].position);
@@ -39448,23 +39449,23 @@ morpheus.Ranking = function (values) {
     out[ranks[i].position] = pos;
   }
   if (tiesTrace.length > 1) { // handle tie sequence at end
-    morpheus.Ranking.fillAverage(out, tiesTrace);
+    phantasus.Ranking.fillAverage(out, tiesTrace);
   }
   return out;
 };
-morpheus.Ranking.fill = function (data, tiesTrace, value) {
+phantasus.Ranking.fill = function (data, tiesTrace, value) {
   for (var i = 0, length = tiesTrace.length; i < length; i++) {
     data[tiesTrace[i]] = value;
   }
 };
-morpheus.Ranking.fillAverage = function (ranks, tiesTrace) {
+phantasus.Ranking.fillAverage = function (ranks, tiesTrace) {
   var c = ranks[tiesTrace[0]];
   // length of sequence of tied ranks
   var length = tiesTrace.length;
-  morpheus.Ranking.fill(ranks, tiesTrace, (2 * c + length - 1) / 2);
+  phantasus.Ranking.fill(ranks, tiesTrace, (2 * c + length - 1) / 2);
 };
 
-morpheus.SingleLinkage = function (nelements, distmatrix) {
+phantasus.SingleLinkage = function (nelements, distmatrix) {
   var i, j, k;
   var nnodes = nelements - 1;
   var temp = []; // var[nnodes];

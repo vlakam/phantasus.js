@@ -1,8 +1,8 @@
-morpheus.DatasetSeriesView = function (dataset, seriesIndices) {
-  morpheus.DatasetAdapter.call(this, dataset);
+phantasus.DatasetSeriesView = function (dataset, seriesIndices) {
+  phantasus.DatasetAdapter.call(this, dataset);
   this.seriesIndices = seriesIndices;
 };
-morpheus.DatasetSeriesView.prototype = {
+phantasus.DatasetSeriesView.prototype = {
   getValue: function (i, j, seriesIndex) {
     seriesIndex = seriesIndex || 0;
     return this.dataset.getValue(i, j, this.seriesIndices[seriesIndex]);
@@ -31,4 +31,4 @@ morpheus.DatasetSeriesView.prototype = {
     return this.getName();
   }
 };
-morpheus.Util.extend(morpheus.DatasetSeriesView, morpheus.DatasetAdapter);
+phantasus.Util.extend(phantasus.DatasetSeriesView, phantasus.DatasetAdapter);

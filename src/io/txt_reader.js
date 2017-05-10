@@ -4,25 +4,25 @@
  * @param options.dataColumnStart
  * @constructor
  */
-morpheus.TxtReader = function (options) {
+phantasus.TxtReader = function (options) {
   if (options == null) {
     options = {};
   }
   this.options = options;
 };
-morpheus.TxtReader.prototype = {
+phantasus.TxtReader.prototype = {
   read: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
                                                                    arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         try {
           callback(null, _this._read(name,
-            new morpheus.ArrayBufferReader(new Uint8Array(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               arrayBuffer))));
         }
         catch (x) {
@@ -76,7 +76,7 @@ morpheus.TxtReader.prototype = {
       var tokens = testLine.split(tab);
       for (var j = 0; j < dataColumnStart; j++) {
         // row metadata
-        arrayOfRowArrays[j].push(morpheus.Util.copyString(tokens[j]));
+        arrayOfRowArrays[j].push(phantasus.Util.copyString(tokens[j]));
       }
       for (var j = dataColumnStart, k = 0; k < ncols; j++, k++) {
         var token = tokens[j];
@@ -91,7 +91,7 @@ morpheus.TxtReader.prototype = {
         var tokens = s.split(tab);
         for (var j = 0; j < dataColumnStart; j++) {
           // row metadata
-          arrayOfRowArrays[j].push(morpheus.Util.copyString(tokens[j]));
+          arrayOfRowArrays[j].push(phantasus.Util.copyString(tokens[j]));
         }
         for (var j = dataColumnStart, k = 0; k < ncols; j++, k++) {
           var token = tokens[j];
@@ -99,7 +99,7 @@ morpheus.TxtReader.prototype = {
         }
       }
     }
-    var dataset = new morpheus.Dataset({
+    var dataset = new phantasus.Dataset({
       name: datasetName,
       rows: matrix.length,
       columns: ncols,
@@ -109,7 +109,7 @@ morpheus.TxtReader.prototype = {
 
     var columnIds = dataset.getColumnMetadata().add('id');
     for (var i = 0, j = dataColumnStart; i < ncols; i++, j++) {
-      columnIds.setValue(i, morpheus.Util.copyString(header[j]));
+      columnIds.setValue(i, phantasus.Util.copyString(header[j]));
     }
     var rowIdVector = dataset.getRowMetadata().add('id');
     rowIdVector.array = arrayOfRowArrays[0];

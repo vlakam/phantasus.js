@@ -1,5 +1,5 @@
-morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
-  morpheus.AbstractCanvas.call(this, true);
+phantasus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
+  phantasus.AbstractCanvas.call(this, true);
   this.preferredSize = {
     width: 0,
     height: 0
@@ -15,7 +15,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
   this.id = _.uniqueId();
   var _this = this;
   this.updateSpanMapFunction = function () {
-    _this.spanMap = morpheus.VectorUtil.createSpanMap(_this.getVector());
+    _this.spanMap = phantasus.VectorUtil.createSpanMap(_this.getVector());
   };
 
   this.lastPosition = {
@@ -33,10 +33,10 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
       var vector = _this.getVector();
       var val = vector.getValue(index);
       if (val != null && val !== '') {
-        var toString = morpheus.VectorTrack.vectorToString(vector);
+        var toString = phantasus.VectorTrack.vectorToString(vector);
         var fontSize = Math.min(24, _this.positions.getSize() - 2);
         var context = _this.canvas.getContext('2d');
-        context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
+        context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
         return context.measureText(toString(val)).width > this.textWidth;
       }
     }
@@ -44,7 +44,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
   var mouseMoved = function (event) {
     var index = -1;
     if (event.type !== 'mouseout') {
-      var position = morpheus.CanvasUtil.getMousePosWithScroll(
+      var position = phantasus.CanvasUtil.getMousePosWithScroll(
         event.target, event, heatmap.scrollLeft(), heatmap
           .scrollTop());
       if (_this.settings.squished) {
@@ -74,7 +74,7 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
     }
   };
 
-  $(this.canvas).on('contextmenu.morpheus', function (e) {
+  $(this.canvas).on('contextmenu.phantasus', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -111,9 +111,9 @@ morpheus.VectorTrack = function (project, name, positions, isColumns, heatmap) {
     minMaxReversed: false
     // whether to reverse min and max when auto-setting min and max
   };
-  $(this.canvas).on('mousemove.morpheus mouseout.morpheus', mouseMoved);
+  $(this.canvas).on('mousemove.phantasus mouseout.phantasus', mouseMoved);
 };
-morpheus.VectorTrack.RENDER = {
+phantasus.VectorTrack.RENDER = {
   TEXT: 'text',
   COLOR: 'color',
   BAR: 'bar',
@@ -124,19 +124,19 @@ morpheus.VectorTrack.RENDER = {
   BOX_PLOT: 'box_plot',
   HEAT_MAP: 'heat_map'
 };
-morpheus.VectorTrack.vectorToString = function (vector) {
+phantasus.VectorTrack.vectorToString = function (vector) {
   var formatter = function (v) {
     return '' + v;
   };
-  var dataType = morpheus.VectorUtil.getDataType(vector);
+  var dataType = phantasus.VectorUtil.getDataType(vector);
   if (dataType === 'number') {
-    formatter = morpheus.Util.nf;
+    formatter = phantasus.Util.nf;
   } else if (dataType === '[number]') {
     formatter = function (v) {
       var s = [];
       if (v != null) {
         for (var i = 0, arrayLength = v.length; i < arrayLength; i++) {
-          s.push(morpheus.Util.nf(v[i]));
+          s.push(phantasus.Util.nf(v[i]));
         }
       }
       return s.join(', ');
@@ -155,7 +155,7 @@ morpheus.VectorTrack.vectorToString = function (vector) {
   return formatter;
 };
 
-morpheus.VectorTrack.prototype = {
+phantasus.VectorTrack.prototype = {
   settingFromConfig: function (conf) {
     var settings = this.settings;
     if (_.isString(conf)) {
@@ -164,7 +164,7 @@ morpheus.VectorTrack.prototype = {
       for (var i = 0, length = tokens.length; i < length; i++) {
         var method = $.trim(tokens[i]);
         method = method.toUpperCase();
-        var mapped = morpheus.VectorTrack.RENDER[method];
+        var mapped = phantasus.VectorTrack.RENDER[method];
         if (mapped !== undefined) {
           settings.render[mapped] = true;
         } else if (method === 'DISCRETE') {
@@ -177,7 +177,7 @@ morpheus.VectorTrack.prototype = {
           settings.highlightMatchingValues = true;
         } else if (method === 'STACKED_BAR') {
           settings.stackedBar = true;
-          settings.render[morpheus.VectorTrack.RENDER.BAR] = true;
+          settings.render[phantasus.VectorTrack.RENDER.BAR] = true;
         } else if (method === 'TOOLTIP') {
           settings.inlineTooltip = true;
         } else {
@@ -193,7 +193,7 @@ morpheus.VectorTrack.prototype = {
       if (conf.render) {
         for (var method in conf.render) {
           method = method.toUpperCase();
-          var mapped = morpheus.VectorTrack.RENDER[method];
+          var mapped = phantasus.VectorTrack.RENDER[method];
           if (mapped !== undefined) {
             this.settings.render[mapped] = true;
           }
@@ -216,7 +216,7 @@ morpheus.VectorTrack.prototype = {
     return this.settings.render[value];
   },
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     $(this.canvas).off();
     this._selection.dispose();
     this.project.off(this.events, this.updateSpanMapFunction);
@@ -229,13 +229,13 @@ morpheus.VectorTrack.prototype = {
     var vector = this.isColumns ? this.project.getSortedFilteredDataset()
       .getColumnMetadata().getByName(name) : this.project
       .getSortedFilteredDataset().getRowMetadata().getByName(name);
-    return !vector ? new morpheus.Vector(name, 0) : vector;
+    return !vector ? new phantasus.Vector(name, 0) : vector;
   },
   getFullVector: function () {
     var vector = this.isColumns ? this.project.getFullDataset()
       .getColumnMetadata().getByName(this.name) : this.project
       .getFullDataset().getRowMetadata().getByName(this.name);
-    return !vector ? new morpheus.Vector(this.name, 0) : vector;
+    return !vector ? new phantasus.Vector(this.name, 0) : vector;
   },
   _updatePreferredSize: function () {
     var size = this._computePreferredSize();
@@ -246,11 +246,11 @@ morpheus.VectorTrack.prototype = {
   _computePreferredSize: function (forPrint) {
     var width = 0;
     var height = 0;
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
       if (this.positions.getSize() >= 6) {
         var context = this.canvas.getContext('2d');
-        var textWidth = morpheus.CanvasUtil.getVectorStringWidth(
+        var textWidth = phantasus.CanvasUtil.getVectorStringWidth(
           context, this.getVector(), this.positions,
           forPrint ? -1 : (this.isColumns ? 120 : 100));
         if (!forPrint) {
@@ -262,28 +262,28 @@ morpheus.VectorTrack.prototype = {
         this.settings.maxTextWidth = 0; // text not drawn
       }
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
       width += this.settings.barSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
       width += this.settings.colorBarSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       width += this.settings.colorBarSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       width += 300;
     }
-    if (!forPrint && !this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (!forPrint && !this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       width = Math.min(300, width);
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)) {
       width += this.settings.arcSize;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       width += 100;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.HEAT_MAP)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.HEAT_MAP)) {
       width += 100;
     }
     // 2 pixel spacing between display types
@@ -309,9 +309,9 @@ morpheus.VectorTrack.prototype = {
     return this._computePreferredSize(true);
   },
   _createDiscreteValueMap: function () {
-    var values = morpheus.VectorUtil.getValues(this.getFullVector());
-    values.sort(morpheus.SortKey.ASCENDING_COMPARATOR);
-    this.discreteValueMap = new morpheus.Map();
+    var values = phantasus.VectorUtil.getValues(this.getFullVector());
+    values.sort(phantasus.SortKey.ASCENDING_COMPARATOR);
+    this.discreteValueMap = new phantasus.Map();
     for (var i = 0, length = values.length; i < length; i++) {
       this.discreteValueMap.set(values[i], i + 1);
     }
@@ -320,10 +320,10 @@ morpheus.VectorTrack.prototype = {
     this.settings.max = values.length;
   },
   _setChartMinMax: function () {
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       if (!this.settings.stackedBar && this.settings.discrete
-        && !this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+        && !this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
         if (!this.discreteValueMap) {
           this._createDiscreteValueMap();
         }
@@ -332,7 +332,7 @@ morpheus.VectorTrack.prototype = {
           || this.settings.mid == null) {
           var vector = this.getFullVector();
 
-          var minMax = morpheus.VectorUtil.getMinMax(vector);
+          var minMax = phantasus.VectorUtil.getMinMax(vector);
           var min = minMax.min;
           var max = minMax.max;
           if (this.settings.minMaxReversed) {
@@ -358,35 +358,35 @@ morpheus.VectorTrack.prototype = {
 
   _update: function () {
     if (!this.settings.discreteAutoDetermined
-      && (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR) || this
-        .isRenderAs(morpheus.VectorTrack.RENDER.BAR))) {
+      && (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || this
+        .isRenderAs(phantasus.VectorTrack.RENDER.BAR))) {
       if (this.getFullVector().getProperties().has(
-          morpheus.VectorKeys.FIELDS)
-        || morpheus.VectorUtil.getDataType(this.getFullVector()) === 'number' || morpheus.VectorUtil.getDataType(this.getFullVector()) === '[number]') {
+          phantasus.VectorKeys.FIELDS)
+        || phantasus.VectorUtil.getDataType(this.getFullVector()) === 'number' || phantasus.VectorUtil.getDataType(this.getFullVector()) === '[number]') {
         this.settings.discrete = false;
         this.settings.highlightMatchingValues = false;
       }
       this.settings.discreteAutoDetermined = true;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.project.off(this.events, this.updateSpanMapFunction);
     }
     this._setChartMinMax();
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.project.on(this.events, this.updateSpanMapFunction);
       if (!this.moleculeCache) {
         this.moleculeCache = {};
         var _this = this;
 
         var valueToModelIndices = this.getFullVector().getProperties()
-          .get(morpheus.VectorKeys.VALUE_TO_INDICES);
+          .get(phantasus.VectorKeys.VALUE_TO_INDICES);
         if (!valueToModelIndices) {
           var fullVector = this.getFullVector();
-          valueToModelIndices = morpheus.VectorUtil
+          valueToModelIndices = phantasus.VectorUtil
             .createValueToIndicesMap(fullVector);
           fullVector.getProperties().set(
-            morpheus.VectorKeys.VALUE_TO_INDICES,
+            phantasus.VectorKeys.VALUE_TO_INDICES,
             valueToModelIndices);
 
         }
@@ -477,13 +477,13 @@ morpheus.VectorTrack.prototype = {
       && this.heatmap.mousePositionOptions.name === viewVector
         .getName()) {
       var valueToModelIndices = this.getFullVector().getProperties().get(
-        morpheus.VectorKeys.VALUE_TO_INDICES);
+        phantasus.VectorKeys.VALUE_TO_INDICES);
       if (!valueToModelIndices) {
         var fullVector = this.getFullVector();
-        valueToModelIndices = morpheus.VectorUtil
+        valueToModelIndices = phantasus.VectorUtil
           .createValueToIndicesMap(fullVector);
         fullVector.getProperties().set(
-          morpheus.VectorKeys.VALUE_TO_INDICES,
+          phantasus.VectorKeys.VALUE_TO_INDICES,
           valueToModelIndices);
 
       }
@@ -552,7 +552,7 @@ morpheus.VectorTrack.prototype = {
       });
     } else {
       var width = this.getUnscaledWidth();
-      if (!this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+      if (!this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
         var viewIndices = project.getRowSelectionModel()
           .getViewIndices();
         viewIndices.forEach(function (i) {
@@ -624,11 +624,11 @@ morpheus.VectorTrack.prototype = {
     var height = clip.height;
     if (!settings.squished) {
       if (this.isColumns) {
-        start = morpheus.Positions.getLeft(clip, positions);
-        end = morpheus.Positions.getRight(clip, positions);
+        start = phantasus.Positions.getLeft(clip, positions);
+        end = phantasus.Positions.getRight(clip, positions);
       } else {
-        start = morpheus.Positions.getTop(clip, positions);
-        end = morpheus.Positions.getBottom(clip, positions);
+        start = phantasus.Positions.getTop(clip, positions);
+        end = phantasus.Positions.getBottom(clip, positions);
       }
     }
     if (settings.squished) {
@@ -697,12 +697,12 @@ morpheus.VectorTrack.prototype = {
       this._setChartMinMax();
     }
     context.textAlign = 'left';
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
 
     var fontSize = Math.min(24, positions.getSize() - 2);
     var size = 0;
-    context.font = fontSize + 'px ' + morpheus.CanvasUtil.FONT_NAME;
-    context.strokeStyle = morpheus.HeatMapElementCanvas.GRID_COLOR;
+    context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.strokeStyle = phantasus.HeatMapElementCanvas.GRID_COLOR;
     context.lineWidth = 0.1;
     // grid lines
     if (this.heatmap.heatmap.isDrawGrid() && !this.settings.squished) {
@@ -719,7 +719,7 @@ morpheus.VectorTrack.prototype = {
         }
         context.stroke();
       } else {
-        if (!this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+        if (!this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
           var gridSize = availableSpace;
           context.beginPath();
           for (var i = start; i < end; i++) {
@@ -739,7 +739,7 @@ morpheus.VectorTrack.prototype = {
     context.lineWidth = 1;
     var offset = 1;
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
       this.renderColor(context, vector, start, end, clip,
         this.isColumns ? availableSpace : 0,
         !this.settings.discrete);
@@ -747,26 +747,26 @@ morpheus.VectorTrack.prototype = {
       availableSpace -= offset;
     }
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       this.renderShape(context, vector, start, end, clip,
         this.isColumns ? availableSpace - offset : offset);
       offset += this.settings.colorBarSize + 2;
       availableSpace -= offset;
     }
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)) {
       this.renderArc(context, vector, start, end, clip,
         this.settings.arcSize);
       offset += this.settings.arcSize + 2;
       availableSpace -= offset;
     }
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)) {
       this.renderMolecule(context, vector, start, end, clip, offset,
         availableSpace);
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
         : this.settings.barSize;
       offset++;
       this.renderBoxPlot(context, vector, start, end, clip, offset,
@@ -774,8 +774,8 @@ morpheus.VectorTrack.prototype = {
       offset += barSize + 2;
       availableSpace -= offset;
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.HEAT_MAP)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.HEAT_MAP)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 2)
         : this.settings.barSize;
       offset++;
       this.renderHeatMap(context, vector, start, end, clip,
@@ -784,19 +784,19 @@ morpheus.VectorTrack.prototype = {
       availableSpace -= offset;
     }
 
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
-      var barSize = !this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT) ? (availableSpace - 1)
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
+      var barSize = !this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) ? (availableSpace - 1)
         : this.settings.barSize;
       if (this.settings.stackedBar) {
         this.renderStackedBar(context, vector, start, end, clip,
           offset, barSize);
       } else {
         var fields = vector.getProperties().get(
-          morpheus.VectorKeys.FIELDS);
+          phantasus.VectorKeys.FIELDS);
         var visibleFieldIndices = vector.getProperties().get(
-          morpheus.VectorKeys.VISIBLE_FIELDS);
+          phantasus.VectorKeys.VISIBLE_FIELDS);
         if (fields != null && visibleFieldIndices == null) {
-          visibleFieldIndices = morpheus.Util.seq(fields.length);
+          visibleFieldIndices = phantasus.Util.seq(fields.length);
         }
 
         if (fields != null) {
@@ -812,8 +812,8 @@ morpheus.VectorTrack.prototype = {
     }
 
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
       this.renderText(context, vector, true, start, end, clip, offset,
         this.isColumns ? fullAvailableSpace : 0);
       offset += this.settings.maxTextWidth + 2;
@@ -821,10 +821,10 @@ morpheus.VectorTrack.prototype = {
     }
     this.textWidth = 0;
     if (!this.settings.squished
-      && this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)) {
+      && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)) {
       this.textWidth = availableSpace;
-      context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
-      var dataType = morpheus.VectorUtil.getDataType(vector);
+      context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+      var dataType = phantasus.VectorUtil.getDataType(vector);
       if (dataType === 'url') {
         context.fillStyle = 'blue';
         this.canvas.style.cursor = 'pointer';
@@ -953,15 +953,15 @@ morpheus.VectorTrack.prototype = {
         disabled: !hasSelection
       });
     }
-    var dataType = morpheus.VectorUtil.getDataType(this.getFullVector());
+    var dataType = phantasus.VectorUtil.getDataType(this.getFullVector());
     var arrayFields = this.getFullVector().getProperties().get(
-      morpheus.VectorKeys.FIELDS);
+      phantasus.VectorKeys.FIELDS);
     var isArray = arrayFields !== undefined;
     var isNumber = dataType === 'number' || dataType === '[number]';
     if (isNumber || isArray) {
       sectionToItems.Display.push({
         name: DISPLAY_BAR,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
       });
     }
     if (isArray) {
@@ -971,7 +971,7 @@ morpheus.VectorTrack.prototype = {
       });
       sectionToItems.Display.push({
         name: DISPLAY_BOX_PLOT,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)
       });
       sectionToItems.Display.push({
         name: FIELDS,
@@ -981,13 +981,13 @@ morpheus.VectorTrack.prototype = {
     if (dataType !== 'url') {
       sectionToItems.Display.push({
         name: DISPLAY_TEXT,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)
       });
       sectionToItems.Display.push({
         name: DISPLAY_COLOR,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
       });
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
         sectionToItems.Display.push({
           name: COLOR_BAR_SIZE
         });
@@ -996,11 +996,11 @@ morpheus.VectorTrack.prototype = {
     if (!isArray && dataType !== 'url') {
       sectionToItems.Display.push({
         name: DISPLAY_SHAPE,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)
       });
       // sectionToItems.Display.push({
       // name : DISPLAY_ARC,
-      // checked : this.isRenderAs(morpheus.VectorTrack.RENDER.ARC)
+      // checked : this.isRenderAs(phantasus.VectorTrack.RENDER.ARC)
       // });
 
     }
@@ -1009,7 +1009,7 @@ morpheus.VectorTrack.prototype = {
       && name.toLowerCase().indexOf('smile') !== -1) {
       sectionToItems.Display.push({
         name: DISPLAY_STRUCTURE,
-        checked: this.isRenderAs(morpheus.VectorTrack.RENDER.MOLECULE)
+        checked: this.isRenderAs(phantasus.VectorTrack.RENDER.MOLECULE)
       });
     }
 
@@ -1029,12 +1029,12 @@ morpheus.VectorTrack.prototype = {
         checked: this.settings.squished
       });
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BOX_PLOT)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BOX_PLOT)) {
       sectionToItems.Display.push({
         separator: true
       });
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)) {
         sectionToItems.Display.push({
           name: 'Edit Bar Color...'
         });
@@ -1046,10 +1046,10 @@ morpheus.VectorTrack.prototype = {
         name: 'Custom Range...'
       });
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.BAR)
-      || this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.BAR)
+      || this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       sectionToItems.Display.push({
         separator: true
       });
@@ -1059,25 +1059,25 @@ morpheus.VectorTrack.prototype = {
           checked: !this.settings.discrete
         });
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
         || this
-          .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-        || (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR) && isArray)) {
+          .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+        || (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR) && isArray)) {
         sectionToItems.Display.push({
           name: 'Edit Colors...'
         });
 
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
         sectionToItems.Display.push({
           name: 'Edit Shapes...'
         });
 
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.COLOR)
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
         || this
-          .isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_COLOR)
-        || (this.isRenderAs(morpheus.VectorTrack.RENDER.BAR) && isArray)) {
+          .isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
+        || (this.isRenderAs(phantasus.VectorTrack.RENDER.BAR) && isArray)) {
         sectionToItems.Display.push({
           name: 'Color Key',
           icon: 'fa fa-key'
@@ -1085,7 +1085,7 @@ morpheus.VectorTrack.prototype = {
       }
 
     }
-    if (this.isRenderAs(morpheus.VectorTrack.RENDER.SHAPE)) {
+    if (this.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
       sectionToItems.Display.push({
         name: 'Shape Key',
         icon: 'fa fa-key'
@@ -1140,7 +1140,7 @@ morpheus.VectorTrack.prototype = {
     if (items.length === 0) {
       return;
     }
-    morpheus.Popup
+    phantasus.Popup
       .showPopup(
         items,
         {
@@ -1157,7 +1157,7 @@ morpheus.VectorTrack.prototype = {
             var visibleFieldIndices = _this
               .getFullVector()
               .getProperties()
-              .get(morpheus.VectorKeys.VISIBLE_FIELDS);
+              .get(phantasus.VectorKeys.VISIBLE_FIELDS);
             var visibleFields;
             if (visibleFieldIndices == null) {
               visibleFields = arrayFields.slice(0);
@@ -1189,10 +1189,10 @@ morpheus.VectorTrack.prototype = {
                   visibleFields[i]));
             }
 
-            var list = new morpheus.DualList(leftOptions,
+            var list = new phantasus.DualList(leftOptions,
               rightOptions);
 
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Fields',
                 okCallback: function () {
@@ -1209,13 +1209,13 @@ morpheus.VectorTrack.prototype = {
                   fullVector
                     .getProperties()
                     .set(
-                      morpheus.VectorKeys.VISIBLE_FIELDS,
+                      phantasus.VectorKeys.VISIBLE_FIELDS,
                       visibleFieldIndices);
 
                   var summaryFunction = fullVector
                     .getProperties()
                     .get(
-                      morpheus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
+                      phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
                   if (summaryFunction) {
                     summaryFunction.indices = visibleFieldIndices;
                   }
@@ -1244,7 +1244,7 @@ morpheus.VectorTrack.prototype = {
                 content: list.$el
               });
           } else if (item === 'Edit Bar Color...') {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             formBuilder.append({
               name: 'bar_color',
               type: 'color',
@@ -1260,13 +1260,13 @@ morpheus.VectorTrack.prototype = {
                 _this.setInvalid(true);
                 _this.repaint();
               });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Bar Color',
               close: 'Close',
               html: formBuilder.$form
             });
           } else if (item === COLOR_BAR_SIZE) {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             formBuilder.append({
               name: 'size',
               type: 'text',
@@ -1285,7 +1285,7 @@ morpheus.VectorTrack.prototype = {
                   _this.repaint();
                 }
               });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Color Bar Size',
               close: 'Close',
               html: formBuilder.$form
@@ -1294,7 +1294,7 @@ morpheus.VectorTrack.prototype = {
             heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
             ' Selected Rows');
           } else if (item === DELETE) {
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Delete',
                 content: 'Are you sure you want to delete '
@@ -1307,7 +1307,7 @@ morpheus.VectorTrack.prototype = {
                     .getFullDataset()
                     .getRowMetadata();
                   metadata
-                    .remove(morpheus.MetadataUtil
+                    .remove(phantasus.MetadataUtil
                       .indexOf(
                         metadata,
                         _this.name));
@@ -1388,14 +1388,14 @@ morpheus.VectorTrack.prototype = {
             heatmap.getActionManager().execute(isColumns ? 'Move Selected Columns To Top' : 'Move' +
             ' Selected Rows To Top');
           } else if (item === SORT_ASC || item === SORT_DESC) {
-            var sortKey = new morpheus.SortKey(
+            var sortKey = new phantasus.SortKey(
               _this.name,
-              item === SORT_ASC ? morpheus.SortKey.SortOrder.ASCENDING
-                : morpheus.SortKey.SortOrder.DESCENDING);
+              item === SORT_ASC ? phantasus.SortKey.SortOrder.ASCENDING
+                : phantasus.SortKey.SortOrder.DESCENDING);
             if (_this.isColumns) {
               _this.project
                 .setColumnSortKeys(
-                  morpheus.SortKey
+                  phantasus.SortKey
                     .keepExistingSortKeys(
                       [sortKey],
                       project
@@ -1404,7 +1404,7 @@ morpheus.VectorTrack.prototype = {
             } else {
               _this.project
                 .setRowSortKeys(
-                  morpheus.SortKey
+                  phantasus.SortKey
                     .keepExistingSortKeys(
                       [sortKey],
                       project
@@ -1416,11 +1416,11 @@ morpheus.VectorTrack.prototype = {
             || item === SORT_SEL_TOP_N) {
             var sortOrder;
             if (item === SORT_SEL_ASC) {
-              sortOrder = morpheus.SortKey.SortOrder.ASCENDING;
+              sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
             } else if (item === SORT_SEL_DESC) {
-              sortOrder = morpheus.SortKey.SortOrder.DESCENDING;
+              sortOrder = phantasus.SortKey.SortOrder.DESCENDING;
             } else {
-              sortOrder = morpheus.SortKey.SortOrder.TOP_N;
+              sortOrder = phantasus.SortKey.SortOrder.TOP_N;
             }
             heatmap.sortBasedOnSelection(sortOrder,
               isColumns, e && e.shiftKey);
@@ -1433,7 +1433,7 @@ morpheus.VectorTrack.prototype = {
             _this._update();
             heatmap.revalidate();
           } else if (item === 'Custom Range...') {
-            var formBuilder = new morpheus.FormBuilder();
+            var formBuilder = new phantasus.FormBuilder();
             var items = [{
               name: 'min',
               required: true,
@@ -1453,7 +1453,7 @@ morpheus.VectorTrack.prototype = {
             _.each(items, function (item) {
               formBuilder.append(item);
             });
-            morpheus.FormBuilder
+            phantasus.FormBuilder
               .showOkCancel({
                 title: 'Range',
                 content: formBuilder.$form,
@@ -1473,7 +1473,7 @@ morpheus.VectorTrack.prototype = {
             heatmap.revalidate();
           } else if (item === 'Color Key') {
 
-            var legend = new morpheus.HeatMapTrackColorLegend(
+            var legend = new phantasus.HeatMapTrackColorLegend(
               [_this], isColumns ? _this.project
                 .getColumnColorModel()
                 : _this.project
@@ -1482,12 +1482,12 @@ morpheus.VectorTrack.prototype = {
             legend.setBounds(size);
             legend.repaint();
 
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Color Key',
               html: legend.canvas
             });
           } else if (item === 'Shape Key') {
-            var legend = new morpheus.HeatMapTrackShapeLegend(
+            var legend = new phantasus.HeatMapTrackShapeLegend(
               [_this], isColumns ? _this.project
                 .getColumnShapeModel()
                 : _this.project
@@ -1496,16 +1496,16 @@ morpheus.VectorTrack.prototype = {
             legend.setBounds(size);
             legend.repaint();
 
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Shape Key',
               html: legend.canvas
             });
           } else if (item === 'Edit Shapes...') {
-            var shapeFormBuilder = new morpheus.FormBuilder();
+            var shapeFormBuilder = new phantasus.FormBuilder();
             var shapeModel = isColumns ? _this.project
               .getColumnShapeModel() : _this.project
               .getRowShapeModel();
-            var chooser = new morpheus.ShapeChooser({
+            var chooser = new phantasus.ShapeChooser({
               map: shapeModel.getMap(_this.name)
             });
 
@@ -1516,7 +1516,7 @@ morpheus.VectorTrack.prototype = {
               _this.setInvalid(true);
               _this.repaint();
             });
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Edit Shapes',
               html: chooser.$div,
               close: 'Close'
@@ -1527,7 +1527,7 @@ morpheus.VectorTrack.prototype = {
               .getColumnColorModel() : _this.project
               .getRowColorModel();
             if (_this.settings.discrete) {
-              colorSchemeChooser = new morpheus.DiscreteColorSchemeChooser(
+              colorSchemeChooser = new phantasus.DiscreteColorSchemeChooser(
                 {
                   colorScheme: {
                     scale: colorModel
@@ -1543,7 +1543,7 @@ morpheus.VectorTrack.prototype = {
                 _this.repaint();
               });
             } else {
-              colorSchemeChooser = new morpheus.HeatMapColorSchemeChooser(
+              colorSchemeChooser = new phantasus.HeatMapColorSchemeChooser(
                 {
                   showRelative: false,
                 });
@@ -1556,7 +1556,7 @@ morpheus.VectorTrack.prototype = {
                 _this.repaint();
               });
             }
-            morpheus.FormBuilder.showInModal({
+            phantasus.FormBuilder.showInModal({
               title: 'Edit Colors',
               html: colorSchemeChooser.$div,
               close: 'Close',
@@ -1618,21 +1618,21 @@ morpheus.VectorTrack.prototype = {
             heatmap.revalidate();
           } else {
             if (item === DISPLAY_BAR) {
-              item = morpheus.VectorTrack.RENDER.BAR;
+              item = phantasus.VectorTrack.RENDER.BAR;
             } else if (item === DISPLAY_COLOR) {
-              item = morpheus.VectorTrack.RENDER.COLOR;
+              item = phantasus.VectorTrack.RENDER.COLOR;
             } else if (item === DISPLAY_TEXT) {
-              item = morpheus.VectorTrack.RENDER.TEXT;
+              item = phantasus.VectorTrack.RENDER.TEXT;
             } else if (item === DISPLAY_TEXT_AND_COLOR) {
-              item = morpheus.VectorTrack.RENDER.TEXT_AND_COLOR;
+              item = phantasus.VectorTrack.RENDER.TEXT_AND_COLOR;
             } else if (item === DISPLAY_STRUCTURE) {
-              item = morpheus.VectorTrack.RENDER.MOLECULE;
+              item = phantasus.VectorTrack.RENDER.MOLECULE;
             } else if (item === DISPLAY_SHAPE) {
-              item = morpheus.VectorTrack.RENDER.SHAPE;
+              item = phantasus.VectorTrack.RENDER.SHAPE;
             } else if (item === DISPLAY_ARC) {
-              item = morpheus.VectorTrack.RENDER.ARC;
+              item = phantasus.VectorTrack.RENDER.ARC;
             } else if (item === DISPLAY_BOX_PLOT) {
-              item = morpheus.VectorTrack.RENDER.BOX_PLOT;
+              item = phantasus.VectorTrack.RENDER.BOX_PLOT;
             } else {
               console.log('Unknown item ' + item);
             }
@@ -1666,12 +1666,12 @@ morpheus.VectorTrack.prototype = {
     }
 
     if (vector.getProperties().get(
-        morpheus.VectorKeys.FIELDS) != null) {
+        phantasus.VectorKeys.FIELDS) != null) {
       var visibleFieldIndices = vector.getProperties().get(
-        morpheus.VectorKeys.VISIBLE_FIELDS);
+        phantasus.VectorKeys.VISIBLE_FIELDS);
       if (visibleFieldIndices == null) {
-        visibleFieldIndices = morpheus.Util.seq(vector.getProperties().get(
-          morpheus.VectorKeys.FIELDS).length);
+        visibleFieldIndices = phantasus.Util.seq(vector.getProperties().get(
+          phantasus.VectorKeys.FIELDS).length);
       }
       colorBarSize /= visibleFieldIndices.length;
       var nvisibleFieldIndices = visibleFieldIndices.length;
@@ -1752,7 +1752,7 @@ morpheus.VectorTrack.prototype = {
       var x = isColumns ? position + itemSize / 2 : offset + size2;
       var y = isColumns ? offset - size2 : position + itemSize / 2;
       size2 -= 0.5; // small border between cells
-      morpheus.CanvasUtil.drawShape(context, shape, x, y, size2);
+      phantasus.CanvasUtil.drawShape(context, shape, x, y, size2);
     }
     context.lineWidth = lineWidth;
   },
@@ -1879,7 +1879,7 @@ morpheus.VectorTrack.prototype = {
   renderMolecule: function (context, vector, start, end, clip, offset) {
     var isColumns = this.isColumns;
     var positions = this.positions;
-    context.fillStyle = morpheus.CanvasUtil.FONT_COLOR;
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.strokeStyle = 'black';
     var width = this.getUnscaledWidth();
     var customUrlProvider = this.heatmap.options.structureUrlProvider !== undefined;
@@ -1983,7 +1983,7 @@ morpheus.VectorTrack.prototype = {
     context.translate(offset, 0);
     var scale = this.createChartScale(availableSpace);
     var visibleFieldIndices = vector.getProperties().get(
-      morpheus.VectorKeys.VISIBLE_FIELDS);
+      phantasus.VectorKeys.VISIBLE_FIELDS);
 
     var colorByVector = this.settings.colorByField != null ? this
       .getVector(this.settings.colorByField) : null;
@@ -2005,9 +2005,9 @@ morpheus.VectorTrack.prototype = {
         var lineHeight = Math.max(2, _itemSize - 8);
         var box = array.summary;
         if (box == null) {
-          var v = morpheus.VectorUtil.arrayAsVector(array);
-          box = morpheus
-            .BoxPlotItem(visibleFieldIndices != null ? new morpheus.SlicedVector(
+          var v = phantasus.VectorUtil.arrayAsVector(array);
+          box = phantasus
+            .BoxPlotItem(visibleFieldIndices != null ? new phantasus.SlicedVector(
               v, visibleFieldIndices)
               : v);
           array.summary = box;
@@ -2109,7 +2109,7 @@ morpheus.VectorTrack.prototype = {
         // 	positiveIndices.push(item.index);
         // });
         //
-        var positiveIndices = morpheus.Util.indexSortPairs(
+        var positiveIndices = phantasus.Util.indexSortPairs(
           positivePairs, false);
         for (var j = 0, length = positiveIndices.length; j < length; j++) {
           var index = positiveIndices[j];
@@ -2134,7 +2134,7 @@ morpheus.VectorTrack.prototype = {
             context.fill();
           }
         }
-        var negativeIndices = morpheus.Util.indexSortPairs(
+        var negativeIndices = phantasus.Util.indexSortPairs(
           negativePairs, true); // draw smaller (more negative)
         // values 1st
         for (var j = 0, length = negativeIndices.length; j < length; j++) {
@@ -2239,7 +2239,7 @@ morpheus.VectorTrack.prototype = {
     if (isColumns) {
       context.translate(clip.x, clip.y); // reset transform, needed for export to svg
     }
-    var toStringFunction = morpheus.VectorTrack.vectorToString(vector);
+    var toStringFunction = phantasus.VectorTrack.vectorToString(vector);
     for (var i = start; i < end; i++) {
       var size = this.positions.getItemSize(i);
       if (size < 6) {
@@ -2267,4 +2267,4 @@ morpheus.VectorTrack.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.VectorTrack, morpheus.AbstractCanvas);
+phantasus.Util.extend(phantasus.VectorTrack, phantasus.AbstractCanvas);

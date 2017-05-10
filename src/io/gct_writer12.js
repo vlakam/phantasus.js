@@ -1,13 +1,13 @@
-morpheus.GctWriter12 = function () {
+phantasus.GctWriter12 = function () {
   this.options = {
     rowDescription: 'Description',
     rowId: 'id',
     columnId: 'id'
   };
 };
-morpheus.GctWriter12.prototype = {
+phantasus.GctWriter12.prototype = {
   toString: function (value) {
-    return morpheus.Util.toString(value);
+    return phantasus.Util.toString(value);
   },
   getExtension: function () {
     return 'gct';
@@ -23,8 +23,8 @@ morpheus.GctWriter12.prototype = {
     pw.push('\n');
     pw.push(rows + '\t' + columns);
     pw.push('\n');
-    var rowMetadata = morpheus.GctWriter.idFirst(dataset.getRowMetadata());
-    var columnMetadata = morpheus.GctWriter.idFirst(dataset
+    var rowMetadata = phantasus.GctWriter.idFirst(dataset.getRowMetadata());
+    var columnMetadata = phantasus.GctWriter.idFirst(dataset
       .getColumnMetadata());
     pw.push('Name');
     pw.push('\t');
@@ -58,7 +58,7 @@ morpheus.GctWriter12.prototype = {
       }
       for (var j = 0; j < columns; j++) {
         pw.push('\t');
-        pw.push(morpheus.Util.nf(dataset.getValue(i, j)));
+        pw.push(phantasus.Util.nf(dataset.getValue(i, j)));
       }
     }
     pw.push('\n');

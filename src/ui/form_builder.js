@@ -1,4 +1,4 @@
-morpheus.FormBuilder = function (options) {
+phantasus.FormBuilder = function (options) {
   var that = this;
   this.prefix = _.uniqueId('form');
   this.$form = $('<form></form>');
@@ -78,7 +78,7 @@ morpheus.FormBuilder = function (options) {
   // this.fieldColumnDef = '8';
 };
 
-morpheus.FormBuilder.showProgressBar = function (options) {
+phantasus.FormBuilder.showProgressBar = function (options) {
   var content = [];
   content.push('<div class="container-fluid">');
   content.push('<div class="row">');
@@ -104,12 +104,12 @@ morpheus.FormBuilder.showProgressBar = function (options) {
     options.stop();
     e.preventDefault();
   });
-  return morpheus.FormBuilder.showInDraggableDiv({
+  return phantasus.FormBuilder.showInDraggableDiv({
     title: options.title,
     $content: $content
   });
 };
-morpheus.FormBuilder.showInDraggableDiv = function (options) {
+phantasus.FormBuilder.showInDraggableDiv = function (options) {
   var width = options.width || '300px';
   var html = [];
   html
@@ -144,8 +144,8 @@ morpheus.FormBuilder.showInDraggableDiv = function (options) {
   return $div;
 };
 
-morpheus.FormBuilder.showMessageModal = function (options) {
-  var $div = morpheus.FormBuilder
+phantasus.FormBuilder.showMessageModal = function (options) {
+  var $div = phantasus.FormBuilder
     ._showInModal({
       modalClass: options.modalClass,
       title: options.title,
@@ -167,7 +167,7 @@ morpheus.FormBuilder.showMessageModal = function (options) {
   // }
 };
 
-morpheus.FormBuilder._showInModal = function (options) {
+phantasus.FormBuilder._showInModal = function (options) {
   var html = [];
   options = $.extend({}, {
     size: '',
@@ -234,8 +234,8 @@ morpheus.FormBuilder._showInModal = function (options) {
  * @param options.focus Element to return focus to when modal is hidden
  * @param options.modalClass
  */
-morpheus.FormBuilder.showInModal = function (options) {
-  return morpheus.FormBuilder
+phantasus.FormBuilder.showInModal = function (options) {
+  return phantasus.FormBuilder
     ._showInModal({
       modalClass: options.modalClass,
       title: options.title,
@@ -268,7 +268,7 @@ morpheus.FormBuilder.showInModal = function (options) {
  * @param options.okFocus
  *
  */
-morpheus.FormBuilder.showOkCancel = function (options) {
+phantasus.FormBuilder.showOkCancel = function (options) {
   options = $.extend({}, {
     ok: true,
     cancel: true
@@ -286,7 +286,7 @@ morpheus.FormBuilder.showOkCancel = function (options) {
     footer
       .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
   }
-  var $div = morpheus.FormBuilder._showInModal({
+  var $div = phantasus.FormBuilder._showInModal({
     title: options.title,
     html: options.content,
     footer: footer.join(''),
@@ -324,20 +324,20 @@ morpheus.FormBuilder.showOkCancel = function (options) {
   return $div;
 };
 
-morpheus.FormBuilder.hasChanged = function (object, keyToUIElement) {
+phantasus.FormBuilder.hasChanged = function (object, keyToUIElement) {
   var keys = _.keys(keyToUIElement);
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     var value = object[key];
     var $element = keyToUIElement[key];
-    if (value !== morpheus.FormBuilder.getValue($element)) {
+    if (value !== phantasus.FormBuilder.getValue($element)) {
       return true;
     }
   }
   return false;
 };
-morpheus.FormBuilder.getValue = function ($element) {
-  var list = $element.data('morpheus.checkbox-list');
+phantasus.FormBuilder.getValue = function ($element) {
+  var list = $element.data('phantasus.checkbox-list');
   if (list != null) {
     return list.val();
   }
@@ -350,7 +350,7 @@ morpheus.FormBuilder.getValue = function ($element) {
   return $element.attr('type') === 'checkbox' ? $element.prop('checked') : $element.val();
 };
 
-morpheus.FormBuilder.prototype = {
+phantasus.FormBuilder.prototype = {
   appendContent: function ($content) {
     this.$form.append($content);
   },
@@ -776,7 +776,7 @@ morpheus.FormBuilder.prototype = {
   append: function (fields) {
     var html = [];
     var that = this;
-    var isArray = morpheus.Util.isArray(fields);
+    var isArray = phantasus.Util.isArray(fields);
     if (!isArray) {
       fields = [fields];
     }
@@ -794,14 +794,14 @@ morpheus.FormBuilder.prototype = {
       _.each(fields, function (field) {
         // needs to already be in dom
         if (field.type === 'checkbox-list') {
-          var list = new morpheus.CheckBoxList({
+          var list = new phantasus.CheckBoxList({
             responsive: false,
             $el: $(checkBoxLists[checkBoxIndex]),
             items: field.options
           });
 
           $(checkBoxLists[checkBoxIndex]).data(
-            'morpheus.checkbox-list', list);
+            'phantasus.checkbox-list', list);
           checkBoxIndex++;
         }
       });
@@ -820,11 +820,11 @@ morpheus.FormBuilder.prototype = {
     if ($v.length === 0) {
       $v = this.$form.find('[name=' + name + '_picker]');
     }
-    return morpheus.FormBuilder.getValue($v);
+    return phantasus.FormBuilder.getValue($v);
   },
   setOptions: function (name, options, selectFirst) {
     var $select = this.$form.find('[name=' + name + ']');
-    var checkBoxList = $select.data('morpheus.checkbox-list');
+    var checkBoxList = $select.data('phantasus.checkbox-list');
     if (checkBoxList) {
       checkBoxList.setItems(options);
     } else {
@@ -876,7 +876,7 @@ morpheus.FormBuilder.prototype = {
       }
     }
     var type = v.attr('type');
-    var list = v.data('morpheus.checkbox-list');
+    var list = v.data('phantasus.checkbox-list');
     if (list) {
       list.setValue(value);
     } else {
@@ -917,4 +917,4 @@ morpheus.FormBuilder.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.FormBuilder, morpheus.Events);
+phantasus.Util.extend(phantasus.FormBuilder, phantasus.Events);

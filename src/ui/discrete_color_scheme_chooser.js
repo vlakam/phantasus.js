@@ -1,5 +1,5 @@
-morpheus.DiscreteColorSchemeChooser = function (options) {
-  var formBuilder = new morpheus.FormBuilder();
+phantasus.DiscreteColorSchemeChooser = function (options) {
+  var formBuilder = new phantasus.FormBuilder();
   var map = options.colorScheme.scale;
   var html = ['<select name="colorPicker" class="selectpicker" data-live-search="true">'];
   map.forEach(function (val, key) {
@@ -42,8 +42,8 @@ morpheus.DiscreteColorSchemeChooser = function (options) {
   });
   this.$div = formBuilder.$form;
 };
-morpheus.DiscreteColorSchemeChooser.prototype = {
+phantasus.DiscreteColorSchemeChooser.prototype = {
   dispose: function () {
   }
 };
-morpheus.Util.extend(morpheus.DiscreteColorSchemeChooser, morpheus.Events);
+phantasus.Util.extend(phantasus.DiscreteColorSchemeChooser, phantasus.Events);

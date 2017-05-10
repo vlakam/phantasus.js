@@ -1,11 +1,11 @@
-morpheus.GctWriter = function () {
+phantasus.GctWriter = function () {
 };
 
-morpheus.GctWriter.idFirst = function (model) {
+phantasus.GctWriter.idFirst = function (model) {
   var fields = ['id', 'Id', 'pr_id'];
   var idIndex = -1;
   for (var i = 0; i < fields.length; i++) {
-    idIndex = morpheus.MetadataUtil.indexOf(model, fields[i]);
+    idIndex = phantasus.MetadataUtil.indexOf(model, fields[i]);
     if (idIndex !== -1) {
       break;
     }
@@ -18,14 +18,14 @@ morpheus.GctWriter.idFirst = function (model) {
         order[j++] = i;
       }
     }
-    return new morpheus.MetadataModelColumnView(model, order);
+    return new phantasus.MetadataModelColumnView(model, order);
   }
   return model;
 };
 
-morpheus.GctWriter.prototype = {
+phantasus.GctWriter.prototype = {
   toString: function (value) {
-    return morpheus.Util.toString(value);
+    return phantasus.Util.toString(value);
   },
   getExtension: function () {
     return 'gct';
@@ -34,8 +34,8 @@ morpheus.GctWriter.prototype = {
     if (pw == null) {
       pw = [];
     }
-    var rowMetadata = morpheus.GctWriter.idFirst(dataset.getRowMetadata());
-    var columnMetadata = morpheus.GctWriter.idFirst(dataset
+    var rowMetadata = phantasus.GctWriter.idFirst(dataset.getRowMetadata());
+    var columnMetadata = phantasus.GctWriter.idFirst(dataset
       .getColumnMetadata());
     this.writeHeader(rowMetadata, columnMetadata, pw);
     this.writeData(dataset, rowMetadata, pw);
@@ -58,8 +58,8 @@ morpheus.GctWriter.prototype = {
         pw.push('\t');
         var value = dataset.getValue(i, j);
         // pw.push((value != null && value.toObject) ? JSON
-        // .stringify(value.toObject()) : morpheus.Util.nf(value));
-        pw.push(morpheus.Util.nf(value));
+        // .stringify(value.toObject()) : phantasus.Util.nf(value));
+        pw.push(phantasus.Util.nf(value));
       }
       pw.push('\n');
     }

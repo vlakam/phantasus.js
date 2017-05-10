@@ -1,13 +1,13 @@
-morpheus.CombinedFilter = function (isAndFilter) {
+phantasus.CombinedFilter = function (isAndFilter) {
   this.filters = [];
   this.isAndFilter = isAndFilter;
   this.enabledFilters = [];
   this.name = 'combined filter';
 };
 
-morpheus.CombinedFilter.prototype = {
+phantasus.CombinedFilter.prototype = {
   shallowClone: function () {
-    var f = new morpheus.CombinedFilter(this.isAndFilter);
+    var f = new phantasus.CombinedFilter(this.isAndFilter);
     f.filters = this.filters.slice(0);
     return f;
   },
@@ -27,7 +27,7 @@ morpheus.CombinedFilter.prototype = {
     return this.isAndFilter;
   },
   equals: function (f) {
-    if (!(f instanceof morpheus.CombinedFilter)) {
+    if (!(f instanceof phantasus.CombinedFilter)) {
       return false;
     }
     if (this.isAndFilter !== f.isAndFilter) {
@@ -86,7 +86,7 @@ morpheus.CombinedFilter.prototype = {
   init: function (dataset) {
     for (var i = 0, nfilters = this.filters.length; i < nfilters; i++) {
       if (this.filters[i].isColumns()) { // all filters operate on rows
-        this.filters[i].init(new morpheus.TransposedDatasetView(dataset));
+        this.filters[i].init(new phantasus.TransposedDatasetView(dataset));
       } else {
         this.filters[i].init(dataset);
       }
@@ -118,18 +118,18 @@ morpheus.CombinedFilter.prototype = {
     return this.enabledFilters.length > 0;
   }
 };
-morpheus.Util.extend(morpheus.CombinedFilter, morpheus.Events);
+phantasus.Util.extend(phantasus.CombinedFilter, phantasus.Events);
 /**
  * @param acceptIndicesSet
- *            a morpheus.Set that contains the model indices in the dataset to
+ *            a phantasus.Set that contains the model indices in the dataset to
  *            retain.
  */
-morpheus.IndexFilter = function (acceptIndicesSet, name, isColumns) {
+phantasus.IndexFilter = function (acceptIndicesSet, name, isColumns) {
   this.acceptIndicesSet = acceptIndicesSet;
   this.name = name;
   this.columns = isColumns;
 };
-morpheus.IndexFilter.prototype = {
+phantasus.IndexFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -144,7 +144,7 @@ morpheus.IndexFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.IndexFilter
+    return filter instanceof phantasus.IndexFilter
       && this.acceptIndicesSet.equals(filter.acceptIndicesSet);
   },
   init: function (dataset) {
@@ -162,14 +162,14 @@ morpheus.IndexFilter.prototype = {
     return this.acceptIndicesSet.has(index);
   }
 };
-morpheus.VectorFilter = function (set, maxSetSize, name, isColumns) {
+phantasus.VectorFilter = function (set, maxSetSize, name, isColumns) {
   this.set = set;
   this.name = name;
   this.maxSetSize = maxSetSize;
   this.columns = isColumns;
 };
 
-morpheus.VectorFilter.prototype = {
+phantasus.VectorFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -182,7 +182,7 @@ morpheus.VectorFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.VectorFilter
+    return filter instanceof phantasus.VectorFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -202,11 +202,11 @@ morpheus.VectorFilter.prototype = {
   }
 };
 
-morpheus.NotNullFilter = function (name, isColumns) {
+phantasus.NotNullFilter = function (name, isColumns) {
   this.name = name;
   this.columns = isColumns;
 };
-morpheus.NotNullFilter.prototype = {
+phantasus.NotNullFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -218,7 +218,7 @@ morpheus.NotNullFilter.prototype = {
     this.enabled = enabled;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.NotNullFilter
+    return filter instanceof phantasus.NotNullFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -238,14 +238,14 @@ morpheus.NotNullFilter.prototype = {
   }
 };
 
-morpheus.RangeFilter = function (min, max, name, isColumns) {
+phantasus.RangeFilter = function (min, max, name, isColumns) {
   this.min = min;
   this.max = max;
   this.name = name;
   this.columns = isColumns;
 };
 
-morpheus.RangeFilter.prototype = {
+phantasus.RangeFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -264,7 +264,7 @@ morpheus.RangeFilter.prototype = {
     this.max = isNaN(value) ? Number.MAX_VALUE : value;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.RangeFilter
+    return filter instanceof phantasus.RangeFilter
       && this.name === filter.name;
   },
   init: function (dataset) {
@@ -286,17 +286,17 @@ morpheus.RangeFilter.prototype = {
   }
 };
 
-morpheus.TopNFilter = function (n, direction, name, isColumns) {
+phantasus.TopNFilter = function (n, direction, name, isColumns) {
   this.n = n;
   this.direction = direction;
   this.name = name;
   this.columns = isColumns;
 };
 
-morpheus.TopNFilter.TOP = 0;
-morpheus.TopNFilter.BOTTOM = 1;
-morpheus.TopNFilter.TOP_BOTTOM = 2;
-morpheus.TopNFilter.prototype = {
+phantasus.TopNFilter.TOP = 0;
+phantasus.TopNFilter.BOTTOM = 1;
+phantasus.TopNFilter.TOP_BOTTOM = 2;
+phantasus.TopNFilter.prototype = {
   enabled: true,
   isColumns: function () {
     return this.columns;
@@ -319,7 +319,7 @@ morpheus.TopNFilter.prototype = {
     this.direction = direction;
   },
   equals: function (filter) {
-    return filter instanceof morpheus.TopNFilter
+    return filter instanceof phantasus.TopNFilter
       && this.name === filter.name && this.n === filter.n
       && this.direction === filter.direction;
   },
@@ -328,7 +328,7 @@ morpheus.TopNFilter.prototype = {
     if (!this.vector) {
       var vector = dataset.getRowMetadata().getByName(this.name);
       this.vector = vector;
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       for (var i = 0, size = vector.size(); i < size; i++) {
         var value = vector.getValue(i);
         if (!isNaN(value)) {
@@ -354,11 +354,11 @@ morpheus.TopNFilter.prototype = {
     var topAndBottomValues = [this.sortedValues[topAndBottomIndices[0]],
       this.sortedValues[topAndBottomIndices[1]]];
 
-    if (this.direction === morpheus.TopNFilter.TOP) {
+    if (this.direction === phantasus.TopNFilter.TOP) {
       this.f = function (val) {
         return isNaN(val) ? false : val >= topAndBottomValues[0];
       };
-    } else if (this.direction === morpheus.TopNFilter.BOTTOM) {
+    } else if (this.direction === phantasus.TopNFilter.BOTTOM) {
       this.f = function (val) {
         return isNaN(val) ? false : val <= topAndBottomValues[1];
       };
@@ -384,11 +384,11 @@ morpheus.TopNFilter.prototype = {
   }
 };
 
-morpheus.AlwaysTrueFilter = function () {
+phantasus.AlwaysTrueFilter = function () {
 
 };
 
-morpheus.AlwaysTrueFilter.prototype = {
+phantasus.AlwaysTrueFilter.prototype = {
   isEnabled: function () {
     return false;
   },
@@ -396,7 +396,7 @@ morpheus.AlwaysTrueFilter.prototype = {
 
   },
   equals: function (filter) {
-    return filter instanceof morpheus.AlwaysTrueFilter;
+    return filter instanceof phantasus.AlwaysTrueFilter;
 
   },
   init: function (dataset) {
@@ -416,40 +416,40 @@ morpheus.AlwaysTrueFilter.prototype = {
   }
 };
 
-morpheus.CombinedFilter.fromJSON = function (combinedFilter, json) {
+phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
   combinedFilter.setAnd(json.isAnd);
   json.filters.forEach(function (filter) {
     if (filter.type === 'set') {
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       filter.values.forEach(function (value) {
         set.add(value);
       });
-      combinedFilter.add(new morpheus.VectorFilter(
+      combinedFilter.add(new phantasus.VectorFilter(
         set,
         filter.maxSetSize,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'range') {
-      combinedFilter.add(new morpheus.RangeFilter(
+      combinedFilter.add(new phantasus.RangeFilter(
         filter.min,
         filter.max,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'top') {
-      combinedFilter.add(new morpheus.TopNFilter(
+      combinedFilter.add(new phantasus.TopNFilter(
         filter.n,
         filter.direction,
         filter.name,
         filter.isColumns
       ));
     } else if (filter.type === 'index') {
-      var set = new morpheus.Set();
+      var set = new phantasus.Set();
       filter.indices.forEach(function (value) {
         set.add(value);
       });
-      combinedFilter.add(new morpheus.IndexFilter(
+      combinedFilter.add(new phantasus.IndexFilter(
         set,
         filter.name,
         filter.isColumns
@@ -460,15 +460,15 @@ morpheus.CombinedFilter.fromJSON = function (combinedFilter, json) {
   });
 };
 
-morpheus.CombinedFilter.toJSON = function (filter) {
+phantasus.CombinedFilter.toJSON = function (filter) {
   var json = {
     isAnd: filter.isAnd(),
     filters: []
   };
   filter.getFilters().forEach(function (filter) {
     if (filter.isEnabled()) {
-      if (filter instanceof morpheus.VectorFilter) {
-        // morpheus.VectorFilter = function (set, maxSetSize, name, isColumns)
+      if (filter instanceof phantasus.VectorFilter) {
+        // phantasus.VectorFilter = function (set, maxSetSize, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -476,8 +476,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           maxSetSize: filter.maxSetSize,
           type: 'set'
         });
-      } else if (filter instanceof morpheus.RangeFilter) {
-        // morpheus.RangeFilter = function (min, max, name, isColumns)
+      } else if (filter instanceof phantasus.RangeFilter) {
+        // phantasus.RangeFilter = function (min, max, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -485,8 +485,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           max: filter.max,
           type: 'range'
         });
-      } else if (filter instanceof morpheus.TopNFilter) {
-        // morpheus.TopNFilter = function (n, direction, name, isColumns)
+      } else if (filter instanceof phantasus.TopNFilter) {
+        // phantasus.TopNFilter = function (n, direction, name, isColumns)
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
@@ -494,8 +494,8 @@ morpheus.CombinedFilter.toJSON = function (filter) {
           max: filter.direction,
           type: 'top'
         });
-      } else if (filter instanceof morpheus.IndexFilter) {
-        // morpheus.IndexFilter = function (acceptIndicesSet, name, isColumns
+      } else if (filter instanceof phantasus.IndexFilter) {
+        // phantasus.IndexFilter = function (acceptIndicesSet, name, isColumns
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),

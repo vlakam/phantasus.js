@@ -1,5 +1,5 @@
-morpheus.Divider = function (vertical) {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.Divider = function (vertical) {
+  phantasus.AbstractCanvas.call(this, false);
   this.vertical = vertical;
   var that = this;
   var canvas = this.canvas;
@@ -17,10 +17,10 @@ morpheus.Divider = function (vertical) {
       width: 15
     });
   }
-  this.hammer = morpheus.Util.hammer(canvas, ['pan']).on('panstart',
+  this.hammer = phantasus.Util.hammer(canvas, ['pan']).on('panstart',
     this.panstart = function (event) {
       that.trigger('resizeStart');
-      morpheus.CanvasUtil.dragging = true;
+      phantasus.CanvasUtil.dragging = true;
     }).on('panmove', this.panmove = function (event) {
     if (that.vertical) {
       that.trigger('resize', {
@@ -32,15 +32,15 @@ morpheus.Divider = function (vertical) {
       });
     }
   }).on('panend', this.panend = function (event) {
-    morpheus.CanvasUtil.dragging = false;
+    phantasus.CanvasUtil.dragging = false;
     that.trigger('resizeEnd');
   });
   this.paint();
 
 };
-morpheus.Divider.prototype = {
+phantasus.Divider.prototype = {
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('panstart', this.panstart).off('panmove', this.panmove).off('panend', this.panend);
     this.hammer.destroy();
   },
@@ -68,5 +68,5 @@ morpheus.Divider.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.Divider, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.Divider, morpheus.Events);
+phantasus.Util.extend(phantasus.Divider, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.Divider, phantasus.Events);

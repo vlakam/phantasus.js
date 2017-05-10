@@ -1,24 +1,24 @@
-morpheus.TsneTool = function () {
+phantasus.TsneTool = function () {
 };
 
-morpheus.TsneTool.execute = function (dataset, input) {
+phantasus.TsneTool.execute = function (dataset, input) {
   // note: in worker here
   var matrix = [];
   var rows = input.project == 'Rows';
   if (!rows) {
-    dataset = new morpheus.TransposedDatasetView(dataset);
+    dataset = new phantasus.TransposedDatasetView(dataset);
   }
   var N = dataset.getRowCount();
-  var f = morpheus.HClusterTool.Functions.fromString(input.metric);
-  if (f === morpheus.TsneTool.PRECOMPUTED_DIST) {
+  var f = phantasus.HClusterTool.Functions.fromString(input.metric);
+  if (f === phantasus.TsneTool.PRECOMPUTED_DIST) {
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       for (var j = i + 1; j < N; j++) {
         matrix[i][j] = dataset.getValue(i, j);
       }
     }
-  } else if (f === morpheus.TsneTool.PRECOMPUTED_SIM) {
-    var max = morpheus.DatasetUtil.max(dataset);
+  } else if (f === phantasus.TsneTool.PRECOMPUTED_SIM) {
+    var max = phantasus.DatasetUtil.max(dataset);
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       for (var j = i + 1; j < N; j++) {
@@ -26,8 +26,8 @@ morpheus.TsneTool.execute = function (dataset, input) {
       }
     }
   } else {
-    var list1 = new morpheus.DatasetRowView(dataset);
-    var list2 = new morpheus.DatasetRowView(dataset);
+    var list1 = new phantasus.DatasetRowView(dataset);
+    var list2 = new phantasus.DatasetRowView(dataset);
     for (var i = 0; i < N; i++) {
       matrix.push([]);
       list1.setIndex(i);
@@ -51,7 +51,7 @@ morpheus.TsneTool.execute = function (dataset, input) {
 
 }
 ;
-morpheus.TsneTool.prototype = {
+phantasus.TsneTool.prototype = {
   toString: function () {
     return 't-SNE';
   },
@@ -61,8 +61,8 @@ morpheus.TsneTool.prototype = {
   gui: function () {
     return [{
       name: 'metric',
-      options: morpheus.HClusterTool.Functions,
-      value: morpheus.HClusterTool.Functions[3].toString(),
+      options: phantasus.HClusterTool.Functions,
+      value: phantasus.HClusterTool.Functions[3].toString(),
       type: 'select'
     }, {
       name: 'project',
@@ -91,15 +91,15 @@ morpheus.TsneTool.prototype = {
     var blob = new Blob(
       ['self.onmessage = function(e) {'
       + 'e.data.scripts.forEach(function (s) { importScripts(s); });'
-      + 'self.postMessage(morpheus.TsneTool.execute(morpheus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+      + 'self.postMessage(phantasus.TsneTool.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
       + '}']);
 
     var url = URL.createObjectURL(blob);
     var worker = new Worker(url);
 
     worker.postMessage({
-      scripts: [morpheus.Util.getScriptPath()],
-      dataset: morpheus.Dataset.toJSON(dataset, {
+      scripts: [phantasus.Util.getScriptPath()],
+      dataset: phantasus.Dataset.toJSON(dataset, {
         columnFields: [],
         rowFields: [],
         seriesIndices: [0]
@@ -109,11 +109,11 @@ morpheus.TsneTool.prototype = {
 
     worker.onmessage = function (e) {
       if (rows) {
-        dataset = new morpheus.TransposedDatasetView(dataset);
+        dataset = new phantasus.TransposedDatasetView(dataset);
       }
       var result = e.data.solution;
 
-      var newDataset = new morpheus.Dataset({
+      var newDataset = new phantasus.Dataset({
         name: 't-SNE',
         rows: dataset.getColumnCount(),
         columns: 2
@@ -126,10 +126,10 @@ morpheus.TsneTool.prototype = {
       var idVector = newDataset.getColumnMetadata().add('id');
       idVector.setValue(0, 'P1');
       idVector.setValue(1, 'P2');
-      newDataset.setRowMetadata(morpheus.MetadataUtil.shallowCopy(dataset.getColumnMetadata()));
-      var min = morpheus.DatasetUtil.min(newDataset);
-      var max = morpheus.DatasetUtil.max(newDataset);
-      new morpheus.HeatMap({
+      newDataset.setRowMetadata(phantasus.MetadataUtil.shallowCopy(dataset.getColumnMetadata()));
+      var min = phantasus.DatasetUtil.min(newDataset);
+      var max = phantasus.DatasetUtil.max(newDataset);
+      new phantasus.HeatMap({
         inheritFromParentOptions: {transpose: !rows},
         name: 't-SNE',
         dataset: newDataset,

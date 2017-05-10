@@ -1,8 +1,8 @@
-morpheus.SlicedVector = function (v, indices) {
-  morpheus.VectorAdapter.call(this, v);
+phantasus.SlicedVector = function (v, indices) {
+  phantasus.VectorAdapter.call(this, v);
   this.indices = indices;
 };
-morpheus.SlicedVector.prototype = {
+phantasus.SlicedVector.prototype = {
   setValue: function (i, value) {
     this.v.setValue(this.indices[i], value);
   },
@@ -13,4 +13,4 @@ morpheus.SlicedVector.prototype = {
     return this.indices.length;
   }
 };
-morpheus.Util.extend(morpheus.SlicedVector, morpheus.VectorAdapter);
+phantasus.Util.extend(phantasus.SlicedVector, phantasus.VectorAdapter);

@@ -4,19 +4,19 @@
  * setValue.
  * @param rows {number} The number of rows
  * @param columns {number} The number of columns
- * @implements {morpheus.DatasetInterface}
+ * @implements {phantasus.DatasetInterface}
  * @constructor
  */
-morpheus.AbstractDataset = function (rows, columns) {
+phantasus.AbstractDataset = function (rows, columns) {
   this.seriesNames = [];
   this.seriesArrays = [];
   this.seriesDataTypes = [];
   this.rows = rows;
   this.columns = columns;
-  this.rowMetadataModel = new morpheus.MetadataModel(rows);
-  this.columnMetadataModel = new morpheus.MetadataModel(columns);
+  this.rowMetadataModel = new phantasus.MetadataModel(rows);
+  this.columnMetadataModel = new phantasus.MetadataModel(columns);
 };
-morpheus.AbstractDataset.prototype = {
+phantasus.AbstractDataset.prototype = {
   /**
    * @ignore
    * @param metadata

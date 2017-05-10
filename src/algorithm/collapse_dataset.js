@@ -1,4 +1,4 @@
-morpheus.CollapseDataset = function (dataset, collapseToFields,
+phantasus.CollapseDataset = function (dataset, collapseToFields,
                                      summarizeFunction, shallowCopy) {
   var vectors = [];
   for (var i = 0; i < collapseToFields.length; i++) {
@@ -6,13 +6,13 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
     if (!v) {
       throw collapseToFields[i]
       + ' not found. Available fields are '
-      + morpheus.MetadataUtil.getMetadataNames(dataset
+      + phantasus.MetadataUtil.getMetadataNames(dataset
         .getRowMetadata());
     }
     vectors.push(v);
   }
-  var idToIndices = morpheus.VectorUtil.createValuesToIndicesMap(vectors);
-  var collapsedDataset = new morpheus.Dataset({
+  var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
+  var collapsedDataset = new phantasus.Dataset({
     name: dataset.getName(),
     rows: idToIndices.size(),
     columns: dataset.getColumnCount(),
@@ -28,7 +28,7 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
   if (shallowCopy) {
     collapsedDataset.setColumnMetadata(dataset.getColumnMetadata());
   } else {
-    morpheus.MetadataUtil.copy(dataset.getColumnMetadata(),
+    phantasus.MetadataUtil.copy(dataset.getColumnMetadata(),
       collapsedDataset.getColumnMetadata());
   }
   var nfields = collapseToFields.length;
@@ -41,9 +41,9 @@ morpheus.CollapseDataset = function (dataset, collapseToFields,
   idToIndices
     .forEach(function (rowIndices, key) {
       // collapse each column separately
-      var slice = morpheus.DatasetUtil.slicedView(dataset,
+      var slice = phantasus.DatasetUtil.slicedView(dataset,
         rowIndices, null);
-      var view = new morpheus.DatasetColumnView(slice);
+      var view = new phantasus.DatasetColumnView(slice);
       for (var series = 0; series < nseries; series++) {
         view.setSeriesIndex(series);
         for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {

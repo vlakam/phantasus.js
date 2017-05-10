@@ -1,4 +1,4 @@
-morpheus.LandingPage = function (pageOptions) {
+phantasus.LandingPage = function (pageOptions) {
   pageOptions = $.extend({}, {
     el: $('#vis')
   }, pageOptions);
@@ -12,12 +12,13 @@ morpheus.LandingPage = function (pageOptions) {
 
   html
     .push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
-  html.push('<span>M</span>');
-  html.push('<span>o</span>');
-  html.push('<span>r</span>');
-  html.push('<span>p</span>');
+  html.push('<span>P</span>');
   html.push('<span>h</span>');
-  html.push('<span>e</span>');
+  html.push('<span>a</span>');
+  html.push('<span>n</span>');
+  html.push('<span>t</span>');
+  html.push('<span>a</span>');
+  html.push('<span>s</span>');
   html.push('<span>u</span>');
   html.push('<span>s</span>');
   html.push('</span>');
@@ -32,15 +33,15 @@ morpheus.LandingPage = function (pageOptions) {
   var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
   var brands = $html.find('[data-name="brand"] > span');
   $html.appendTo($el);
-  new morpheus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
-  var formBuilder = new morpheus.FormBuilder();
+  new phantasus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
+  var formBuilder = new phantasus.FormBuilder();
   formBuilder.append({
     name: 'file',
     showLabel: false,
     value: '',
     type: 'file',
     required: true,
-    help: morpheus.DatasetUtil.DATASET_FILE_FORMATS
+    help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
   });
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
@@ -54,11 +55,11 @@ morpheus.LandingPage = function (pageOptions) {
     }
   };
   setTimeout(step, 300);
-  this.tabManager = new morpheus.TabManager({landingPage: this});
+  this.tabManager = new phantasus.TabManager({landingPage: this});
   this.tabManager.on('change rename add remove', function (e) {
     var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
     if (title == null || title === '') {
-      title = 'Morpheus';
+      title = 'phantasus';
     }
     document.title = title;
   });
@@ -70,7 +71,7 @@ morpheus.LandingPage = function (pageOptions) {
   // }
 };
 
-morpheus.LandingPage.prototype = {
+phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
@@ -80,7 +81,7 @@ morpheus.LandingPage.prototype = {
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
       options.landingPage = _this;
-      new morpheus.HeatMap(options);
+      new phantasus.HeatMap(options);
     }
 
   },
@@ -89,13 +90,13 @@ morpheus.LandingPage.prototype = {
     this.$el.hide();
     $(window)
       .off(
-        'paste.morpheus drop.morpheus dragover.morpheus dragenter.morpheus');
+        'paste.phantasus drop.phantasus dragover.phantasus dragenter.phantasus');
     this.formBuilder.off('change');
   },
   show: function () {
     var _this = this;
     if (navigator.onLine && !this.sampleDatasets) {
-      this.sampleDatasets = new morpheus.SampleDatasets({
+      this.sampleDatasets = new phantasus.SampleDatasets({
         $el: this.$sampleDatasetsEl,
         show: true,
         callback: function (heatMapOptions) {
@@ -113,12 +114,12 @@ morpheus.LandingPage.prototype = {
       }
     });
 
-    $(window).on('beforeunload.morpheus', function () {
+    $(window).on('beforeunload.phantasus', function () {
       if (_this.tabManager.getTabCount() > 0) {
-        return 'Are you sure you want to close Morpheus?';
+        return 'Are you sure you want to close phantasus?';
       }
     });
-    $(window).on('paste.morpheus', function (e) {
+    $(window).on('paste.phantasus', function (e) {
       var tagName = e.target.tagName;
       if (tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA') {
         return;
@@ -139,11 +140,11 @@ morpheus.LandingPage.prototype = {
         _this.openFile(url);
       }
 
-    }).on('dragover.morpheus dragenter.morpheus', function (e) {
+    }).on('dragover.phantasus dragenter.phantasus', function (e) {
       e.preventDefault();
       e.stopPropagation();
     }).on(
-      'drop.morpheus',
+      'drop.phantasus',
       function (e) {
         if (e.originalEvent.dataTransfer
           && e.originalEvent.dataTransfer.files.length) {
@@ -161,12 +162,12 @@ morpheus.LandingPage.prototype = {
   },
   openFile: function (value) {
     var _this = this;
-    var fileName = morpheus.Util.getFileName(value);
+    var fileName = phantasus.Util.getFileName(value);
     if (fileName.toLowerCase().indexOf('.json') === fileName.length - 5) {
-      morpheus.Util.getText(value).done(function (text) {
+      phantasus.Util.getText(value).done(function (text) {
         _this.open(JSON.parse(text));
       }).fail(function (err) {
-        morpheus.FormBuilder.showMessageModal({
+        phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session'
         });
@@ -179,7 +180,7 @@ morpheus.LandingPage.prototype = {
         }
       };
 
-      morpheus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
+      phantasus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
         if (readOptions) {
           for (var key in readOptions) {
             options.dataset.options[key] = readOptions[key];

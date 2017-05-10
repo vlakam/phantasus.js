@@ -2,12 +2,12 @@ describe('bivariate_functions_test', function () {
 
 	describe('fisher exact', function () {
 		it('R', function () {
-			expect(morpheus.FisherExact.fisherTest(3, 1, 1, 3)).toBeCloseTo(
+			expect(phantasus.FisherExact.fisherTest(3, 1, 1, 3)).toBeCloseTo(
 				0.4857, 0.0001);
-			expect(morpheus.FisherExact.fisherTest(2, 15, 10, 3)).toBeCloseTo(
+			expect(phantasus.FisherExact.fisherTest(2, 15, 10, 3)).toBeCloseTo(
 				0.0005367, 0.0001);
 
-			expect(morpheus.FisherExact.fisherTest(30, 28, 4, 15)).toBeCloseTo(
+			expect(phantasus.FisherExact.fisherTest(30, 28, 4, 15)).toBeCloseTo(
 				0.03176, 0.0001);
 
 		});
@@ -38,7 +38,7 @@ describe('bivariate_functions_test', function () {
 				for (var i = 0, nrows = data.length; i < nrows; i++) {
 					c.push(data[i][index]);
 				}
-				return morpheus.VectorUtil.arrayAsVector(c);
+				return phantasus.VectorUtil.arrayAsVector(c);
 			}
 
 			it('longley', function () {
@@ -68,7 +68,7 @@ describe('bivariate_functions_test', function () {
 				}
 				for (var i = 0; i < nVars; i++) {
 					for (var j = 0; j < i; j++) {
-						var corr = morpheus.KendallsCorrelation(getColumn(matrix, i), getColumn(matrix, j));
+						var corr = phantasus.KendallsCorrelation(getColumn(matrix, i), getColumn(matrix, j));
 						result[i][j] = corr;
 						result[j][i] = corr;
 					}
@@ -108,8 +108,8 @@ describe('bivariate_functions_test', function () {
 			for (var i = 1; i < x.length; i++) {
 				var array = [];
 				for (var j = 0; j < i; j++) {
-					array.push(morpheus.Euclidean(morpheus.VectorUtil
-					.arrayAsVector(x[i]), morpheus.VectorUtil
+					array.push(phantasus.Euclidean(phantasus.VectorUtil
+					.arrayAsVector(x[i]), phantasus.VectorUtil
 					.arrayAsVector(x[j])));
 				}
 				result.push(array);
@@ -138,8 +138,8 @@ describe('bivariate_functions_test', function () {
 				for (var i = 0; i < x.length; i++) {
 					var array = [];
 					for (var j = 0; j < x.length; j++) {
-						array.push(morpheus.Pearson(morpheus.VectorUtil
-						.arrayAsVector(x[i]), morpheus.VectorUtil
+						array.push(phantasus.Pearson(phantasus.VectorUtil
+						.arrayAsVector(x[i]), phantasus.VectorUtil
 						.arrayAsVector(x[j])));
 					}
 					result.push(array);
@@ -160,8 +160,8 @@ describe('bivariate_functions_test', function () {
 			for (var i = 0; i < x.length; i++) {
 				var array = [];
 				for (var j = 0; j < x.length; j++) {
-					array.push(morpheus.Spearman(morpheus.VectorUtil
-					.arrayAsVector(x[i]), morpheus.VectorUtil
+					array.push(phantasus.Spearman(phantasus.VectorUtil
+					.arrayAsVector(x[i]), phantasus.VectorUtil
 					.arrayAsVector(x[j])));
 				}
 				result.push(array);

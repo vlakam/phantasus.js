@@ -1,7 +1,7 @@
-morpheus.HeatMapSynchronizer = function () {
+phantasus.HeatMapSynchronizer = function () {
   this.controllers = [];
 };
-morpheus.HeatMapSynchronizer.prototype = {
+phantasus.HeatMapSynchronizer.prototype = {
   firing: false,
   getProject: function () {
     return this.controllers[0].getProject();

@@ -1,11 +1,11 @@
 describe('set_test', function() {
 
 	it('set() returns an empty set', function() {
-		expect(new morpheus.Set().values()).toEqual([]);
+		expect(new phantasus.Set().values()).toEqual([]);
 	});
 
 	it('size', function() {
-		var s = new morpheus.Set();
+		var s = new phantasus.Set();
 		expect(s.size()).toEqual(0);
 		s.add('foo');
 		expect(s.size()).toEqual(1);
@@ -21,7 +21,7 @@ describe('set_test', function() {
 		expect(s.size()).toEqual(0);
 	});
 	it('forEach', function() {
-		var s = new morpheus.Set();
+		var s = new phantasus.Set();
 		s.add('foo');
 		s.add('bar');
 		var c = [];
@@ -33,7 +33,7 @@ describe('set_test', function() {
 	});
 
 	it('add and remove', function() {
-		var s = new morpheus.Set();
+		var s = new phantasus.Set();
 		s.add('foo');
 		s.add('bar');
 		expect(s.values().sort()).toEqual([ 'bar', 'foo' ]);

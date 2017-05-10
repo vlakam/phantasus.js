@@ -1,4 +1,4 @@
-morpheus.HelpMenu = function () {
+phantasus.HelpMenu = function () {
   var html = [];
   html.push('<div class="btn-group">');
   html.push('<button type="button" class="btn btn-default btn-xxs' +

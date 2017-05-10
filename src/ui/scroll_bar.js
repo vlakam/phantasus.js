@@ -1,5 +1,5 @@
-morpheus.ScrollBar = function (isVertical) {
-  morpheus.AbstractCanvas.call(this);
+phantasus.ScrollBar = function (isVertical) {
+  phantasus.AbstractCanvas.call(this);
   this.isVertical = isVertical;
   $(this.canvas).css('border', '1px solid #d8d8d8');
   if (isVertical) {
@@ -14,8 +14,8 @@ morpheus.ScrollBar = function (isVertical) {
   this.field = this.isVertical ? 'y' : 'x';
   var that = this;
   var mouseMove = function (event) {
-    if (!morpheus.CanvasUtil.dragging) {
-      var position = morpheus.CanvasUtil.getMousePos(event.target, event,
+    if (!phantasus.CanvasUtil.dragging) {
+      var position = phantasus.CanvasUtil.getMousePos(event.target, event,
         true);
       var mouseOver = (position[that.field] >= that.thumbPos && position[that.field] <= (that.thumbPos + that.thumbExtent));
       if (that.thumbMouseOver !== mouseOver) {
@@ -25,19 +25,19 @@ morpheus.ScrollBar = function (isVertical) {
     }
   };
   var mouseExit = function (e) {
-    if (!morpheus.CanvasUtil.dragging && that.thumbMouseOver) {
+    if (!phantasus.CanvasUtil.dragging && that.thumbMouseOver) {
       that.thumbMouseOver = false;
       that.repaint();
     }
   };
   $(this.canvas).on('mousemove', mouseMove).on('mouseout', mouseExit).on(
     'mouseenter', mouseMove);
-  this.hammer = morpheus.Util
+  this.hammer = phantasus.Util
     .hammer(this.canvas, [this.isVertical ? 'panv' : 'panh', 'tap'])
     .on(
       'panstart',
       this.panstart = function (event) {
-        var position = morpheus.CanvasUtil.getMousePos(
+        var position = phantasus.CanvasUtil.getMousePos(
           event.target, event, true);
         if (position[that.field] >= that.thumbPos
           && position[that.field] <= (that.thumbPos + that.thumbExtent)) {
@@ -54,7 +54,7 @@ morpheus.ScrollBar = function (isVertical) {
       'panmove',
       this.panmove = function (event) {
         if (that.draggingThumb) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           var thumbPosPix = that.dragStartThumbPos
             + (that.isVertical ? event.deltaY
@@ -74,7 +74,7 @@ morpheus.ScrollBar = function (isVertical) {
       this.tap = function (event) {
         // ensure not clicked on the thumb
         if (!that.draggingThumb) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           if (!that.decorator.tap(position)) {
             // scroll up or down by thumbExtent
@@ -88,7 +88,7 @@ morpheus.ScrollBar = function (isVertical) {
         }
       });
 };
-morpheus.ScrollBar.prototype = {
+phantasus.ScrollBar.prototype = {
   thumbPos: 0, // the top of the thumb, from 0 to visibleExtent-thumbExtent
   thumbExtent: 0,
   extent: 0,
@@ -100,7 +100,7 @@ morpheus.ScrollBar.prototype = {
   draggingThumb: false,
   thumbMouseOver: false,
   dispose: function () {
-    morpheus.AbstractCanvas.prototype.dispose.call(this);
+    phantasus.AbstractCanvas.prototype.dispose.call(this);
     this.hammer.off('panend', this.panend).off('panstart',
       this.panstart).off('panmove', this.panmove).off('tap', this.tap).off('doubletap', this.tap);
     this.hammer.destroy();
@@ -184,5 +184,5 @@ morpheus.ScrollBar.prototype = {
     this.setValue(value, false);
   }
 };
-morpheus.Util.extend(morpheus.ScrollBar, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.ScrollBar, morpheus.Events);
+phantasus.Util.extend(phantasus.ScrollBar, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.ScrollBar, phantasus.Events);

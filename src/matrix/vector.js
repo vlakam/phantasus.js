@@ -9,19 +9,19 @@
  *            the number of elements in this vector
  * @constructor
  */
-morpheus.Vector = function (name, size) {
+phantasus.Vector = function (name, size) {
   this.array = [];
-  morpheus.AbstractVector.call(this, name, size);
+  phantasus.AbstractVector.call(this, name, size);
 };
 /**
  * @static
  */
-morpheus.Vector.fromArray = function (name, array) {
-  var v = new morpheus.Vector(name, array.length);
+phantasus.Vector.fromArray = function (name, array) {
+  var v = new phantasus.Vector(name, array.length);
   v.array = array;
   return v;
 };
-morpheus.Vector.prototype = {
+phantasus.Vector.prototype = {
   /**
    * @ignore
    * @param value
@@ -53,11 +53,11 @@ morpheus.Vector.prototype = {
   /**
    * @ignore
    * @param array
-   * @returns {morpheus.Vector}
+   * @returns {phantasus.Vector}
    */
   setArray: function (array) {
     this.array = array;
     return this;
   }
 };
-morpheus.Util.extend(morpheus.Vector, morpheus.AbstractVector);
+phantasus.Util.extend(phantasus.Vector, phantasus.AbstractVector);

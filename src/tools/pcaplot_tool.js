@@ -1,4 +1,4 @@
-morpheus.PcaPlotTool = function (chartOptions) {
+phantasus.PcaPlotTool = function (chartOptions) {
   var _this = this;
   this.project = chartOptions.project;
   var project = this.project;
@@ -11,7 +11,7 @@ morpheus.PcaPlotTool = function (chartOptions) {
     + '<div class=""'
     + '</div></div>');
 
-  var formBuilder = new morpheus.FormBuilder({
+  var formBuilder = new phantasus.FormBuilder({
     vertical: true
   });
   this.formBuilder = formBuilder;
@@ -65,10 +65,10 @@ morpheus.PcaPlotTool = function (chartOptions) {
     }
 
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getRowMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -84,10 +84,10 @@ morpheus.PcaPlotTool = function (chartOptions) {
           });
         });
 
-    morpheus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
+    phantasus.MetadataUtil.getMetadataNames(dataset.getColumnMetadata())
       .forEach(
         function (name) {
-          var dataType = morpheus.VectorUtil
+          var dataType = phantasus.VectorUtil
             .getDataType(dataset.getColumnMetadata()
               .getByName(name));
           if (dataType === 'number'
@@ -198,7 +198,7 @@ morpheus.PcaPlotTool = function (chartOptions) {
   this.draw();
 };
 
-morpheus.PcaPlotTool.getVectorInfo = function (value) {
+phantasus.PcaPlotTool.getVectorInfo = function (value) {
   var field = value.substring(0, value.length - 2);
   var isColumns = value.substring(value.length - 2) === '_c';
   return {
@@ -206,10 +206,10 @@ morpheus.PcaPlotTool.getVectorInfo = function (value) {
     isColumns: isColumns
   };
 };
-morpheus.PcaPlotTool.prototype = {
+phantasus.PcaPlotTool.prototype = {
   annotate: function (options) {
     var _this = this;
-    var formBuilder = new morpheus.FormBuilder();
+    var formBuilder = new phantasus.FormBuilder();
     formBuilder.append({
       name: 'annotation_name',
       type: 'text',
@@ -220,7 +220,7 @@ morpheus.PcaPlotTool.prototype = {
       type: 'text',
       required: true
     });
-    morpheus.FormBuilder
+    phantasus.FormBuilder
       .showOkCancel({
         title: 'Annotate Selection',
         content: formBuilder.$form,
@@ -269,22 +269,22 @@ morpheus.PcaPlotTool.prototype = {
             }
           }
           if (isRows) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(rowVector);
             _this.project.trigger('trackChanged', {
               vectors: [rowVector],
               render: existingRowVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: false
             });
           }
           if (isColumns) {
-            morpheus.VectorUtil
+            phantasus.VectorUtil
               .maybeConvertStringToNumber(columnVector);
             _this.project.trigger('trackChanged', {
               vectors: [columnVector],
               render: existingColumnVector != null ? []
-                : [morpheus.VectorTrack.RENDER.TEXT],
+                : [phantasus.VectorTrack.RENDER.TEXT],
               columns: true
             });
           }
@@ -294,7 +294,7 @@ morpheus.PcaPlotTool.prototype = {
   },
   draw: function () {
     var _this = this;
-    var plotlyDefaults = morpheus.ChartTool.getPlotlyDefaults();
+    var plotlyDefaults = phantasus.ChartTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
     var chartWidth = 400;
@@ -307,9 +307,9 @@ morpheus.PcaPlotTool.prototype = {
 
       var dataset = _this.project.getSortedFilteredDataset();
 
-      console.log("PCAPlot :: dataset:", dataset, "trueIndices:", morpheus.Util.getTrueIndices(dataset));
+      console.log("PCAPlot :: dataset:", dataset, "trueIndices:", phantasus.Util.getTrueIndices(dataset));
 
-      var indices = morpheus.Util.getTrueIndices(dataset);
+      var indices = phantasus.Util.getTrueIndices(dataset);
 
       _this.dataset = dataset;
 
@@ -342,7 +342,7 @@ morpheus.PcaPlotTool.prototype = {
 
       var data = [];
       if (sizeByVector) {
-        var minMax = morpheus.VectorUtil.getMinMax(sizeByVector);
+        var minMax = phantasus.VectorUtil.getMinMax(sizeByVector);
         sizeFunction = d3.scale.linear().domain(
           [minMax.min, minMax.max]).range([6, 19])
           .clamp(true);
@@ -386,7 +386,7 @@ morpheus.PcaPlotTool.prototype = {
         for (var cat = 1; cat < catNum; cat++) {
           var curText = [];
           var curSize = sizeByVector ? [] : size;
-          var curColor = morpheus.VectorColorModel.CATEGORY_ALL[(cat - 1) % 60];
+          var curColor = phantasus.VectorColorModel.CATEGORY_ALL[(cat - 1) % 60];
           for (var i = 0; i < categoriesIndices.get(cat).length; i++) {
             curText.push(text[categoriesIndices.get(cat)[i]]);
             if (sizeByVector) {
@@ -429,9 +429,9 @@ morpheus.PcaPlotTool.prototype = {
 
       var expressionSetPromise = dataset.getESSession();
 
-      //console.log("morpheus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
+      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
 
-      //console.log("morpheus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
+      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
 
       expressionSetPromise.then(function (essession) {
         var args = {
@@ -494,7 +494,7 @@ morpheus.PcaPlotTool.prototype = {
         //console.log(arguments);
 
         var req = ocpu.call("pcaPlot", args, function (session) {
-          //console.log("morpheus.PcaPlotTool.prototype.draw ::", "successful", session);
+          //console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
           session.getObject(function (success) {
             //console.log(success);
             _this.pca = JSON.parse(success);
@@ -505,7 +505,7 @@ morpheus.PcaPlotTool.prototype = {
              var data = json.x.data;
              var layout = json.x.layout;
              Plotly.newPlot(myPlot, data, layout, {showLink: false});*/
-            //console.log("morpheus.PcaPlotTool.prototype.draw ::", "plot json", json);
+            //console.log("phantasus.PcaPlotTool.prototype.draw ::", "plot json", json);
           });
           /*var txt = session.txt.split("\n");
            var imageLocationAr = txt[txt.length - 2].split("/"0);

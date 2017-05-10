@@ -23,14 +23,14 @@
  *
  * @param p Percentile between 0 and 100
  */
-morpheus.Percentile = function (vector, p, isSorted) {
-  return morpheus.ArrayPercentile(morpheus.RemoveNaN(vector), p, isSorted);
+phantasus.Percentile = function (vector, p, isSorted) {
+  return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), p, isSorted);
 };
 /**
  * @private
  * @ignore
  */
-morpheus.RemoveNaN = function (values) {
+phantasus.RemoveNaN = function (values) {
   var array = [];
   for (var i = 0, size = values.size(); i < size; i++) {
     var value = values.getValue(i);
@@ -40,16 +40,16 @@ morpheus.RemoveNaN = function (values) {
   }
   return array;
 };
-morpheus.Median = function (vector) {
-  return morpheus.ArrayPercentile(morpheus.RemoveNaN(vector), 50, false);
+phantasus.Median = function (vector) {
+  return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), 50, false);
 };
-morpheus.Median.toString = function () {
+phantasus.Median.toString = function () {
   return 'Median';
 };
 /**
  * @ignore
  */
-morpheus.ArrayPercentile = function (values, p, isSorted) {
+phantasus.ArrayPercentile = function (values, p, isSorted) {
 
   if (!isSorted) {
     values.sort(function (a, b) {
@@ -61,7 +61,7 @@ morpheus.ArrayPercentile = function (values, p, isSorted) {
 /**
  * @ignore
  */
-morpheus.MaxPercentiles = function (percentiles) {
+phantasus.MaxPercentiles = function (percentiles) {
   var f = function (vector) {
     var values = [];
     for (var i = 0, size = vector.size(); i < size; i++) {
@@ -78,7 +78,7 @@ morpheus.MaxPercentiles = function (percentiles) {
     });
     var max = 0;
     for (var i = 0; i < percentiles.length; i++) {
-      var p = morpheus.ArrayPercentile(values, percentiles[i], true);
+      var p = phantasus.ArrayPercentile(values, percentiles[i], true);
       if (Math.abs(p) > Math.abs(max)) {
         max = p;
       }
@@ -101,7 +101,7 @@ morpheus.MaxPercentiles = function (percentiles) {
   };
   return f;
 };
-morpheus.Mean = function (vector) {
+phantasus.Mean = function (vector) {
   var sum = 0;
   var count = 0;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -113,10 +113,10 @@ morpheus.Mean = function (vector) {
   }
   return count === 0 ? NaN : sum / count;
 };
-morpheus.Mean.toString = function () {
+phantasus.Mean.toString = function () {
   return 'Mean';
 };
-morpheus.Sum = function (vector) {
+phantasus.Sum = function (vector) {
   var sum = 0;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -128,10 +128,10 @@ morpheus.Sum = function (vector) {
   }
   return !found ? NaN : sum;
 };
-morpheus.Sum.toString = function () {
+phantasus.Sum.toString = function () {
   return 'Sum';
 };
-morpheus.CountNonNaN = function (vector) {
+phantasus.CountNonNaN = function (vector) {
   var count = 0;
   for (var i = 0, length = vector.size(); i < length; i++) {
     var val = vector.getValue(i);
@@ -141,11 +141,11 @@ morpheus.CountNonNaN = function (vector) {
   }
   return count;
 };
-morpheus.CountNonNaN.toString = function () {
+phantasus.CountNonNaN.toString = function () {
   return 'Count non-NaN';
 };
 
-morpheus.Max = function (vector) {
+phantasus.Max = function (vector) {
   var max = -Number.MAX_VALUE;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -157,10 +157,10 @@ morpheus.Max = function (vector) {
   }
   return !found ? NaN : max;
 };
-morpheus.Max.toString = function () {
+phantasus.Max.toString = function () {
   return 'Max';
 };
-morpheus.Min = function (vector) {
+phantasus.Min = function (vector) {
   var min = Number.MAX_VALUE;
   var found = false;
   for (var i = 0, length = vector.size(); i < length; i++) {
@@ -172,12 +172,12 @@ morpheus.Min = function (vector) {
   }
   return !found ? NaN : min;
 };
-morpheus.Min.toString = function () {
+phantasus.Min.toString = function () {
   return 'Min';
 };
-morpheus.Variance = function (list, mean) {
+phantasus.Variance = function (list, mean) {
   if (mean == undefined) {
-    mean = morpheus.Mean(list);
+    mean = phantasus.Mean(list);
   }
   var sum = 0;
   var n = 0;
@@ -200,23 +200,23 @@ morpheus.Variance = function (list, mean) {
   var variance = sum / n;
   return variance;
 };
-morpheus.Variance.toString = function () {
+phantasus.Variance.toString = function () {
   return 'Variance';
 };
 
-morpheus.StandardDeviation = function (list, mean) {
-  return Math.sqrt(morpheus.Variance(list, mean));
+phantasus.StandardDeviation = function (list, mean) {
+  return Math.sqrt(phantasus.Variance(list, mean));
 };
-morpheus.StandardDeviation.toString = function () {
+phantasus.StandardDeviation.toString = function () {
   return 'Standard deviation';
 };
 
 var LOG_10 = Math.log(10);
-morpheus.Log10 = function (x) {
+phantasus.Log10 = function (x) {
   return x <= 0 ? 0 : Math.log(x) / LOG_10;
 };
 var LOG_2 = Math.log(2);
-morpheus.Log2 = function (x) {
+phantasus.Log2 = function (x) {
   return x <= 0 ? 0 : Math.log(x) / LOG_2;
 };
 
@@ -226,11 +226,11 @@ morpheus.Log2 = function (x) {
  * @param nominalPValues
  *            Array of nominal p-values.
  */
-morpheus.FDR_BH = function (nominalPValues) {
+phantasus.FDR_BH = function (nominalPValues) {
   var size = nominalPValues.length;
   var fdr = [];
-  var pValueIndices = morpheus.Util.indexSort(nominalPValues, true);
-  var ranks = morpheus.Util.rankIndexArray(pValueIndices);
+  var pValueIndices = phantasus.Util.indexSort(nominalPValues, true);
+  var ranks = phantasus.Util.rankIndexArray(pValueIndices);
 
   // check for ties
   for (var i = pValueIndices.length - 1; i > 0; i--) {
@@ -247,7 +247,7 @@ morpheus.FDR_BH = function (nominalPValues) {
   }
 
   // ensure fdr is monotonically decreasing
-  var pIndices = morpheus.Util.indexSort(nominalPValues, false);
+  var pIndices = phantasus.Util.indexSort(nominalPValues, false);
   for (var i = 0; i < pIndices.length - 1; i++) {
     var highIndex = pIndices[i];
     var lowIndex = pIndices[i + 1];
@@ -259,13 +259,13 @@ morpheus.FDR_BH = function (nominalPValues) {
   return fdr;
 };
 
-morpheus.FDR_BH.tString = function () {
+phantasus.FDR_BH.tString = function () {
   return 'FDR(BH)';
 };
 
-morpheus.MAD = function (list, median) {
+phantasus.MAD = function (list, median) {
   if (median == null) {
-    median = morpheus.Percentile(list, 50);
+    median = phantasus.Percentile(list, 50);
   }
   var temp = [];
   for (var j = 0, size = list.size(); j < size; j++) {
@@ -274,24 +274,24 @@ morpheus.MAD = function (list, median) {
       temp.push(Math.abs(value - median));
     }
   }
-  var r = morpheus.Percentile(new morpheus.Vector('', temp.length)
+  var r = phantasus.Percentile(new phantasus.Vector('', temp.length)
     .setArray(temp), 50);
   return 1.4826 * r;
 };
-morpheus.MAD.toString = function () {
+phantasus.MAD.toString = function () {
   return 'Median absolute deviation';
 };
-morpheus.CV = function (list) {
-  var mean = morpheus.Mean(list);
-  var stdev = Math.sqrt(morpheus.Variance(list, mean));
+phantasus.CV = function (list) {
+  var mean = phantasus.Mean(list);
+  var stdev = Math.sqrt(phantasus.Variance(list, mean));
   return stdev / mean;
 };
-morpheus.CV.toString = function () {
+phantasus.CV.toString = function () {
   return 'Coefficient of variation';
 };
 
-morpheus.BoxPlotItem = function (list) {
-  var values = morpheus.RemoveNaN(list);
+phantasus.BoxPlotItem = function (list) {
+  var values = phantasus.RemoveNaN(list);
   values.sort(function (a, b) {
     return (a === b ? 0 : (a < b ? -1 : 1));
   });
@@ -304,9 +304,9 @@ morpheus.BoxPlotItem = function (list) {
       upperAdjacentValue: NaN
     };
   }
-  var median = morpheus.ArrayPercentile(values, 50, true);
-  var q1 = morpheus.ArrayPercentile(values, 25, true);
-  var q3 = morpheus.ArrayPercentile(values, 75, true);
+  var median = phantasus.ArrayPercentile(values, 50, true);
+  var q1 = phantasus.ArrayPercentile(values, 25, true);
+  var q3 = phantasus.ArrayPercentile(values, 75, true);
   var w = 1.5;
   var upperAdjacentValue = -Number.MAX_VALUE;
   var lowerAdjacentValue = Number.MAX_VALUE;

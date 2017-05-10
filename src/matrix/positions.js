@@ -1,4 +1,4 @@
-morpheus.Positions = function () {
+phantasus.Positions = function () {
   this.spaces = undefined;
   this.defaultPositionFunction = function (index) {
     return (this.size * index);
@@ -10,7 +10,7 @@ morpheus.Positions = function () {
   this.squishedIndices = {};
   this.isSquished = false;
 };
-morpheus.Positions.getBottom = function (rect, rowPositions) {
+phantasus.Positions.getBottom = function (rect, rowPositions) {
   var bottom = rowPositions.getLength();
   if (rect != null) {
     bottom = 1 + rowPositions.getIndex(rect.y + rect.height, false);
@@ -19,7 +19,7 @@ morpheus.Positions.getBottom = function (rect, rowPositions) {
   }
   return bottom;
 };
-morpheus.Positions.getTop = function (rect, rowPositions) {
+phantasus.Positions.getTop = function (rect, rowPositions) {
   var top = 0;
   if (rect != null) {
     top = rowPositions.getIndex(rect.y, false) - 1;
@@ -28,7 +28,7 @@ morpheus.Positions.getTop = function (rect, rowPositions) {
   }
   return top;
 };
-morpheus.Positions.getLeft = function (rect, columnPositions) {
+phantasus.Positions.getLeft = function (rect, columnPositions) {
   var left = 0;
   if (rect != null) {
     left = columnPositions.getIndex(rect.x, false) - 1;
@@ -37,7 +37,7 @@ morpheus.Positions.getLeft = function (rect, columnPositions) {
   }
   return left;
 };
-morpheus.Positions.getRight = function (rect, columnPositions) {
+phantasus.Positions.getRight = function (rect, columnPositions) {
   var right = columnPositions.getLength();
   if (rect != null) {
     right = 1 + columnPositions.getIndex(rect.x + rect.width, false);
@@ -45,13 +45,13 @@ morpheus.Positions.getRight = function (rect, columnPositions) {
   }
   return right;
 };
-morpheus.Positions.prototype = {
+phantasus.Positions.prototype = {
   length: 0,
   size: 13,
   squishFactor: 0.1,
   compress: true,
   copy: function () {
-    var copy = new morpheus.Positions();
+    var copy = new phantasus.Positions();
     if (this.spaces) {
       copy.spaces = this.spaces.slice();
     }

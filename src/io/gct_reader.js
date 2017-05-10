@@ -1,8 +1,8 @@
-morpheus.GctReader = function () {
+phantasus.GctReader = function () {
 
 };
 
-morpheus.GctReader.prototype = {
+phantasus.GctReader.prototype = {
   getFormatName: function () {
     return 'gct';
   },
@@ -11,7 +11,7 @@ morpheus.GctReader.prototype = {
     if (fileOrUrl instanceof File) {
       this._readChunking(fileOrUrl, callback, false);
     } else {
-      if (morpheus.Util.isFetchSupported()) {
+      if (phantasus.Util.isFetchSupported()) {
         this._readChunking(fileOrUrl, callback, true);
       } else {
         this._readNoChunking(fileOrUrl, callback);
@@ -92,7 +92,7 @@ morpheus.GctReader.prototype = {
       } else if (lineNumber === 2) {
         columnNamesArray = tokens;
         for (var i = 0; i < columnNamesArray.length; i++) {
-          columnNamesArray[i] = morpheus.Util.copyString(columnNamesArray[i]);
+          columnNamesArray[i] = phantasus.Util.copyString(columnNamesArray[i]);
         }
         if (ncols === -1) {
           ncols = columnNamesArray.length - numRowAnnotations - 1;
@@ -118,7 +118,7 @@ morpheus.GctReader.prototype = {
           var index = j + numRowAnnotations + 1;
           var columnName = index < columnNamesArray.length ? columnNamesArray[index]
             : null;
-          columnMetadata[0].push(morpheus.Util.copyString(columnName));
+          columnMetadata[0].push(phantasus.Util.copyString(columnName));
         }
 
         for (var j = 0; j < numRowAnnotations; j++) {
@@ -131,12 +131,12 @@ morpheus.GctReader.prototype = {
         dataMatrixLineNumberStart = 3 + numColumnAnnotations;
       } else { // lines >=3
         if (lineNumber < dataMatrixLineNumberStart) {
-          var metadataName = morpheus.Util.copyString(tokens[0]);
+          var metadataName = phantasus.Util.copyString(tokens[0]);
           var v = [];
           columnMetadata.push(v);
           columnMetadataNames.push(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.push(morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.push(phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         } else { // data lines
           if (tokens[0] !== '') {
@@ -147,7 +147,7 @@ morpheus.GctReader.prototype = {
             for (var rowAnnotationIndex = 0; rowAnnotationIndex <= numRowAnnotations; rowAnnotationIndex++) {
               var rowMetadataValue = tokens[rowAnnotationIndex];
               rowMetadata[rowAnnotationIndex].push(
-                morpheus.Util.copyString(rowMetadataValue));
+                phantasus.Util.copyString(rowMetadataValue));
 
             }
 
@@ -161,7 +161,7 @@ morpheus.GctReader.prototype = {
       lineNumber++;
 
     };
-    (useFetch ? morpheus.BufferedReader : Papa).parse(fileOrUrl, {
+    (useFetch ? phantasus.BufferedReader : Papa).parse(fileOrUrl, {
       delimiter: '\t',	// auto-detect
       newline: '',	// auto-detect
       header: false,
@@ -175,8 +175,8 @@ morpheus.GctReader.prototype = {
         handleTokens(result.data[0]);
       },
       complete: function () {
-        var dataset = new morpheus.Dataset({
-          name: morpheus.Util.getBaseFileName(morpheus.Util
+        var dataset = new phantasus.Dataset({
+          name: phantasus.Util.getBaseFileName(phantasus.Util
             .getFileName(fileOrUrl)),
           rows: matrix.length,
           columns: ncols,
@@ -189,8 +189,8 @@ morpheus.GctReader.prototype = {
         for (var i = 0; i < columnMetadataNames.length; i++) {
           dataset.getColumnMetadata().add(columnMetadataNames[i]).array = columnMetadata[i];
         }
-        morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-        morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+        phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+        phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
           1);
         callback(null, dataset);
       },
@@ -207,7 +207,7 @@ morpheus.GctReader.prototype = {
   },
   _read: function (datasetName, reader) {
     var tab = /\t/;
-    var versionLine = morpheus.Util.copyString(reader.readLine().trim());
+    var versionLine = phantasus.Util.copyString(reader.readLine().trim());
     if (versionLine === '') {
       throw new Error('Missing version line');
     }
@@ -219,7 +219,7 @@ morpheus.GctReader.prototype = {
     } else {
       console.log('Unknown version: assuming version 2');
     }
-    var dimensionsLine = morpheus.Util.copyString(reader.readLine());
+    var dimensionsLine = phantasus.Util.copyString(reader.readLine());
     if (dimensionsLine == null) {
       throw new Error('No dimensions specified');
     }
@@ -247,7 +247,7 @@ morpheus.GctReader.prototype = {
           'Number of rows and columns must be greater than 0.');
       }
     }
-    var columnNamesLine = morpheus.Util.copyString(reader.readLine());
+    var columnNamesLine = phantasus.Util.copyString(reader.readLine());
     if (columnNamesLine == null) {
       throw new Error('No column annotations');
     }
@@ -282,7 +282,7 @@ morpheus.GctReader.prototype = {
         var index = j + numRowAnnotations + 1;
         var columnName = index < columnNamesArray.length ? columnNamesArray[index]
           : null;
-        columnMetadata[0].push(morpheus.Util.copyString(columnName));
+        columnMetadata[0].push(phantasus.Util.copyString(columnName));
       }
 
       for (var j = 0; j < numRowAnnotations; j++) {
@@ -304,7 +304,7 @@ morpheus.GctReader.prototype = {
           columnMetadata.push(v);
           columnMetadataNames.push(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.push(morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.push(phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         }
       }
@@ -322,7 +322,7 @@ morpheus.GctReader.prototype = {
           for (var rowAnnotationIndex = 0; rowAnnotationIndex < numRowAnnotationsPlusOne; rowAnnotationIndex++) {
             var rowMetadataValue = tokens[rowAnnotationIndex];
             rowMetadata[rowAnnotationIndex].push(
-              morpheus.Util.copyString(rowMetadataValue));
+              phantasus.Util.copyString(rowMetadataValue));
 
           }
 
@@ -333,7 +333,7 @@ morpheus.GctReader.prototype = {
         }
 
       }
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         name: datasetName,
         rows: matrix.length,
         columns: ncols,
@@ -346,13 +346,13 @@ morpheus.GctReader.prototype = {
       for (var i = 0; i < columnMetadataNames.length; i++) {
         dataset.getColumnMetadata().add(columnMetadataNames[i]).array = columnMetadata[i];
       }
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
         1);
       return dataset;
 
     } else {
-      var dataset = new morpheus.Dataset({
+      var dataset = new phantasus.Dataset({
         dataType: 'Float32',
         name: datasetName,
         rows: nrows,
@@ -365,13 +365,13 @@ morpheus.GctReader.prototype = {
           var index = j + numRowAnnotations + 1;
           var columnName = index < columnNamesArray.length ? columnNamesArray[index]
             : null;
-          columnIds.setValue(j, morpheus.Util.copyString(columnName));
+          columnIds.setValue(j, phantasus.Util.copyString(columnName));
         }
 
       } else {
         for (var j = 0; j < ncols; j++) {
           var columnName = columnNamesArray[j + numRowAnnotations + 1];
-          columnIds.setValue(j, morpheus.Util.copyString(columnName));
+          columnIds.setValue(j, phantasus.Util.copyString(columnName));
         }
       }
 
@@ -399,7 +399,7 @@ morpheus.GctReader.prototype = {
           var metadataName = tokens[0];
           var v = dataset.getColumnMetadata().add(metadataName);
           for (var j = 0; j < ncols; j++) {
-            v.setValue(j, morpheus.Util.copyString(tokens[j + dataColumnStart]));
+            v.setValue(j, phantasus.Util.copyString(tokens[j + dataColumnStart]));
           }
         }
       }
@@ -413,19 +413,19 @@ morpheus.GctReader.prototype = {
         }
         var tokens = s.split(tab);
         if (version === 2) {
-          rowAnnotationVectors[0].setValue(rowIndex, morpheus.Util.copyString(tokens[0]));
+          rowAnnotationVectors[0].setValue(rowIndex, phantasus.Util.copyString(tokens[0]));
           var desc = tokens[1];
           if (!nonEmptyDescriptionFound) {
             nonEmptyDescriptionFound = desc !== '';
           }
-          rowAnnotationVectors[1].setValue(rowIndex, morpheus.Util.copyString(desc));
+          rowAnnotationVectors[1].setValue(rowIndex, phantasus.Util.copyString(desc));
         } else {
           // we iterate to numRowAnnotations + 1 to include id row
           // metadata field
           for (var rowAnnotationIndex = 0; rowAnnotationIndex < numRowAnnotationsPlusOne; rowAnnotationIndex++) {
             var rowMetadataValue = tokens[rowAnnotationIndex];
             rowAnnotationVectors[rowAnnotationIndex].setValue(rowIndex,
-              morpheus.Util.copyString(rowMetadataValue));
+              phantasus.Util.copyString(rowMetadataValue));
 
           }
         }
@@ -433,7 +433,7 @@ morpheus.GctReader.prototype = {
           var token = tokens[columnIndex + dataColumnStart];
           // if (token[0] === '{') {
           // var value = JSON.parse(token);
-          // dataset.setValue(rowIndex, columnIndex, morpheus.Util
+          // dataset.setValue(rowIndex, columnIndex, phantasus.Util
           // .wrapNumber(value.__v, value));
           // } else {
           // dataset.setValue(rowIndex, columnIndex, parseFloat(token));
@@ -450,22 +450,22 @@ morpheus.GctReader.prototype = {
         throw new Error('Missing data rows');
       }
 
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-      morpheus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+      phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
         1);
       return dataset;
     }
   },
   _readNoChunking: function (fileOrUrl, callback) {
     var _this = this;
-    var name = morpheus.Util.getBaseFileName(morpheus.Util
+    var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    morpheus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
+    phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);
       } else {
         callback(null, _this._read(name,
-          new morpheus.ArrayBufferReader(new Uint8Array(
+          new phantasus.ArrayBufferReader(new Uint8Array(
             arrayBuffer))));
       }
     });
@@ -473,7 +473,7 @@ morpheus.GctReader.prototype = {
     // 	url: fileOrUrl,
     // 	dataType: 'text'
     // }).done(function (text) {
-    // 	callback(null, _this.read(name, new morpheus.StringReader(text)));
+    // 	callback(null, _this.read(name, new phantasus.StringReader(text)));
     // }).fail(function (err) {
     // 	callback(err);
     // });

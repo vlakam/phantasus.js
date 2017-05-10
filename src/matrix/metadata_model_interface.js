@@ -1,6 +1,6 @@
 /**
  * Stores annotations for the rows or columns of a dataset.
- * @interface morpheus.MetadataModelInterface
+ * @interface phantasus.MetadataModelInterface
  *
  */
 
@@ -9,10 +9,10 @@
  * with the same name already exists, it is removed and existing properties
  * and values copied to the new vector before appending the new vector.
  * @function
- * @name morpheus.MetadataModelInterface#add
+ * @name phantasus.MetadataModelInterface#add
  * @param name {String} The vector name to be inserted into this meta data instance.
  * @param options {object}
- * @return {morpheus.VectorInterface} the added vector.
+ * @return {phantasus.VectorInterface} the added vector.
  */
 
 /**
@@ -20,7 +20,7 @@
  * contains.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getItemCount
+ * @name phantasus.MetadataModelInterface#getItemCount
  * @return {number} the item count
  */
 
@@ -28,9 +28,9 @@
  * Returns the vector at the specified metadata index.
  *
  * @function
- * @name morpheus.MetadataModelInterface#get
+ * @name phantasus.MetadataModelInterface#get
  * @param index {number} the metadata index
- * @return {morpheus.VectorInterface} the vector
+ * @return {phantasus.VectorInterface} the vector
  */
 
 /**
@@ -39,9 +39,9 @@
  * indices).
  *
  * @function
- * @name morpheus.MetadataModelInterface#remove
+ * @name phantasus.MetadataModelInterface#remove
  * @param index {number} the meta data index to remove.
- * @return {morpheus.VectorInterface} the removed vector
+ * @return {phantasus.VectorInterface} the removed vector
  * @throws Error if index < 0 or >= getMetadataCount
  */
 
@@ -49,16 +49,16 @@
  * Returns the vector witht the specified name.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getByName
+ * @name phantasus.MetadataModelInterface#getByName
  * @param name {string} the vector name
- * @return {morpheus.VectorInterface} the vector
+ * @return {phantasus.VectorInterface} the vector
  */
 
 /**
  * Returns the number of vectors in this meta data instance.
  *
  * @function
- * @name morpheus.MetadataModelInterface#getMetadataCount
+ * @name phantasus.MetadataModelInterface#getMetadataCount
  * @return {number} the number of vectors.
  */
 

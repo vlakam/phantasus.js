@@ -1,16 +1,16 @@
-morpheus.LegendWithStops = function () {
-  morpheus.AbstractCanvas.call(this, false);
+phantasus.LegendWithStops = function () {
+  phantasus.AbstractCanvas.call(this, false);
   this.setBounds({
     width: 300,
     height: 40
   });
   var that = this;
-  this.hammer = morpheus.Util.hammer(this.canvas, ['pan', 'tap', 'press'])
+  this.hammer = phantasus.Util.hammer(this.canvas, ['pan', 'tap', 'press'])
     .on(
       'panmove',
       this.panmove = function (event) {
         if (that.panStartSelectedIndex !== -1) {
-          var position = morpheus.CanvasUtil.getMousePos(
+          var position = phantasus.CanvasUtil.getMousePos(
             event.target, event);
           var fraction = that.fractionToStopPix
             .invert(position.x);
@@ -24,14 +24,14 @@ morpheus.LegendWithStops = function () {
       'panstart',
       this.panstart = function (event) {
         that.panStartSelectedIndex = that
-          .findIndexForPosition(morpheus.CanvasUtil
+          .findIndexForPosition(phantasus.CanvasUtil
             .getMousePos(event.target, event, true));
       }).on('panend', this.panend = function (event) {
       that.panStartSelectedIndex = -1;
     }).on(
       'tap',
       this.tap = function (event) {
-        var position = morpheus.CanvasUtil.getMousePos(
+        var position = phantasus.CanvasUtil.getMousePos(
           event.target, event);
         if (event.tapCount > 1) {
           // don't add on double-click
@@ -58,7 +58,7 @@ morpheus.LegendWithStops = function () {
     }
   });
 };
-morpheus.LegendWithStops.prototype = {
+phantasus.LegendWithStops.prototype = {
   selectedIndex: -1,
   border: 7,
   stopHalfSize: 5,
@@ -92,11 +92,11 @@ morpheus.LegendWithStops.prototype = {
     this.stepped = stepped;
     this.fractionToStopPix = fractionToStopPix;
     var context = this.canvas.getContext('2d');
-    morpheus.CanvasUtil.resetTransform(context);
+    phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
     context.translate(this.border, 0);
-    morpheus.HeatMapColorSchemeLegend.draw(context, fractions, colors, this
+    phantasus.HeatMapColorSchemeLegend.draw(context, fractions, colors, this
         .getUnscaledWidth()
       - 2 * this.border, this.getUnscaledHeight() - 20, stepped);
     context.translate(-this.border, 0);
@@ -124,5 +124,5 @@ morpheus.LegendWithStops.prototype = {
     }
   }
 };
-morpheus.Util.extend(morpheus.LegendWithStops, morpheus.AbstractCanvas);
-morpheus.Util.extend(morpheus.LegendWithStops, morpheus.Events);
+phantasus.Util.extend(phantasus.LegendWithStops, phantasus.AbstractCanvas);
+phantasus.Util.extend(phantasus.LegendWithStops, phantasus.Events);
