@@ -12,12 +12,13 @@ phantasus.LandingPage = function (pageOptions) {
 
   html
     .push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
-  html.push('<span>M</span>');
-  html.push('<span>o</span>');
-  html.push('<span>r</span>');
-  html.push('<span>p</span>');
+  html.push('<span>P</span>');
   html.push('<span>h</span>');
-  html.push('<span>e</span>');
+  html.push('<span>a</span>');
+  html.push('<span>n</span>');
+  html.push('<span>t</span>');
+  html.push('<span>a</span>');
+  html.push('<span>s</span>');
   html.push('<span>u</span>');
   html.push('<span>s</span>');
   html.push('</span>');
