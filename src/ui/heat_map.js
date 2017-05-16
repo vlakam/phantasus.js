@@ -1979,6 +1979,12 @@ phantasus.HeatMap.prototype = {
       });
 
     }
+    if (this.options.rowColorModel) {
+      this.getProject().getRowColorModel().fromJSON(this.options.rowColorModel);
+    }
+    if (this.options.columnColorModel) {
+      this.getProject().getColumnColorModel().fromJSON(this.options.columnColorModel);
+    }
     if (this.options.rowSize === 'fit' || this.options.columnSize === 'fit') {
       // note that we have to revalidate twice because column sizes are
       // dependent on row sizes and vice versa
@@ -1988,12 +1994,6 @@ phantasus.HeatMap.prototype = {
         this.revalidate({
           paint: false
         });
-      }
-      if (this.options.rowColorModel) {
-        this.getProject().getRowColorModel().fromJSON(this.options.rowColorModel);
-      }
-      if (this.options.columnColorModel) {
-        this.getProject().getColumnColorModel().fromJSON(this.options.columnColorModel);
       }
       if (this.options.rowSize === 'fit') {
         this.heatmap.getRowPositions().setSize(this.getFitRowSize());

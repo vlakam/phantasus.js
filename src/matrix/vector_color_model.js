@@ -87,8 +87,8 @@ phantasus.VectorColorModel.prototype = {
   toJSON: function () {
     var json = {};
     this.vectorNameToColorScheme.forEach(function (colorScheme, name) {
-      var colorSchemeJSON = phantasus.AbstractColorSupplier.toJSON(colorScheme);
-      colorSchemeJSON.continuous = true;
+      // colorScheme is instanceof phantasus.HeatMapColorScheme
+      var colorSchemeJSON = phantasus.AbstractColorSupplier.toJSON(colorScheme.getCurrentColorSupplier());
       json[name] = colorSchemeJSON;
     });
     this.vectorNameToColorMap.forEach(function (colorMap, name) {
@@ -98,10 +98,11 @@ phantasus.VectorColorModel.prototype = {
   },
   fromJSON: function (json) {
     for (var name in json) {
-      if (json.continuous) {
-        this.vectorNameToColorScheme.set(name, phantasus.AbstractColorSupplier.fromJSON());
+      var obj = json[name];
+      if (obj.colors) {
+        this.vectorNameToColorScheme.set(name, phantasus.AbstractColorSupplier.fromJSON(obj));
       } else {
-        this.vectorNameToColorMap.set(name, phantasus.Map.fromJSON(json[name]));
+        this.vectorNameToColorMap.set(name, phantasus.Map.fromJSON(obj));
       }
     }
   },
