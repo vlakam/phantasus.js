@@ -16,7 +16,7 @@ phantasus.ChartTool = function (chartOptions) {
     + '</div></div>');
 
   var formBuilder = new phantasus.FormBuilder({
-    vertical: true
+    formStyle: 'vertical'
   });
   this.formBuilder = formBuilder;
   formBuilder.append({

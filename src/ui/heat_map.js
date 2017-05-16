@@ -53,78 +53,76 @@ phantasus.HeatMap = function (options) {
          */
         columnAnnotations: undefined,
 
-        /*
-         * Array of column metadata names to group the heat map
-         * by.
-         *
-         * <p>
-         * <b>Example:</b> Group by the type and gender
-         * metadata field.
-         * </p>
-         *
-         * <code>['type', 'gender']</code>
-         */
-        columnGroupBy: undefined,
-        /*
-         * Array of row metadata names to group the heat map by.
-         *
-         * <p>
-         * <b>Example:</b> Group by the gene metadata field.
-         * </p>
-         * <code>['gene']</code>
-         */
-        rowGroupBy: undefined,
-        /*
-         * Object that describes mapping of values to colors.
-         * Type can be 'fixed' or 'relative'. Stepped indicates
-         * whether color scheme is continuous (false) or
-         * discrete (true).
-         * <p>
-         * <b>Example:</b> Use a fixed color scheme with color
-         * stops at -100, -90, 90, and 100.
-         * <p>
-         * <code>{ type : 'fixed', stepped:false, map : [ { value : -100, color :
-         * 'blue' }, { value : -90, color : 'white' }, { value :
-         * 90, color : 'white' }, { value : 100, color : 'red' } ] };</code>
-         */
-        colorScheme: undefined,
-        /*
-         * Array of metadata names and sort order. Use 0 for
-         * ascending and 1 for descending. To sort by values use
-         * modelIndices.
-         *
-         * <p>
-         * <b>Example:</b> Sort ascending by gene, and then
-         * descending by stdev
-         * </p>
-         * <code>[{field:'gene', order:0}, {field:'stdev',
-         *              order:1}]</code>
-         */
-        rowSortBy: undefined,
-        /*
-         * Array of metadata names and sort order. Use 0 for
-         * ascending and 1 for descending.
-         *
-         * <p>
-         * <b>Example:</b> to sort ascending by gene, and then
-         * descending by stdev
-         * </p>
-         * <code> [{name:'gene',
-         *              order:0}, {name:'stdev', order:1}]</code>
-         */
-        columnSortBy: undefined,
-        /*
-         * URL to a dendrogram in <a target="_blank"
-         * href="https://en.wikipedia.org/wiki/Newick_format">Newick
-         * format</a>
-         */
-        rowDendrogram: undefined,
-        /*
-         * URL to a dendrogram in <a target="_blank"
-         * href="https://en.wikipedia.org/wiki/Newick_format">Newick
-         * format</a>
-         */
-        columnDendrogram: undefined,
+      /*
+       * Array of column metadata names to group the heat map
+       * by.
+       *
+       * <p>
+       * <b>Example:</b> Group by the type and gender
+       * metadata field.
+       * </p>
+       *
+       * <code>['type', 'gender']</code>
+       */
+      columnGroupBy: undefined,
+      /*
+       * Array of row metadata names to group the heat map by.
+       *
+       * <p>
+       * <b>Example:</b> Group by the gene metadata field.
+       * </p>
+       * <code>['gene']</code>
+       */
+      rowGroupBy: undefined,
+      /*
+       * Object that describes mapping of values to colors.
+       * scalingMode can be 'fixed' or 'relative'. Stepped indicates
+       * whether color scheme is continuous (false) or
+       * discrete (true).
+       * <p>
+       * <b>Example:</b> Use a fixed color scheme with color
+       * stops at -100, -90, 90, and 100.
+       * <p>
+       * <code>{ scalingMode : 'fixed', stepped:false, values : [-100, -90, 90, 100], colors : ['blue', 'white', 'white', 'red'] };</code>
+       */
+      colorScheme: undefined,
+      /*
+       * Array of metadata names and sort order. Use 0 for
+       * ascending and 1 for descending. To sort by values use
+       * modelIndices.
+       *
+       * <p>
+       * <b>Example:</b> Sort ascending by gene, and then
+       * descending by stdev
+       * </p>
+       * <code>[{field:'gene', order:0}, {field:'stdev',
+       *              order:1}]</code>
+       */
+      rowSortBy: undefined,
+      /*
+       * Array of metadata names and sort order. Use 0 for
+       * ascending and 1 for descending.
+       *
+       * <p>
+       * <b>Example:</b> to sort ascending by gene, and then
+       * descending by stdev
+       * </p>
+       * <code> [{name:'gene',
+       *              order:0}, {name:'stdev', order:1}]</code>
+       */
+      columnSortBy: undefined,
+      /*
+       * URL to a dendrogram in <a target="_blank"
+       * href="https://en.wikipedia.org/wiki/Newick_format">Newick
+       * format</a>
+       */
+      rowDendrogram: undefined,
+      /*
+       * URL to a dendrogram in <a target="_blank"
+       * href="https://en.wikipedia.org/wiki/Newick_format">Newick
+       * format</a>
+       */
+      columnDendrogram: undefined,
 
       /*
        * Column metadata field in dataset used to match leaf
@@ -209,7 +207,7 @@ phantasus.HeatMap = function (options) {
       /*
        * Heat map grid thickness in pixels
        */
-      gridThickness:0.1,
+      gridThickness: 0.1,
       customUrls: undefined, // Custom urls for File>Open.
       height: 'window', // set the available height for the
       // heat map. If not
@@ -829,14 +827,14 @@ phantasus.HeatMap.prototype = {
     var colorScheme;
     if (options.extension === 'segtab' || options.extension === 'seg') {
       colorScheme = {
-        type: 'fixed',
+        scalingMode: 'fixed',
         map: phantasus.HeatMapColorScheme.Predefined.CN().map
-          .map(function (item) {
-            return {
-              value: Math.pow(2, 1 + item.value),
-              color: item.color
-            };
-          })
+        .map(function (item) {
+          return {
+            value: Math.pow(2, 1 + item.value),
+            color: item.color
+          };
+        })
       };
     } else if (options.extension === 'maf') {
       colorScheme = phantasus.HeatMapColorScheme.Predefined.MAF();
@@ -857,7 +855,7 @@ phantasus.HeatMap.prototype = {
       }
       if (!useMafColorMap) {
         colorScheme = {
-          type: 'fixed',
+          scalingMode: 'fixed',
           stepped: true,
           map: [{
             value: 0,

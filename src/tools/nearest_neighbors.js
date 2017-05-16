@@ -11,6 +11,17 @@ phantasus.NearestNeighbors.Functions.fromString = function (s) {
   }
   throw new Error(s + ' not found');
 };
+
+phantasus.NearestNeighbors.execute = function (dataset, input) {
+  var f = phantasus.NearestNeighbors.Functions.fromString(input.metric);
+  var permutations = new phantasus.PermutationPValues(dataset, null, null, input.npermutations, f, phantasus.Vector.fromArray('', input.listValues));
+  return {
+    rowSpecificPValues: permutations.rowSpecificPValues,
+    k: permutations.k,
+    fdr: permutations.fdr,
+    scores: permutations.scores
+  };
+};
 phantasus.NearestNeighbors.prototype = {
   toString: function () {
     return 'Nearest Neighbors';
@@ -19,45 +30,45 @@ phantasus.NearestNeighbors.prototype = {
     var $selectedOnly = form.$form.find('[name=use_selected_only]')
       .parent();
     form.$form
-      .find('[name=compute_nearest_neighbors_of]')
-      .on(
-        'change',
-        function (e) {
-          var val = $(this).val();
-          if (val === 'selected rows' || val === 'column annotation') {
-            $($selectedOnly.contents()[1])
-              .replaceWith(
-                document
-                  .createTextNode(' Use selected columns only'));
-          } else {
-            $($selectedOnly.contents()[1])
-              .replaceWith(
-                document
-                  .createTextNode(' Use selected rows only'));
-          }
-          form.setVisible('annotation', false);
-          if (val === 'column annotation' || val === 'row annotation') {
-            var metadata = val === 'column annotation' ? project.getFullDataset()
-              .getColumnMetadata() : project.getFullDataset()
-              .getRowMetadata();
-            var names = [];
-            // get numeric columns only
-            for (var i = 0; i < metadata.getMetadataCount(); i++) {
-              var v = metadata.get(i);
-              if (phantasus.VectorUtil.getDataType(v) === 'number') {
-                names.push(v.getName());
-              }
+    .find('[name=compute_nearest_neighbors_of]')
+    .on(
+      'change',
+      function (e) {
+        var val = $(this).val();
+        if (val === 'selected rows' || val === 'column annotation') {
+          $($selectedOnly.contents()[1])
+          .replaceWith(
+            document
+            .createTextNode(' Use selected columns only'));
+        } else {
+          $($selectedOnly.contents()[1])
+          .replaceWith(
+            document
+            .createTextNode(' Use selected rows only'));
+        }
+        form.setVisible('annotation', false);
+        if (val === 'column annotation' || val === 'row annotation') {
+          var metadata = val === 'column annotation' ? project.getFullDataset()
+          .getColumnMetadata() : project.getFullDataset()
+          .getRowMetadata();
+          var names = [];
+          // get numeric columns only
+          for (var i = 0; i < metadata.getMetadataCount(); i++) {
+            var v = metadata.get(i);
+            if (phantasus.VectorUtil.getDataType(v) === 'number') {
+              names.push(v.getName());
             }
-            names.sort(function (a, b) {
-              a = a.toLowerCase();
-              b = b.toLowerCase();
-              return (a < b ? -1 : (a === b ? 0 : 1));
-            });
-            form
-              .setOptions('annotation', names);
-            form.setVisible('annotation', true);
           }
-        });
+          names.sort(function (a, b) {
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            return (a < b ? -1 : (a === b ? 0 : 1));
+          });
+          form
+          .setOptions('annotation', names);
+          form.setVisible('annotation', true);
+        }
+      });
     $($selectedOnly.contents()[1]).replaceWith(
       document.createTextNode(' Use selected columns only'));
     form.setVisible('annotation', false);
@@ -79,6 +90,10 @@ phantasus.NearestNeighbors.prototype = {
     }, {
       name: 'annotation',
       type: 'bootstrap-select'
+    }, {
+      name: 'permutations',
+      value: '0',
+      type: 'text'
     }];
   },
   execute: function (options) {
@@ -108,11 +123,11 @@ phantasus.NearestNeighbors.prototype = {
         spaceIndices);
     }
     var d1 = phantasus.DatasetUtil
-      .slicedView(dataset, selectedIndices, null);
-    var list1;
+    .slicedView(dataset, selectedIndices, null);
+    var nearestNeighborsList;
     if (isAnnotation) {
-      list1 = dataset.getColumnMetadata().getByName(options.input.annotation);
-      if (!list1) {
+      nearestNeighborsList = dataset.getColumnMetadata().getByName(options.input.annotation);
+      if (!nearestNeighborsList) {
         throw new Error('No annotation selected.');
       }
     } else {
@@ -130,29 +145,93 @@ phantasus.NearestNeighbors.prototype = {
         }
         d1 = newDataset;
       }
-      list1 = new phantasus.DatasetRowView(d1);
+      nearestNeighborsList = new phantasus.DatasetRowView(d1);
     }
 
-    var list2 = new phantasus.DatasetRowView(dataset);
-    var values = [];
-    var v = dataset.getRowMetadata().getByName(f.toString());
-    if (v == null) {
-      v = dataset.getRowMetadata().add(f.toString());
-    }
-    for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
-      v.setValue(i, f(list1, list2.setIndex(i)));
-    }
-    if (!isColumns) {
-      project.setRowSortKeys([new phantasus.SortKey(f.toString(),
-        phantasus.SortKey.SortOrder.DESCENDING)], true);
+    var npermutations = parseInt(options.input.permutations);
+    var scoreVector = dataset.getRowMetadata().add(f.toString());
+    if (npermutations > 0) {
+
+      if (options.input.background === undefined) {
+        options.input.background = true;
+      }
+      options.input.background = options.input.background && typeof Worker !== 'undefined';
+      options.input.background = false; // FIXME
+      options.input.npermutations = npermutations;
+
+      var done = function (result) {
+        var pvalueVector = dataset.getRowMetadata().add('p_value');
+        var fdrVector = dataset.getRowMetadata().add('FDR(BH)');
+        var kVector = dataset.getRowMetadata().add('k');
+
+        for (var i = 0, size = pvalueVector.size(); i < size; i++) {
+          pvalueVector.setValue(i, result.rowSpecificPValues[i]);
+          fdrVector.setValue(i, result.fdr[i]);
+          kVector.setValue(i, result.k[i]);
+          scoreVector.setValue(i, result.scores[i]);
+        }
+        var vectors = [pvalueVector, fdrVector, kVector, scoreVector];
+        project.trigger('trackChanged', {
+          vectors: vectors,
+          render: ['text'],
+          columns: isColumns
+        });
+      };
+
+      var listValues = new Float32Array(nearestNeighborsList.size());
+      for (var i = 0, size = listValues.length; i < size; i++) {
+        listValues[i] = nearestNeighborsList.getValue(i);
+      }
+      options.input.listValues = listValues;
+      if (options.input.background) {
+        var blob = new Blob(
+          ['self.onmessage = function(e) {'
+          + 'importScripts(e.data.scripts);'
+          + 'self.postMessage(phantasus.NearestNeighbors.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+          + '}']);
+
+        var url = window.URL.createObjectURL(blob);
+        var worker = new Worker(url);
+
+        worker.postMessage({
+          scripts: phantasus.Util.getScriptPath(),
+          dataset: phantasus.Dataset.toJSON(dataset, {
+            columnFields: [],
+            rowFields: [],
+            seriesIndices: [0]
+          }),
+          input: options.input
+        });
+
+        worker.onmessage = function (e) {
+          done(e.data);
+          worker.terminate();
+          window.URL.revokeObjectURL(url);
+        };
+        return worker;
+      } else {
+        done(phantasus.NearestNeighbors.execute(dataset, options.input));
+      }
+
     } else {
-      project.setColumnSortKeys([new phantasus.SortKey(f.toString(),
-        phantasus.SortKey.SortOrder.DESCENDING)], true);
+      var datasetRowView = new phantasus.DatasetRowView(dataset);
+
+      for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
+        scoreVector.setValue(i, f(nearestNeighborsList, datasetRowView.setIndex(i)));
+      }
+      if (!isColumns) {
+        project.setRowSortKeys([new phantasus.SortKey(f.toString(),
+          phantasus.SortKey.SortOrder.DESCENDING)], true);
+      } else {
+        project.setColumnSortKeys([new phantasus.SortKey(f.toString(),
+          phantasus.SortKey.SortOrder.DESCENDING)], true);
+      }
+      project.trigger('trackChanged', {
+        vectors: [v],
+        render: ['text'],
+        columns: isColumns
+      });
     }
-    project.trigger('trackChanged', {
-      vectors: [v],
-      render: ['text'],
-      columns: isColumns
-    });
+
   }
 };

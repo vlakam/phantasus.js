@@ -6,7 +6,7 @@
  */
 phantasus.HeatMapColorScheme = function (project, scheme) {
   this.project = project;
-  var that = this;
+  var _this = this;
 
   this.separateColorSchemeForRowMetadataField = null;
   this.rowValueToColorSupplier = {};
@@ -15,17 +15,16 @@ phantasus.HeatMapColorScheme = function (project, scheme) {
     if (scheme.valueToColorScheme) { // json representation
       this.fromJSON(scheme);
     } else {
-      this.rowValueToColorSupplier[null] = phantasus.HeatMapColorScheme
-        .createColorSupplier(scheme);
+      this.rowValueToColorSupplier[null] = this.fromJSON(scheme);
       this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     }
   }
   project
-    .on(
-      'rowFilterChanged columnFilterChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
-      function () {
-        that.projectUpdated();
-      });
+  .on(
+    'rowFilterChanged columnFilterChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
+    function () {
+      _this.projectUpdated();
+    });
   this.projectUpdated();
 };
 phantasus.HeatMapColorScheme.Predefined = {};
@@ -452,11 +451,17 @@ phantasus.HeatMapColorScheme.prototype = {
     }
     this.rowValueToColorSupplier = {};
     var obj = json.valueToColorScheme || json.colorSchemes;
-    _.each(_.keys(obj), function (key) {
+    if (obj == null) {
       var colorSupplier = phantasus.AbstractColorSupplier
+      .fromJSON(json);
+      _this.rowValueToColorSupplier['null'] = colorSupplier;
+    } else {
+      _.each(_.keys(obj), function (key) {
+        var colorSupplier = phantasus.AbstractColorSupplier
         .fromJSON(obj[key]);
-      _this.rowValueToColorSupplier[key] = colorSupplier;
-    });
+        _this.rowValueToColorSupplier[key] = colorSupplier;
+      });
+    }
     this._ensureColorSupplierExists();
 
   },
@@ -486,12 +491,12 @@ phantasus.HeatMapColorScheme.prototype = {
     if (separateColorSchemeForRowMetadataField != this.separateColorSchemeForRowMetadataField) {
       this.separateColorSchemeForRowMetadataField = separateColorSchemeForRowMetadataField;
       this.vector = this.project.getSortedFilteredDataset()
-        .getRowMetadata().getByName(
-          separateColorSchemeForRowMetadataField);
-      var that = this;
+      .getRowMetadata().getByName(
+        separateColorSchemeForRowMetadataField);
+      var _this = this;
       _.each(_.keys(this.rowValueToColorSupplier), function (key) {
         // remove old color schemes
-        delete that.rowValueToColorSupplier[key];
+        delete _this.rowValueToColorSupplier[key];
       });
     }
   },

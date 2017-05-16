@@ -8,21 +8,8 @@ phantasus.LandingPage = function (pageOptions) {
   var $el = $('<div class="container" style="display: none;"></div>');
   this.$el = $el;
   var html = [];
+  phantasus.Util.createPhantasusHeader().appendTo($el);
   html.push('<div data-name="help" class="pull-right"></div>');
-
-  html
-    .push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
-  html.push('<span>P</span>');
-  html.push('<span>h</span>');
-  html.push('<span>a</span>');
-  html.push('<span>n</span>');
-  html.push('<span>t</span>');
-  html.push('<span>a</span>');
-  html.push('<span>s</span>');
-  html.push('<span>u</span>');
-  html.push('<span>s</span>');
-  html.push('</span>');
-  html.push('</div>');
 
   html.push('<h4>Open your own file</h4>');
   html.push('<div data-name="formRow" class="center-block"></div>');
@@ -30,8 +17,7 @@ phantasus.LandingPage = function (pageOptions) {
     ' dataset</h4></div>');
   html.push('</div>');
   var $html = $(html.join(''));
-  var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
-  var brands = $html.find('[data-name="brand"] > span');
+
   $html.appendTo($el);
   new phantasus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
   var formBuilder = new phantasus.FormBuilder();
@@ -47,15 +33,7 @@ phantasus.LandingPage = function (pageOptions) {
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
   this.$sampleDatasetsEl = $el.find('[data-name=preloadedDataset]');
-  var index = 0;
-  var step = function () {
-    brands[index].style.color = colorScale(index);
-    index++;
-    if (index < brands.length) {
-      setTimeout(step, 200);
-    }
-  };
-  setTimeout(step, 300);
+
   this.tabManager = new phantasus.TabManager({landingPage: this});
   this.tabManager.on('change rename add remove', function (e) {
     var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
