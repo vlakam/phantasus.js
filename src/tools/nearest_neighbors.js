@@ -227,7 +227,7 @@ phantasus.NearestNeighbors.prototype = {
           phantasus.SortKey.SortOrder.DESCENDING)], true);
       }
       project.trigger('trackChanged', {
-        vectors: [v],
+        vectors: [scoreVector],
         render: ['text'],
         columns: isColumns
       });
