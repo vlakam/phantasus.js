@@ -382,8 +382,14 @@ phantasus.VectorTrack.prototype = {
     if (!this.settings.discreteAutoDetermined
       && (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)
       || this.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || this
-        .isRenderAs(phantasus.VectorTrack.RENDER.BAR))) {
-      if (this.getFullVector().getProperties().has(
+      .isRenderAs(phantasus.VectorTrack.RENDER.BAR))) {
+      if ((this.isColumns ? this.project.getColumnColorModel() : this.project.getRowColorModel()).getContinuousColorScheme(this.getFullVector()) != null) {
+        this.settings.discrete = false;
+        this.settings.highlightMatchingValues = false;
+      } else if ((this.isColumns ? this.project.getColumnColorModel() : this.project.getRowColorModel()).getDiscreteColorScheme(this.getFullVector()) != null) {
+        this.settings.discrete = true;
+        this.settings.highlightMatchingValues = true;
+      } else if (this.getFullVector().getProperties().has(
           phantasus.VectorKeys.FIELDS)
         || phantasus.VectorUtil.getDataType(this.getFullVector()) === 'number' || phantasus.VectorUtil.getDataType(this.getFullVector()) === '[number]') {
         this.settings.discrete = false;
@@ -458,7 +464,8 @@ phantasus.VectorTrack.prototype = {
       }
     }
     this._updatePreferredSize();
-  },
+  }
+  ,
   postPaint: function (clip, context) {
     // draw hover, matching values
     context.lineWidth = 1;
@@ -483,7 +490,8 @@ phantasus.VectorTrack.prototype = {
       }
     }
     this._highlightMatchingValues(context, vector, start, end);
-  },
+  }
+  ,
   _highlightMatchingValues: function (context, viewVector, start, end) {
     var project = this.project;
     var positions = this.positions;
@@ -552,7 +560,8 @@ phantasus.VectorTrack.prototype = {
 
     }
 
-  },
+  }
+  ,
   drawSelection: function (options) {
     var project = this.project;
     var positions = this.positions;
@@ -587,7 +596,8 @@ phantasus.VectorTrack.prototype = {
       }
     }
 
-  },
+  }
+  ,
   prePaint: function (clip, context) {
     // draw selection
     var project = this.project;
@@ -606,7 +616,8 @@ phantasus.VectorTrack.prototype = {
       this.lastPosition.end = end;
       this.invalid = true;
     }
-  },
+  }
+  ,
   drawRowBorder: function (context, positions, index, gridSize) {
     var size = positions.getItemSize(index);
     var pix = positions.getPosition(index);
@@ -619,7 +630,8 @@ phantasus.VectorTrack.prototype = {
     context.moveTo(0, pix);
     context.lineTo(gridSize, pix);
     context.stroke();
-  },
+  }
+  ,
   drawColumnBorder: function (context, positions, index, gridSize) {
     var size = positions.getItemSize(index);
     var pix = positions.getPosition(index);
@@ -632,10 +644,12 @@ phantasus.VectorTrack.prototype = {
     context.moveTo(pix, 0);
     context.lineTo(pix, gridSize);
     context.stroke();
-  },
+  }
+  ,
   isSquished: function () {
     return this.settings.squished;
-  },
+  }
+  ,
   _setup: function (context, clip) {
     var start = 0;
     var vector = this.getVector();
@@ -673,7 +687,8 @@ phantasus.VectorTrack.prototype = {
       end: end,
       vector: vector
     };
-  },
+  }
+  ,
   draw: function (clip, context) {
     var setup = this._setup(context, clip);
     this._draw({
@@ -685,7 +700,8 @@ phantasus.VectorTrack.prototype = {
         : this.getUnscaledWidth(),
       clip: clip
     });
-  },
+  }
+  ,
   print: function (clip, context) {
     var vector = this.getVector();
     this._draw({
@@ -697,7 +713,8 @@ phantasus.VectorTrack.prototype = {
         : clip.width,
       clip: clip
     });
-  },
+  }
+  ,
   /**
    * @param options.vector
    * @param options.context
@@ -857,7 +874,8 @@ phantasus.VectorTrack.prototype = {
       availableSpace -= offset;
     }
 
-  },
+  }
+  ,
   showPopup: function (e, isHeader) {
     var _this = this;
     var project = this.project;
@@ -1670,41 +1688,42 @@ phantasus.VectorTrack.prototype = {
 
             heatmap.revalidate();
 
-          } else if (item === DISPLAY_STACKED_BAR) {
-            _this.settings.stackedBar = !_this.settings.stackedBar;
-            _this._update();
-            heatmap.revalidate();
+        } else if (item === DISPLAY_STACKED_BAR) {
+          _this.settings.stackedBar = !_this.settings.stackedBar;
+          _this._update();
+          heatmap.revalidate();
+        } else {
+          if (item === DISPLAY_BAR) {
+            item = phantasus.VectorTrack.RENDER.BAR;
+          } else if (item === DISPLAY_COLOR) {
+            item = phantasus.VectorTrack.RENDER.COLOR;
+          } else if (item === DISPLAY_TEXT) {
+            item = phantasus.VectorTrack.RENDER.TEXT;
+          } else if (item === DISPLAY_TEXT_AND_COLOR) {
+            item = phantasus.VectorTrack.RENDER.TEXT_AND_COLOR;
+          } else if (item === DISPLAY_STRUCTURE) {
+            item = phantasus.VectorTrack.RENDER.MOLECULE;
+          } else if (item === DISPLAY_SHAPE) {
+            item = phantasus.VectorTrack.RENDER.SHAPE;
+          } else if (item === DISPLAY_ARC) {
+            item = phantasus.VectorTrack.RENDER.ARC;
+          } else if (item === DISPLAY_BOX_PLOT) {
+            item = phantasus.VectorTrack.RENDER.BOX_PLOT;
           } else {
-            if (item === DISPLAY_BAR) {
-              item = phantasus.VectorTrack.RENDER.BAR;
-            } else if (item === DISPLAY_COLOR) {
-              item = phantasus.VectorTrack.RENDER.COLOR;
-            } else if (item === DISPLAY_TEXT) {
-              item = phantasus.VectorTrack.RENDER.TEXT;
-            } else if (item === DISPLAY_TEXT_AND_COLOR) {
-              item = phantasus.VectorTrack.RENDER.TEXT_AND_COLOR;
-            } else if (item === DISPLAY_STRUCTURE) {
-              item = phantasus.VectorTrack.RENDER.MOLECULE;
-            } else if (item === DISPLAY_SHAPE) {
-              item = phantasus.VectorTrack.RENDER.SHAPE;
-            } else if (item === DISPLAY_ARC) {
-              item = phantasus.VectorTrack.RENDER.ARC;
-            } else if (item === DISPLAY_BOX_PLOT) {
-              item = phantasus.VectorTrack.RENDER.BOX_PLOT;
-            } else {
-              // console.log('Unknown item ' + item);
-            }
-            var show = !_this.isRenderAs(item);
-            if (!show) {
-              delete _this.settings.render[item];
-            } else {
-              _this.settings.render[item] = true;
-            }
-            _this._update();
-            heatmap.revalidate();
+            console.log('Unknown item ' + item);
           }
-        });
-  },
+          var show = !_this.isRenderAs(item);
+          if (!show) {
+            delete _this.settings.render[item];
+          } else {
+            _this.settings.render[item] = true;
+          }
+          _this._update();
+          heatmap.revalidate();
+        }
+      });
+  }
+  ,
   renderColor: function (context, vector, start, end, clip, offset, continuous) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -1779,7 +1798,8 @@ phantasus.VectorTrack.prototype = {
         }
       }
     }
-  },
+  }
+  ,
   renderShape: function (context, vector, start, end, clip, offset) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -1813,7 +1833,8 @@ phantasus.VectorTrack.prototype = {
       phantasus.CanvasUtil.drawShape(context, shape, x, y, size2);
     }
     context.lineWidth = lineWidth;
-  },
+  }
+  ,
   renderHeatMap: function (context, vector, start, end, clip, size) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -1856,7 +1877,8 @@ phantasus.VectorTrack.prototype = {
     }
 
     context.restore();
-  },
+  }
+  ,
   renderArc: function (context, vector, start, end, clip, size) {
 
     var isColumns = this.isColumns;
@@ -1911,7 +1933,8 @@ phantasus.VectorTrack.prototype = {
 
     }
     context.restore();
-  },
+  }
+  ,
   sdfToSvg: function (sdf, width, height) {
     if (!this.jsme && typeof JSApplet !== 'undefined') {
       this.jsmeId = _.uniqueId('m');
@@ -1933,7 +1956,8 @@ phantasus.VectorTrack.prototype = {
     var text = '<svg><g transform="scale(' + scale + ')">' + svg.innerHTML
       + '</g></svg>';
     return text;
-  },
+  }
+  ,
   renderMolecule: function (context, vector, start, end, clip, offset) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -1987,7 +2011,8 @@ phantasus.VectorTrack.prototype = {
         }
       }
     }
-  },
+  }
+  ,
   createChartScale: function (availableSpace) {
     var domain;
     var range;
@@ -2003,7 +2028,8 @@ phantasus.VectorTrack.prototype = {
     }
     var scale = d3.scale.linear().domain(domain).range(range).clamp(true);
     return scale;
-  },
+  }
+  ,
   renderBar: function (context, vector, start, end, clip, offset, availableSpace) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -2032,7 +2058,8 @@ phantasus.VectorTrack.prototype = {
         context.fill();
       }
     }
-  },
+  }
+  ,
   renderBoxPlot: function (context, vector, start, end, clip, offset, availableSpace) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -2126,7 +2153,8 @@ phantasus.VectorTrack.prototype = {
       }
     }
     context.restore();
-  },
+  }
+  ,
   renderStackedBar: function (context, vector, start, end, clip, offset, availableSpace) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -2222,7 +2250,8 @@ phantasus.VectorTrack.prototype = {
       }
     }
     context.lineWidth = 1;
-  },
+  }
+  ,
   renderUnstackedBar: function (context, vector, start, end, clip, offset, availableSpace, fieldIndices) {
     var isColumns = this.isColumns;
     var positions = this.positions;
@@ -2283,7 +2312,8 @@ phantasus.VectorTrack.prototype = {
       }
 
     }
-  },
+  }
+  ,
   renderText: function (context, vector, isColor, start, end, clip, offset,
                         canvasSize) {
 
