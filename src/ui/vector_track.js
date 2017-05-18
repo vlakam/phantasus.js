@@ -177,6 +177,7 @@ phantasus.VectorTrack.vectorToString = function (vector) {
 phantasus.VectorTrack.prototype = {
   settingFromConfig: function (conf) {
     var settings = this.settings;
+    // old style, comma separated list of text, color, etc.
     if (_.isString(conf)) {
       settings.render = {};
       var tokens = conf.split(',');
@@ -203,10 +204,7 @@ phantasus.VectorTrack.prototype = {
           // console.log(method + ' not found.');
         }
       }
-    } else if (_.isNumber(conf)) {
-      settings.render = {};
-      settings.render[conf] = true;
-    } else if (_.isObject(conf)) {
+    } else if (_.isObject(conf)) { // new style display:{max:10, render:['text']}
       conf.maxTextWidth = undefined;
       this.settings = $.extend({}, this.settings, conf);
       if (conf.discrete != null) {
