@@ -753,10 +753,11 @@ phantasus.ActionManager = function () {
       .getColumnSelectionModel() : project
       .getRowSelectionModel();
     var text = [];
+    var toStringFunction = phantasus.VectorTrack.vectorToString(v);
     selectionModel.getViewIndices().forEach(
       function (index) {
-        text.push(phantasus.Util.toString(v
-          .getValue(index)));
+        text.push(toStringFunction(v
+        .getValue(index)));
       });
     phantasus.Util.setClipboardData([{
       format: 'text/plain',
