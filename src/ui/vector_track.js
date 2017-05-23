@@ -1204,7 +1204,7 @@ phantasus.VectorTrack.prototype = {
             type: 'number',
             value: phantasus.Util.getNumberFormatPatternFractionDigits(pattern),
             required: true,
-            style: 'max-width:10px;'
+            style: 'max-width:60px;'
           });
           formBuilder.find('number_of_fraction_digits').on(
             'keyup input', _.debounce(
