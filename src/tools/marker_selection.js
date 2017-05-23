@@ -6,7 +6,7 @@ phantasus.MarkerSelection = function () {
  * @private
  */
 phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
-  phantasus.FoldChange, phantasus.SignalToNoise,
+  phantasus.FoldChange, phantasus.LogFoldChange, phantasus.SignalToNoise,
   phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
 phantasus.MarkerSelection.Functions.fromString = function (s) {

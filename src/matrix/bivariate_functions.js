@@ -176,6 +176,15 @@ phantasus.FoldChange = function (list1, list2) {
 phantasus.FoldChange.toString = function () {
   return 'Fold Change';
 };
+
+phantasus.LogFoldChange = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  return (m1 - m2);
+};
+phantasus.LogFoldChange.toString = function () {
+  return 'Log Fold Change';
+};
 phantasus.TTest = function (list1, list2) {
   var m1 = phantasus.Mean(list1);
   var m2 = phantasus.Mean(list2);
