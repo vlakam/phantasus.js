@@ -69,10 +69,13 @@ phantasus.TcgaUtil.SAMPLE_TYPES = {
 };
 
 phantasus.TcgaUtil.barcode = function (s) {
+  // e.g. TCGA-AC-A23H-01A-11D-A159-09
+  // see https://wiki.nci.nih.gov/display/TCGA/TCGA+barcode
+  // TCGA, Tissue source site, Study participant, Sample type
   var tokens = s.split('-');
   var id = tokens[2];
   var sampleType;
-  // e.g. TCGA-AC-A23H-01A-11D-A159-09
+
   if (tokens.length > 3) {
     sampleType = tokens[3];
     if (sampleType.length > 2) {
@@ -189,7 +192,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     var rppa = $.Deferred();
     promises.push(rppa);
 
-    new phantasus.TxtReader().read(options.rppa, function (err, dataset) {
+    new phantasus.TxtReader({dataColumnStart: 2}).read(options.rppa, function (err, dataset) {
       if (err) {
         // console.log('Error reading file:' + err);
       } else {
