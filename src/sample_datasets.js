@@ -241,7 +241,7 @@ phantasus.SampleDatasets.getTcgaDataset = function (options) {
   datasetOptions.columnAnnotations = [{
     file: baseUrl + 'All_CDEs.txt',
     datasetField: 'participant_id',
-    fileField: 'patient_id'
+    fileField: 'bcr_patient_barcode'
   }];
   return phantasus.TcgaUtil.getDataset(datasetOptions);
 
