@@ -25,7 +25,6 @@ phantasus.HelpMenu = function () {
       focus: document.activeElement
     });
     e.preventDefault();
-
   });
   this.$el.find('[data-name=tutorial]').on('click', function (e) {
     window
