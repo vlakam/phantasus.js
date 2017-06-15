@@ -296,10 +296,6 @@ phantasus.HeatMap = function (options) {
   this.actionManager = new phantasus.ActionManager();
   this.actionManager.heatMap = this;
   this.$el.addClass('phantasus');
-  if (!options.landingPage) {
-    options.landingPage = new phantasus.LandingPage();
-    options.landingPage.$el.prependTo(this.$el);
-  }
 
   // console.log("heatmap full options", this.options);
 
@@ -359,9 +355,15 @@ phantasus.HeatMap = function (options) {
 
     this.tabManager = this.options.tabManager != null ? this.options.tabManager
       : new phantasus.TabManager({
-      landingPage: this.options.landingPage,
-      autohideTabBar: this.options.autohideTabBar
-    });
+        landingPage: function () {
+          if (_this.options.landingPage == null) {
+            _this.options.landingPage = new phantasus.LandingPage();
+            _this.options.landingPage.$el.prependTo(_this.$el);
+          }
+          return _this.options.landingPage;
+        },
+        autohideTabBar: this.options.autohideTabBar
+      });
 
     if (!this.options.tabManager) {
       this.tabManager.appendTo(this.$el);
