@@ -37,27 +37,16 @@ phantasus.SampleDatasets = function (options) {
   });
 
   $el
-    .on(
-      'click',
-      '[data-toggle=dataTypeToggle]',
-      function (e) {
-        var $this = $(this);
-        var $button = $this.parents('tr').find('button');
-        var isDisabled = $this.parents('tr').find(
-            'input:checked').length === 0;
-        $button.prop('disabled', isDisabled);
-        if (!isDisabled) {
-          $button
-            .removeClass('animated flash')
-            .addClass('animated flash')
-            .one(
-              'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
-              function () {
-                $(this).removeClass(
-                  'animated flash');
-              });
-        }
-      });
+  .on(
+    'click',
+    '[data-toggle=dataTypeToggle]',
+    function (e) {
+      var $this = $(this);
+      var $button = $this.parents('tr').find('button');
+      var isDisabled = $this.parents('tr').find(
+          'input:checked').length === 0;
+      $button.prop('disabled', isDisabled);
+    });
   $
     .ajax(
       'https://software.broadinstitute.org/morpheus/preloaded-datasets/tcga/tcga_index.txt')
