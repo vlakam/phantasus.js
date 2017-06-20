@@ -114,11 +114,12 @@ phantasus.TcgaUtil.getDataset = function (options) {
     promises.push(mrna);
     new phantasus.TxtReader().read(options.mrna, function (err, dataset) {
       if (err) {
-        // console.log('Error reading file:' + err);
+        console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
+      console.log("mrna promise", datasets);
       mrna.resolve();
     });
   }

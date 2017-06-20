@@ -139,7 +139,7 @@ phantasus.OpenFileTool.prototype = {
         phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session',
-          focus: document.activeElement
+          focus: document.activeElement,
         });
       });
     } else if (options.input.open_file_action === 'append columns'
@@ -152,7 +152,8 @@ phantasus.OpenFileTool.prototype = {
         options.input.file), options.heatMap);
     } else { // annotate rows or columns
 
-      var isAnnotateColumns = options.input.open_file_action == 'Annotate Columns';
+      var isAnnotateColumns = options.input.open_file_action ==
+        'Annotate Columns';
       var fileOrUrl = options.input.file;
       var dataset = project.getFullDataset();
       var fileName = phantasus.Util.getFileName(fileOrUrl);
@@ -163,16 +164,18 @@ phantasus.OpenFileTool.prototype = {
             isAnnotateColumns, lines);
         });
       } else if (phantasus.Util.endsWith(fileName, '.gmt')) {
-        phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
-                                                                        buf) {
+        phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (
+          err,
+          buf) {
           if (err) {
             throw new Error('Unable to read ' + fileOrUrl);
           }
-          var sets = new phantasus.GmtReader()
-            .read(new phantasus.ArrayBufferReader(new Uint8Array(
+          var sets = new phantasus.GmtReader().read(
+            new phantasus.ArrayBufferReader(new Uint8Array(
               buf)));
           that.promptSets(dataset, heatMap, isAnnotateColumns,
-            sets, phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl)));
+            sets, phantasus.Util.getBaseFileName(
+              phantasus.Util.getFileName(fileOrUrl)));
         });
 
       } else {
@@ -203,7 +206,7 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: [vector],
         display: ['color'],
-        columns: isColumns
+        columns: isColumns,
       });
     }
   },
@@ -252,9 +255,10 @@ phantasus.OpenFileTool.prototype = {
    * @param fileColumnNamesToInclude
    *            An array of column names to include from the metadata file or
    *            null to include all
+   * @param tranposed For text/Excel files only. If <code>true</code>, different annotations are on each row.
    */
   annotate: function (lines, dataset, isColumns, sets, metadataName,
-                      fileColumnName, fileColumnNamesToInclude) {
+                      fileColumnName, fileColumnNamesToInclude, transposed) {
     if (isColumns) {
       dataset = phantasus.DatasetUtil.transposedView(dataset);
     }
@@ -265,70 +269,110 @@ phantasus.OpenFileTool.prototype = {
     var vectors = [];
     var idToIndices = phantasus.VectorUtil.createValueToIndicesMap(vector);
     if (!lines) {
-      _
-        .each(
-          sets,
-          function (set) {
-            var name = set.name;
-            var members = set.ids;
+      _.each(
+        sets,
+        function (set) {
+          var name = set.name;
+          var members = set.ids;
 
-            var v = dataset.getRowMetadata().add(name);
-            vectors.push(v);
-            _
-              .each(
-                members,
-                function (id) {
-                  var indices = idToIndices
-                    .get(id);
-                  if (indices !== undefined) {
-                    for (var i = 0, nIndices = indices.length; i < nIndices; i++) {
-                      v.setValue(
-                        indices[i],
-                        name);
-                    }
-                  }
-                });
-          });
+          var v = dataset.getRowMetadata().add(name);
+          vectors.push(v);
+          _.each(
+            members,
+            function (id) {
+              var indices = idToIndices.get(id);
+              if (indices !== undefined) {
+                for (var i = 0, nIndices = indices.length; i < nIndices; i++) {
+                  v.setValue(
+                    indices[i],
+                    name);
+                }
+              }
+            });
+        });
     } else {
       var tab = /\t/;
-      var header = lines[0].split(tab);
-      var fileMatchOnColumnIndex = _.indexOf(header, fileColumnName);
-      if (fileMatchOnColumnIndex === -1) {
-        throw new Error(fileColumnName + ' not found in header:'
-          + header);
-      }
-      var columnIndices = [];
-      var nheaders = header.length;
-      for (var j = 0; j < header.length; j++) {
-        var name = header[j];
-        if (j === fileMatchOnColumnIndex) {
-          continue;
+      if (!transposed) {
+        var header = lines[0].split(tab);
+        var fileMatchOnColumnIndex = _.indexOf(header, fileColumnName);
+        if (fileMatchOnColumnIndex === -1) {
+          throw new Error(fileColumnName + ' not found in header:'
+            + header);
         }
-        if (fileColumnNamesToInclude
-          && _.indexOf(fileColumnNamesToInclude, name) === -1) {
-          continue;
+        var columnIndices = [];
+        var nheaders = header.length;
+        for (var j = 0; j < header.length; j++) {
+          var name = header[j];
+          if (j === fileMatchOnColumnIndex) {
+            continue;
+          }
+          if (fileColumnNamesToInclude
+            && _.indexOf(fileColumnNamesToInclude, name) === -1) {
+            continue;
+          }
+          var v = dataset.getRowMetadata().getByName(name);
+          if (!v) {
+            v = dataset.getRowMetadata().add(name);
+          }
+          columnIndices.push(j);
+          vectors.push(v);
         }
-        var v = dataset.getRowMetadata().getByName(name);
-        if (!v) {
-          v = dataset.getRowMetadata().add(name);
-        }
-        columnIndices.push(j);
-        vectors.push(v);
-      }
-      var nheaders = columnIndices.length;
-      for (var i = 1, nrows = lines.length; i < nrows; i++) {
-        var line = lines[i].split(tab);
-        var id = line[fileMatchOnColumnIndex];
-        var indices = idToIndices.get(id);
-        if (indices !== undefined) {
-          var nIndices = indices.length;
-          for (var j = 0; j < nheaders; j++) {
-            var token = line[columnIndices[j]];
-            var v = vectors[j];
-            for (var r = 0; r < nIndices; r++) {
-              v.setValue(indices[r], token);
+        var nheaders = columnIndices.length;
+        for (var i = 1, nrows = lines.length; i < nrows; i++) {
+          var line = lines[i].split(tab);
+          var id = line[fileMatchOnColumnIndex];
+          var indices = idToIndices.get(id);
+          if (indices !== undefined) {
+            var nIndices = indices.length;
+            for (var j = 0; j < nheaders; j++) {
+              var token = line[columnIndices[j]];
+              var v = vectors[j];
+              for (var r = 0; r < nIndices; r++) {
+                v.setValue(indices[r], token);
+              }
             }
           }
+        }
+      }
+      else {
+        var splitLines = [];
+        var matchOnLine;
+        for (var i = 0, nrows = lines.length; i < nrows; i++) {
+          var line = lines[i].split(tab);
+          if (fileColumnName === line[0]) {
+            matchOnLine = line;
+          } else {
+            var name = line[0];
+            if (fileColumnNamesToInclude
+              && _.indexOf(fileColumnNamesToInclude, name) === -1) {
+              continue;
+            }
+            splitLines.push(line);
+            var v = dataset.getRowMetadata().getByName(name);
+            if (!v) {
+              v = dataset.getRowMetadata().add(name);
+            }
+            vectors.push(v);
+          }
+        }
+        if (matchOnLine == null) {
+          throw new Error(fileColumnName + ' not found in header.');
+        }
+
+        for (var j = 1, ncols = matchOnLine.length; j < ncols; j++) {
+          var id = matchOnLine[j];
+          var indices = idToIndices.get(id);
+          if (indices !== undefined) {
+            var nIndices = indices.length;
+            splitLines.forEach(function (line, j) {
+              var token = line[j];
+              var v = vectors[j];
+              for (var r = 0; r < nIndices; r++) {
+                v.setValue(indices[r], token);
+              }
+            });
+          }
+
         }
       }
     }
@@ -349,22 +393,22 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: [vector],
         display: ['text'],
-        columns: isColumns
+        columns: isColumns,
       });
     };
     promptTool.toString = function () {
       return 'Select Fields To Match On';
     };
     promptTool.gui = function () {
-      return [{
-        name: 'dataset_field_name',
-        options: phantasus.MetadataUtil
-          .getMetadataNames(isColumns ? dataset
-            .getColumnMetadata() : dataset.getRowMetadata()),
-        type: 'select',
-        value: 'id',
-        required: true
-      }];
+      return [
+        {
+          name: 'dataset_field_name',
+          options: phantasus.MetadataUtil.getMetadataNames(
+            isColumns ? dataset.getColumnMetadata() : dataset.getRowMetadata()),
+          type: 'select',
+          value: 'id',
+          required: true,
+        }];
 
     };
     phantasus.HeatMap.showTool(promptTool, heatMap);
@@ -387,7 +431,9 @@ phantasus.OpenFileTool.prototype = {
         nameToIndex.set(vectors[i].getName(), i);
       }
       if (lines.colors) {
-        var colorModel = isColumns ? heatMap.getProject().getColumnColorModel() : heatMap.getProject().getRowColorModel();
+        var colorModel = isColumns
+          ? heatMap.getProject().getColumnColorModel()
+          : heatMap.getProject().getRowColorModel();
         lines.colors.forEach(function (item) {
           var index = nameToIndex.get(item.header);
           var vector = vectors[index];
@@ -398,21 +444,21 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: vectors,
         display: display,
-        columns: isColumns
+        columns: isColumns,
       });
     };
     promptTool.toString = function () {
       return 'Select Fields To Match On';
     };
     promptTool.gui = function () {
-      var items = [{
-        name: 'dataset_field_name',
-        options: phantasus.MetadataUtil
-          .getMetadataNames(isColumns ? dataset
-            .getColumnMetadata() : dataset.getRowMetadata()),
-        type: 'select',
-        required: true
-      }];
+      var items = [
+        {
+          name: 'dataset_field_name',
+          options: phantasus.MetadataUtil.getMetadataNames(
+            isColumns ? dataset.getColumnMetadata() : dataset.getRowMetadata()),
+          type: 'select',
+          required: true,
+        }];
       if (lines) {
         items.push({
           name: 'file_field_name',
@@ -420,14 +466,14 @@ phantasus.OpenFileTool.prototype = {
           options: _.map(header, function (item) {
             return {
               name: item,
-              value: item
+              value: item,
             };
           }),
-          required: true
+          required: true,
         });
       }
       return items;
     };
     phantasus.HeatMap.showTool(promptTool, heatMap);
-  }
+  },
 };

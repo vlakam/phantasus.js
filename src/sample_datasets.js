@@ -5,6 +5,7 @@ phantasus.SampleDatasets = function (options) {
   var _this = this;
   var $el = options.$el;
   this.callback = options.callback;
+  console.log(this.callback);
   $el.on('click', '[name=ccle]', function (e) { // button click
     var $this = $(this);
     var obj = {};
@@ -36,8 +37,7 @@ phantasus.SampleDatasets = function (options) {
     _this.openTcga(obj);
   });
 
-  $el
-  .on(
+  $el.on(
     'click',
     '[data-toggle=dataTypeToggle]',
     function (e) {
@@ -228,11 +228,14 @@ phantasus.SampleDatasets.getTcgaDataset = function (options) {
 
   datasetOptions.mrnaClust = baseUrl + 'bestclus.txt';
 
-  datasetOptions.columnAnnotations = [{
-    file: baseUrl + 'All_CDEs.txt',
-    datasetField: 'participant_id',
-    fileField: 'bcr_patient_barcode'
-  }];
+  datasetOptions.columnAnnotations = [
+    {
+      file: baseUrl + 'All_CDEs.txt',
+      datasetField: 'participant_id',
+      fileField: 'patient_id', // e.g. tcga-5l-aat0
+      transposed: true,
+    }];
+  console.log(datasetOptions);
   return phantasus.TcgaUtil.getDataset(datasetOptions);
 
 };
@@ -274,7 +277,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
   columnAnnotations.push({
     file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_Sample_Info.txt',
     datasetField: 'id',
-    fileField: 'id'
+    fileField: 'id',
   });
 
   var returnDeferred = $.Deferred();
@@ -282,7 +285,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
 
   var annotationDef = phantasus.DatasetUtil.annotate({
     annotations: columnAnnotations,
-    isColumns: true
+    isColumns: true,
   });
   var datasetToReturn;
   datasetDef.done(function (d) {
@@ -313,84 +316,113 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
 phantasus.SampleDatasets.prototype = {
 
   openTcga: function (options) {
-    this
-      .callback({
-        name: options.name,
-        renderReady: function (heatMap) {
-          var whitelist = [
-            'age_at_initial_pathologic_diagnosis',
-            'breast_carcinoma_estrogen_receptor_status',
-            'breast_carcinoma_progesterone_receptor_status',
-            'lab_proc_her2_neu_immunohistochemistry_receptor_status',
-            'days_to_death', 'ethnicity', 'gender',
-            'histological_type', 'pathologic_stage'];
+    console.log("openTcga", options);
+    this.callback({
+      name: options.name,
+      renderReady: function (heatMap) {
+        var whitelist = [
+          'age_at_initial_pathologic_diagnosis',
+          'breast_carcinoma_estrogen_receptor_status',
+          'breast_carcinoma_progesterone_receptor_status',
+          'lab_proc_her2_neu_immunohistochemistry_receptor_status',
+          'days_to_death', 'ethnicity', 'gender',
+          'histological_type', 'pathologic_stage'];
 
-          var columnMetadata = heatMap.getProject()
-            .getFullDataset().getColumnMetadata();
-          for (var i = 0; i < whitelist.length; i++) {
-            if (columnMetadata.getByName(whitelist[i])) {
-              heatMap.addTrack(whitelist[i], true, 'color');
-            }
+        var columnMetadata = heatMap.getProject().getFullDataset().getColumnMetadata();
+        for (var i = 0; i < whitelist.length; i++) {
+          if (columnMetadata.getByName(whitelist[i])) {
+            heatMap.addTrack(whitelist[i], true, 'color');
           }
-          // view in space of mutation sample ids only
-          if (options.sig_genes) {
-            if (heatMap.getTrackIndex('q_value', false) === -1) {
-              heatMap.addTrack('q_value', false, 'text');
-            }
+        }
+        // view in space of mutation sample ids only
+        if (options.sig_genes) {
+          if (heatMap.getTrackIndex('q_value', false) === -1) {
+            heatMap.addTrack('q_value', false, 'text');
           }
-        },
-        columns: [{
+        }
+      },
+      columns: [
+        {
           field: 'participant_id',
-          display: 'text'
+          display: 'text',
         }, {
           field: 'sample_type',
-          display: 'color'
+          display: 'color',
         }, {
           field: 'mutation_summary',
-          display: 'stacked_bar'
+          display: 'stacked_bar',
         }, {
           field: 'mutation_summary_selection',
-          display: 'stacked_bar'
+          display: 'stacked_bar',
         }, {
           field: 'mRNAseq_cluster',
-          display: 'color, highlight'
+          display: 'color, highlight',
         }],
-        dataset: phantasus.SampleDatasets.getTcgaDataset(options)
-      });
+      dataset: phantasus.SampleDatasets.getTcgaDataset(options),
+    });
   },
   openCCLE: function (options) {
     this.callback({
       name: 'CCLE',
-      rows: [{
-        field: 'id',
-        display: 'text,tooltip'
-      }, {
-        field: 'mutation_summary',
-        display: 'stacked_bar'
-      }, {
-        field: 'Source',
-        display: 'color'
-      }],
-      columns: [{
-        field: 'id',
-        display: 'text,tooltip'
-      }, {
-        field: 'mutation_summary',
-        display: 'stacked_bar'
-      }, {
-        field: 'gender',
-        display: 'color, highlight'
-      }, {
-        field: 'histology',
-        display: 'color, highlight'
-      }, {
-        field: 'histology subtype',
-        display: 'color, highlight'
-      }, {
-        field: 'primary_site',
-        display: 'color, highlight'
-      }],
-      dataset: phantasus.SampleDatasets.getCCLEDataset(options)
+      rows: [
+        {
+          field: 'id',
+          display: 'text,tooltip',
+        }, {
+          field: 'mutation_summary',
+          display: 'stacked_bar',
+        }, {
+          field: 'Source',
+          display: 'color',
+        }],
+      columns: [
+        {
+          field: 'id',
+          display: 'text,tooltip',
+        }, {
+          field: 'mutation_summary',
+          display: 'stacked_bar',
+        }, {
+          field: 'gender',
+          display: 'color, highlight',
+        }, {
+          field: 'histology',
+          display: 'color, highlight',
+        }, {
+          field: 'histology subtype',
+          display: 'color, highlight',
+        }, {
+          field: 'primary_site',
+          display: 'color, highlight',
+        }],
+      dataset: phantasus.SampleDatasets.getCCLEDataset(options),
     });
-  }
+  },
 };
+
+phantasus.SampleDatasets.TCGA_DISEASE_TYPES_INFO = [
+  {
+    id: 'mrna',
+    name: 'GENE EXPRESSION',
+    type: 'mrna',
+  }, {
+    id: 'gistic',
+    name: 'GISTIC COPY NUMBER',
+    type: 'gistic',
+  }, {
+    id: 'gistic',
+    name: 'COPY NUMBER BY GENE',
+    type: 'gisticGene',
+  }, {
+    id: 'sig_genes',
+    name: 'MUTATION',
+    type: 'sig_genes',
+  }, {
+    id: 'rppa',
+    name: 'PROTEOMICS',
+    type: 'rppa',
+  }, {
+    id: 'methylation',
+    name: 'METHYLATION',
+    type: 'methylation',
+  }];

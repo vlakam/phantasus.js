@@ -111,9 +111,10 @@ phantasus.DatasetUtil.readDatasetArray = function (datasets) {
  * Annotate a dataset from external file or text.
  *
  * @param options.annotations -
- *            Array of file, datasetField, and fileField.
- * @param options.isColumns -
+ *            Array of file, datasetField, and fileField, and transposed.
+ * @param options.isColumns
  *            Whether to annotate columns
+ *
  * @return A jQuery Deferred object that resolves to an array of functions to
  *         execute with a dataset parameter.
  */
@@ -156,7 +157,7 @@ phantasus.DatasetUtil.annotate = function (options) {
           functions[annotationIndex] = function (dataset) {
             new phantasus.OpenFileTool().annotate(lines, dataset,
               isColumns, null, ann.datasetField,
-              ann.fileField, ann.include);
+              ann.fileField, ann.include, ann.transposed);
           };
           deferred.resolve();
         }
