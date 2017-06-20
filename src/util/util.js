@@ -1745,7 +1745,7 @@ phantasus.Util.getRexpData = function (rexp, rclass) {
 
 phantasus.Util.getFilePath = function (session, str) {
   var splitted = str.split("/");
-  var fileName = splitted[splitted.length - 1].substring(0, splitted[splitted.length - 1].length - 2);
+  var fileName = splitted[splitted.length - 1];
   return session.getLoc() + "files/" + fileName;
 };
 

@@ -247,6 +247,14 @@ phantasus.Dataset.prototype = {
   getESSession: function () {
     //console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
+  },
+
+  getESVariable: function () {
+    return this.esVariable;
+  },
+
+  setESVariable: function(variable) {
+    this.esVariable = variable;
   }
 
 };

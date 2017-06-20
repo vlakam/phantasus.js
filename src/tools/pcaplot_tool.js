@@ -515,7 +515,7 @@ phantasus.PcaPlotTool.prototype = {
            _this.$chart.prepend(img);*/
           /*var img = $('<img />', {src : session.getLoc() + 'graphics/1/png', style : "width:720px;height:540px"});*/
 
-        }, false, "::es");
+        }, false, "::" + dataset.getESVariable());
         req.fail(function () {
           alert(req.responseText);
           console.log("PcaPlot ::", req.responseText);

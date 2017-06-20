@@ -198,7 +198,7 @@ phantasus.LimmaTool.prototype = {
             r.readAsArrayBuffer(file);
           });
         })
-      }, false, "::es");
+      }, false, '::' + dataset.getESVariable());
       req.fail(function () {
         console.log(req.responseText);
       });

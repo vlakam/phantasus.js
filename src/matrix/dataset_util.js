@@ -231,9 +231,17 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
         if (err) {
           deferred.reject(err);
         } else {
-          deferred.resolve(dataset);
-          console.log(dataset);
-          phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          if (isGSE) {
+            for (var d in dataset) {
+              deferred.resolve(d);
+              console.log(d);
+            }
+          }
+          else {
+            deferred.resolve(dataset);
+            console.log(dataset);
+            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          }
         }
       });
 
@@ -1123,7 +1131,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       }
     };
     var ProtoBuf = dcodeIO.ProtoBuf;
-    ProtoBuf.protoFromFile("./message.proto", function (error, success) {
+    ProtoBuf.protoFromFile('./message.proto', function (error, success) {
       if (error) {
         alert(error);
         console.log("ExpressionSetCreation :: ", "ProtoBuilder failed", error);
@@ -1132,12 +1140,13 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder error", error);
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder success", success);
       var builder = success,
-        rexp = builder.build("rexp"),
+        rexp = builder.build('rexp'),
         REXP = rexp.REXP;
 
       var proto = new REXP(messageJSON);
-      var req = ocpu.call("createES", proto, function (session) {
+      var req = ocpu.call('createES', proto, function (session) {
         //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "from successful request", session);
+        dataset.setESVariable('es');
         resolve(session);
       }, true);
 
