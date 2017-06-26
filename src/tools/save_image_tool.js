@@ -16,9 +16,9 @@ phantasus.SaveImageTool.prototype = {
       required: true
     }, {
       name: 'format',
-      type: 'select',
-      options: ['png', 'svg'],
-      value: 'png',
+      type: 'radio',
+      options: ['PNG', 'SVG'],
+      value: 'PNG',
       required: true
     }];
   },
@@ -27,7 +27,7 @@ phantasus.SaveImageTool.prototype = {
     if (fileName === '') {
       fileName = 'image';
     }
-    var format = options.input.format;
+    var format = options.input.format.toLowerCase();
     if (!phantasus.Util.endsWith(fileName.toLowerCase(), '.' + format)) {
       fileName += '.' + format;
     }

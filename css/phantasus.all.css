@@ -465,7 +465,7 @@ classes should alter those!
     float: left;
 }
 
-.morpheus-landing-panel {
+.phantasus-landing-panel {
     padding: 20px;
     border: 1px solid #707070;
     min-height: 300px;
@@ -473,33 +473,33 @@ classes should alter those!
     overflow: auto;
 }
 
-.morpheus-file-drop.drag {
+.phantasus-file-drop.drag {
     border: 2px dotted #0571b0;
 }
 
-.morpheus-file-drop.drag .morpheus-drag-text {
+.phantasus-file-drop.drag .phantasus-drag-text {
     color: #0571b0;
 }
 
 
-.morpheus-nav {
+.phantasus-nav {
     border-bottom: none;
 }
 
-.morpheus-preloaded {
+.phantasus-preloaded {
     text-align: left;
 }
 
-.morpheus-preloaded label {
+.phantasus-preloaded label {
     font-weight: normal;
     display: block;
 }
 
-.nav-pills.morpheus > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+.nav-pills.phantasus > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     background-color: #ca0020;
 }
 
-.morpheus-footer {
+.phantasus-footer {
     padding-top: 25px;
     padding-bottom: 25px;
     margin-top: 50px;
@@ -508,19 +508,19 @@ classes should alter those!
     background-color: black;
 }
 
-.morpheus-footer a {
+.phantasus-footer a {
     color: #fff;
 }
 
-.morpheus-footer-links {
+.phantasus-footer-links {
     padding-left: 0;
     margin-bottom: 20px;
 }
 
-.morpheus-footer-links li {
+.phantasus-footer-links li {
     display: inline-block;
 }
 
-.morpheus-footer-links li + li {
+.phantasus-footer-links li + li {
     margin-left: 15px;
 }
