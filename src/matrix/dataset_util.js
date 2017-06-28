@@ -232,14 +232,13 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
           deferred.reject(err);
         } else {
           if (isGSE) {
-            for (var d in dataset) {
-              deferred.resolve(d);
-              console.log(d);
-            }
+            console.log("GSE answer", dataset, dataset.length);
+            console.log('first dataset', dataset[0]);
+            deferred.resolve(dataset[i]);
           }
           else {
-            deferred.resolve(dataset);
             console.log(dataset);
+            deferred.resolve(dataset);
             phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
           }
         }
@@ -250,7 +249,6 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     pr.toString = function () {
       return '' + fileOrUrl;
     };
-    //console.log("phantasus.DatasetUtil.read ::", pr);
     return pr;
   } else if (typeof fileOrUrl.done === 'function') { // assume it's a
     // deferred

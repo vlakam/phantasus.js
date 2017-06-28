@@ -526,6 +526,7 @@ phantasus.HeatMap = function (options) {
       : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
       _this.options.dataset = dataset;
+      _this.options.name = dataset.seriesNames[0];
     });
     deferred.fail(function (err) {
       _this.options.$loadingImage.remove();

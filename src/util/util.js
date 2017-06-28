@@ -1711,11 +1711,17 @@ phantasus.Util.getFieldNames = function (rexp) {
   return res;
 };
 phantasus.Util.getRexpData = function (rexp, rclass) {
+  //console.log(rexp, rclass);
   var names = phantasus.Util.getFieldNames(rexp);
+  //console.log('fieldNames', names);
+
   var data = {};
   for (var i = 0; i < names.length; i++) {
     var rexpV = rexp.rexpValue[i];
     data[names[i]] = {};
+    if (rexpV.rclass == rclass.LIST) {
+      data[names[i]] = phantasus.Util.getRexpData(rexpV, rclass);
+    }
     if (rexpV.attrName.length > 0 && rexpV.attrName[0] == 'dim') {
       data[names[i]].dim = rexpV.attrValue[0].intValue;
     }
