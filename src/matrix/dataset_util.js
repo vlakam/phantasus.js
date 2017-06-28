@@ -231,14 +231,11 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
         if (err) {
           deferred.reject(err);
         } else {
-          if (isGSE) {
-            console.log("GSE answer", dataset, dataset.length);
-            console.log('first dataset', dataset[0]);
-            deferred.resolve(dataset[i]);
-          }
-          else {
-            console.log(dataset);
-            deferred.resolve(dataset);
+
+          console.log(dataset);
+          console.log('ready to resolve with', dataset);
+          deferred.resolve(dataset);
+          if (!isGSE) {
             phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
           }
         }
@@ -989,14 +986,14 @@ phantasus.DatasetUtil.getContentArray = function (dataset) {
   var array = [];
   var nr = dataset.rows;
   var nc = dataset.columns;
-  console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
+  //console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
 
   for (var i = 0; i < nr; i++) {
     for (var j = 0; j < nc; j++) {
       array.push(dataset.getValue(i, j));
     }
   }
-  console.log("getContentArray ::", array);
+  //console.log("getContentArray ::", array);
   return array;
 };
 phantasus.DatasetUtil.getMetadataArray = function (dataset) {
@@ -1051,7 +1048,7 @@ phantasus.DatasetUtil.getMetadataArray = function (dataset) {
 phantasus.DatasetUtil.toESSessionPromise = function (options) {
   var dataset = options.dataset ? options.dataset : options;
 
-  console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
+  //console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
   //var copiedDataset = phantasus.DatasetUtil.copy(dataset);
   //console.log("EsSessionPromise ::", "after copying", dataset);
   while (dataset.dataset) {
@@ -1063,9 +1060,9 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof phantasus.SlicedDatasetView", "go deeper");
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
-    console.log("before going further", options);
+    //console.log("before going further", options);
     if (options.isGEO) {
-      console.log("toESSession::", "resolving as geo dataset");
+      //console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;
     }
@@ -1073,7 +1070,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
     var array = phantasus.DatasetUtil.getContentArray(dataset);
     var meta = phantasus.DatasetUtil.getMetadataArray(dataset);
 
-    console.log(array, meta);
+    //console.log(array, meta);
     var messageJSON = {
       rclass: "LIST",
       rexpValue: [{

@@ -34,9 +34,12 @@ phantasus.GseReader.prototype = {
             //console.log(jsondata);
 
             var datasets = [];
-            for (var series in jsondata) {
-              datasets.push(phantasus.GseReader.getDataset(session, series, jsondata[series]));
+            for (var k = 0; k < Object.keys(jsondata).length; k++) {
+              var dataset = phantasus.GseReader.getDataset(session, Object.keys(jsondata)[k], jsondata[Object.keys(jsondata)[k]]);
+              dataset.setESVariable('es_' + (k + 1).toString());
+              datasets.push(dataset);
             }
+            console.log("resulting datasets", datasets);
             callback(null, datasets);
           });
         };

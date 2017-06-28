@@ -4,6 +4,7 @@
  */
 
 phantasus.HeatMap = function (options) {
+  console.log('new heatmap', options.name);
   phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
@@ -284,7 +285,24 @@ phantasus.HeatMap = function (options) {
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
         phantasus.DatasetUtil.read(file).done(function (dataset) {
-          _this.options.dataset.resolve(dataset);
+          console.log('now resolving here?');
+          if (dataset.length && dataset.length > 0) {
+            _this.options.dataset.resolve(dataset[0]);
+            _this.setName(dataset[0].seriesNames[0]);
+            for (var i = 1; i < dataset.length; i++) {
+              var heatmap = new phantasus.HeatMap({
+                name: dataset[i].seriesNames[0],
+                dataset: dataset[i],
+                parent: _this.heatmap,
+                symmetric: _this.options.symmetric,
+                inheritFromParent: false
+              });
+              console.log(i, dataset[i], heatmap);
+            }
+          }
+          else {
+            _this.options.dataset.resolve(dataset);
+          }
         }).fail(function (err) {
           _this.options.dataset.reject(err);
         });
@@ -295,10 +313,16 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    this.options.name = phantasus.Util
-      .getBaseFileName(phantasus.Util
-        .getFileName(this.options.dataset.file ? this.options.dataset.file
-          : this.options.dataset));
+    console.log('no name', this.options.dataset);
+    if (this.options.dataset.seriesNames) {
+      this.options.name = this.options.dataset.seriesName[0];
+    }
+    else {
+      this.options.name = phantasus.Util
+        .getBaseFileName(phantasus.Util
+          .getFileName(this.options.dataset.file ? this.options.dataset.file
+            : this.options.dataset));
+    }
   }
 
   var isPrimary = this.options.parent == null;
@@ -390,7 +414,7 @@ phantasus.HeatMap = function (options) {
     promises.push(rowDef);
 
   }
-  console.log("HeatMap creation ::", options.columnAnnotations);
+  //console.log("HeatMap creation ::", options.columnAnnotations);
   if (options.columnAnnotations) {
     var columnDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
@@ -435,6 +459,7 @@ phantasus.HeatMap = function (options) {
 
   }
   var heatMapLoaded = function () {
+    console.log('heatMapLoaded', _this.options.name);
     phantasus.DatasetUtil.toESSessionPromise(options.dataset);
     if (typeof window !== 'undefined') {
       $(window).on('orientationchange.phantasus resize.phantasus', _this.resizeListener = function () {
@@ -525,8 +550,26 @@ phantasus.HeatMap = function (options) {
       options.dataset.file, options.dataset.options)
       : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
-      _this.options.dataset = dataset;
-      _this.options.name = dataset.seriesNames[0];
+      console.log('resolving here?', dataset);
+
+      if (dataset.length && dataset.length > 0) {
+        _this.options.dataset = dataset[0];
+        _this.setName(dataset[0].seriesNames[0]);
+
+        for (var i = 1; i < dataset.length; i++) {
+          var heatmap = new phantasus.HeatMap({
+            name: dataset[i].seriesNames[0],
+            dataset: dataset[i],
+            parent: _this.heatmap,
+            symmetric: _this.options.symmetric,
+            inheritFromParent: false
+          });
+          console.log(i, dataset[i], heatmap);
+        }
+      }
+      else {
+        _this.options.dataset = dataset;
+      }
     });
     deferred.fail(function (err) {
       _this.options.$loadingImage.remove();

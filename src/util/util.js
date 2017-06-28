@@ -1756,21 +1756,21 @@ phantasus.Util.getFilePath = function (session, str) {
 };
 
 phantasus.Util.getTrueIndices = function (dataset) {
-  console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
+  //console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
   var rowIndices = dataset.rowIndices ? dataset.rowIndices : [];
   var rows = phantasus.Util.getConsNumbers(rowIndices.length);
   var columnIndices = dataset.columnIndices ? dataset.columnIndices : [];
   var columns = phantasus.Util.getConsNumbers(columnIndices.length);
   var iter = 0;
   var savedDataset = dataset;
-  console.log("rows processing");
+  //console.log("rows processing");
   while (dataset.dataset) {
     if (!dataset.rowIndices) {
       dataset = dataset.dataset;
       continue;
     }
     rowIndices = dataset.rowIndices;
-    console.log(iter, "rows:", rows.length, rows);
+    //console.log(iter, "rows:", rows.length, rows);
     var newRows = Array.apply(null, Array(rows.length)).map(Number.prototype.valueOf, 0);
     for (var i = 0; i < rows.length; i++) {
       newRows[i] = dataset.rowIndices[rows[i]];
@@ -1780,7 +1780,7 @@ phantasus.Util.getTrueIndices = function (dataset) {
     iter++;
   }
   iter = 0;
-  console.log("columns processing");
+  //console.log("columns processing");
   dataset = savedDataset;
   while (dataset.dataset) {
     if (!dataset.columnIndices) {
@@ -1789,7 +1789,7 @@ phantasus.Util.getTrueIndices = function (dataset) {
     }
     columnIndices = dataset.columnIndices;
 
-    console.log(iter, "columns:", columns.length, columns);
+    //console.log(iter, "columns:", columns.length, columns);
     var newCols = Array.apply(null, Array(columns.length)).map(Number.prototype.valueOf, 0)
     for (i = 0; i < columns.length; i++) {
       newCols[i] = dataset.columnIndices[columns[i]];
@@ -1800,26 +1800,26 @@ phantasus.Util.getTrueIndices = function (dataset) {
     iter++;
   }
 
-  console.log("res", rows, columns);
+  //console.log("res", rows, columns);
   var conseqRows = phantasus.Util.getConsNumbers(dataset.rows);
   var conseqCols = phantasus.Util.getConsNumbers(dataset.columns);
-  console.log(conseqCols);
+  //console.log(conseqCols);
   var ans = {};
-  console.log(phantasus.Util.equalArrays(rows, conseqRows));
+  //console.log(phantasus.Util.equalArrays(rows, conseqRows));
   if (phantasus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && phantasus.Util.equalArrays(conseqRows, rowIndices)) {
     ans.rows = [];
   }
   else {
     ans.rows = rows.length > 0 ? rows : rowIndices;
   }
-  console.log(phantasus.Util.equalArrays(columns, conseqCols));
+  //console.log(phantasus.Util.equalArrays(columns, conseqCols));
   if (phantasus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && phantasus.Util.equalArrays(conseqCols, columnIndices)) {
     ans.columns = [];
   }
   else {
     ans.columns = columns.length > 0 ? columns : columnIndices;
   }
-  console.log(ans);
+  //console.log(ans);
   return ans;
 };
 
