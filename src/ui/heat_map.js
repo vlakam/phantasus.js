@@ -2315,8 +2315,10 @@ phantasus.HeatMap.prototype = {
     var dragStartScrollLeft;
     var panstartMousePosition;
     this.hammer = phantasus.Util
-    .hammer(_this.heatmap.canvas, ['pan', 'pinch', 'tap'])
-    .on('panend', this.panend = function (event) {
+    .hammer(_this.heatmap.canvas, ['pan', 'pinch', 'tap', 'swipe'])
+    .on('swipe', this.swipe = function (event) {
+      event.preventDefault();
+    }).on('panend', this.panend = function (event) {
       _this.panning = false;
       if (panstartMousePosition) {
         panstartMousePosition = null;
@@ -3157,7 +3159,7 @@ phantasus.HeatMap.prototype = {
     this.afterVerticalScrollBarDivider.dispose();
     this.hscroll.dispose();
     this.vscroll.dispose();
-    this.hammer.off('panmove', this.panmove).off('panstart', this.panstart).off('tap',
+    this.hammer.off('swipe', this.swipe).off('panmove', this.panmove).off('panstart', this.panstart).off('tap',
       this.tap).off('pinch', this.pinch).off('panend', this.panend);
     this.hammer.destroy();
     if (typeof window !== 'undefined') {
