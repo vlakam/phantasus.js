@@ -374,10 +374,10 @@ phantasus.HeatMapKeyListener = function (heatMap) {
         }
       }
     }
-    if (stop) {
+    // if (stop) {
       e.preventDefault();
       e.stopPropagation();
-    }
+    // }
 
   });
   function shortcutToString(sc) {
