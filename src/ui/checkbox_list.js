@@ -77,7 +77,23 @@ phantasus.CheckBoxList = function (options) {
   var $selectAll = $checkBoxEl.find('[name=selectAll]');
   var $selectNone = $checkBoxEl.find('[name=selectNone]');
   var $cb = $checkBoxEl.find('[data-name=checkbox]');
+  var updateLabel = function () {
+    var label = [];
+    label.push('selected ');
+    label.push(phantasus.Util.intFormat(set.size()));
+    label.push(' of ');
+    label.push(phantasus.Util.intFormat(table.getAllItemCount()));
+    if (table.getFilteredItemCount() !== table.getAllItemCount()) {
+      label.push(', ');
+      label.push(phantasus.Util.intFormat(table.getFilteredItemCount()));
+      label.push(table.getFilteredItemCount() === 1 ? ' match' : ' matches');
+    }
+    $selection.html(label.join(''));
 
+  };
+  table.grid.on('filter', function (e) {
+    updateLabel();
+  });
   $cb.on('click', function (e) {
     if ($cb.hasClass('fa-square-o')) {
       var items = table.getItems(); // select all
@@ -145,7 +161,7 @@ phantasus.CheckBoxList = function (options) {
 
   this.set = set;
   this.table = table;
-  $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
+  updateLabel();
 
   var priorCount = 0;
   this.table.on('checkBoxSelectionChanged', function () {
@@ -179,7 +195,7 @@ phantasus.CheckBoxList = function (options) {
       }
     }
 
-    $selection.html(phantasus.Util.intFormat(set.size()) + '/' + phantasus.Util.intFormat(table.getAllItemCount()));
+    updateLabel();
 
     _this.table.redraw();
   });
