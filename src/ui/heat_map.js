@@ -2323,6 +2323,7 @@ phantasus.HeatMap.prototype = {
         _this.heatmap.setSelectionBox(null);
         _this.heatmap.repaint();
       }
+      event.preventDefault();
     }).on('panmove', this.panmove = function (event) {
       if (panstartMousePosition) {
         var pos = phantasus.CanvasUtil
@@ -2396,6 +2397,7 @@ phantasus.HeatMap.prototype = {
         dragStartScrollTop = _this.scrollTop();
         dragStartScrollLeft = _this.scrollLeft();
       }
+      event.preventDefault();
     })
     .on(
       'tap',
