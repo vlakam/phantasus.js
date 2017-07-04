@@ -4,7 +4,7 @@
  */
 
 phantasus.HeatMap = function (options) {
-  console.log('new heatmap', options.name);
+  console.log('new heatmap', options);
   phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
@@ -313,7 +313,6 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    console.log('no name', this.options.dataset);
     if (this.options.dataset.seriesNames) {
       this.options.name = this.options.dataset.seriesName[0];
     }
@@ -560,7 +559,6 @@ phantasus.HeatMap = function (options) {
           var heatmap = new phantasus.HeatMap({
             name: dataset[i].seriesNames[0],
             dataset: dataset[i],
-            parent: _this.heatmap,
             symmetric: _this.options.symmetric,
             inheritFromParent: false
           });

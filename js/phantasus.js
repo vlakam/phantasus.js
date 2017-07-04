@@ -11840,12 +11840,35 @@ phantasus.LandingPage.prototype = {
     this.dispose();
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
+    console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
       options.landingPage = _this;
-      new phantasus.HeatMap(options);
+
+      if (options.dataset.options.isGSE) {
+        var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
+          session.getObject(function (filenames) {
+            filenames = JSON.parse(filenames);
+            console.log(filenames);
+            if (filenames.length === 1) {
+              new phantasus.HeatMap(options);
+            }
+            else {
+              for (var j = 0; j < filenames.length; j++) {
+                var specificOptions = options;
+                specificOptions.dataset.file = filenames[j];
+
+                new phantasus.HeatMap(specificOptions);
+              }
+            }
+          })
+        })
+      }
+      else {
+        new phantasus.HeatMap(options);
+      }
     }
 
   },
@@ -11940,7 +11963,10 @@ phantasus.LandingPage.prototype = {
       var options = {
         dataset: {
           file: value,
-          options: {interactive: true}
+          options: {
+            interactive: true,
+            isGSE: fileName.toUpperCase().indexOf('GSE') === 0
+          }
         }
       };
 
@@ -22850,7 +22876,7 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
-      // data types are file, dropbox, url, GSE, and predefined
+      // data types are file, dropbox, url, GEO, and predefined
       options.push('My Computer');
       options.push('URL');
       options.push('GEO Datasets');
@@ -22988,6 +23014,8 @@ phantasus.FormBuilder.prototype = {
         var text = $.trim($(this).val());
         that.setValue(name, text);
         if (evt.which === 13) {
+          console.log('environment', evt);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
           that.trigger('change', {
             name: name,
             value: text.toUpperCase()
@@ -22996,7 +23024,6 @@ phantasus.FormBuilder.prototype = {
       });
       // browse file selected
       that.$form.on('change', '[name=' + name + '_file]', function (evt) {
-
         var files = evt.target.files; // FileList object
         that.setValue(name, isMultiple ? files : files[0]);
         that.trigger('change', {
@@ -28432,7 +28459,7 @@ phantasus.Util.extend(phantasus.HeatMapTrackShapeLegend, phantasus.AbstractCanva
  */
 
 phantasus.HeatMap = function (options) {
-  console.log('new heatmap', options.name);
+  console.log('new heatmap', options);
   phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
@@ -28741,7 +28768,6 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    console.log('no name', this.options.dataset);
     if (this.options.dataset.seriesNames) {
       this.options.name = this.options.dataset.seriesName[0];
     }
@@ -28988,7 +29014,6 @@ phantasus.HeatMap = function (options) {
           var heatmap = new phantasus.HeatMap({
             name: dataset[i].seriesNames[0],
             dataset: dataset[i],
-            parent: _this.heatmap,
             symmetric: _this.options.symmetric,
             inheritFromParent: false
           });
