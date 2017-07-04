@@ -177,7 +177,7 @@ if(!window.jQuery) {
   function r_fun_call_proto(fun, args, handler) {
     return r_fun_ajax(fun, {
       data : new Uint8Array(args.toArrayBuffer()),
-      contentType : 'application/x-protobuf',
+      contentType : 'application/protobuf',
       processData : false
     }, handler);
   }

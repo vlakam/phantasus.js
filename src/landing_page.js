@@ -201,7 +201,7 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGSE: fileName.toUpperCase().indexOf('GSE') === 0
+            isGSE: fileName.toUpperCase().indexOf('GSE') === 0 && fileName.indexOf('.') === -1
           }
         }
       };

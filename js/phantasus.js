@@ -11965,7 +11965,7 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGSE: fileName.toUpperCase().indexOf('GSE') === 0
+            isGSE: fileName.toUpperCase().indexOf('GSE') === 0 && fileName.indexOf('.') === -1
           }
         }
       };
@@ -28768,15 +28768,11 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    if (this.options.dataset.seriesNames) {
-      this.options.name = this.options.dataset.seriesName[0];
-    }
-    else {
-      this.options.name = phantasus.Util
-        .getBaseFileName(phantasus.Util
-          .getFileName(this.options.dataset.file ? this.options.dataset.file
-            : this.options.dataset));
-    }
+    this.options.name = phantasus.Util
+      .getBaseFileName(phantasus.Util
+        .getFileName(this.options.dataset.file ? this.options.dataset.file
+          : this.options.dataset));
+
   }
 
   var isPrimary = this.options.parent == null;
