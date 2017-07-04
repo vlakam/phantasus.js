@@ -1713,11 +1713,17 @@ phantasus.Util.getFieldNames = function (rexp) {
   return res;
 };
 phantasus.Util.getRexpData = function (rexp, rclass) {
+  //console.log(rexp, rclass);
   var names = phantasus.Util.getFieldNames(rexp);
+  //console.log('fieldNames', names);
+
   var data = {};
   for (var i = 0; i < names.length; i++) {
     var rexpV = rexp.rexpValue[i];
     data[names[i]] = {};
+    if (rexpV.rclass == rclass.LIST) {
+      data[names[i]] = phantasus.Util.getRexpData(rexpV, rclass);
+    }
     if (rexpV.attrName.length > 0 && rexpV.attrName[0] == 'dim') {
       data[names[i]].dim = rexpV.attrValue[0].intValue;
     }
@@ -1747,26 +1753,26 @@ phantasus.Util.getRexpData = function (rexp, rclass) {
 
 phantasus.Util.getFilePath = function (session, str) {
   var splitted = str.split("/");
-  var fileName = splitted[splitted.length - 1].substring(0, splitted[splitted.length - 1].length - 2);
+  var fileName = splitted[splitted.length - 1];
   return session.getLoc() + "files/" + fileName;
 };
 
 phantasus.Util.getTrueIndices = function (dataset) {
-  console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
+  //console.log('TrueIndices', dataset, dataset.dataset, dataset.dataset === undefined);
   var rowIndices = dataset.rowIndices ? dataset.rowIndices : [];
   var rows = phantasus.Util.getConsNumbers(rowIndices.length);
   var columnIndices = dataset.columnIndices ? dataset.columnIndices : [];
   var columns = phantasus.Util.getConsNumbers(columnIndices.length);
   var iter = 0;
   var savedDataset = dataset;
-  console.log("rows processing");
+  //console.log("rows processing");
   while (dataset.dataset) {
     if (!dataset.rowIndices) {
       dataset = dataset.dataset;
       continue;
     }
     rowIndices = dataset.rowIndices;
-    console.log(iter, "rows:", rows.length, rows);
+    //console.log(iter, "rows:", rows.length, rows);
     var newRows = Array.apply(null, Array(rows.length)).map(Number.prototype.valueOf, 0);
     for (var i = 0; i < rows.length; i++) {
       newRows[i] = dataset.rowIndices[rows[i]];
@@ -1776,7 +1782,7 @@ phantasus.Util.getTrueIndices = function (dataset) {
     iter++;
   }
   iter = 0;
-  console.log("columns processing");
+  //console.log("columns processing");
   dataset = savedDataset;
   while (dataset.dataset) {
     if (!dataset.columnIndices) {
@@ -1785,7 +1791,7 @@ phantasus.Util.getTrueIndices = function (dataset) {
     }
     columnIndices = dataset.columnIndices;
 
-    console.log(iter, "columns:", columns.length, columns);
+    //console.log(iter, "columns:", columns.length, columns);
     var newCols = Array.apply(null, Array(columns.length)).map(Number.prototype.valueOf, 0)
     for (i = 0; i < columns.length; i++) {
       newCols[i] = dataset.columnIndices[columns[i]];
@@ -1796,26 +1802,26 @@ phantasus.Util.getTrueIndices = function (dataset) {
     iter++;
   }
 
-  console.log("res", rows, columns);
+  //console.log("res", rows, columns);
   var conseqRows = phantasus.Util.getConsNumbers(dataset.rows);
   var conseqCols = phantasus.Util.getConsNumbers(dataset.columns);
-  console.log(conseqCols);
+  //console.log(conseqCols);
   var ans = {};
-  console.log(phantasus.Util.equalArrays(rows, conseqRows));
+  //console.log(phantasus.Util.equalArrays(rows, conseqRows));
   if (phantasus.Util.equalArrays(rows, conseqRows) || rows.length == 0 && phantasus.Util.equalArrays(conseqRows, rowIndices)) {
     ans.rows = [];
   }
   else {
     ans.rows = rows.length > 0 ? rows : rowIndices;
   }
-  console.log(phantasus.Util.equalArrays(columns, conseqCols));
+  //console.log(phantasus.Util.equalArrays(columns, conseqCols));
   if (phantasus.Util.equalArrays(columns, conseqCols) || columns.length == 0 && phantasus.Util.equalArrays(conseqCols, columnIndices)) {
     ans.columns = [];
   }
   else {
     ans.columns = columns.length > 0 ? columns : columnIndices;
   }
-  console.log(ans);
+  //console.log(ans);
   return ans;
 };
 
@@ -3526,14 +3532,17 @@ phantasus.GseReader = function (options) {
 phantasus.GseReader.prototype = {
   read: function (name, callback) {
     var req = ocpu.call('loadGEO', {name: name, type: this.type}, function (session) {
-      //console.log('phantasus.GseReader.prototype.read ::', session);
       session.getObject(function (success) {
         //console.log('phantasus.GseReader.prototype.read ::', success);
+
+        var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
+        //console.log(filePath);
+
         var r = new FileReader();
-        var filePath = phantasus.Util.getFilePath(session, success);
-        //console.log('phantasus.GseReader.prototype.read ::', filePath);
+
         r.onload = function (e) {
           var contents = e.target.result;
+          //console.log(contents);
           var ProtoBuf = dcodeIO.ProtoBuf;
           ProtoBuf.protoFromFile("./message.proto", function (error, success) {
             if (error) {
@@ -3550,77 +3559,22 @@ phantasus.GseReader.prototype = {
             var res = REXP.decode(contents);
 
             var jsondata = phantasus.Util.getRexpData(res, rclass);
+            //console.log(jsondata);
 
-            var flatData = jsondata.data.values;
-            var nrowData = jsondata.data.dim[0];
-            var ncolData = jsondata.data.dim[1];
-            var flatPdata = jsondata.pdata.values;
-            //var participants = jsondata.participants.values;
-            var annotation = jsondata.fdata.values;
-            console.log(annotation);
-            var id = jsondata.rownames.values;
-            var metaNames = jsondata.colMetaNames.values;
-            var rowMetaNames = jsondata.rowMetaNames.values;
-
-            var matrix = [];
-            for (var i = 0; i < nrowData; i++) {
-              var curArray = new Float32Array(ncolData);
-              for (var j = 0; j < ncolData; j++) {
-                curArray[j] = flatData[i + j * nrowData];
-              }
-              matrix.push(curArray);
+            var datasets = [];
+            for (var k = 0; k < Object.keys(jsondata).length; k++) {
+              var dataset = phantasus.GseReader.getDataset(session, Object.keys(jsondata)[k], jsondata[Object.keys(jsondata)[k]]);
+              dataset.setESVariable('es_' + (k + 1).toString());
+              datasets.push(dataset);
             }
-            var dataset = new phantasus.Dataset({
-              name: name,
-              rows: nrowData,
-              columns: ncolData,
-              array: matrix,
-              dataType: 'Float32',
-              esSession: session,
-              isGEO: true
-            });
-
-
-            /*console.log("phantasus.GseReader.prototype.read ::", "input list", res);
-             console.log("phantasus.GseReader.prototype.read ::", "metaNames", metaNames);
-             console.log("phantasus.GseReader.prototype.read ::", dataset);*/
-            /*var columnsIds = dataset.getColumnMetadata().add('id');
-            for (var i = 0; i < ncolData; i++) {
-              columnsIds.setValue(i, phantasus.Util.copyString(participants[i]));
-            }*/
-            //console.log(flatPdata);
-            for (var i = 0; i < metaNames.length; i++) {
-              var curVec = dataset.getColumnMetadata().add(metaNames[i]);
-              for (var j = 0; j < ncolData; j++) {
-                curVec.setValue(j, flatPdata[j + i * ncolData]);
-              }
-            }
-
-            var rowIds = dataset.getRowMetadata().add('id');
-
-            /*if (annotation) {
-              var rowSymbol = dataset.getRowMetadata().add('symbol');
-            }*/
-            for (var i = 0; i < rowMetaNames.length; i++) {
-              var curVec = dataset.getRowMetadata().add(rowMetaNames[i]);
-              for (var j = 0; j < nrowData; j++) {
-                curVec.setValue(j, annotation[j + i * nrowData]);
-                rowIds.setValue(j, id[j])
-              }
-            }
-            phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
-            phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
-              1);
-            callback(null, dataset);
-
+            console.log("resulting datasets", datasets);
+            callback(null, datasets);
           });
         };
 
-        phantasus.BlobFromPath.getFileObject(filePath, function (file) {
-          //console.log('phantasus.GseReader.prototype.read ::', file);
-          r.readAsArrayBuffer(file);
+        phantasus.BlobFromPath.getFileObject(filePath, function (f) {
+          r.readAsArrayBuffer(f);
         });
-
       })
     });
     req.fail(function () {
@@ -3633,6 +3587,62 @@ phantasus.GseReader.prototype = {
 
   }
 };
+
+
+phantasus.GseReader.getDataset = function (session, seriesName, jsondata) {
+  var flatData = jsondata.data.values;
+  var nrowData = jsondata.data.dim[0];
+  var ncolData = jsondata.data.dim[1];
+  var flatPdata = jsondata.pdata.values;
+  //var participants = jsondata.participants.values;
+  var annotation = jsondata.fdata.values;
+  //console.log(annotation);
+  var id = jsondata.rownames.values;
+  var metaNames = jsondata.colMetaNames.values;
+  var rowMetaNames = jsondata.rowMetaNames.values;
+
+  var matrix = [];
+  for (var i = 0; i < nrowData; i++) {
+    var curArray = new Float32Array(ncolData);
+    for (var j = 0; j < ncolData; j++) {
+      curArray[j] = flatData[i + j * nrowData];
+    }
+    matrix.push(curArray);
+  }
+  var dataset = new phantasus.Dataset({
+    name: seriesName,
+    rows: nrowData,
+    columns: ncolData,
+    array: matrix,
+    dataType: 'Float32',
+    esSession: session,
+    isGEO: true
+  });
+
+  for (i = 0; i < metaNames.length; i++) {
+    var curVec = dataset.getColumnMetadata().add(metaNames[i]);
+    for (j = 0; j < ncolData; j++) {
+      curVec.setValue(j, flatPdata[j + i * ncolData]);
+    }
+  }
+
+  var rowIds = dataset.getRowMetadata().add('id');
+
+  for (i = 0; i < rowMetaNames.length; i++) {
+    curVec = dataset.getRowMetadata().add(rowMetaNames[i]);
+    for (j = 0; j < nrowData; j++) {
+      curVec.setValue(j, annotation[j + i * nrowData]);
+      rowIds.setValue(j, id[j])
+    }
+  }
+  phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
+  phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
+    1);
+
+  //console.log("returned dataset", dataset);
+  return dataset;
+};
+
 phantasus.JsonDatasetReader = function () {
 
 };
@@ -6026,9 +6036,13 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
         if (err) {
           deferred.reject(err);
         } else {
-          deferred.resolve(dataset);
+
           console.log(dataset);
-          phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          console.log('ready to resolve with', dataset);
+          deferred.resolve(dataset);
+          if (!isGSE) {
+            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          }
         }
       });
 
@@ -6037,7 +6051,6 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     pr.toString = function () {
       return '' + fileOrUrl;
     };
-    //console.log("phantasus.DatasetUtil.read ::", pr);
     return pr;
   } else if (typeof fileOrUrl.done === 'function') { // assume it's a
     // deferred
@@ -6778,14 +6791,14 @@ phantasus.DatasetUtil.getContentArray = function (dataset) {
   var array = [];
   var nr = dataset.rows;
   var nc = dataset.columns;
-  console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
+  //console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
 
   for (var i = 0; i < nr; i++) {
     for (var j = 0; j < nc; j++) {
       array.push(dataset.getValue(i, j));
     }
   }
-  console.log("getContentArray ::", array);
+  //console.log("getContentArray ::", array);
   return array;
 };
 phantasus.DatasetUtil.getMetadataArray = function (dataset) {
@@ -6840,7 +6853,7 @@ phantasus.DatasetUtil.getMetadataArray = function (dataset) {
 phantasus.DatasetUtil.toESSessionPromise = function (options) {
   var dataset = options.dataset ? options.dataset : options;
 
-  console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
+  //console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
   //var copiedDataset = phantasus.DatasetUtil.copy(dataset);
   //console.log("EsSessionPromise ::", "after copying", dataset);
   while (dataset.dataset) {
@@ -6852,9 +6865,9 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof phantasus.SlicedDatasetView", "go deeper");
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
-    console.log("before going further", options);
+    //console.log("before going further", options);
     if (options.isGEO) {
-      console.log("toESSession::", "resolving as geo dataset");
+      //console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;
     }
@@ -6862,7 +6875,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
     var array = phantasus.DatasetUtil.getContentArray(dataset);
     var meta = phantasus.DatasetUtil.getMetadataArray(dataset);
 
-    console.log(array, meta);
+    //console.log(array, meta);
     var messageJSON = {
       rclass: "LIST",
       rexpValue: [{
@@ -6918,7 +6931,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       }
     };
     var ProtoBuf = dcodeIO.ProtoBuf;
-    ProtoBuf.protoFromFile("./message.proto", function (error, success) {
+    ProtoBuf.protoFromFile('./message.proto', function (error, success) {
       if (error) {
         alert(error);
         console.log("ExpressionSetCreation :: ", "ProtoBuilder failed", error);
@@ -6927,12 +6940,13 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder error", error);
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder success", success);
       var builder = success,
-        rexp = builder.build("rexp"),
+        rexp = builder.build('rexp'),
         REXP = rexp.REXP;
 
       var proto = new REXP(messageJSON);
-      var req = ocpu.call("createES", proto, function (session) {
+      var req = ocpu.call('createES', proto, function (session) {
         //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "from successful request", session);
+        dataset.setESVariable('es');
         resolve(session);
       }, true);
 
@@ -6965,6 +6979,9 @@ phantasus.Dataset = function (options) {
 
   if (options.esSession) {
     this.esSession = options.esSession;
+  }
+  if (options.esVariable) {
+    this.esVariable = options.esVariable;
   }
   this.seriesNames.push(options.name);
   this.seriesArrays.push(options.array ? options.array : phantasus.Dataset
@@ -7193,6 +7210,14 @@ phantasus.Dataset.prototype = {
   getESSession: function () {
     //console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
+  },
+
+  getESVariable: function () {
+    return this.esVariable;
+  },
+
+  setESVariable: function(variable) {
+    this.esVariable = variable;
   }
 
 };
@@ -9544,6 +9569,12 @@ phantasus.SlicedDatasetView.prototype = {
     //console.log("phantasus.SlicedDatasetView.prototype.getESSession ::", this);
     return this.dataset.getESSession();
   },
+  setESVariable: function (variable) {
+    this.dataset.setESVariable(variable);
+  },
+  getESVariable: function () {
+    return this.dataset.getESVariable();
+  },
   getRowCount: function () {
     return this.rowIndices !== null ? this.rowIndices.length : this.dataset
       .getRowCount();
@@ -11033,7 +11064,7 @@ phantasus.VectorColorModel.prototype = {
       } else {
         colors = colorbrewer.Paired[values.length];
       }
-      console.log("getMappedValue", colors);
+      //console.log("getMappedValue", colors);
 
       if (!colors) {
         if (values.length <= 20) {
@@ -11042,13 +11073,13 @@ phantasus.VectorColorModel.prototype = {
           colors = phantasus.VectorColorModel.CATEGORY_ALL;
         }
       }
-      console.log("getMappedValue", colors);
+      //console.log("getMappedValue", colors);
 
       if (colors) {
         var ncolors = colors.length;
         for (var i = 0, nvalues = values.length; i < nvalues; i++) {
           var color = this._getColorForValue(values[i]);
-          console.log(i, color, values[i], colors[i % ncolors]);
+          //console.log(i, color, values[i], colors[i % ncolors]);
           if (color == null) {
             color = colors[i % ncolors];
           }
@@ -11060,7 +11091,7 @@ phantasus.VectorColorModel.prototype = {
           _this.getMappedValue(vector, val);
         });
       }
-      console.log(metadataValueToColorMap);
+      //console.log(metadataValueToColorMap);
     }
     var color = metadataValueToColorMap.get(value);
     if (color == null) {
@@ -11809,12 +11840,35 @@ phantasus.LandingPage.prototype = {
     this.dispose();
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
+    console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
       options.landingPage = _this;
-      new phantasus.HeatMap(options);
+
+      if (options.dataset.options.isGSE) {
+        var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
+          session.getObject(function (filenames) {
+            filenames = JSON.parse(filenames);
+            console.log(filenames);
+            if (filenames.length === 1) {
+              new phantasus.HeatMap(options);
+            }
+            else {
+              for (var j = 0; j < filenames.length; j++) {
+                var specificOptions = options;
+                specificOptions.dataset.file = filenames[j];
+
+                new phantasus.HeatMap(specificOptions);
+              }
+            }
+          })
+        })
+      }
+      else {
+        new phantasus.HeatMap(options);
+      }
     }
 
   },
@@ -11909,7 +11963,10 @@ phantasus.LandingPage.prototype = {
       var options = {
         dataset: {
           file: value,
-          options: {interactive: true}
+          options: {
+            interactive: true,
+            isGSE: fileName.toUpperCase().indexOf('GSE') === 0
+          }
         }
       };
 
@@ -12438,12 +12495,8 @@ phantasus.AdjustDataTool.prototype = {
               (dataset.getValue(i, j) - median) / mad);
           }
         }
-        changed = true;
       }
 
-      /* if (changed) {
-       phantasus.DatasetUtil.toESSessionPromise(dataset);
-       }*/
       return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,
@@ -14818,7 +14871,7 @@ phantasus.KmeansTool.prototype = {
             render: ['color']
           });
         })
-      }, false, "::es");
+      }, false, '::' + dataset.getESVariable());
 
     });
   }
@@ -15023,7 +15076,7 @@ phantasus.LimmaTool.prototype = {
             r.readAsArrayBuffer(file);
           });
         })
-      }, false, "::es");
+      }, false, '::' + dataset.getESVariable());
       req.fail(function () {
         console.log(req.responseText);
       });
@@ -15944,11 +15997,22 @@ phantasus.OpenDatasetTool.prototype = {
                 });
               });
         } else if (action === 'open') { // new tab
-          new phantasus.HeatMap({
-            dataset: newDataset,
-            parent: heatMap,
-            inheritFromParent: false
-          });
+          if (newDataset.length && newDataset.length > 0) {
+            for (var i = 0; i < newDataset.length; i++) {
+              new phantasus.HeatMap({
+                dataset: newDataset[i],
+                name: newDataset[i].seriesNames[0],
+                parent: heatMap,
+                inheritFromParent: false
+              });
+            }
+          } else {
+            new phantasus.HeatMap({
+              dataset: newDataset,
+              parent: heatMap,
+              inheritFromParent: false
+            });
+          }
 
         } else {
           console.log('Unknown action: ' + action);
@@ -17085,7 +17149,7 @@ phantasus.PcaPlotTool.prototype = {
            _this.$chart.prepend(img);*/
           /*var img = $('<img />', {src : session.getLoc() + 'graphics/1/png', style : "width:720px;height:540px"});*/
 
-        }, false, "::es");
+        }, false, "::" + dataset.getESVariable());
         req.fail(function () {
           alert(req.responseText);
           console.log("PcaPlot ::", req.responseText);
@@ -22812,7 +22876,7 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
-      // data types are file, dropbox, url, GSE, and predefined
+      // data types are file, dropbox, url, GEO, and predefined
       options.push('My Computer');
       options.push('URL');
       options.push('GEO Datasets');
@@ -22950,6 +23014,8 @@ phantasus.FormBuilder.prototype = {
         var text = $.trim($(this).val());
         that.setValue(name, text);
         if (evt.which === 13) {
+          console.log('environment', evt);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
           that.trigger('change', {
             name: name,
             value: text.toUpperCase()
@@ -22958,7 +23024,6 @@ phantasus.FormBuilder.prototype = {
       });
       // browse file selected
       that.$form.on('change', '[name=' + name + '_file]', function (evt) {
-
         var files = evt.target.files; // FileList object
         that.setValue(name, isMultiple ? files : files[0]);
         that.trigger('change', {
@@ -26792,7 +26857,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     $(menu.join('')).appendTo($menus);
   }
 
-  console.log("HeatMapToolbar ::", "heatMap:", heatMap, "heatMap.options:", heatMap.options);
+  //console.log("HeatMapToolbar ::", "heatMap:", heatMap, "heatMap.options:", heatMap.options);
   if (heatMap.options.menu) {
     if (heatMap.options.menu.File) {
       createMenu('File', heatMap.options.menu.File, '240px');
@@ -28394,6 +28459,7 @@ phantasus.Util.extend(phantasus.HeatMapTrackShapeLegend, phantasus.AbstractCanva
  */
 
 phantasus.HeatMap = function (options) {
+  console.log('new heatmap', options);
   phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
@@ -28674,7 +28740,24 @@ phantasus.HeatMap = function (options) {
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
         phantasus.DatasetUtil.read(file).done(function (dataset) {
-          _this.options.dataset.resolve(dataset);
+          console.log('now resolving here?');
+          if (dataset.length && dataset.length > 0) {
+            _this.options.dataset.resolve(dataset[0]);
+            _this.setName(dataset[0].seriesNames[0]);
+            for (var i = 1; i < dataset.length; i++) {
+              var heatmap = new phantasus.HeatMap({
+                name: dataset[i].seriesNames[0],
+                dataset: dataset[i],
+                parent: _this.heatmap,
+                symmetric: _this.options.symmetric,
+                inheritFromParent: false
+              });
+              console.log(i, dataset[i], heatmap);
+            }
+          }
+          else {
+            _this.options.dataset.resolve(dataset);
+          }
         }).fail(function (err) {
           _this.options.dataset.reject(err);
         });
@@ -28685,10 +28768,15 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    this.options.name = phantasus.Util
-      .getBaseFileName(phantasus.Util
-        .getFileName(this.options.dataset.file ? this.options.dataset.file
-          : this.options.dataset));
+    if (this.options.dataset.seriesNames) {
+      this.options.name = this.options.dataset.seriesName[0];
+    }
+    else {
+      this.options.name = phantasus.Util
+        .getBaseFileName(phantasus.Util
+          .getFileName(this.options.dataset.file ? this.options.dataset.file
+            : this.options.dataset));
+    }
   }
 
   var isPrimary = this.options.parent == null;
@@ -28780,7 +28868,7 @@ phantasus.HeatMap = function (options) {
     promises.push(rowDef);
 
   }
-  console.log("HeatMap creation ::", options.columnAnnotations);
+  //console.log("HeatMap creation ::", options.columnAnnotations);
   if (options.columnAnnotations) {
     var columnDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
@@ -28825,6 +28913,7 @@ phantasus.HeatMap = function (options) {
 
   }
   var heatMapLoaded = function () {
+    console.log('heatMapLoaded', _this.options.name);
     phantasus.DatasetUtil.toESSessionPromise(options.dataset);
     if (typeof window !== 'undefined') {
       $(window).on('orientationchange.phantasus resize.phantasus', _this.resizeListener = function () {
@@ -28915,7 +29004,25 @@ phantasus.HeatMap = function (options) {
       options.dataset.file, options.dataset.options)
       : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
-      _this.options.dataset = dataset;
+      console.log('resolving here?', dataset);
+
+      if (dataset.length && dataset.length > 0) {
+        _this.options.dataset = dataset[0];
+        _this.setName(dataset[0].seriesNames[0]);
+
+        for (var i = 1; i < dataset.length; i++) {
+          var heatmap = new phantasus.HeatMap({
+            name: dataset[i].seriesNames[0],
+            dataset: dataset[i],
+            symmetric: _this.options.symmetric,
+            inheritFromParent: false
+          });
+          console.log(i, dataset[i], heatmap);
+        }
+      }
+      else {
+        _this.options.dataset = dataset;
+      }
     });
     deferred.fail(function (err) {
       _this.options.$loadingImage.remove();

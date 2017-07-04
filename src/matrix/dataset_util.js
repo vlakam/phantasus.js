@@ -231,9 +231,13 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
         if (err) {
           deferred.reject(err);
         } else {
-          deferred.resolve(dataset);
+
           console.log(dataset);
-          phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          console.log('ready to resolve with', dataset);
+          deferred.resolve(dataset);
+          if (!isGSE) {
+            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          }
         }
       });
 
@@ -242,7 +246,6 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     pr.toString = function () {
       return '' + fileOrUrl;
     };
-    //console.log("phantasus.DatasetUtil.read ::", pr);
     return pr;
   } else if (typeof fileOrUrl.done === 'function') { // assume it's a
     // deferred
@@ -983,14 +986,14 @@ phantasus.DatasetUtil.getContentArray = function (dataset) {
   var array = [];
   var nr = dataset.rows;
   var nc = dataset.columns;
-  console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
+  //console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
 
   for (var i = 0; i < nr; i++) {
     for (var j = 0; j < nc; j++) {
       array.push(dataset.getValue(i, j));
     }
   }
-  console.log("getContentArray ::", array);
+  //console.log("getContentArray ::", array);
   return array;
 };
 phantasus.DatasetUtil.getMetadataArray = function (dataset) {
@@ -1045,7 +1048,7 @@ phantasus.DatasetUtil.getMetadataArray = function (dataset) {
 phantasus.DatasetUtil.toESSessionPromise = function (options) {
   var dataset = options.dataset ? options.dataset : options;
 
-  console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
+  //console.log("ENTERED TO_ESSESSION_PROMISE", dataset, options);
   //var copiedDataset = phantasus.DatasetUtil.copy(dataset);
   //console.log("EsSessionPromise ::", "after copying", dataset);
   while (dataset.dataset) {
@@ -1057,9 +1060,9 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "dataset in instanceof phantasus.SlicedDatasetView", "go deeper");
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
-    console.log("before going further", options);
+    //console.log("before going further", options);
     if (options.isGEO) {
-      console.log("toESSession::", "resolving as geo dataset");
+      //console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;
     }
@@ -1067,7 +1070,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
     var array = phantasus.DatasetUtil.getContentArray(dataset);
     var meta = phantasus.DatasetUtil.getMetadataArray(dataset);
 
-    console.log(array, meta);
+    //console.log(array, meta);
     var messageJSON = {
       rclass: "LIST",
       rexpValue: [{
@@ -1123,7 +1126,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       }
     };
     var ProtoBuf = dcodeIO.ProtoBuf;
-    ProtoBuf.protoFromFile("./message.proto", function (error, success) {
+    ProtoBuf.protoFromFile('./message.proto', function (error, success) {
       if (error) {
         alert(error);
         console.log("ExpressionSetCreation :: ", "ProtoBuilder failed", error);
@@ -1132,12 +1135,13 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder error", error);
       //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "protobuilder success", success);
       var builder = success,
-        rexp = builder.build("rexp"),
+        rexp = builder.build('rexp'),
         REXP = rexp.REXP;
 
       var proto = new REXP(messageJSON);
-      var req = ocpu.call("createES", proto, function (session) {
+      var req = ocpu.call('createES', proto, function (session) {
         //console.log("phantasus.DatasetUtil.toESSessionPromise ::", "from successful request", session);
+        dataset.setESVariable('es');
         resolve(session);
       }, true);
 

@@ -88,7 +88,7 @@ phantasus.KmeansTool.prototype = {
             render: ['color']
           });
         })
-      }, false, "::es");
+      }, false, '::' + dataset.getESVariable());
 
     });
   }

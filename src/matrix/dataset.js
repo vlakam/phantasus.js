@@ -20,6 +20,9 @@ phantasus.Dataset = function (options) {
   if (options.esSession) {
     this.esSession = options.esSession;
   }
+  if (options.esVariable) {
+    this.esVariable = options.esVariable;
+  }
   this.seriesNames.push(options.name);
   this.seriesArrays.push(options.array ? options.array : phantasus.Dataset
     .createArray(options));
@@ -247,6 +250,14 @@ phantasus.Dataset.prototype = {
   getESSession: function () {
     //console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
+  },
+
+  getESVariable: function () {
+    return this.esVariable;
+  },
+
+  setESVariable: function(variable) {
+    this.esVariable = variable;
   }
 
 };

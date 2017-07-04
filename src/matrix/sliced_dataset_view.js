@@ -19,6 +19,12 @@ phantasus.SlicedDatasetView.prototype = {
     //console.log("phantasus.SlicedDatasetView.prototype.getESSession ::", this);
     return this.dataset.getESSession();
   },
+  setESVariable: function (variable) {
+    this.dataset.setESVariable(variable);
+  },
+  getESVariable: function () {
+    return this.dataset.getESVariable();
+  },
   getRowCount: function () {
     return this.rowIndices !== null ? this.rowIndices.length : this.dataset
       .getRowCount();

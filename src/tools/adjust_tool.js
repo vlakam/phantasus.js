@@ -103,12 +103,8 @@ phantasus.AdjustDataTool.prototype = {
               (dataset.getValue(i, j) - median) / mad);
           }
         }
-        changed = true;
       }
 
-      /* if (changed) {
-       phantasus.DatasetUtil.toESSessionPromise(dataset);
-       }*/
       return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,
