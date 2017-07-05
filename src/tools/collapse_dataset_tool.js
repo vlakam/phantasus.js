@@ -78,6 +78,8 @@ phantasus.CollapseDatasetTool.prototype = {
       heatMap.setTrackVisible(name, false, !rows);
     });
     project.setFullDataset(dataset, true);
+
+    dataset.isGEO = false;
     phantasus.DatasetUtil.toESSessionPromise(dataset);
   }
 };

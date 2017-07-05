@@ -1061,7 +1061,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
     //console.log("before going further", options);
-    if (options.isGEO) {
+    if (options.isGEO || dataset.isGEO) {
       //console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;

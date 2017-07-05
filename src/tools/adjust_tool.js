@@ -92,6 +92,7 @@ phantasus.AdjustDataTool.prototype = {
               / stdev);
           }
         }
+        changed = true;
       }
       if (options.input['robust_z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
@@ -103,8 +104,13 @@ phantasus.AdjustDataTool.prototype = {
               (dataset.getValue(i, j) - median) / mad);
           }
         }
+        changed = true;
       }
 
+      if (changed) {
+        dataset.isGEO = false;
+        //phantasus.DatasetUtil().toESSessionPromise(dataset);
+      }
       return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,

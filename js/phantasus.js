@@ -6866,7 +6866,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
     //console.log("before going further", options);
-    if (options.isGEO) {
+    if (options.isGEO || dataset.isGEO) {
       //console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;
@@ -12484,6 +12484,7 @@ phantasus.AdjustDataTool.prototype = {
               / stdev);
           }
         }
+        changed = true;
       }
       if (options.input['robust_z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
@@ -12495,8 +12496,13 @@ phantasus.AdjustDataTool.prototype = {
               (dataset.getValue(i, j) - median) / mad);
           }
         }
+        changed = true;
       }
 
+      if (changed) {
+        dataset.isGEO = false;
+        //phantasus.DatasetUtil().toESSessionPromise(dataset);
+      }
       return new phantasus.HeatMap({
         name: heatMap.getName(),
         dataset: dataset,
@@ -14296,6 +14302,8 @@ phantasus.CollapseDatasetTool.prototype = {
       heatMap.setTrackVisible(name, false, !rows);
     });
     project.setFullDataset(dataset, true);
+
+    dataset.isGEO = false;
     phantasus.DatasetUtil.toESSessionPromise(dataset);
   }
 };
