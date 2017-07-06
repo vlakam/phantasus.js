@@ -210,7 +210,7 @@ phantasus
       createMenu('Edit', heatMap.options.menu.Edit);
     }
     if (heatMap.options.menu.View) {
-      createMenu('View', heatMap.options.menu.View, '150px');
+      createMenu('View', heatMap.options.menu.View, '170px');
     }
     if (heatMap.options.menu.Tools) {
       createMenu('Tools', heatMap.options.menu.Tools);
