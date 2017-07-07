@@ -54,8 +54,8 @@ phantasus.HeatMapToolBar = function (heatMap) {
     ' name="searchToggle"> Column Dendrogram');
   searchHtml.push('</label>');
   searchHtml.push('</div>');
-phantasus
-  function createSearchOptionsMenu () {
+
+  function createSearchOptionsMenu() {
     searchHtml.push('<div style="display:inline-block;" class="dropdown">');
     searchHtml.push(
       '<button type="button" class="btn btn-default btn-xxs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="fa fa-caret-down"></span></button>');
@@ -85,7 +85,7 @@ phantasus
     searchHtml.push('</div>');
   }
 
-  function createSearchMenu (dataName, navigation) {
+  function createSearchMenu(dataName, navigation) {
     searchHtml.push(
       '<div style="display:inline-block;" data-name="' + dataName + '">');
     searchHtml.push('<div class="form-group">');
@@ -144,7 +144,7 @@ phantasus
   var $menus = $(
     '<div style="display: inline-block;margin-right:14px;"></div>');
 
-  function createMenu (menuName, actions, minWidth) {
+  function createMenu(menuName, actions, minWidth) {
     if (!minWidth) {
       minWidth = '0px';
     }
@@ -229,18 +229,6 @@ phantasus
   toolbarHtml.push('<div class="phantasus-button-divider"></div>');
   // zoom
   if (heatMap.options.toolbar.zoom) {
-    // toolbarHtml
-    // .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="tooltip"' +
-    //   ' title="Zoom Out (-)" name="Zoom Out"><span class="fa fa-minus"></span></button>');
-    // toolbarHtml
-    // .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="tooltip"' +
-    //   ' title="Zoom In (+)" name="Zoom In"><span class="fa fa-plus"></span></button>');
-    // toolbarHtml
-    // .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="tooltip"' +
-    //   ' title="Fit To Window" name="Fit To Window"><span class="fa fa-compress"></span></button>');
-    // toolbarHtml
-    // .push('<button type="button" class="btn btn-default btn-xxs" data-toggle="tooltip"' +
-    //   ' title="Reset Zoom" name="Reset Zoom">100%</button>');
 
     var dropdownId = _.uniqueId('phantasus');
     toolbarHtml.push('<div style="display:inline-block;" class="dropdown">');
@@ -256,8 +244,7 @@ phantasus
       ' <span style="font-size: .8em;" class="fa fa-caret-down"></span>');
     toolbarHtml.push('</button>');
     toolbarHtml.push(
-      '<ul class="dropdown-menu" aria-labelledby="' + dropdownId + '">');
-
+      '<ul style="width:200px;" class="dropdown-menu" aria-labelledby="' + dropdownId + '">');
     toolbarHtml.push(
       '<li><a class="phantasus-menu-item" href="#" data-action="Zoom In">Zoom In<span class="pull-right">+</span></a></li>');
     toolbarHtml.push(
@@ -269,8 +256,7 @@ phantasus
       ' class="fa' +
       ' fa-compress phantasus-menu-item-icon"></span><span class="pull-right">' +
       phantasus.Util.COMMAND_KEY +
-      phantasus.KeyboardCharMap[heatMap.getActionManager().
-        getAction('Fit To Window').which[0]] + '</span> </a></li>');
+      phantasus.KeyboardCharMap[heatMap.getActionManager().getAction('Fit To Window').which[0]] + '</span> </a></li>');
     toolbarHtml.push('<li role="separator" class="divider"></li>');
     toolbarHtml.push(
       '<li><a class="phantasus-menu-item" href="#" data-action="100%">100%</a></li>');
@@ -450,7 +436,7 @@ phantasus
   var $searchToggle = $searchForm.find('[name=searchToggle]'); // buttons
   var nameToSearchObject = {};
 
-  function getSearchElements ($group, searchName, cb) {
+  function getSearchElements($group, searchName, cb) {
     var obj = {
       $group: $group,
       $search: $group.find('[name=search]'),
@@ -459,8 +445,7 @@ phantasus
       $previousMatch: $group.find('[name=previousMatch]'),
       $nextMatch: $group.find('[name=nextMatch]'),
       $matchesToTop: $group.find('[name=matchesToTop]'),
-      $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').
-        parent(),
+      $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').parent(),
     };
   nameToSearchObject[searchName] = obj;
     return obj;
@@ -496,10 +481,9 @@ phantasus
 
     var $span = $(this).find('span');
     if ($span.data('type') === 'toggle') {
-      $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').
-        removeClass('dropdown-checkbox' +
-          ' fa' +
-          ' fa-check');
+      $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').removeClass('dropdown-checkbox' +
+        ' fa' +
+        ' fa-check');
       $span.addClass('dropdown-checkbox fa fa-check');
     }
     phantasus.Util.trackEvent({
@@ -743,7 +727,7 @@ phantasus
       });
     }, 500));
 
-  function searchValues () {
+  function searchValues() {
     var $searchResultsLabel = _this.$valueSearchResults;
     var text = $.trim(_this.$valueTextField.val());
     if (text === '') {
@@ -1089,8 +1073,7 @@ phantasus.HeatMapToolBar.prototype = {
         + (matches === 1 ? '' : 'es'));
     }
     if (matches <= 0) {
-      var positions = isColumns ? this.heatMap.getHeatMapElementComponent().
-        getColumnPositions()
+      var positions = isColumns ? this.heatMap.getHeatMapElementComponent().getColumnPositions()
         : this.heatMap.getHeatMapElementComponent().getRowPositions();
       positions.setSquishedIndices(null);
       if (isColumns) {

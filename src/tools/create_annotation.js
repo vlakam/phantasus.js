@@ -16,7 +16,8 @@ phantasus.CreateAnnotation.prototype = {
         name: 'annotation_name',
         value: '',
         type: 'text',
-        required: true
+        required: true,
+        autocomplete: 'off'
       },
       {
         name: 'formula',

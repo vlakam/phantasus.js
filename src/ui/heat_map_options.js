@@ -393,10 +393,13 @@ phantasus.HeatMapOptions = function (heatMap) {
   var separateSchemesField = heatMap.heatmap.getColorScheme()
     .getSeparateColorSchemeForRowMetadataField();
   if (separateSchemesField != null) {
-    $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
+    var v = heatMap.project.getFullDataset().getRowMetadata()
+    .getByName(separateSchemesField);
+    if (v != null) {
+      $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
       .createValueToIndexMap(
-        heatMap.project.getFullDataset().getRowMetadata()
-          .getByName(separateSchemesField)).keys()));
+        v).keys()));
+    }
   }
 
   if (separateSchemesField != null) {
