@@ -83,7 +83,7 @@ phantasus.LandingPage.prototype = {
       options.focus = i === 0;
       options.landingPage = _this;
 
-      if (options.dataset.options.isGSE) {
+      if (options.dataset.options.isGEO) {
         var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
           session.getObject(function (filenames) {
             filenames = JSON.parse(filenames);
@@ -205,7 +205,7 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGSE: fileName.toUpperCase().indexOf('GSE') === 0 && fileName.indexOf('.') === -1
+            isGEO: (fileName.toUpperCase().indexOf('GSE') === 0 || fileName.toUpperCase().indexOf('GDS') === 0) && fileName.indexOf('.') === -1
           }
         }
       };
