@@ -148,7 +148,8 @@ phantasus.LimmaTool.prototype = {
         session.getObject(function (success) {
           console.log(success);
           var r = new FileReader();
-          var filePath = phantasus.Util.getFilePath(session, success);
+          var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
+          console.log("filePath::", filePath);
 
           r.onload = function (e) {
             var contents = e.target.result;
