@@ -988,9 +988,9 @@ phantasus.DatasetUtil.getContentArray = function (dataset) {
   var nc = dataset.columns;
   //console.log("getContentArray ::", "dataset:", dataset, "rows:", nr, "columns:", nc);
 
-  for (var i = 0; i < nr; i++) {
-    for (var j = 0; j < nc; j++) {
-      array.push(dataset.getValue(i, j));
+  for (var i = 0; i < nc; i++) {
+    for (var j = 0; j < nr; j++) {
+      array.push(dataset.getValue(j, i));
     }
   }
   //console.log("getContentArray ::", array);
@@ -1070,7 +1070,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
     var array = phantasus.DatasetUtil.getContentArray(dataset);
     var meta = phantasus.DatasetUtil.getMetadataArray(dataset);
 
-    //console.log(array, meta);
+    console.log(array, array.length);
     var messageJSON = {
       rclass: "LIST",
       rexpValue: [{
@@ -1079,7 +1079,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
         attrName: "dim",
         attrValue: {
           rclass: "INTEGER",
-          intValue: [dataset.getColumnCount(), dataset.getRowCount()]
+          intValue: [dataset.getRowCount(), dataset.getColumnCount()]
         }
       }, {
         rclass: "STRING",
