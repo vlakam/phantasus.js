@@ -332,6 +332,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   var $toolbar = $(toolbarHtml.join(''));
 
   $toolbar.find('[data-action]').on('click', function (e) {
+    e.preventDefault();
     heatMap.getActionManager().execute($(this).data('action'));
   }).on('blur', function (e) {
     if (document.activeElement === document.body) {
