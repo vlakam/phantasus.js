@@ -248,6 +248,9 @@ phantasus.HeatMap = function (options) {
       symmetric: false,
       keyboard: true,
       inlineTooltip: true,
+      // Prevent mousewheel default (stops accidental page back on Mac), but also prevents page
+      // scrolling
+      standalone: false,
       $loadingImage: phantasus.Util.createLoadingEl(),
       menu: {
         File: ['Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', null, 'Rename' +
@@ -1846,6 +1849,7 @@ phantasus.HeatMap.prototype = {
     };
     setInitialDisplay(false, this.options.rows);
     setInitialDisplay(true, this.options.columns);
+
     function reorderTracks(array, isColumns) {
       if (array == null || array.length <= 1) {
         return;
@@ -2537,7 +2541,9 @@ phantasus.HeatMap.prototype = {
     return this.$content;
   },
   focus: function () {
+    var scrollTop = document.body.scrollTop;
     this.$tabPanel.focus();
+    document.body.scrollTop = scrollTop;
   },
   getFocusEl: function () {
     return this.$tabPanel;
