@@ -274,6 +274,8 @@ phantasus.ActionManager = function () {
       },
       icon: 'fa fa-line-chart'
     });
+  } else {
+    console.log('echarts not found.');
   }
   if (typeof Plotly !== 'undefined') {
     this.add({
