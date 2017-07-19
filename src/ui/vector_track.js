@@ -900,7 +900,7 @@ phantasus.VectorTrack.prototype = {
     var project = this.project;
     var isColumns = this.isColumns;
     var hasSelection = isColumns ? project.getColumnSelectionModel()
-      .count() > 0 : project.getRowSelectionModel().count() > 0;
+    .count() > 0 : project.getRowSelectionModel().count() > 0;
     var ANNOTATE_SELECTION = 'Annotate Selection';
     var INVERT_SELECTION = 'Invert Selection';
     var SELECT_ALL = 'Select All';
@@ -1584,7 +1584,7 @@ phantasus.VectorTrack.prototype = {
         } else if (item === 'Shape Key') {
           var legend = new phantasus.HeatMapTrackShapeLegend(
             [_this], isColumns ? _this.project
-            .getColumnShapeModel()
+              .getColumnShapeModel()
               : _this.project
               .getRowShapeModel());
           var size = legend.getPreferredSize();
@@ -2057,6 +2057,10 @@ phantasus.VectorTrack.prototype = {
     var midPix = scale(this.settings.mid);
     var settings = this.settings;
     var discrete = settings.discrete && this.discreteValueMap != null;
+    var colorByVector = this.settings.colorByField != null ? this
+    .getVector(this.settings.colorByField) : null;
+    var colorModel = isColumns ? this.project.getColumnColorModel()
+      : this.project.getRowColorModel();
     for (var i = start; i < end; i++) {
       var value = vector.getValue(i);
       if (discrete) {
@@ -2065,6 +2069,9 @@ phantasus.VectorTrack.prototype = {
       var position = positions.getPosition(i);
       var size = positions.getItemSize(i);
       var scaledValue = scale(value);
+      if (colorByVector !== null) {
+        context.fillStyle = colorModel.getMappedValue(colorByVector, colorByVector.getValue(i));
+      }
       if (isColumns) {
         context.beginPath();
         context.rect(position, Math.min(midPix, scaledValue), size,
