@@ -21,13 +21,8 @@ phantasus.Project = function (dataset) {
   this.symmetricProjectListener = null;
   phantasus.Project._recomputeCalculatedColumnFields(this.originalDataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
   phantasus.Project
-    ._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(
-      this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
-  phantasus.Project._recomputeCalculatedColumnFields(this.originalDataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
-  phantasus.Project
   ._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(
-    this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_FILTER);
-  this.history = [];
+    this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
 };
 phantasus.Project.Events = {
   DATASET_CHANGED: 'datasetChanged',

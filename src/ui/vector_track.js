@@ -861,36 +861,32 @@ phantasus.VectorTrack.prototype = {
           this.renderUnstackedBar(context, vector, start, end, clip,
             offset, barSize, visibleFieldIndices);
         } else {
-          this.renderBar(context, vector, start, end, clip, offset,
+          this.renderBar(context, vector, start, end, clip, this.isColumns ? (fullAvailableSpace - offset - barSize) : offset,
             barSize);
         }
       }
+
       offset += barSize + 2;
       availableSpace -= offset;
-    }
 
+    }
     if (!this.settings.squished
       && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR)) {
       context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
-      this.renderText(context, vector, true, start, end, clip, offset,
-        this.isColumns ? fullAvailableSpace : 0);
+      this.renderText(context, vector, true, start, end, clip, this.isColumns ? (fullAvailableSpace - offset) : offset);
       offset += this.settings.maxTextWidth + 2;
       availableSpace -= offset;
     }
-    this.textWidth = 0;
     if (!this.settings.squished
       && this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT)) {
-      this.textWidth = availableSpace;
       context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
       var dataType = phantasus.VectorUtil.getDataType(vector);
       if (dataType === 'url') {
         context.fillStyle = 'blue';
         this.canvas.style.cursor = 'pointer';
       }
-      this.renderText(context, vector, false, start, end, clip, offset,
-        this.isColumns ? fullAvailableSpace : 0);
-      offset += this.settings.textWidth + 2;
-      availableSpace -= offset;
+      this.renderText(context, vector, false, start, end, clip, this.isColumns ? (fullAvailableSpace - offset) : offset);
+
     }
 
   }
@@ -2061,6 +2057,7 @@ phantasus.VectorTrack.prototype = {
     .getVector(this.settings.colorByField) : null;
     var colorModel = isColumns ? this.project.getColumnColorModel()
       : this.project.getRowColorModel();
+
     for (var i = start; i < end; i++) {
       var value = vector.getValue(i);
       if (discrete) {
@@ -2074,7 +2071,7 @@ phantasus.VectorTrack.prototype = {
       }
       if (isColumns) {
         context.beginPath();
-        context.rect(position, Math.min(midPix, scaledValue), size,
+        context.rect(position, Math.min(midPix, scaledValue) + offset, size,
           Math.abs(midPix - scaledValue));
         context.fill();
       } else {
@@ -2372,8 +2369,8 @@ phantasus.VectorTrack.prototype = {
         }
         if (isColumns) {
           context.save();
-          context.translate(position + size / 2 - clip.x, canvasSize
-            - clip.y - offset);
+          context.translate(position + size / 2 - clip.x,
+            offset - clip.y);
           context.rotate(-Math.PI / 2);
           context.fillText(value, 0, 0);
           context.restore();
