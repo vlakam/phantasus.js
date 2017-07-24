@@ -201,7 +201,7 @@ phantasus.LimmaTool.prototype = {
         })
       }, false, '::' + dataset.getESVariable());
       req.fail(function () {
-        new Error("Limma call failed" + req.responseText);
+        throw new Error("Limma call failed" + req.responseText);
         // console.log(req.responseText);
       });
     });

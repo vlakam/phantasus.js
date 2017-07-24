@@ -90,7 +90,7 @@ phantasus.KmeansTool.prototype = {
         })
       }, false, '::' + dataset.getESVariable());
       req.fail(function () {
-        new Error("Kmeans call to OpenCPU failed" + req.responseText);
+        throw new Error("Kmeans call to OpenCPU failed" + req.responseText);
       });
 
     });
