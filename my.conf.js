@@ -14,6 +14,12 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
 
+    plugins: [
+      require( 'karma-jasmine' ),
+      require( 'karma-chrome-launcher' ),
+      require( 'karma-phantomjs-launcher' )
+    ],
+
     // list of files / patterns to load in the browser
     files: [
       {pattern: './js/jquery-2.2.4.min.js', watched: false},
@@ -69,7 +75,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode
