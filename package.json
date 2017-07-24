@@ -47,10 +47,5 @@
     "protobufjs": "~3.7",
     "requirejs": "^2.3.4",
     "serve-static": "^1.12.1"
-  },
-  "dependencies": {
-    "jasmine-fixture": "^2.0.0",
-    "jasmine-jquery": "^2.1.1",
-    "jquery": "^3.2.1"
   }
 }
