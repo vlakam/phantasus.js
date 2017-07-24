@@ -27,7 +27,7 @@ phantasus.Dataset = function (options) {
   this.seriesArrays.push(options.array ? options.array : phantasus.Dataset
     .createArray(options));
   this.seriesDataTypes.push(options.dataType);
-  //console.log(this);
+  //// console.log(this);
 };
 /**
  *
@@ -244,11 +244,11 @@ phantasus.Dataset.prototype = {
     return this.seriesNames.length - 1;
   },
   setESSession: function (session) {
-    //console.log("phantasus.Dataset.prototype.setESSession ::", this, session);
+    //// console.log("phantasus.Dataset.prototype.setESSession ::", this, session);
     this.esSession = session;
   },
   getESSession: function () {
-    //console.log("phantasus.Dataset.prototype.getESSession ::", this);
+    //// console.log("phantasus.Dataset.prototype.getESSession ::", this);
     return this.esSession;
   },
 

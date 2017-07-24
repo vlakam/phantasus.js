@@ -136,7 +136,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   var $menus = $('<div style="display: inline-block;margin-right:14px;"></div>');
 
   function createMenu(menuName, actions, minWidth) {
-    //console.log("HeatMapToolbar.createMenu::", menuName, actions, minWidth);
+    //// console.log("HeatMapToolbar.createMenu::", menuName, actions, minWidth);
     if (!minWidth) {
       minWidth = '0px';
     }
@@ -185,7 +185,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     $(menu.join('')).appendTo($menus);
   }
 
-  //console.log("HeatMapToolbar ::", "heatMap:", heatMap, "heatMap.options:", heatMap.options);
+  //// console.log("HeatMapToolbar ::", "heatMap:", heatMap, "heatMap.options:", heatMap.options);
   if (heatMap.options.menu) {
     if (heatMap.options.menu.File) {
       createMenu('File', heatMap.options.menu.File, '240px');

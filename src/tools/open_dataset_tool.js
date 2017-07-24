@@ -344,7 +344,7 @@ phantasus.OpenDatasetTool.prototype = {
           }
 
         } else {
-          console.log('Unknown action: ' + action);
+          // console.log('Unknown action: ' + action);
         }
 
         heatMap.revalidate();

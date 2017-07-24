@@ -26,7 +26,7 @@ phantasus.KmeansTool.prototype = {
   },
   execute: function (options) {
     var project = options.project;
-    //console.log("phantasus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
+    // console.log("phantasus.KmeansTool.prototype.execute ::", "full dataset", fullDataset);
     var dataset = project.getSortedFilteredDataset();
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
@@ -65,24 +65,24 @@ phantasus.KmeansTool.prototype = {
         session.getObject(function (success) {
           var clusters = JSON.parse(success);
 
-          console.log(clusters);
+          // console.log(clusters);
           var v = dataset.getRowMetadata().getByName("clusters");
           if (v == null) {
             v = dataset.getRowMetadata().add("clusters");
           }
-          //console.log(sortedDataset, sortedDataset.getRowCount(), v, sortedDataset);
+          // console.log(sortedDataset, sortedDataset.getRowCount(), v, sortedDataset);
           for (var i = 0; i < dataset.getRowCount(); i++) {
             v.setValue(i, clusters[i]);
           }
-          //console.log(dataset.getRowMetadata().getByName("clusters"));
+          // console.log(dataset.getRowMetadata().getByName("clusters"));
           /*while (v instanceof phantasus.VectorAdapter || v instanceof phantasus.SlicedVector) {
            v = v.v
            }*/
-          //console.log(v);
+          // console.log(v);
           //v.setArray(clusters);
           v.getProperties().set("phantasus.dataType", "string");
-          //console.log("phantasus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
-          //console.log("phantasus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
+          // console.log("phantasus.KmeansTool.prototype.execute ::", "updated dataset?", dataset);
+          // console.log("phantasus.KmeansTool.prototype.execute ::", "clusters?", dataset.getRowMetadata().get(phantasus.MetadataUtil.indexOf(dataset.getRowMetadata(), "clusters")));
           project.trigger('trackChanged', {
             vectors: [v],
             render: ['color']

@@ -66,7 +66,7 @@ phantasus.GctReader.prototype = {
         } else if ('#1.3' === text) {
           version = 3;
         } else {
-          console.log('Unknown version: assuming version 2');
+          // console.log('Unknown version: assuming version 2');
         }
       } else if (lineNumber === 1) {
         var dimensions = tokens;
@@ -217,7 +217,7 @@ phantasus.GctReader.prototype = {
     } else if ('#1.3' === versionLine) {
       version = 3;
     } else {
-      console.log('Unknown version: assuming version 2');
+      // console.log('Unknown version: assuming version 2');
     }
     var dimensionsLine = phantasus.Util.copyString(reader.readLine());
     if (dimensionsLine == null) {

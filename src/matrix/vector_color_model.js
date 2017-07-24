@@ -193,7 +193,7 @@ phantasus.VectorColorModel.prototype = {
     return cs.getColor(0, 0, value);
   },
   getMappedValue: function (vector, value) {
-    //console.log("getMappedValue", vector, value);
+    //// console.log("getMappedValue", vector, value);
     var metadataValueToColorMap = this.vectorNameToColorMap.get(vector
       .getName());
     if (metadataValueToColorMap === undefined) {
@@ -209,7 +209,7 @@ phantasus.VectorColorModel.prototype = {
       } else {
         colors = colorbrewer.Paired[values.length];
       }
-      //console.log("getMappedValue", colors);
+      //// console.log("getMappedValue", colors);
 
       if (!colors) {
         if (values.length <= 20) {
@@ -218,13 +218,13 @@ phantasus.VectorColorModel.prototype = {
           colors = phantasus.VectorColorModel.CATEGORY_ALL;
         }
       }
-      //console.log("getMappedValue", colors);
+      //// console.log("getMappedValue", colors);
 
       if (colors) {
         var ncolors = colors.length;
         for (var i = 0, nvalues = values.length; i < nvalues; i++) {
           var color = this._getColorForValue(values[i]);
-          //console.log(i, color, values[i], colors[i % ncolors]);
+          //// console.log(i, color, values[i], colors[i % ncolors]);
           if (color == null) {
             color = colors[i % ncolors];
           }
@@ -236,7 +236,7 @@ phantasus.VectorColorModel.prototype = {
           _this.getMappedValue(vector, val);
         });
       }
-      //console.log(metadataValueToColorMap);
+      //// console.log(metadataValueToColorMap);
     }
     var color = metadataValueToColorMap.get(value);
     if (color == null) {

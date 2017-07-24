@@ -18,7 +18,7 @@ phantasus.GisticReader.prototype = {
         }
         catch (x) {
           if (x.stack) {
-            console.log(x.stack);
+            // console.log(x.stack);
           }
           callback(x);
         }

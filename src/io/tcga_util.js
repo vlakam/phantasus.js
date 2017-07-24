@@ -111,7 +111,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     promises.push(mrna);
     new phantasus.TxtReader().read(options.mrna, function (err, dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -125,7 +125,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     promises.push(mutation);
     new phantasus.MafFileReader().read(options.mutation, function (err, dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -144,7 +144,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     new phantasus.GisticReader().read(options.gistic,
       function (err, dataset) {
         if (err) {
-          console.log('Error reading file:' + err);
+          // console.log('Error reading file:' + err);
         } else {
           datasets.push(dataset);
           phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -162,7 +162,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
 
     }).read(options.gisticGene, function (err, dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -176,7 +176,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     promises.push(seg);
     new phantasus.SegTabReader().read(options.seg, function (err, dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -191,7 +191,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
 
     new phantasus.TxtReader().read(options.rppa, function (err, dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -208,7 +208,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     new phantasus.TxtReader({}).read(options.methylation, function (err,
                                                                    dataset) {
       if (err) {
-        console.log('Error reading file:' + err);
+        // console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
@@ -333,7 +333,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
           f(datasetToReturn);
         });
       }
-      console.log("phantasus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
+      // console.log("phantasus.TcgaUtil.setIdAndSampleType ::", datasetToReturn);
       phantasus.DatasetUtil.toESSessionPromise(datasetToReturn);
       returnDeferred.resolve(datasetToReturn);
     });

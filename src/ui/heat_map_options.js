@@ -534,7 +534,7 @@ phantasus.HeatMapOptions = function (heatMap) {
                     .SUMMLY2()));
 
           } else {
-            console.log('not found');
+            // console.log('not found');
           }
           colorSchemeChooser
             .setColorScheme(heatMap.heatmap
@@ -543,7 +543,7 @@ phantasus.HeatMapOptions = function (heatMap) {
           heatMap.heatmap.repaint();
           $(this).val('');
         } else {
-          console.log('empty option selected');
+          // console.log('empty option selected');
         }
         colorSchemeChooser.restoreCurrentValue();
       });

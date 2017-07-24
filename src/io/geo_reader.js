@@ -1,25 +1,25 @@
-phantasus.GseReader = function (options) {
-  this.type = options.type;
+phantasus.GeoReader = function () {
 };
-phantasus.GseReader.prototype = {
+
+phantasus.GeoReader.prototype = {
   read: function (name, callback) {
-    var req = ocpu.call('loadGEO', {name: name, type: this.type}, function (session) {
+    var req = ocpu.call('loadGEO', { name: name }, function (session) {
       session.getObject(function (success) {
-        //console.log('phantasus.GseReader.prototype.read ::', success);
+        //// console.log('phantasus.GeoReader.prototype.read ::', success);
 
         var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
-        //console.log(filePath);
+        //// console.log(filePath);
 
         var r = new FileReader();
 
         r.onload = function (e) {
           var contents = e.target.result;
-          //console.log(contents);
+          //// console.log(contents);
           var ProtoBuf = dcodeIO.ProtoBuf;
           ProtoBuf.protoFromFile("./message.proto", function (error, success) {
             if (error) {
               alert(error);
-              console.log("GSEReader ::", "ProtoBuilder failed", error);
+              // console.log("GeoReader ::", "ProtoBuilder failed", error);
               return;
             }
             var builder = success,
@@ -31,15 +31,15 @@ phantasus.GseReader.prototype = {
             var res = REXP.decode(contents);
 
             var jsondata = phantasus.Util.getRexpData(res, rclass);
-            //console.log(jsondata);
+            //// console.log(jsondata);
 
             var datasets = [];
             for (var k = 0; k < Object.keys(jsondata).length; k++) {
-              var dataset = phantasus.GseReader.getDataset(session, Object.keys(jsondata)[k], jsondata[Object.keys(jsondata)[k]]);
+              var dataset = phantasus.GeoReader.getDataset(session, Object.keys(jsondata)[k], jsondata[Object.keys(jsondata)[k]]);
               dataset.setESVariable('es_' + (k + 1).toString());
               datasets.push(dataset);
             }
-            console.log("resulting datasets", datasets);
+            // console.log("resulting datasets", datasets);
             callback(null, datasets);
           });
         };
@@ -51,7 +51,7 @@ phantasus.GseReader.prototype = {
     });
     req.fail(function () {
       callback(req.responseText);
-      //console.log('phantasus.GseReader.prototype.read ::', req.responseText);
+      //// console.log('phantasus.GeoReader.prototype.read ::', req.responseText);
     });
 
   },
@@ -61,14 +61,14 @@ phantasus.GseReader.prototype = {
 };
 
 
-phantasus.GseReader.getDataset = function (session, seriesName, jsondata) {
+phantasus.GeoReader.getDataset = function (session, seriesName, jsondata) {
   var flatData = jsondata.data.values;
   var nrowData = jsondata.data.dim[0];
   var ncolData = jsondata.data.dim[1];
   var flatPdata = jsondata.pdata.values;
   //var participants = jsondata.participants.values;
   var annotation = jsondata.fdata.values;
-  //console.log(annotation);
+  //// console.log(annotation);
   var id = jsondata.rownames.values;
   var metaNames = jsondata.colMetaNames.values;
   var rowMetaNames = jsondata.rowMetaNames.values;
@@ -111,6 +111,6 @@ phantasus.GseReader.getDataset = function (session, seriesName, jsondata) {
   phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
     1);
 
-  //console.log("returned dataset", dataset);
+  //// console.log("returned dataset", dataset);
   return dataset;
 };

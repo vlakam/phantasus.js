@@ -67,12 +67,12 @@ phantasus.LimmaTool.prototype = {
       throw new Error("You must choose at least one option in each class");
     }
 
-    console.log("field", field);
-    console.log("classA", classA);
-    console.log("classB", classB);
+    // console.log("field", field);
+    // console.log("classA", classA);
+    // console.log("classB", classB);
 
     var dataset = project.getSortedFilteredDataset();
-    console.log(dataset);
+    // console.log(dataset);
     var es = dataset.getESSession();
 
     var v = dataset.getColumnMetadata().getByName("Comparison");
@@ -128,7 +128,7 @@ phantasus.LimmaTool.prototype = {
       values[dataset.columnIndices[j]] = v.getValue(j);
     }
 
-    console.log(values);
+    // console.log(values);
 
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
@@ -143,13 +143,13 @@ phantasus.LimmaTool.prototype = {
       if (trueIndices.columns.length > 0) {
         args.columns = trueIndices.columns;
       }
-      console.log(args);
+      // console.log(args);
       var req = ocpu.call("limmaAnalysis", args, function (session) {
         session.getObject(function (success) {
-          console.log(success);
+          // console.log(success);
           var r = new FileReader();
           var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
-          console.log("filePath::", filePath);
+          // console.log("filePath::", filePath);
 
           r.onload = function (e) {
             var contents = e.target.result;
@@ -157,7 +157,7 @@ phantasus.LimmaTool.prototype = {
             ProtoBuf.protoFromFile("./message.proto", function (error, success) {
               if (error) {
                 alert(error);
-                console.log("LimmaTool ::", "ProtoBuilder failed", error);
+                // console.log("LimmaTool ::", "ProtoBuilder failed", error);
               }
               var builder = success,
                 rexp = builder.build("rexp"),
@@ -168,7 +168,7 @@ phantasus.LimmaTool.prototype = {
               var names = phantasus.Util.getFieldNames(res, rclass);
               var vs = [];
               var rows = trueIndices.rows.length > 0 ? trueIndices.rows : dataset.rowIndices;
-              console.log(trueIndices.rows);
+              // console.log(trueIndices.rows);
               /*if (trueIndices.rows.length > 0) {
                var backRows = Array.apply(null, Array(dataset.rowIndices.length)).map(Number.prototype.valueOf,0);
                for (var i = 0; i < trueIndices.rows.length; i++) {
@@ -176,10 +176,10 @@ phantasus.LimmaTool.prototype = {
                }
                rows = backRows;
                }*/
-              console.log("rows", rows);
+              // console.log("rows", rows);
               names.forEach(function (name) {
                 if (name !== "symbol") {
-                  console.log(name, data[name]);
+                  // console.log(name, data[name]);
                   var v = dataset.getRowMetadata().add(name);
                   for (var i = 0; i < dataset.getRowCount(); i++) {
                     v.setValue(i, data[name].values[i]);
@@ -201,7 +201,7 @@ phantasus.LimmaTool.prototype = {
         })
       }, false, '::' + dataset.getESVariable());
       req.fail(function () {
-        console.log(req.responseText);
+        // console.log(req.responseText);
       });
     });
   }

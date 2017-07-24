@@ -76,7 +76,7 @@ phantasus.LandingPage.prototype = {
     this.dispose();
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
-    console.log(optionsArray);
+    // console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
@@ -87,7 +87,7 @@ phantasus.LandingPage.prototype = {
         var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
           session.getObject(function (filenames) {
             filenames = JSON.parse(filenames);
-            console.log(filenames);
+            // console.log(filenames);
             if (filenames.length === 0) {
               alert("Dataset" + " " + options.dataset.file + " does not exist");
               _this.show();

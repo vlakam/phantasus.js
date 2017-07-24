@@ -73,7 +73,7 @@ phantasus.CollapseDatasetTool.prototype = {
       set.remove(field);
     });
     // hide fields that were not part of collapse to
-    console.log("Collapse ", set);
+    // console.log("Collapse ", set);
     set.forEach(function (val, name) {
       heatMap.setTrackVisible(name, false, !rows);
     });

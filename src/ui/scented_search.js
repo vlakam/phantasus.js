@@ -218,7 +218,7 @@ phantasus.ScentedSearch.prototype = {
         }
         var modelIndices = valueToModelIndices.get(value);
         if (modelIndices == null) {
-          console.log('valueToModelIndices error');
+          // console.log('valueToModelIndices error');
           return;
         }
         var scale = this.scale;

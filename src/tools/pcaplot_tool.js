@@ -106,7 +106,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
 
   updateOptions();
 
-  //console.log(options);
+  //// console.log(options);
   formBuilder.append({
     name: 'size',
     type: 'bootstrap-select',
@@ -166,7 +166,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
    _.debounce(_this.draw(), 100);
    };*/
   var trackChanged = function () {
-    //console.log("track changed");
+    //// console.log("track changed");
     updateOptions();
     setVisibility();
     formBuilder.setOptions('x-axis', pcaOptions, true);
@@ -307,7 +307,7 @@ phantasus.PcaPlotTool.prototype = {
 
       var dataset = _this.project.getSortedFilteredDataset();
 
-      console.log("PCAPlot :: dataset:", dataset, "trueIndices:", phantasus.Util.getTrueIndices(dataset));
+      // console.log("PCAPlot :: dataset:", dataset, "trueIndices:", phantasus.Util.getTrueIndices(dataset));
 
       var indices = phantasus.Util.getTrueIndices(dataset);
 
@@ -429,9 +429,9 @@ phantasus.PcaPlotTool.prototype = {
 
       var expressionSetPromise = dataset.getESSession();
 
-      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
+      //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
 
-      //console.log("phantasus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
+      //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
 
       expressionSetPromise.then(function (essession) {
         var args = {
@@ -447,8 +447,8 @@ phantasus.PcaPlotTool.prototype = {
         var drawResult = function () {
           var x = _this.pca.pca[pc1];
           var y = _this.pca.pca[pc2];
-          //console.log(_this.pca);
-          //console.log(_this.colorByVector, _this.categoriesIndices);
+          //// console.log(_this.pca);
+          //// console.log(_this.colorByVector, _this.categoriesIndices);
           if (_this.colorByVector) {
             for (var cat = 1; cat <= _this.categoriesIndices.size; cat++) {
               var curX = [];
@@ -457,8 +457,8 @@ phantasus.PcaPlotTool.prototype = {
                 curX.push(x[_this.categoriesIndices.get(cat)[j]]);
                 curY.push(y[_this.categoriesIndices.get(cat)[j]]);
               }
-              //console.log(curX, curY);
-              //console.log(data[cat]);
+              //// console.log(curX, curY);
+              //// console.log(data[cat]);
               data[cat - 1].x = curX;
               data[cat - 1].y = curY;
             }
@@ -487,16 +487,16 @@ phantasus.PcaPlotTool.prototype = {
           var $chart = $('<div></div>');
           var myPlot = $chart[0];
           $chart.appendTo(_this.$chart);
-          //console.log(data, layout, config);
+          //// console.log(data, layout, config);
           Plotly.newPlot(myPlot, data, layout, config);
         };
 
-        //console.log(arguments);
+        //// console.log(arguments);
 
         var req = ocpu.call("pcaPlot", args, function (session) {
-          //console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
+          //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
           session.getObject(function (success) {
-            //console.log(success);
+            //// console.log(success);
             _this.pca = JSON.parse(success);
             drawResult();
             /*
@@ -505,12 +505,12 @@ phantasus.PcaPlotTool.prototype = {
              var data = json.x.data;
              var layout = json.x.layout;
              Plotly.newPlot(myPlot, data, layout, {showLink: false});*/
-            //console.log("phantasus.PcaPlotTool.prototype.draw ::", "plot json", json);
+            //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "plot json", json);
           });
           /*var txt = session.txt.split("\n");
            var imageLocationAr = txt[txt.length - 2].split("/"0);
            var imageLocation = session.getLoc() + "files/" + imageLocationAr[imageLocationAr.length - 1];
-           console.log(imageLocation);
+           // console.log(imageLocation);
            var img = $('<img />', {src : imageLocation, style : "width:720px;height:540px"});
            _this.$chart.prepend(img);*/
           /*var img = $('<img />', {src : session.getLoc() + 'graphics/1/png', style : "width:720px;height:540px"});*/
@@ -518,7 +518,7 @@ phantasus.PcaPlotTool.prototype = {
         }, false, "::" + dataset.getESVariable());
         req.fail(function () {
           alert(req.responseText);
-          console.log("PcaPlot ::", req.responseText);
+          // console.log("PcaPlot ::", req.responseText);
         });
 
       });
@@ -526,7 +526,7 @@ phantasus.PcaPlotTool.prototype = {
 
       expressionSetPromise.catch(function (reason) {
         alert("Problems occured during transforming dataset to ExpressionSet\n" + reason);
-        console.log("ExpressionSetCreation ::", "Problems occured during transforming dataset to ExpressionSet\n", reason);
+        // console.log("ExpressionSetCreation ::", "Problems occured during transforming dataset to ExpressionSet\n", reason);
       });
 
     });
