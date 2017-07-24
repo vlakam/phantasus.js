@@ -104,7 +104,10 @@ phantasus.LandingPage.prototype = {
               }
             }
           })
-        })
+        });
+        req.fail(function () {
+          new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
+        });
       }
       else {
         new phantasus.HeatMap(options);

@@ -11868,7 +11868,10 @@ phantasus.LandingPage.prototype = {
               }
             }
           })
-        })
+        });
+        req.fail(function () {
+          new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
+        });
       }
       else {
         new phantasus.HeatMap(options);
@@ -14876,6 +14879,9 @@ phantasus.KmeansTool.prototype = {
           });
         })
       }, false, '::' + dataset.getESVariable());
+      req.fail(function () {
+        new Error("Kmeans call to OpenCPU failed" + req.responseText);
+      });
 
     });
   }
@@ -15083,6 +15089,7 @@ phantasus.LimmaTool.prototype = {
         })
       }, false, '::' + dataset.getESVariable());
       req.fail(function () {
+        new Error("Limma call failed" + req.responseText);
         // console.log(req.responseText);
       });
     });
@@ -17156,7 +17163,7 @@ phantasus.PcaPlotTool.prototype = {
 
         }, false, "::" + dataset.getESVariable());
         req.fail(function () {
-          alert(req.responseText);
+          new Error("PcaPlot call failed" + req.responseText);
           // console.log("PcaPlot ::", req.responseText);
         });
 
