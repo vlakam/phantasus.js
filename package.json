@@ -27,7 +27,9 @@
     "phantasus"
   ],
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test":
+      "grunt concat uglify && ./node_modules/.bin/karma start --single-run"
+
   },
   "devDependencies": {
     "finalhandler": "^1.0.3",
