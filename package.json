@@ -27,9 +27,7 @@
     "phantasus"
   ],
   "scripts": {
-    "test":
-      "grunt concat uglify && ./node_modules/.bin/karma start --single-run"
-
+    "test": "grunt concat uglify && ./node_modules/.bin/karma start --single-run"
   },
   "devDependencies": {
     "finalhandler": "^1.0.3",
@@ -52,7 +50,6 @@
     "phantomjs-prebuilt": "^2.1.14",
     "protobufjs": "~3.7",
     "requirejs": "^2.3.4",
-    "serve-static": "^1.12.3"
   },
   "dependencies": {
     "grunt-cli": "^1.2.0",
