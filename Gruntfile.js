@@ -53,14 +53,16 @@ module.exports = function (grunt) {
       },
       extJs: {
         dest: 'js/phantasus-external.js',
-        src: ['js/jquery.mousewheel.min.js', 'js/jquery-ui.min.js', 'js/jquery.event.drag-2.2.js', 'js/d3.min.js',
+        src: ['js/d3.min.js', 'js/jquery-2.2.4.min.js',
           'js/bootstrap.min.js', 'js/underscore-min.js',
           'js/newick.js', 'js/hammer.min.js',
+          'js/jquery.mousewheel.min.js',
           'js/bootstrap-select.min.js',
           'js/xlsx.full.min.js', 'js/canvas2svg.js',
           'js/canvg.js', 'js/rgbcolor.js',
-          'js/parser.js',
+          'js/jquery-ui.min.js', 'js/parser.js',
           'js/FileSaver.min.js', 'js/colorbrewer.js',
+          'js/jquery.event.drag-2.2.js',
           'js/clipboard.min.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js']
