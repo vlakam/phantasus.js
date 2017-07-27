@@ -1,29 +1,28 @@
 module.exports = function (grunt) {
-  grunt
-  .initConfig({
+  grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     meta: {
       banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - '
       + '<%= grunt.template.today("yyyy-mm-dd") %>\n'
       + '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>'
-      + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */'
+      + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */',
     },
     uglify: {
       phantasus: {
         options: {
           mangle: false,
           compress: false,
-          preserveComments: false
+          preserveComments: false,
         },
         files: {
           'js/phantasus-latest.min.js': ['js/phantasus.js']
-        }
+        },
       },
       extJs: {
         options: {
           mangle: false,
           compress: false,
-          preserveComments: false
+          preserveComments: false,
         },
         files: {
           'js/phantasus-external.min.js': ['js/phantasus-external.js']
@@ -38,7 +37,8 @@ module.exports = function (grunt) {
     },
     concat: {
       css: {
-        src: ['css/bootstrap.min.css',
+        src: [
+          'css/bootstrap.min.css',
           'css/bootstrap-select.min.css',
           'css/jquery-ui.min.css',
           'css/font-awesome.min.css',
@@ -47,13 +47,17 @@ module.exports = function (grunt) {
         dest: 'css/phantasus.all.css'
       },
       extJsAll: {
-        src: ['js/phantasus-external.min.js',
-          'js/plotly-latest.min.js', 'js/echarts.min.js', 'js/papaparse.min.js'],
-        dest: 'js/phantasus-external-latest.min.js'
+        nonull: true,
+        src: [
+          'js/morpheus-external.js',
+          'js/echarts.min.js', 'js/papaparse.min.js'],
+        dest: 'js/morpheus-external-latest.min.js',
       },
       extJs: {
+        nonull: true,
         dest: 'js/phantasus-external.js',
-        src: ['js/d3.min.js', 'js/jquery-2.2.4.min.js',
+        src: [
+          'js/d3.min.js', 'js/jquery-2.2.4.min.js',
           'js/bootstrap.min.js', 'js/underscore-min.js',
           'js/newick.js', 'js/hammer.min.js',
           'js/jquery.mousewheel.min.js',
@@ -70,14 +74,15 @@ module.exports = function (grunt) {
       phantasus: {
         options: {
           banner: '(function(global){\n\'use strict\';\n',
-          footer: '\n})(typeof window !== \'undefined\' ? window : this);\n'
+          footer: '\n})(typeof window !== \'undefined\' ? window : this);\n',
         },
         dest: 'js/phantasus.js',
-        src: ['src/util/util.js', 'src/util/*.js',
+        src: [
+          'src/util/util.js', 'src/util/*.js',
           'src/io/*.js', 'src/matrix/vector_adapter.js',
           'src/matrix/*.js', 'src/*.js',
-          'src/tools/*.js', 'src/ui/*.js', 'src/**/*.js', 'js/tsne.js']
-      }
+          'src/tools/*.js', 'src/ui/*.js', 'src/**/*.js', 'js/tsne.js'],
+      },
     },
     watch: {
       files: ['src/*.js', 'src/**/*.js'],
