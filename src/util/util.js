@@ -1022,14 +1022,15 @@ phantasus.Util.rankIndexArray = function (index) {
 
 phantasus.Util.indexSort = function (array, ascending) {
   var pairs = [];
-  array.forEach(function (value, index) {
+  for(var i = 0, length = array.length; i < length; i++) {
     pairs.push({
-      value: value,
-      index: index
+      value: array[i],
+      index: i
     });
-  });
+  }
   return phantasus.Util.indexSortPairs(pairs, ascending);
 };
+
 phantasus.Util.indexSortPairs = function (array, ascending) {
   if (ascending) {
     array.sort(function (a, b) {
