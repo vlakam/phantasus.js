@@ -16979,7 +16979,7 @@ phantasus.PcaPlotTool.prototype = {
       var textByVector = getTrueVector(dataset.getColumnMetadata().getByName(label));
 
       var na = _this.formBuilder.getValue('replace_NA_with');
-      var color = colorByVector ? [] : '#1f78b4';
+      var color = colorByVector ? [] : null;
       var size = sizeByVector ? [] : 12;
       var text = [];
       var sizeFunction = null;
@@ -17134,6 +17134,8 @@ phantasus.PcaPlotTool.prototype = {
           var myPlot = $chart[0];
           $chart.appendTo(_this.$chart);
           //// console.log(data, layout, config);
+
+          layout.showlegend = !(size == 12 && color == null);
           Plotly.newPlot(myPlot, data, layout, config);
         };
 
