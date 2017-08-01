@@ -28,11 +28,11 @@
                 a URI encoded JSON configuration object. <br/>'url': a URL to a
                 JSON configuration file. <br/> <br/> <b>Example</b><br/>
                 <code>{columnAnnotations : [ { file :
-                    '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_v2.4_SampleInfo_small.txt',
+                    '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_v2.4_SampleInfo_small.txt',
                     datasetField : 'id', fileField : 'id' } ], columns : [ { field :
                     'id', display : 'text' }, { field : 'Site_primary', display :
                     'color' } ], dataset :
-                    '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_QC_v2.4.3.rnai.Gs.gct'}</code>
+                    '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_QC_v2.4.3.rnai.Gs.gct'}</code>
                 <br/> <a href="#" name="open">Open Example In phantasus</a>
         </div>
     </div>
@@ -208,7 +208,7 @@
     function (e) {
       var json = {
         columnAnnotations: [{
-          file: '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_v2.4_SampleInfo_small.txt',
+          file: '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_v2.4_SampleInfo_small.txt',
           datasetField: 'id',
           fileField: 'id'
         }],
@@ -219,9 +219,9 @@
           field: 'Site_primary',
           display: 'color'
         }],
-        dataset: '//s3.amazonaws.com/data.clue.io/phantasus/Achilles_QC_v2.4.3.rnai.Gs.gct'
-      }
-      window.location.href = 'http://www.broadinstitute.org/cancer/software/phantasus?json='
+        dataset: '//s3.amazonaws.com/data.clue.io/morpheus/Achilles_QC_v2.4.3.rnai.Gs.gct'
+      };
+      window.location.href = 'http://www.broadinstitute.org/cancer/software/morpheus?json='
         + encodeURIComponent(JSON.stringify(json));
 
     });
