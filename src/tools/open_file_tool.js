@@ -112,7 +112,7 @@ phantasus.OpenFileTool.prototype = {
   },
 
   execute: function (options) {
-    var that = this;
+    var _this = this;
     var isInteractive = this.options.file == null;
     var heatMap = options.heatMap;
     if (!isInteractive) {
@@ -128,7 +128,7 @@ phantasus.OpenFileTool.prototype = {
     }
     var project = options.project;
     if (options.input.open_file_action === 'Open session') {
-      phantasus.Util.getText(options.input.file).done(function (text) {
+      return phantasus.Util.getText(options.input.file).done(function (text) {
         var options = JSON.parse(text);
         options.tabManager = heatMap.getTabManager();
         options.focus = true;
@@ -139,19 +139,19 @@ phantasus.OpenFileTool.prototype = {
         phantasus.FormBuilder.showMessageModal({
           title: 'Error',
           message: 'Unable to load session',
-          focus: document.activeElement,
+          focus: document.activeElement
         });
       });
     } else if (options.input.open_file_action === 'append columns'
       || options.input.open_file_action === 'append'
       || options.input.open_file_action === 'open'
       || options.input.open_file_action === 'overlay') {
-      new phantasus.OpenDatasetTool().execute(options);
+      return new phantasus.OpenDatasetTool().execute(options);
     } else if (options.input.open_file_action === 'Open dendrogram') {
       phantasus.HeatMap.showTool(new phantasus.OpenDendrogramTool(
         options.input.file), options.heatMap);
     } else { // annotate rows or columns
-
+      var d = $.Deferred();
       var isAnnotateColumns = options.input.open_file_action ==
         'Annotate Columns';
       var fileOrUrl = options.input.file;
@@ -159,21 +159,25 @@ phantasus.OpenFileTool.prototype = {
       var fileName = phantasus.Util.getFileName(fileOrUrl);
       if (phantasus.Util.endsWith(fileName, '.cls')) {
         var result = phantasus.Util.readLines(fileOrUrl);
+        result.always(function () {
+          d.resolve();
+        });
         result.done(function (lines) {
-          that.annotateCls(heatMap, dataset, fileName,
+          _this.annotateCls(heatMap, dataset, fileName,
             isAnnotateColumns, lines);
         });
       } else if (phantasus.Util.endsWith(fileName, '.gmt')) {
         phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (
           err,
           buf) {
+          d.resolve();
           if (err) {
             throw new Error('Unable to read ' + fileOrUrl);
           }
           var sets = new phantasus.GmtReader().read(
             new phantasus.ArrayBufferReader(new Uint8Array(
               buf)));
-          that.promptSets(dataset, heatMap, isAnnotateColumns,
+          _this.promptSets(dataset, heatMap, isAnnotateColumns,
             sets, phantasus.Util.getBaseFileName(
               phantasus.Util.getFileName(fileOrUrl)));
         });
@@ -181,9 +185,11 @@ phantasus.OpenFileTool.prototype = {
       } else {
         var result = phantasus.Util.readLines(fileOrUrl);
         result.done(function (lines) {
-          that.prompt(lines, dataset, heatMap, isAnnotateColumns);
+          _this.prompt(lines, dataset, heatMap, isAnnotateColumns);
+        }).always(function () {
+          d.resolve();
         });
-
+        return d;
       }
 
     }
@@ -206,7 +212,7 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: [vector],
         display: ['color'],
-        columns: isColumns,
+        columns: isColumns
       });
     }
   },
@@ -393,7 +399,7 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: [vector],
         display: ['text'],
-        columns: isColumns,
+        columns: isColumns
       });
     };
     promptTool.toString = function () {
@@ -407,7 +413,7 @@ phantasus.OpenFileTool.prototype = {
             isColumns ? dataset.getColumnMetadata() : dataset.getRowMetadata()),
           type: 'select',
           value: 'id',
-          required: true,
+          required: true
         }];
 
     };
@@ -444,7 +450,7 @@ phantasus.OpenFileTool.prototype = {
       heatMap.getProject().trigger('trackChanged', {
         vectors: vectors,
         display: display,
-        columns: isColumns,
+        columns: isColumns
       });
     };
     promptTool.toString = function () {
@@ -457,7 +463,7 @@ phantasus.OpenFileTool.prototype = {
           options: phantasus.MetadataUtil.getMetadataNames(
             isColumns ? dataset.getColumnMetadata() : dataset.getRowMetadata()),
           type: 'select',
-          required: true,
+          required: true
         }];
       if (lines) {
         items.push({
@@ -466,14 +472,14 @@ phantasus.OpenFileTool.prototype = {
           options: _.map(header, function (item) {
             return {
               name: item,
-              value: item,
+              value: item
             };
           }),
-          required: true,
+          required: true
         });
       }
       return items;
     };
     phantasus.HeatMap.showTool(promptTool, heatMap);
-  },
+  }
 };

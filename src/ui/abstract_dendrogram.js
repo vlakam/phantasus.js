@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * @param tree An object with maxHeight, rootNode, leafNodes, nLeafNodes. Each node has an id
  * (integer), name (string), children, depth, height, minIndex, maxIndex, parent. Leaf nodes also
  * have an index.
@@ -198,7 +198,9 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                     setIndex(selectedNode);
 
                     var currentOrder = [];
-                    var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject().getSortedFilteredDataset().getRowCount();
+                    var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject()
+                      .getSortedFilteredDataset()
+                      .getRowCount();
                     for (var i = 0; i < count; i++) {
                       currentOrder.push(isColumns ? project.convertViewColumnIndexToModel(i) : project.convertViewRowIndexToModel(i));
                     }
@@ -208,6 +210,7 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       currentOrder[i] = tmp;
                     }
                     var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
+                    key.setPreservesDendrogram(true);
                     key.setLockOrder(2);
                     if (isColumns) {
                       heatMap.getProject().setColumnSortKeys([key], true);

@@ -101,7 +101,8 @@ phantasus.OpenDatasetTool.prototype = {
     var action = options.input.open_file_action;
     var dataset = project.getSortedFilteredDataset();
     deferred.fail(function (err) {
-      var message = ['Error opening ' + phantasus.Util.getFileName(file)
+      var message = [
+        'Error opening ' + phantasus.Util.getFileName(file)
       + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
@@ -345,7 +346,7 @@ phantasus.OpenDatasetTool.prototype = {
           }
 
         } else {
-          // console.log('Unknown action: ' + action);
+          console.log('Unknown action: ' + action);
         }
 
         heatMap.revalidate();
@@ -356,6 +357,7 @@ phantasus.OpenDatasetTool.prototype = {
 
     console.log("openDatasetTool.execute", file);
     var _this = this;
+    var d = $.Deferred();
     phantasus.OpenDatasetTool
       .fileExtensionPrompt(file,
         function (readOptions) {
@@ -371,9 +373,12 @@ phantasus.OpenDatasetTool.prototype = {
           }
           var deferred = phantasus.DatasetUtil.read(file,
             readOptions);
+          deferred.always(function () {
+            d.resolve();
+          });
           _this._read(options, deferred);
         });
-
+    return d;
   }, // prompt for metadata field name in dataset and in file
   _matchAppend: function (newDatasetMetadataNames,
                           currentDatasetMetadataNames, heatMap, callback) {
@@ -385,13 +390,14 @@ phantasus.OpenDatasetTool.prototype = {
       return 'Select Fields';
     };
     tool.gui = function () {
-      var items = [{
-        name: 'current_dataset_annotation_name',
-        options: currentDatasetMetadataNames,
-        type: 'select',
-        value: 'id',
-        required: true
-      }];
+      var items = [
+        {
+          name: 'current_dataset_annotation_name',
+          options: currentDatasetMetadataNames,
+          type: 'select',
+          value: 'id',
+          required: true
+        }];
       items.push({
         name: 'new_dataset_annotation_name',
         type: 'select',

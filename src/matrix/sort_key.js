@@ -1,4 +1,46 @@
+phantasus.AbstractSortKey = function (name, columns) {
+  this.name = name;
+  this.columns = columns;
+};
+
+phantasus.AbstractSortKey.prototype = {
+  lockOrder: 0,
+  columns: true,
+  preservesDendrogram: false,
+  /**
+   * Indicates whether this key is sorting rows or columns.
+   * @return {Boolean}
+   */
+  isColumns: function () {
+    return this.columns;
+  },
+  setColumns: function (columns) {
+    this.columns = columns;
+  },
+  isPreservesDendrogram: function () {
+    return this.preservesDendrogram;
+  },
+  setPreservesDendrogram: function (preservesDendrogram) {
+    this.preservesDendrogram = preservesDendrogram;
+  },
+  getLockOrder: function () {
+    return this.lockOrder;
+  },
+  setLockOrder: function (lockOrder) {
+    this.lockOrder = lockOrder;
+  },
+  setSortOrder: function (sortOrder) {
+    this.sortOrder = sortOrder;
+  },
+  getSortOrder: function () {
+    return this.sortOrder;
+  },
+  init: function () {
+
+  }
+};
 phantasus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) {
+  phantasus.AbstractSortKey.call(this, name, columns);
   var highlightedModelIndices = {};
   var p = project;
   var viewIndices = [];
@@ -18,22 +60,10 @@ phantasus.MatchesOnTopSortKey = function (project, modelIndices, name, columns) 
     return (a === b ? 0 : (a < b ? -1 : 1));
   };
   this.indices = viewIndices;
-  this.name = name;
-  this.columns = columns;
 };
 phantasus.MatchesOnTopSortKey.prototype = {
-  lockOrder: 0,
-  /**
-   * Indicates whether this key is sorting rows or columns.
-   * @return {*}
-   */
-  isColumns: function () {
-    return this.columns;
-  },
-  setColumns: function (columns) {
-    this.columns = columns;
-  },
-  init: function () {
+  toString: function () {
+    return this.name;
   },
   getSortOrder: function () {
     return 2;
@@ -43,39 +73,29 @@ phantasus.MatchesOnTopSortKey.prototype = {
   },
   getValue: function (i) {
     return i;
-  },
-  toString: function (i) {
-    return this.name;
-  },
-  getLockOrder: function () {
-    return this.lockOrder;
-  },
-  setLockOrder: function (lockOrder) {
-    this.lockOrder = lockOrder;
   }
 };
+phantasus.Util.extend(phantasus.MatchesOnTopSortKey, phantasus.AbstractSortKey);
+
 phantasus.SortKey = function (field, sortOrder, columns) {
+  phantasus.AbstractSortKey.call(this, field, columns);
   if (typeof sortOrder === 'string') {
     sortOrder = phantasus.SortKey.SortOrder[sortOrder.toUpperCase()];
+    if (sortOrder === undefined) {
+      sortOrder = 0;
+    }
   }
-  this.field = field;
-  this.sortOrder = sortOrder;
   this.v = null;
   this.c = null;
   this.setSortOrder(sortOrder);
-  this.columns = columns;
 };
 
 phantasus.SortKey.prototype = {
-  lockOrder: 0,
-  isColumns: function () {
-    return this.columns;
-  },
-  setColumns: function (columns) {
-    this.columns = columns;
+  toString: function () {
+    return this.name;
   },
   init: function (dataset, visibleModelIndices) {
-    this.v = dataset.getRowMetadata().getByName(this.field);
+    this.v = dataset.getRowMetadata().getByName(this.name);
     if (!this.v) {
       this.v = {};
       this.v.getValue = function () {
@@ -90,17 +110,32 @@ phantasus.SortKey.prototype = {
           : phantasus.SortKey.NUMBER_DESCENDING_COMPARATOR;
       } else if (dataType === '[number]') {
         var summary = this.v.getProperties().get(
-            phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION)
+          phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION)
           || phantasus.SortKey.ARRAY_MAX_SUMMARY_FUNCTION;
-
         this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey
-          .ARRAY_ASCENDING_COMPARATOR(summary)
+            .ARRAY_ASCENDING_COMPARATOR(summary)
           : phantasus.SortKey.ARRAY_DESCENDING_COMPARATOR(summary);
       } else {
         this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.ASCENDING_COMPARATOR
           : phantasus.SortKey.DESCENDING_COMPARATOR;
       }
+      if (this.customComparator != null) {
+        var oldC = this.c;
+        var customComparator = this.customComparator;
+        if (this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING) {
+          this.c = function (a, b) {
+            var val = customComparator(a, b);
+            return val === 0 ? oldC(a, b) : val;
+          };
+        } else {
+          this.c = function (a, b) {
+            var val = customComparator(b, a);
+            return val === 0 ? oldC(a, b) : val;
+          };
+        }
+      }
     }
+
     if (this.sortOrder === phantasus.SortKey.SortOrder.TOP_N) {
       var pairs = [];
       var missingIndices = [];
@@ -141,7 +176,8 @@ phantasus.SortKey.prototype = {
         }
         var indexCounterPairs = [];
         for (var i = 0; i < nInGroup && bottomIndex >= 0; i++, bottomIndex--, counter++) {
-          indexCounterPairs.push([bottomPairs[bottomIndex].index,
+          indexCounterPairs.push([
+            bottomPairs[bottomIndex].index,
             counter]);
         }
         for (var i = indexCounterPairs.length - 1, j = 0; i >= 0; i--, j++) {
@@ -165,31 +201,12 @@ phantasus.SortKey.prototype = {
   },
   getComparator: function () {
     return this.c;
-  }
-  ,
+  },
   getValue: function (i) {
     return this.modelIndexToValue ? this.modelIndexToValue[i] : this.v.getValue(i);
   }
-  ,
-  setSortOrder: function (sortOrder) {
-    this.sortOrder = sortOrder;
-  }
-  ,
-  getSortOrder: function () {
-    return this.sortOrder;
-  }
-  ,
-  toString: function () {
-    return this.field;
-  },
-  getLockOrder: function () {
-    return this.lockOrder;
-  },
-  setLockOrder: function (lockOrder) {
-    this.lockOrder = lockOrder;
-  }
-}
-;
+};
+phantasus.Util.extend(phantasus.SortKey, phantasus.AbstractSortKey);
 /**
  * @param modelIndices
  *            Selected rows or columns
@@ -197,21 +214,16 @@ phantasus.SortKey.prototype = {
  *            sort columns by selected rows.
  */
 phantasus.SortByValuesKey = function (modelIndices, sortOrder, isColumnSort) {
-  this.field = 'selection';
+  phantasus.AbstractSortKey.call(this, 'values', isColumnSort);
   this.bothCount = 10;
   this.modelIndices = modelIndices;
   this.sortOrder = sortOrder;
-  this.isColumnSort = isColumnSort;
   this.setSortOrder(sortOrder);
 
 };
 phantasus.SortByValuesKey.prototype = {
-  lockOrder: 0,
-  isColumns: function () {
-    return this.isColumnSort;
-  },
-  setColumns: function (columns) {
-    this.isColumnSort = columns;
+  toString: function () {
+    return this.name;
   },
   init: function (dataset, visibleModelIndices) {
     // isColumnSort-sort columns by selected rows
@@ -262,7 +274,8 @@ phantasus.SortByValuesKey.prototype = {
         }
         var indexCounterPairs = [];
         for (var i = 0; i < nInGroup && bottomIndex >= 0; i++, bottomIndex--, counter++) {
-          indexCounterPairs.push([bottomPairs[bottomIndex].index,
+          indexCounterPairs.push([
+            bottomPairs[bottomIndex].index,
             counter]);
         }
         for (var i = indexCounterPairs.length - 1, j = 0; i >= 0; i--, j++) {
@@ -303,20 +316,10 @@ phantasus.SortByValuesKey.prototype = {
       this.c = phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR;
     }
 
-  },
-  getSortOrder: function () {
-    return this.sortOrder;
-  },
-  toString: function () {
-    return 'values';
-  },
-  getLockOrder: function () {
-    return this.lockOrder;
-  },
-  setLockOrder: function (lockOrder) {
-    this.lockOrder = lockOrder;
   }
 };
+phantasus.Util.extend(phantasus.SortByValuesKey, phantasus.AbstractSortKey);
+
 /**
  * @param modelIndices
  *            Array of model indices
@@ -329,6 +332,7 @@ phantasus.SortByValuesKey.prototype = {
  * @param columns Whether column sort
  */
 phantasus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, columns) {
+  phantasus.AbstractSortKey.call(this, name, columns);
   this.nvisible = nvisible;
   var modelIndexToValue = [];
   for (var i = 0, length = modelIndices.length; i < length; i++) {
@@ -336,19 +340,11 @@ phantasus.SpecifiedModelSortOrder = function (modelIndices, nvisible, name, colu
   }
   this.modelIndices = modelIndices;
   this.modelIndexToValue = modelIndexToValue;
-  this.name = name;
   this.c = phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR;
-  this.columns = columns;
 };
 phantasus.SpecifiedModelSortOrder.prototype = {
-  lockOrder: 0,
-  isColumns: function () {
-    return this.columns;
-  },
-  setColumns: function (columns) {
-    this.columns = columns;
-  },
-  init: function (dataset) {
+  toString: function () {
+    return this.name;
   },
   getComparator: function (a, b) {
     return this.c;
@@ -360,20 +356,9 @@ phantasus.SpecifiedModelSortOrder.prototype = {
     this.sortOrder = sortOrder;
     this.c = this.sortOrder === phantasus.SortKey.SortOrder.ASCENDING ? phantasus.SortKey.NUMBER_ASCENDING_COMPARATOR
       : phantasus.SortKey.NUMBER_DESCENDING_COMPARATOR;
-  },
-  getSortOrder: function () {
-    return this.sortOrder;
-  },
-  getName: function () {
-    return this.name;
-  },
-  getLockOrder: function () {
-    return this.lockOrder;
-  },
-  setLockOrder: function (lockOrder) {
-    this.lockOrder = lockOrder;
   }
 };
+phantasus.Util.extend(phantasus.SpecifiedModelSortOrder, phantasus.AbstractSortKey);
 
 /**
  * Group by key
@@ -381,37 +366,27 @@ phantasus.SpecifiedModelSortOrder.prototype = {
  * @param values
  */
 phantasus.SpecifiedGroupByKey = function (clusterIds, columns) {
+  phantasus.AbstractSortKey.call(this, 'Dendrogram Cut', columns);
   this.clusterIds = clusterIds;
   this.c = function (a, b) {
     return (a === b ? 0 : // Values are equal
       (a < b ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
         1));
   };
-  this.columns = columns;
 };
 phantasus.SpecifiedGroupByKey.prototype = {
-  isColumns: function () {
-    return this.columns;
-  },
-  setColumns: function (columns) {
-    this.columns = columns;
-  },
-  init: function (dataset) {
+  toString: function () {
+    return this.name;
   },
   getComparator: function (a, b) {
     return this.c;
   },
   getValue: function (i) {
     return this.clusterIds[i];
-  },
-  setSortOrder: function (sortOrder) {
-  },
-  getSortOrder: function () {
-  },
-  getName: function () {
-    return 'Dendrogram Cut';
   }
 };
+phantasus.Util.extend(phantasus.SpecifiedGroupByKey, phantasus.AbstractSortKey);
+
 phantasus.SortKey.SortOrder = {
   ASCENDING: 0,
   DESCENDING: 1,
@@ -697,6 +672,32 @@ phantasus.SortKey.fromJSON = function (project, json) {
     var sortKey = null;
     if (key.type === 'annotation') {
       sortKey = new phantasus.SortKey(key.field, key.order, key.isColumns);
+      if (key.customSortOrder != null) {
+
+        var customSortOrderMap = new phantasus.Map();
+        for (var i = 0, size = key.customSortOrder.length; i < size; i++) {
+          customSortOrderMap.set(key.customSortOrder[i], i);
+        }
+        var comparator = function (a, b) {
+          var v1 = customSortOrderMap.get(a);
+          var v2 = customSortOrderMap.get(b);
+          if (v1 === undefined && v2 === undefined) {
+            return 0;
+          }
+          if (v1 === undefined) {
+            v1 = Infinity;
+          }
+          if (v2 === undefined) {
+            v2 = Infinity;
+          }
+          return (v1 < v2 ? -1 : 1);
+        };
+        sortKey.customComparator = comparator;
+        if (key.preservesDendrogram) {
+          sortKey.nvisible = key.customSortOrder.length;
+        }
+      }
+
     } else if (key.type === 'byValues') {
       sortKey = new phantasus.SortByValuesKey(key.modelIndices, key.order, key.isColumns);
     } else if (key.type === 'specified') {
@@ -711,6 +712,9 @@ phantasus.SortKey.fromJSON = function (project, json) {
       }
     }
     if (sortKey != null) {
+      if (key.preservesDendrogram != null) {
+        sortKey.setPreservesDendrogram(key.preservesDendrogram);
+      }
       if (key.lockOrder !== 0) {
         sortKey.setLockOrder(key.lockOrder);
       }
@@ -735,7 +739,7 @@ phantasus.SortKey.toJSON = function (sortKeys) {
         isColumns: key.isColumns(),
         order: key.getSortOrder(),
         type: 'annotation',
-        field: '' + key,
+        field: '' + key
       };
     } else if (key instanceof phantasus.SortByValuesKey) {
       sortKey = {
@@ -763,6 +767,7 @@ phantasus.SortKey.toJSON = function (sortKeys) {
       };
     }
     if (sortKey != null) {
+      sortKey.preservesDendrogram = key.isPreservesDendrogram();
       if (key.getLockOrder && key.getLockOrder() !== 0) {
         sortKey.lockOrder = key.getLockOrder();
       }

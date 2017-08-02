@@ -95,7 +95,7 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   this.backgroundColor = 'rgb(255,255,255)';
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
     'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
-  .on('mouseenter.phantasus', mouseMove).on('contextmenu.phantasus', showPopup).addClass('phantasus-track-header ' + (isColumns ? 'phantasus-columns' : 'phantasus-rows'));
+    .on('mouseenter.phantasus', mouseMove).on('contextmenu.phantasus', showPopup).addClass('phantasus-track-header ' + (isColumns ? 'phantasus-columns' : 'phantasus-rows'));
 
   var resizeCursor;
   var dragStartWidth = 0;
@@ -364,7 +364,7 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getSortKeys: function () {
     return this.isColumns ? this.project.getColumnSortKeys() : this.project
-    .getRowSortKeys();
+      .getRowSortKeys();
   },
   setOrder: function (sortKeys) {
     if (this.isColumns) {
@@ -449,7 +449,7 @@ phantasus.VectorTrackHeader.prototype = {
         if (sortKeys[i].getLockOrder() === 0) {
           counter++;
         }
-        if (sortKeys[i] instanceof phantasus.SortKey && columnName === sortKeys[i].toString()) {
+        if (sortKeys[i].getLockOrder() === 0 && sortKeys[i] instanceof phantasus.SortKey && columnName === sortKeys[i].toString()) {
           return {
             index: i,
             number: counter

@@ -253,9 +253,33 @@ phantasus.HeatMap = function (options) {
       standalone: false,
       $loadingImage: phantasus.Util.createLoadingEl(),
       menu: {
-        File: ['Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', null, 'Rename' +
-        ' Tab'],
-        Tools: ['New Heat Map', null, 'Hierarchical Clustering', null, 'Marker Selection', 'Nearest Neighbors', 'Create Calculated Annotation', null, 'Adjust', 'Collapse', 'Similarity Matrix', 'Transpose', 't-SNE', null, 'Chart', null, 'Sort/Group', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
+        File: [
+          'Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', null, 'Rename' +
+          ' Tab'],
+        Tools: [
+          'New Heat Map',
+          null,
+          'Hierarchical Clustering',
+          null,
+          'Marker Selection',
+          'Nearest Neighbors',
+          'Create Calculated Annotation',
+          null,
+          'Adjust',
+          'Collapse',
+          'Similarity Matrix',
+          'Transpose',
+          null,
+          'Chart',
+          null,
+          'Sort/Group',
+          'Filter',
+          null,
+          'API',
+          null,
+          'k-means',
+          'limma',
+          'PCA Plot'],
         View: ['Zoom In', 'Zoom Out', 'Fit To Window', '100%', null, 'Options'],
         Edit: ['Copy Image', 'Copy Selected Dataset', null, 'Move Selected Rows To Top', 'Annotate Selected Rows', 'Copy Selected Rows', 'Invert' +
         ' Selected Rows', 'Select All Rows', 'Clear Selected Rows', null, 'Move Selected Columns To Top', 'Annotate Selected Columns', 'Copy Selected Columns', 'Invert' +
@@ -727,10 +751,20 @@ phantasus.HeatMap.showTool = function (tool, heatMap, callback) {
             }
           };
         } else {
-          if (callback) {
-            callback(input);
+          if (value != null && typeof value.done === 'function') { // promise
+            value.always(function () {
+              if (callback) {
+                callback(input);
+              }
+              $dialog.remove();
+            });
+          } else {
+            if (callback) {
+              callback(input);
+            }
+            $dialog.remove();
           }
-          $dialog.remove();
+
         }
       }, 20);
       setTimeout(function () {
@@ -829,10 +863,12 @@ phantasus.HeatMap.isDendrogramVisible = function (project, isColumns) {
   // // FIXME compare filters
   var size = isColumns ? project.getSortedFilteredDataset().getColumnCount()
     : project.getSortedFilteredDataset().getRowCount();
-  return sortKeys.length === 1 && sortKeys[0] instanceof phantasus.SpecifiedModelSortOrder
-    && sortKeys[0].name === 'dendrogram'
-    && sortKeys[0].nvisible === size;
-
+  for (var i = 0; i < sortKeys.length; i++) {
+    if (!sortKeys[i].isPreservesDendrogram() || sortKeys[i].nvisible !== size) {
+      return false;
+    }
+  }
+  return true;
 };
 
 phantasus.HeatMap.prototype = {
@@ -1218,6 +1254,7 @@ phantasus.HeatMap.prototype = {
         this.columnDendrogram = dendrogram;
         var sortKey = new phantasus.SpecifiedModelSortOrder(modelOrder,
           modelOrder.length, 'dendrogram', true);
+        sortKey.setPreservesDendrogram(true);
         sortKey.setLockOrder(2);
         this.project.setColumnSortKeys(
           [sortKey], true);
@@ -1228,6 +1265,7 @@ phantasus.HeatMap.prototype = {
         this.rowDendrogram = dendrogram;
         var sortKey = new phantasus.SpecifiedModelSortOrder(modelOrder,
           modelOrder.length, 'dendrogram', false);
+        sortKey.setPreservesDendrogram(true);
         sortKey.setLockOrder(2);
         this.project.setRowSortKeys(
           [sortKey], true);
@@ -1241,8 +1279,7 @@ phantasus.HeatMap.prototype = {
         : this.project.getRowSortKeys();
       // remove dendrogram sort key
       for (var i = 0; i < sortKeys.length; i++) {
-        if (sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder
-          && sortKeys[i].name === 'dendrogram') {
+        if (sortKeys[i].isPreservesDendrogram()) {
           sortKeys.splice(i, 1);
           i--;
         }
@@ -1559,6 +1596,7 @@ phantasus.HeatMap.prototype = {
         rowDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           rowIndices, rowIndices.length, 'dendrogram');
         rowDendrogramSortKey.setLockOrder(2);
+        rowDendrogramSortKey.setPreservesDendrogram(true);
       }
     }
     var columnDendrogramSortKey = null;
@@ -1617,6 +1655,7 @@ phantasus.HeatMap.prototype = {
         columnDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           columnIndices, columnIndices.length, 'dendrogram');
         columnDendrogramSortKey.setLockOrder(2);
+        columnDendrogramSortKey.setPreservesDendrogram(true);
       }
     }
 
