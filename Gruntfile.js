@@ -5,14 +5,14 @@ module.exports = function (grunt) {
       banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - '
       + '<%= grunt.template.today("yyyy-mm-dd") %>\n'
       + '<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>'
-      + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */',
+      + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */'
     },
     uglify: {
       phantasus: {
         options: {
           mangle: false,
           compress: false,
-          preserveComments: false,
+          preserveComments: false
         },
         files: {
           'js/phantasus-latest.min.js': ['js/phantasus.js']
@@ -22,7 +22,7 @@ module.exports = function (grunt) {
         options: {
           mangle: false,
           compress: false,
-          preserveComments: false,
+          preserveComments: false
         },
         files: {
           'js/phantasus-external.min.js': ['js/phantasus-external.js']
@@ -73,15 +73,15 @@ module.exports = function (grunt) {
       phantasus: {
         options: {
           banner: '(function(global){\n\'use strict\';\n',
-          footer: '\n})(typeof window !== \'undefined\' ? window : this);\n',
+          footer: '\n})(typeof window !== \'undefined\' ? window : this);\n'
         },
         dest: 'js/phantasus.js',
         src: [
           'src/util/util.js', 'src/util/*.js',
           'src/io/*.js', 'src/matrix/vector_adapter.js',
           'src/matrix/*.js', 'src/*.js',
-          'src/tools/*.js', 'src/ui/*.js', 'src/**/*.js', 'js/tsne.js'],
-      },
+          'src/tools/*.js', 'src/ui/*.js', 'src/**/*.js']
+      }
     },
     watch: {
       files: ['src/*.js', 'src/**/*.js'],
