@@ -3,7 +3,7 @@ phantasus.OpenFileTool = function (options) {
 };
 phantasus.OpenFileTool.prototype = {
   toString: function () {
-    return 'Open';
+    return 'Open' + (this.options.file != null ? (' - ' + this.options.file.name) : '');
   },
   gui: function () {
     var array = [{

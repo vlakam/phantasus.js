@@ -279,7 +279,8 @@ phantasus.HeatMapKeyListener = function (heatMap) {
       heatMap: heatMap
     };
     var shortcutMatches = function (sc) {
-      if (sc.which.indexOf(which) !== -1 && (sc.commandKey === undefined || commandKey === sc.commandKey) && (sc.shiftKey === undefined || shiftKey === sc.shiftKey) && (sc.accept == undefined || sc.accept(acceptOptions))) {
+      if (sc.which.indexOf(which) !== -1 && (sc.commandKey === undefined || commandKey === sc.commandKey) && (sc.shiftKey === undefined || shiftKey === sc.shiftKey) &&
+        (sc.accept == undefined || sc.accept(acceptOptions))) {
         sc.cb({heatMap: heatMap});
         return true;
       }
@@ -324,9 +325,12 @@ phantasus.HeatMapKeyListener = function (heatMap) {
         e.preventDefault();
         e.stopPropagation();
         var files = e.originalEvent.dataTransfer.files;
-        phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
-          file: files[0]
-        }), heatMap);
+        for (var i = 0; i < files.length; i++) {
+          phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
+            file: files[i]
+          }), heatMap);
+        }
+
       }
     });
   $keyelement.on('paste.phantasus',
