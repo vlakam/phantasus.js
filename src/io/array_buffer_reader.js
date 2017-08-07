@@ -2,21 +2,7 @@ phantasus.ArrayBufferReader = function (buffer) {
   this.buffer = buffer;
   this.bufferLength = buffer.length;
   this.index = 0;
-  if (typeof TextDecoder !== 'undefined') {
-    var textDecoder = new TextDecoder();
-    this.decoder = function (buf, start, end) {
-      return textDecoder.decode(buf.subarray(start, end));
-    };
-  } else {
-    this.decoder = function (buf, start, end) {
-      // TODO convert in chunks
-      var s = [];
-      for (var i = start; i < end; i++) {
-        s.push(String.fromCharCode(buffer[i]));
-      }
-      return s.join('');
-    };
-  }
+  this.decoder = morpheus.Util.createTextDecoder();
 };
 
 phantasus.ArrayBufferReader.prototype = {

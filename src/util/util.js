@@ -126,7 +126,8 @@ phantasus.Util.getDataType = function (val) {
  * Checks whether supplied argument is an array
  */
 phantasus.Util.isArray = function (array) {
-  var types = [Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
+  var types = [
+    Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
     Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array,];
   // handle native arrays
   for (var i = 0, length = types.length; i < length; i++) {
@@ -210,15 +211,15 @@ phantasus.Util.forceDelete = function (obj) {
         type: 'text/javascript'
       })), w = new Worker(ef);
 
-            URL.revokeObjectURL(ef);
-            return w;
-        })();
+      URL.revokeObjectURL(ef);
+      return w;
+    })();
 
-        _garbageCollector.postMessage(obj, [obj]);
-    }
-    catch (x) {
-        console.log('Unable to delete');
-    }
+    _garbageCollector.postMessage(obj, [obj]);
+  }
+  catch (x) {
+    console.log('Unable to delete');
+  }
 };
 phantasus.Util.getFileName = function (fileOrUrl) {
   if (fileOrUrl instanceof File) {
@@ -233,27 +234,27 @@ phantasus.Util.getFileName = function (fileOrUrl) {
     var params = name.substring(question + 1);
     var keyValuePairs = decodeURIComponent(params).split('&');
 
-        // check for parameters in name
-        for (var i = 0; i < keyValuePairs.length; i++) {
-            var pair = keyValuePairs[i].split('=');
-            if (pair[0] === 'file' || pair[0] === 'name') {
-                name = pair[1];
-                break;
-            }
-        }
-    } else {
-        var slash = name.lastIndexOf('/');
-        if (slash === name.length - 1) {
-            name = name.substring(0, name.length - 1);
-            slash = name.lastIndexOf('/');
-        }
-        if (slash !== -1) {
-            name = name.substring(slash + 1); // get stuff after slash
-            // https://s3.amazonaws.com/data.clue.io/icv/dosval/BRD-K45711268_10_UM_24_H/pcl_cell.gct?AWSAccessKeyId=AKIAJZQISWLUKFS3VUKA&Expires=1455761050&Signature=HVle9MvXV3OGRZHOngdm2frqER8%3D
-
-        }
+    // check for parameters in name
+    for (var i = 0; i < keyValuePairs.length; i++) {
+      var pair = keyValuePairs[i].split('=');
+      if (pair[0] === 'file' || pair[0] === 'name') {
+        name = pair[1];
+        break;
+      }
     }
-    return name;
+  } else {
+    var slash = name.lastIndexOf('/');
+    if (slash === name.length - 1) {
+      name = name.substring(0, name.length - 1);
+      slash = name.lastIndexOf('/');
+    }
+    if (slash !== -1) {
+      name = name.substring(slash + 1); // get stuff after slash
+      // https://s3.amazonaws.com/data.clue.io/icv/dosval/BRD-K45711268_10_UM_24_H/pcl_cell.gct?AWSAccessKeyId=AKIAJZQISWLUKFS3VUKA&Expires=1455761050&Signature=HVle9MvXV3OGRZHOngdm2frqER8%3D
+
+    }
+  }
+  return name;
 };
 phantasus.Util.prefixWithZero = function (value) {
   return value < 10 ? '0' + value : value;
@@ -346,11 +347,12 @@ phantasus.Util.endsWith = function (string, suffix) {
     && string.substr(string.length - suffix.length) === suffix;
 };
 phantasus.Util.measureSvgText = function (text, classname) {
-  if (!text || text.length === 0)
+  if (!text || text.length === 0) {
     return {
       height: 0,
       width: 0
     };
+  }
   var container = d3.select('body').append('svg');
   if (classname) {
     container.attr('class', classname);
@@ -378,53 +380,71 @@ phantasus.Util.hammer = function (el, recognizers) {
     recognizers: []
   });
 
-    if (_.indexOf(recognizers, 'pan') !== -1) {
-        hammer.add(new Hammer.Pan({
-            threshold: 1,
-            direction: Hammer.DIRECTION_ALL
-        }));
-    } else if (_.indexOf(recognizers, 'panh') !== -1) {
-        hammer.add(new Hammer.Pan({
-            threshold: 1,
-            direction: Hammer.DIRECTION_HORIZONTAL
-        }));
-    } else if (_.indexOf(recognizers, 'panv') !== -1) {
-        hammer.add(new Hammer.Pan({
-            threshold: 1,
-            direction: Hammer.DIRECTION_VERTICAL
-        }));
-    }
-    if (_.indexOf(recognizers, 'tap') !== -1) {
-        // var singleTap = new Hammer.Tap({
-        // event : 'singletap',
-        // interval : 50
-        // });
-        // var doubleTap = new Hammer.Tap({
-        // event : 'doubletap',
-        // taps : 2
-        // });
-        // doubleTap.recognizeWith(singleTap);
-        // singleTap.requireFailure([ doubleTap ]);
-        // hammer.add([ doubleTap, singleTap ]);
-        hammer.add(new Hammer.Tap());
-    }
-    if (_.indexOf(recognizers, 'pinch') !== -1) {
-        hammer.add(new Hammer.Pinch());
-    }
-    if (_.indexOf(recognizers, 'longpress') !== -1) {
-        hammer.add(new Hammer.Press({
-            event: 'longpress',
-            time: 1000
-        }));
-    }
-    if (_.indexOf(recognizers, 'press') !== -1) {
-        hammer.add(new Hammer.Press());
-    }
-    if (_.indexOf(recognizers, 'swipe') !== -1) {
-        hammer.add(new Hammer.Swipe());
-    }
+  if (_.indexOf(recognizers, 'pan') !== -1) {
+    hammer.add(new Hammer.Pan({
+      threshold: 1,
+      direction: Hammer.DIRECTION_ALL
+    }));
+  } else if (_.indexOf(recognizers, 'panh') !== -1) {
+    hammer.add(new Hammer.Pan({
+      threshold: 1,
+      direction: Hammer.DIRECTION_HORIZONTAL
+    }));
+  } else if (_.indexOf(recognizers, 'panv') !== -1) {
+    hammer.add(new Hammer.Pan({
+      threshold: 1,
+      direction: Hammer.DIRECTION_VERTICAL
+    }));
+  }
+  if (_.indexOf(recognizers, 'tap') !== -1) {
+    // var singleTap = new Hammer.Tap({
+    // event : 'singletap',
+    // interval : 50
+    // });
+    // var doubleTap = new Hammer.Tap({
+    // event : 'doubletap',
+    // taps : 2
+    // });
+    // doubleTap.recognizeWith(singleTap);
+    // singleTap.requireFailure([ doubleTap ]);
+    // hammer.add([ doubleTap, singleTap ]);
+    hammer.add(new Hammer.Tap());
+  }
+  if (_.indexOf(recognizers, 'pinch') !== -1) {
+    hammer.add(new Hammer.Pinch());
+  }
+  if (_.indexOf(recognizers, 'longpress') !== -1) {
+    hammer.add(new Hammer.Press({
+      event: 'longpress',
+      time: 1000
+    }));
+  }
+  if (_.indexOf(recognizers, 'press') !== -1) {
+    hammer.add(new Hammer.Press());
+  }
+  if (_.indexOf(recognizers, 'swipe') !== -1) {
+    hammer.add(new Hammer.Swipe());
+  }
 
-    return hammer;
+  return hammer;
+};
+
+phantasus.Util.createTextDecoder = function () {
+  if (typeof TextDecoder !== 'undefined') {
+    var textDecoder = new TextDecoder();
+    return function (buf, start, end) {
+      return textDecoder.decode(buf.subarray(start, end));
+    };
+  } else {
+    return function (buf, start, end) {
+      // TODO convert in chunks
+      var s = [];
+      for (var i = start; i < end; i++) {
+        s.push(String.fromCharCode(buf[i]));
+      }
+      return s.join('');
+    };
+  }
 };
 phantasus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
   var filteredSet = new phantasus.Set();
@@ -458,23 +478,23 @@ phantasus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, ma
         }
       }
 
-        }
     }
-    var matches = [];
+  }
+  var matches = [];
 
-    filteredSet.forEach(function (value) {
-        var quotedValue = value;
-        if (quotedValue.indexOf(' ') !== -1) {
-            quotedValue = '"' + quotedValue + '"';
-        }
-        matches.push({
-            value: quotedValue,
-            label: '<span>' + value.replace(regexMatch, '<b>$1</b>')
-            + '</span>'
-        });
+  filteredSet.forEach(function (value) {
+    var quotedValue = value;
+    if (quotedValue.indexOf(' ') !== -1) {
+      quotedValue = '"' + quotedValue + '"';
+    }
+    matches.push({
+      value: quotedValue,
+      label: '<span>' + value.replace(regexMatch, '<b>$1</b>')
+      + '</span>'
     });
+  });
 
-    cb(matches);
+  cb(matches);
 };
 
 /**
@@ -486,54 +506,54 @@ phantasus.Util.setClipboardData = function (clipboardData, delay) {
   var fakeElem = document.createElement('div');
   fakeElem.contentEditable = true;
 
-    // Prevent zooming on iOS
-    fakeElem.style.fontSize = '12pt';
-    // Reset box model
+  // Prevent zooming on iOS
+  fakeElem.style.fontSize = '12pt';
+  // Reset box model
 
-    fakeElem.style.border = '0';
-    fakeElem.style.padding = '0';
-    fakeElem.style.margin = '0';
-    // Move element out of screen horizontally
-    fakeElem.style.position = 'absolute';
-    fakeElem.style[isRTL ? 'right' : 'left'] = '-999999px';
-    // Move element to the same position vertically
-    fakeElem.style.top = (window.pageYOffset || document.documentElement.scrollTop) + 'px';
-    fakeElem.setAttribute('readonly', '');
-    //fakeElem.innerHTML = html;
-    var f = function (e) {
-        clipboardData.forEach(function (elem) {
-            e.clipboardData.setData(elem.format, elem.data);
-        });
+  fakeElem.style.border = '0';
+  fakeElem.style.padding = '0';
+  fakeElem.style.margin = '0';
+  // Move element out of screen horizontally
+  fakeElem.style.position = 'absolute';
+  fakeElem.style[isRTL ? 'right' : 'left'] = '-999999px';
+  // Move element to the same position vertically
+  fakeElem.style.top = (window.pageYOffset || document.documentElement.scrollTop) + 'px';
+  fakeElem.setAttribute('readonly', '');
+  //fakeElem.innerHTML = html;
+  var f = function (e) {
+    clipboardData.forEach(function (elem) {
+      e.clipboardData.setData(elem.format, elem.data);
+    });
 
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        fakeElem.removeEventListener('copy', f);
-    };
-    fakeElem.addEventListener('copy', f);
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    fakeElem.removeEventListener('copy', f);
+  };
+  fakeElem.addEventListener('copy', f);
 
-    document.body.appendChild(fakeElem);
-    // if (fakeElem.hasAttribute('contenteditable')) {
-    fakeElem.focus();
-    // }
-    var selection = window.getSelection();
-    var range = document.createRange();
-    range.selectNodeContents(fakeElem);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    if (delay) {
-        setTimeout(function () {
-            if (!document.execCommand('copy')) {
-                console.log('copy failed');
-            }
-            document.body.removeChild(fakeElem);
-        }, 20);
-    } else {
-        if (!document.execCommand('copy')) {
-            console.log('copy failed');
-        }
-        document.body.removeChild(fakeElem);
+  document.body.appendChild(fakeElem);
+  // if (fakeElem.hasAttribute('contenteditable')) {
+  fakeElem.focus();
+  // }
+  var selection = window.getSelection();
+  var range = document.createRange();
+  range.selectNodeContents(fakeElem);
+  selection.removeAllRanges();
+  selection.addRange(range);
+  if (delay) {
+    setTimeout(function () {
+      if (!document.execCommand('copy')) {
+        console.log('copy failed');
+      }
+      document.body.removeChild(fakeElem);
+    }, 20);
+  } else {
+    if (!document.execCommand('copy')) {
+      console.log('copy failed');
     }
+    document.body.removeChild(fakeElem);
+  }
 };
 
 /**
@@ -562,7 +582,7 @@ phantasus.Util.autosuggest = function (options) {
     suggestWhenEmpty: true,
   }, options);
 
-    var searching = false;
+  var searching = false;
 
   function _select(event, ui, isKey) {
     if (ui.item.skip) {
@@ -577,49 +597,49 @@ phantasus.Util.autosuggest = function (options) {
             selectionStart: options.$el[0].selectionStart
           });
 
-            var field = (event.toElement && event.toElement.dataset) ? event.toElement.dataset.autocomplete : null;
-            var value = field ? ui.item[field] : ui.item.value;
-            var show = ui.item.show;
+      var field = (event.toElement && event.toElement.dataset) ? event.toElement.dataset.autocomplete : null;
+      var value = field ? ui.item[field] : ui.item.value;
+      var show = ui.item.show;
 
-            // replace the current input
-            if (terms.length === 0) {
-                terms.push(value);
-            } else if (ui.item.clear) {
-                terms = [value];
-            } else {
-                terms[terms.selectionStartIndex === -1
-                || terms.selectionStartIndex === undefined ? terms.length - 1
-                    : terms.selectionStartIndex] = value;
-            }
-            // add the selected item
-            options.$el[0].value = terms.join(' ');
-            if ((show && !isKey) || (isKey && event.which === 13)) { // did
-                // we
-                // select
-                // just a
-                // field name?
-                searching = true;
-                setTimeout(function () {
-                    options.$el.autocomplete('search',
-                        options.$el.val());
-                }, 20);
-                setTimeout(function () {
-                    searching = false;
-                }, 100);
+      // replace the current input
+      if (terms.length === 0) {
+        terms.push(value);
+      } else if (ui.item.clear) {
+        terms = [value];
+      } else {
+        terms[terms.selectionStartIndex === -1
+        || terms.selectionStartIndex === undefined ? terms.length - 1
+          : terms.selectionStartIndex] = value;
+      }
+      // add the selected item
+      options.$el[0].value = terms.join(' ');
+      if ((show && !isKey) || (isKey && event.which === 13)) { // did
+        // we
+        // select
+        // just a
+        // field name?
+        searching = true;
+        setTimeout(function () {
+          options.$el.autocomplete('search',
+            options.$el.val());
+        }, 20);
+        setTimeout(function () {
+          searching = false;
+        }, 100);
 
-            }
-            if (!isKey && options.select) {
-                options.select();
-            }
-            return false;
-        }
-        if (!isKey && options.select) {
-            options.select();
-        }
-        if (!isKey && event.which === 13) {
-            event.stopImmediatePropagation();
-        }
+      }
+      if (!isKey && options.select) {
+        options.select();
+      }
+      return false;
     }
+    if (!isKey && options.select) {
+      options.select();
+    }
+    if (!isKey && event.which === 13) {
+      event.stopImmediatePropagation();
+    }
+  }
 
   options.$el
   // don't navigate away from the field on tab when selecting an item
@@ -704,15 +724,15 @@ phantasus.Util.autosuggest = function (options) {
     });
   }
 
-    options.$el.on('keyup', function (e) {
-        if (e.which === 13 && !searching) {
-            options.$el.autocomplete('close');
-        } else if (e.which === 38 && options.history) { // up arrow
-            options.$el.autocomplete('search', {history: true});
-        } else if (options.suggestWhenEmpty && options.$el.val() === '') {
-            options.$el.autocomplete('search', '');
-        }
-    });
+  options.$el.on('keyup', function (e) {
+    if (e.which === 13 && !searching) {
+      options.$el.autocomplete('close');
+    } else if (e.which === 38 && options.history) { // up arrow
+      options.$el.autocomplete('search', {history: true});
+    } else if (options.suggestWhenEmpty && options.$el.val() === '') {
+      options.$el.autocomplete('search', '');
+    }
+  });
 
 };
 
@@ -731,61 +751,61 @@ phantasus.Util.getAutocompleteTokens = function (text, options) {
   var tokens = [];
   var currentToken = [];
 
-    for (var i = 0, n = text.length; i < n; i++) {
-        var c = text[i];
-        if (c === '"') {
-            inQuote = !inQuote;
-            currentToken.push(c);
-        } else if (c === '(' || c === ')') {
-            inParen = c === '(';
-            currentToken.push(c);
-        } else {
-            if ((c === ' ' || c === '\t') && !inQuote && !inParen) {
-                tokens.push({
-                    s: currentToken.join(''),
-                    inSelectionStart: currentToken.inSelectionStart
-                });
-                currentToken = []; // start new token
-            } else { // add to current token
-                currentToken.push(c);
-            }
-        }
-        if (i === options.selectionStart - 1) {
-            currentToken.inSelectionStart = true;
-        }
-
-    }
-
-    tokens.push({
-        s: currentToken.join(''),
-        inSelectionStart: currentToken.inSelectionStart
-    });
-    // add trailing token
-    if (!options.trim && !inQuote && text[text.length - 1] === ' ') {
+  for (var i = 0, n = text.length; i < n; i++) {
+    var c = text[i];
+    if (c === '"') {
+      inQuote = !inQuote;
+      currentToken.push(c);
+    } else if (c === '(' || c === ')') {
+      inParen = c === '(';
+      currentToken.push(c);
+    } else {
+      if ((c === ' ' || c === '\t') && !inQuote && !inParen) {
         tokens.push({
-            s: ' ',
-            inSelectionStart: false
+          s: currentToken.join(''),
+          inSelectionStart: currentToken.inSelectionStart
         });
+        currentToken = []; // start new token
+      } else { // add to current token
+        currentToken.push(c);
+      }
     }
-    // remove empty tokens
-    // keep spaces at end of input "field:value" for next autocomplete
-    var filteredTokens = [];
-    var selectionStartIndex = -1;
-    for (var i = 0, ntokens = tokens.length; i < ntokens; i++) {
-        var token = tokens[i];
-        var s = token.s;
-        if (options.trim || i < (ntokens - 1)) {
-            s = $.trim(s);
-        }
-        if (s !== '') {
-            if (token.inSelectionStart) {
-                selectionStartIndex = filteredTokens.length;
-            }
-            filteredTokens.push(s);
-        }
+    if (i === options.selectionStart - 1) {
+      currentToken.inSelectionStart = true;
     }
-    filteredTokens.selectionStartIndex = selectionStartIndex;
-    return filteredTokens;
+
+  }
+
+  tokens.push({
+    s: currentToken.join(''),
+    inSelectionStart: currentToken.inSelectionStart
+  });
+  // add trailing token
+  if (!options.trim && !inQuote && text[text.length - 1] === ' ') {
+    tokens.push({
+      s: ' ',
+      inSelectionStart: false
+    });
+  }
+  // remove empty tokens
+  // keep spaces at end of input "field:value" for next autocomplete
+  var filteredTokens = [];
+  var selectionStartIndex = -1;
+  for (var i = 0, ntokens = tokens.length; i < ntokens; i++) {
+    var token = tokens[i];
+    var s = token.s;
+    if (options.trim || i < (ntokens - 1)) {
+      s = $.trim(s);
+    }
+    if (s !== '') {
+      if (token.inSelectionStart) {
+        selectionStartIndex = filteredTokens.length;
+      }
+      filteredTokens.push(s);
+    }
+  }
+  filteredTokens.selectionStartIndex = selectionStartIndex;
+  return filteredTokens;
 };
 
 phantasus.Util.showDialog = function ($el, title, options) {
@@ -847,22 +867,22 @@ phantasus.Util.sheetToArray = function (sheet, delim) {
         continue;
       }
 
-            var txt = String(XLSX.utils.format_cell(val));
-            if (val.s != null) {
-                var color = '#' + val.s.fgColor.rgb;
-                colors.push({
-                    header: header[row.length],
-                    color: color,
-                    value: txt
-                });
-            }
-            row.push(txt);
-        }
-        rows.push(delim ? row.join(delim) : row);
+      var txt = String(XLSX.utils.format_cell(val));
+      if (val.s != null) {
+        var color = '#' + val.s.fgColor.rgb;
+        colors.push({
+          header: header[row.length],
+          color: color,
+          value: txt
+        });
+      }
+      row.push(txt);
     }
+    rows.push(delim ? row.join(delim) : row);
+  }
 
-    rows.colors = colors;
-    return rows;
+  rows.colors = colors;
+  return rows;
 };
 phantasus.Util.linesToObjects = function (lines) {
   var header = lines[0];
@@ -1030,7 +1050,6 @@ phantasus.Util.indexSort = function (array, ascending) {
   }
   return phantasus.Util.indexSortPairs(pairs, ascending);
 };
-
 phantasus.Util.indexSortPairs = function (array, ascending) {
   if (ascending) {
     array.sort(function (a, b) {
@@ -1048,8 +1067,9 @@ phantasus.Util.indexSortPairs = function (array, ascending) {
   return indices;
 };
 phantasus.Util.arrayEquals = function (array1, array2, comparator) {
-  if (array1 == array2)
+  if (array1 == array2) {
     return true;
+  }
   if (array1 == null || array2 == null) {
     return false;
   }
@@ -1126,8 +1146,8 @@ phantasus.Util.arrayToString = function (value, sep) {
       s.push('' + val_i);
     }
 
-    }
-    return s.join(sep);
+  }
+  return s.join(sep);
 
 };
 phantasus.Util.removeTrailingZerosInFraction = function (str) {
@@ -1190,9 +1210,9 @@ phantasus.Util.createSearchPredicates = function (options) {
   var fieldSearchEnabled = !validateFieldNames
     || (availableFields != null && availableFields.length > 0);
 
-    var fieldRegExp = /\\:/g;
-    var predicates = [];
-    var defaultIsExactMatch = options.defaultMatchMode === 'exact';
+  var fieldRegExp = /\\:/g;
+  var predicates = [];
+  var defaultIsExactMatch = options.defaultMatchMode === 'exact';
 
   tokens
     .forEach(function (token) {
@@ -1448,16 +1468,16 @@ phantasus.Util.readLines = function (fileOrUrl, interactive) {
         deferred.resolve(phantasus.Util.splitOnNewLine(event.target.result));
       }
 
-        };
-        if (ext === 'xlsx' || ext === 'xls') {
-            reader.readAsArrayBuffer(fileOrUrl);
-        } else {
-            reader.readAsText(fileOrUrl);
-        }
-    } else { // it's already lines?
-        deferred.resolve(fileOrUrl);
+    };
+    if (ext === 'xlsx' || ext === 'xls') {
+      reader.readAsArrayBuffer(fileOrUrl);
+    } else {
+      reader.readAsText(fileOrUrl);
     }
-    return deferred;
+  } else { // it's already lines?
+    deferred.resolve(fileOrUrl);
+  }
+  return deferred;
 };
 phantasus.Util.createValueToIndices = function (array, field) {
   var map = new phantasus.Map();
@@ -1503,7 +1523,8 @@ phantasus.Util.createPhantasusHeader = function () {
   return $div;
 };
 phantasus.Util.createLoadingEl = function () {
-  return $('<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
+  return $(
+    '<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
 };
 /**
  * Splits a string by the new line character, trimming whitespace
@@ -1512,29 +1533,29 @@ phantasus.Util.splitOnNewLine = function (text, commentChar) {
   var commentCharCode = commentChar !== undefined ? commentChar.charCodeAt(0)
     : undefined;
 
-    var lines = text.split(/\n/);
-    if (lines.length === 1) {
-        var tmp = text.split(/\r/); // old school mac?
-        if (tmp.length > 1) {
-            lines = tmp;
-        }
+  var lines = text.split(/\n/);
+  if (lines.length === 1) {
+    var tmp = text.split(/\r/); // old school mac?
+    if (tmp.length > 1) {
+      lines = tmp;
     }
+  }
 
-    var rows = [];
-    var rtrim = /\s+$/;
-    for (var i = 0, nlines = lines.length; i < nlines; i++) {
-        var line = lines[i].replace(rtrim, '');
-        if (line !== '') {
-            if (commentCharCode !== undefined) {
-                if (line.charCodeAt(0) !== commentCharCode) {
-                    rows.push(line);
-                }
-            } else {
-                rows.push(line);
-            }
+  var rows = [];
+  var rtrim = /\s+$/;
+  for (var i = 0, nlines = lines.length; i < nlines; i++) {
+    var line = lines[i].replace(rtrim, '');
+    if (line !== '') {
+      if (commentCharCode !== undefined) {
+        if (line.charCodeAt(0) !== commentCharCode) {
+          rows.push(line);
         }
+      } else {
+        rows.push(line);
+      }
     }
-    return rows;
+  }
+  return rows;
 };
 
 phantasus.Util.ContainsPredicate = function (field, text) {
