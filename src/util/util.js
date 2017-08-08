@@ -40,9 +40,10 @@ phantasus.Util.viewPortSize = function () {
     /"/g, '');
 };
 
+phantasus.Util.TRACKING_ENABLED = true;
 phantasus.Util.TRACKING_CODE_LOADED = false;
 phantasus.Util.loadTrackingCode = function () {
-  if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
+  if (phantasus.Util.TRACKING_ENABLED && typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
     if (phantasus.Util.TRACKING_CODE_LOADED) {
       return;
     } else if (typeof ga === 'undefined') {
@@ -1495,7 +1496,7 @@ phantasus.Util.createValueToIndices = function (array, field) {
 
 phantasus.Util.createPhantasusHeader = function () {
   var html = [];
-  
+
   html.push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
   html.push('<span>P</span>');
   html.push('<span>h</span>');
