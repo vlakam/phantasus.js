@@ -209,8 +209,9 @@ phantasus.TcgaUtil.getDataset = function (options) {
     // id + type
     var methylation = $.Deferred();
     promises.push(methylation);
-    new phantasus.TxtReader({}).read(options.methylation, function (err,
-                                                                   dataset) {
+    new phantasus.TxtReader({}).read(options.methylation, function (
+      err,
+      dataset) {
       if (err) {
         // console.log('Error reading file:' + err);
       } else {
@@ -243,6 +244,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
   var annotationCallbacks = [];
   var annotationDef = null;
   if (options.columnAnnotations) {
+    // match datasetField: 'participant_id' to fileField: 'patient_id', // e.g. tcga-5l-aat0
     annotationDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
       isColumns: true

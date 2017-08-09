@@ -541,6 +541,9 @@ phantasus.HeatMap = function (options) {
       if (_this.options.$loadingImage) {
         _this.options.$loadingImage.remove();
       }
+      if (_this.options.datasetError) {
+        _this.options.datasetError(message);
+      }
       phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message,
@@ -640,7 +643,9 @@ phantasus.HeatMap = function (options) {
         message.push(err.message);
 
       }
-
+      if (_this.options.datasetError) {
+        _this.options.datasetError(message);
+      }
       phantasus.FormBuilder.showInModal({
         title: 'Error',
         html: message.join(''),
