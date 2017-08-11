@@ -14851,7 +14851,7 @@ phantasus.KmeansTool.prototype = {
       if (rowIndices.length > 0) {
         args.rows = rowIndices;
       }
-      var req = ocpu.call("kmeans", args, function (session) {
+      var req = ocpu.call("performKmeans", args, function (session) {
         session.getObject(function (success) {
           var clusters = JSON.parse(success);
 
@@ -17141,7 +17141,7 @@ phantasus.PcaPlotTool.prototype = {
 
         //// console.log(arguments);
 
-        var req = ocpu.call("pcaPlot", args, function (session) {
+        var req = ocpu.call("calcPCA", args, function (session) {
           //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
           session.getObject(function (success) {
             //// console.log(success);

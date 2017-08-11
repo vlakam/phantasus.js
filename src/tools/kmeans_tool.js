@@ -61,7 +61,7 @@ phantasus.KmeansTool.prototype = {
       if (rowIndices.length > 0) {
         args.rows = rowIndices;
       }
-      var req = ocpu.call("kmeans", args, function (session) {
+      var req = ocpu.call("performKmeans", args, function (session) {
         session.getObject(function (success) {
           var clusters = JSON.parse(success);
 

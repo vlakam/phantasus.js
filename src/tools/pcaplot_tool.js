@@ -495,7 +495,7 @@ phantasus.PcaPlotTool.prototype = {
 
         //// console.log(arguments);
 
-        var req = ocpu.call("pcaPlot", args, function (session) {
+        var req = ocpu.call("calcPCA", args, function (session) {
           //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
           session.getObject(function (success) {
             //// console.log(success);

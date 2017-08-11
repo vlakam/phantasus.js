@@ -3,6 +3,7 @@
 node_modules/
 phantasus-external.js
 phantasus-external.min.js
+phantasus.js
 .RData
 .Rhistory
 ctrp
