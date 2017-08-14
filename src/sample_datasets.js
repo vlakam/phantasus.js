@@ -47,11 +47,12 @@ phantasus.SampleDatasets = function (options) {
           'input:checked').length === 0;
       $button.prop('disabled', isDisabled);
     });
-  $
-    .ajax(
-      'https://software.broadinstitute.org/morpheus/preloaded-datasets/tcga/tcga_index.txt')
-    .done(
-      function (text) {
+
+    fetch('https://software.broadinstitute.org/morpheus/preloaded-datasets/tcga/tcga_index.txt').then(function (response) {
+      if (response.ok) {
+        return response.text();
+      }
+    }).then(function (text) {
         var exampleHtml = [];
         exampleHtml.push('<table class="table table-condensed table-bordered">');
         exampleHtml.push('<thead><tr><th>Name</th><th>Gene' +
@@ -197,7 +198,9 @@ phantasus.SampleDatasets = function (options) {
         tcga.push('</tbody>');
         tcga.push('</table>');
         $(tcga.join('')).appendTo($el.find('[data-name=tcga]'));
-      });
+      }).catch(function (error) {
+        console.log(error);
+    });
 };
 
 phantasus.SampleDatasets.getTcgaDataset = function (options) {
@@ -233,7 +236,7 @@ phantasus.SampleDatasets.getTcgaDataset = function (options) {
       file: baseUrl + 'All_CDEs.txt',
       datasetField: 'participant_id',
       fileField: 'patient_id', // e.g. tcga-5l-aat0
-      transposed: true,
+      transposed: true
     }];
   console.log(datasetOptions);
   return phantasus.TcgaUtil.getDataset(datasetOptions);
@@ -266,8 +269,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
   var columnAnnotations = [];
   if (options.ach) {
     // there are several cell lines that are in Achilles but not CCLE
-    columnAnnotations
-      .push({
+    columnAnnotations.push({
         file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/Achilles_v2.4_SampleInfo_small.txt',
         datasetField: 'id',
         fileField: 'id'
@@ -277,7 +279,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
   columnAnnotations.push({
     file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_Sample_Info.txt',
     datasetField: 'id',
-    fileField: 'id',
+    fileField: 'id'
   });
 
   var returnDeferred = $.Deferred();
@@ -285,7 +287,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
 
   var annotationDef = phantasus.DatasetUtil.annotate({
     annotations: columnAnnotations,
-    isColumns: true,
+    isColumns: true
   });
   var datasetToReturn;
   datasetDef.done(function (d) {
@@ -344,21 +346,21 @@ phantasus.SampleDatasets.prototype = {
       columns: [
         {
           field: 'participant_id',
-          display: 'text',
+          display: 'text'
         }, {
           field: 'sample_type',
-          display: 'color',
+          display: 'color'
         }, {
           field: 'mutation_summary',
-          display: 'stacked_bar',
+          display: 'stacked_bar'
         }, {
           field: 'mutation_summary_selection',
-          display: 'stacked_bar',
+          display: 'stacked_bar'
         }, {
           field: 'mRNAseq_cluster',
-          display: 'color, highlight',
+          display: 'color, highlight'
         }],
-      dataset: phantasus.SampleDatasets.getTcgaDataset(options),
+      dataset: phantasus.SampleDatasets.getTcgaDataset(options)
     });
   },
   openCCLE: function (options) {
@@ -367,62 +369,62 @@ phantasus.SampleDatasets.prototype = {
       rows: [
         {
           field: 'id',
-          display: 'text,tooltip',
+          display: 'text,tooltip'
         }, {
           field: 'mutation_summary',
-          display: 'stacked_bar',
+          display: 'stacked_bar'
         }, {
           field: 'Source',
-          display: 'color',
+          display: 'color'
         }],
       columns: [
         {
           field: 'id',
-          display: 'text,tooltip',
+          display: 'text,tooltip'
         }, {
           field: 'mutation_summary',
-          display: 'stacked_bar',
+          display: 'stacked_bar'
         }, {
           field: 'gender',
-          display: 'color, highlight',
+          display: 'color, highlight'
         }, {
           field: 'histology',
-          display: 'color, highlight',
+          display: 'color, highlight'
         }, {
           field: 'histology subtype',
-          display: 'color, highlight',
+          display: 'color, highlight'
         }, {
           field: 'primary_site',
-          display: 'color, highlight',
+          display: 'color, highlight'
         }],
-      dataset: phantasus.SampleDatasets.getCCLEDataset(options),
+      dataset: phantasus.SampleDatasets.getCCLEDataset(options)
     });
-  },
+  }
 };
 
 phantasus.SampleDatasets.TCGA_DISEASE_TYPES_INFO = [
   {
     id: 'mrna',
     name: 'GENE EXPRESSION',
-    type: 'mrna',
+    type: 'mrna'
   }, {
     id: 'gistic',
     name: 'GISTIC COPY NUMBER',
-    type: 'gistic',
+    type: 'gistic'
   }, {
     id: 'gistic',
     name: 'COPY NUMBER BY GENE',
-    type: 'gisticGene',
+    type: 'gisticGene'
   }, {
     id: 'sig_genes',
     name: 'MUTATION',
-    type: 'sig_genes',
+    type: 'sig_genes'
   }, {
     id: 'rppa',
     name: 'PROTEOMICS',
-    type: 'rppa',
+    type: 'rppa'
   }, {
     id: 'methylation',
     name: 'METHYLATION',
-    type: 'methylation',
+    type: 'methylation'
   }];

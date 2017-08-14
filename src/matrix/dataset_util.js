@@ -84,7 +84,8 @@ phantasus.DatasetUtil.readDatasetArray = function (datasets) {
       loadedDatasets[this.index] = dataset;
     });
     p.fail(function (err) {
-      var message = ['Error opening ' + phantasus.Util
+      var message = [
+        'Error opening ' + phantasus.Util
         .getFileName(url) + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
@@ -185,8 +186,6 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (options == null) {
     options = {};
   }
-
-
   var isFile = fileOrUrl instanceof File;
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
@@ -223,7 +222,8 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     if (options.background) {
       var path = phantasus.Util.getScriptPath();
       var blob = new Blob(
-        ['self.onmessage = function(e) {'
+        [
+          'self.onmessage = function(e) {'
         + 'importScripts(e.data.path);'
         + 'var ext = phantasus.Util.getExtension(phantasus.Util'
         + '.getFileName(e.data.fileOrUrl));'

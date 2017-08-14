@@ -31,8 +31,8 @@ phantasus.Util.extend = function (c1, c2) {
     }
   }
 };
-phantasus.Util.isFetchSupported = function () {
-  return navigator.userAgent.indexOf('Chrome') !== -1;
+phantasus.Util.isFetchStreamingSupported = function () {
+  return typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Chrome') !== -1;
 };
 
 phantasus.Util.viewPortSize = function () {
@@ -223,7 +223,7 @@ phantasus.Util.forceDelete = function (obj) {
   }
 };
 phantasus.Util.getFileName = function (fileOrUrl) {
-  if (fileOrUrl instanceof File) {
+  if (phantasus.Util.isFile(fileOrUrl)) {
     return fileOrUrl.name;
   }
   if (fileOrUrl.name !== undefined) {
@@ -343,6 +343,14 @@ phantasus.Util.paramsToObject = function (hash) {
   }
   return result;
 };
+
+phantasus.Util.isHeadless = function () {
+  return typeof $.ui === 'undefined';
+};
+
+phantasus.Util.isFile = function (f) {
+  return typeof File !== 'undefined' && f instanceof File;
+};
 phantasus.Util.endsWith = function (string, suffix) {
   return string.length >= suffix.length
     && string.substr(string.length - suffix.length) === suffix;
@@ -377,57 +385,61 @@ if (typeof navigator !== 'undefined') {
 phantasus.Util.COMMAND_KEY = phantasus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
 
 phantasus.Util.hammer = function (el, recognizers) {
-  var hammer = new Hammer(el, {
-    recognizers: []
-  });
+  if (typeof Hammer !== 'undefined') {
+    var hammer = new Hammer(el, {
+      recognizers: []
+    });
 
-  if (_.indexOf(recognizers, 'pan') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_ALL
-    }));
-  } else if (_.indexOf(recognizers, 'panh') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_HORIZONTAL
-    }));
-  } else if (_.indexOf(recognizers, 'panv') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_VERTICAL
-    }));
-  }
-  if (_.indexOf(recognizers, 'tap') !== -1) {
-    // var singleTap = new Hammer.Tap({
-    // event : 'singletap',
-    // interval : 50
-    // });
-    // var doubleTap = new Hammer.Tap({
-    // event : 'doubletap',
-    // taps : 2
-    // });
-    // doubleTap.recognizeWith(singleTap);
-    // singleTap.requireFailure([ doubleTap ]);
-    // hammer.add([ doubleTap, singleTap ]);
-    hammer.add(new Hammer.Tap());
-  }
-  if (_.indexOf(recognizers, 'pinch') !== -1) {
-    hammer.add(new Hammer.Pinch());
-  }
-  if (_.indexOf(recognizers, 'longpress') !== -1) {
-    hammer.add(new Hammer.Press({
-      event: 'longpress',
-      time: 1000
-    }));
-  }
-  if (_.indexOf(recognizers, 'press') !== -1) {
-    hammer.add(new Hammer.Press());
-  }
-  if (_.indexOf(recognizers, 'swipe') !== -1) {
-    hammer.add(new Hammer.Swipe());
+    if (_.indexOf(recognizers, 'pan') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_ALL
+      }));
+    } else if (_.indexOf(recognizers, 'panh') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_HORIZONTAL
+      }));
+    } else if (_.indexOf(recognizers, 'panv') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_VERTICAL
+      }));
+    }
+    if (_.indexOf(recognizers, 'tap') !== -1) {
+      // var singleTap = new Hammer.Tap({
+      // event : 'singletap',
+      // interval : 50
+      // });
+      // var doubleTap = new Hammer.Tap({
+      // event : 'doubletap',
+      // taps : 2
+      // });
+      // doubleTap.recognizeWith(singleTap);
+      // singleTap.requireFailure([ doubleTap ]);
+      // hammer.add([ doubleTap, singleTap ]);
+      hammer.add(new Hammer.Tap());
+    }
+    if (_.indexOf(recognizers, 'pinch') !== -1) {
+      hammer.add(new Hammer.Pinch());
+    }
+    if (_.indexOf(recognizers, 'longpress') !== -1) {
+      hammer.add(new Hammer.Press({
+        event: 'longpress',
+        time: 1000
+      }));
+    }
+    if (_.indexOf(recognizers, 'press') !== -1) {
+      hammer.add(new Hammer.Press());
+    }
+    if (_.indexOf(recognizers, 'swipe') !== -1) {
+      hammer.add(new Hammer.Swipe());
+    }
+    return hammer;
+  } else {
+    return $();
   }
 
-  return hammer;
 };
 
 phantasus.Util.createTextDecoder = function () {
@@ -990,15 +1002,19 @@ phantasus.Util.xlsxTo1dArray = function (options, callback) {
 phantasus.Util.getText = function (fileOrUrl) {
   var deferred = $.Deferred();
   if (phantasus.Util.isString(fileOrUrl)) {
-    $.ajax({
-      headers: fileOrUrl.headers,
-      dataType: 'text',
-      url: fileOrUrl,
-    }).done(function (text, status, xhr) {
+    fetch(fileOrUrl).then(function (response) {
+      if (response.ok) {
+        return response.text();
+      } else {
+        deferred.reject(response.status + ' ' + response.statusText);
+      }
+    }).then(function (text) {
       // var type = xhr.getResponseHeader('Content-Type');
       deferred.resolve(text);
+    }).catch(function (err) {
+      deferred.reject(err);
     });
-  } else if (fileOrUrl instanceof File) {
+  } else if (phantasus.Util.isFile(fileOrUrl)) {
     var reader = new FileReader();
     reader.onload = function (event) {
       deferred.resolve(event.target.result);
@@ -1399,24 +1415,27 @@ phantasus.Util.splitLines = function (lines) {
  * @return A deferred object that resolves to an array of strings
  */
 phantasus.Util.readLines = function (fileOrUrl, interactive) {
-  var isFile = fileOrUrl instanceof File;
+  var isFile = phantasus.Util.isFile(fileOrUrl);
   var isString = phantasus.Util.isString(fileOrUrl);
   var name = phantasus.Util.getFileName(fileOrUrl);
   var ext = phantasus.Util.getExtension(name);
   var deferred = $.Deferred();
   if (isString) { // URL
     if (ext === 'xlsx') {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', fileOrUrl, true);
+      var fetchOptions = {};
       if (fileOrUrl.headers) {
+        fetchOptions.headers = new Headers();
         for (var header in fileOrUrl.headers) {
-          xhr.setRequestHeader(header, fileOrUrl.headers[header]);
+          fetchOptions.headers.append(header, fileOrUrl.headers[header]);
         }
       }
-      // $.ajaxPrefilter({url: fileOrUrl}, {}, oReq); // copy ajax pre-filters from ajax
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = function (oEvent) {
-        var arrayBuffer = oReq.response;
+      fetch(fileOrUrl, fetchOptions).then(function (response) {
+        if (response.ok) {
+          return response.arrayBuffer();
+        } else {
+          deferred.reject(response);
+        }
+      }).then(function (arrayBuffer) {
         if (arrayBuffer) {
           var data = new Uint8Array(arrayBuffer);
           var arr = [];
@@ -1432,16 +1451,20 @@ phantasus.Util.readLines = function (fileOrUrl, interactive) {
           });
 
         } else {
-          throw 'not found';
+          deferred.reject();
         }
-      };
-      xhr.send(null);
+      });
     } else {
-      $.ajax({
-        headers: fileOrUrl.headers,
-        url: fileOrUrl,
-      }).done(function (text, status, xhr) {
+      fetch(fileOrUrl, fetchOptions).then(function (response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          deferred.reject();
+        }
+      }).then(function (text) {
         deferred.resolve(phantasus.Util.splitOnNewLine(text));
+      }).catch(function (err) {
+        deferred.reject(err);
       });
     }
   } else if (isFile) {

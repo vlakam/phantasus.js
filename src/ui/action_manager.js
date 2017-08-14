@@ -20,7 +20,7 @@ phantasus.ActionManager = function () {
     cb: function (options) {
       new phantasus.SortDialog(options.heatMap.getProject());
     },
-    icon: 'fa fa-sort-alpha-asc',
+    icon: 'fa fa-sort-alpha-asc'
   });
 
   var $filterModal = null;
@@ -106,7 +106,7 @@ phantasus.ActionManager = function () {
       }
       $filterModal.modal('show');
     },
-    icon: 'fa fa-filter',
+    icon: 'fa fa-filter'
   });
 
   this.add({
@@ -115,7 +115,7 @@ phantasus.ActionManager = function () {
     cb: function (options) {
       options.heatMap.showOptions();
     },
-    icon: 'fa fa-cog',
+    icon: 'fa fa-cog'
   });
 
   this.add({
@@ -154,7 +154,8 @@ phantasus.ActionManager = function () {
       // 		'<img src="' + url + '">');
       // });
 
-      phantasus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([
+        {
         format: 'text/html',
         data: '<img src="' + url + '">'
       }], true);
@@ -274,8 +275,6 @@ phantasus.ActionManager = function () {
       },
       icon: 'fa fa-line-chart'
     });
-  } else {
-    console.log('echarts not found.');
   }
   if (typeof Plotly !== 'undefined') {
     this.add({
@@ -307,11 +306,23 @@ phantasus.ActionManager = function () {
   this.add({
     name: 'Fit To Window',
     cb: function (options) {
-      options.heatMap.fitToWindow(true);
+      options.heatMap.fitToWindow({fitRows: true, fitColumns: true, repaint: true});
     },
     which: [48], // zero
     commandKey: true,
     icon: 'fa fa-compress'
+  });
+  this.add({
+    name: 'Fit Columns To Window',
+    cb: function (options) {
+      options.heatMap.fitToWindow({fitRows: false, fitColumns: true, repaint: true});
+    }
+  });
+  this.add({
+    name: 'Fit Rows To Window',
+    cb: function (options) {
+      options.heatMap.fitToWindow({fitRows: true, fitColumns: false, repaint: true});
+    }
   });
   this.add({
     name: '100%',
@@ -659,7 +670,7 @@ phantasus.ActionManager = function () {
     var project = options.heatMap.getProject();
     var selectionModel = !isColumns ? project.getRowSelectionModel()
       : project
-      .getColumnSelectionModel();
+        .getColumnSelectionModel();
     var viewIndices = selectionModel.getViewIndices().values();
     if (viewIndices.length === 0) {
       return;
@@ -716,7 +727,7 @@ phantasus.ActionManager = function () {
     var project = options.heatMap.getProject();
     var selectionModel = !isColumns ? project.getRowSelectionModel()
       : project
-      .getColumnSelectionModel();
+        .getColumnSelectionModel();
     var count = !isColumns ? project
       .getSortedFilteredDataset()
       .getRowCount() : project
@@ -764,9 +775,10 @@ phantasus.ActionManager = function () {
     selectionModel.getViewIndices().forEach(
       function (index) {
         text.push(toStringFunction(v
-        .getValue(index)));
+          .getValue(index)));
       });
-    phantasus.Util.setClipboardData([{
+    phantasus.Util.setClipboardData([
+      {
       format: 'text/plain',
       data: text.join('\n')
     }]);
@@ -788,9 +800,9 @@ phantasus.ActionManager = function () {
 
     var project = options.heatMap.getProject();
     var selectionModel = isColumns ? project
-      .getColumnSelectionModel()
+        .getColumnSelectionModel()
       : project
-      .getRowSelectionModel();
+        .getRowSelectionModel();
     if (selectionModel.count() === 0) {
       phantasus.FormBuilder
         .showMessageModal({
@@ -917,7 +929,8 @@ phantasus.ActionManager = function () {
 
       var text = new phantasus.GctWriter()
         .write(dataset);
-      phantasus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([
+        {
         format: 'text/plain',
         data: text
       }]);
@@ -926,7 +939,8 @@ phantasus.ActionManager = function () {
   });
   var _this = this;
   //console.log(_this);
-  [new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
+  [
+    new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
     new phantasus.NearestNeighbors(), new phantasus.AdjustDataTool(),
     new phantasus.CollapseDatasetTool(), new phantasus.CreateAnnotation(), new phantasus.SimilarityMatrixTool(),
     new phantasus.TransposeTool(), new phantasus.TsneTool(), new phantasus.DevAPI(),

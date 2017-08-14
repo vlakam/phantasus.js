@@ -8,9 +8,15 @@ phantasus.JsonDatasetReader.prototype = {
     var name = phantasus.Util.getBaseFileName(phantasus.Util.getFileName(fileOrUrl));
     var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
     if (isString) {
-      $.ajax(fileOrUrl).done(function (json) {
-        callback(null, phantasus.Dataset.fromJSON(json));
-      }).fail(function (err) {
+      fetch(fileOrUrl).then(function (response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          callback(response.status + ' ' + response.statusText);
+        }
+      }).then(function (text) {
+        callback(null, phantasus.Dataset.fromJSON(JSON.parse(text.trim())));
+      }).catch(function (err) {
         callback(err);
       });
     } else {
@@ -24,5 +30,5 @@ phantasus.JsonDatasetReader.prototype = {
       reader.readAsText(fileOrUrl);
     }
 
-  },
+  }
 };

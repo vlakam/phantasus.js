@@ -146,11 +146,11 @@ phantasus.HeatMapElementCanvas.prototype = {
       var width = columnPositions.getItemSize(project
         .getHoverColumnIndex());
       var y = (project.getHoverRowIndex() === -1 ? rowPositions
-      .getPosition(rowPositions.getLength() - 1) : rowPositions
-      .getPosition(project.getHoverRowIndex()));
+        .getPosition(rowPositions.getLength() - 1) : rowPositions
+        .getPosition(project.getHoverRowIndex()));
       var x = (project.getHoverColumnIndex() === -1 ? columnPositions
-      .getPosition(0) : columnPositions.getPosition(project
-      .getHoverColumnIndex()));
+        .getPosition(0) : columnPositions.getPosition(project
+        .getHoverColumnIndex()));
 
       if (project.getHoverColumnIndex() !== -1) {
         // thin rectangle down entire column
@@ -211,7 +211,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var selectedColumnElements = this.selectedColumnElements;
 
     if (!(selectedRowElements.length === 0 &&
-      selectedColumnElements.length === 0)) {
+        selectedColumnElements.length === 0)) {
       if (selectedRowElements.length === 0) {
         selectedRowElements = [[top, bottom - 1]];
       }

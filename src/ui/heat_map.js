@@ -378,20 +378,22 @@ phantasus.HeatMap = function (options) {
   var isPrimary = this.options.parent == null;
   if (this.options.parent == null) {
 
-    this.tabManager = this.options.tabManager != null ? this.options.tabManager
-      : new phantasus.TabManager({
-        landingPage: function () {
-          if (_this.options.landingPage == null) {
-            _this.options.landingPage = new phantasus.LandingPage();
-            _this.options.landingPage.$el.prependTo(_this.$el);
-          }
-          return _this.options.landingPage;
-        },
-        autohideTabBar: this.options.autohideTabBar
-      });
+    if (!phantasus.Util.isHeadless()) {
+      this.tabManager = this.options.tabManager != null ? this.options.tabManager
+        : new phantasus.TabManager({
+          landingPage: function () {
+            if (_this.options.landingPage == null) {
+              _this.options.landingPage = new phantasus.LandingPage();
+              _this.options.landingPage.$el.prependTo(_this.$el);
+            }
+            return _this.options.landingPage;
+          },
+          autohideTabBar: this.options.autohideTabBar
+        });
 
-    if (!this.options.tabManager) {
-      this.tabManager.appendTo(this.$el);
+      if (!this.options.tabManager) {
+        this.tabManager.appendTo(this.$el);
+      }
     }
   } else {
     if (this.options.inheritFromParent) {
@@ -432,17 +434,18 @@ phantasus.HeatMap = function (options) {
     _this.$content.off('remove.phantasus');
     _this.dispose();
   });
-  var tab = this.tabManager.add({
-    $el: this.$content,
-    closeable: this.options.closeable,
-    rename: this.options.rename,
-    title: this.options.name,
-    object: this,
-    focus: this.options.focus
-  });
-  this.tabId = tab.id;
-  this.$tabPanel = tab.$panel;
-
+  if (!phantasus.Util.isHeadless()) {
+    var tab = this.tabManager.add({
+      $el: this.$content,
+      closeable: this.options.closeable,
+      rename: this.options.rename,
+      title: this.options.name,
+      object: this,
+      focus: this.options.focus
+    });
+    this.tabId = tab.id;
+    this.$tabPanel = tab.$panel;
+  }
   if (options.$loadingImage) {
     options.$loadingImage.appendTo(this.$content);
   }
@@ -527,11 +530,13 @@ phantasus.HeatMap = function (options) {
       options.loadedCallback(_this);
     }
 
-    if (_this.options.focus) {
-      _this.tabManager.setActiveTab(tab.id);
-      _this.focus();
-    } else if (_this.tabManager.getTabCount() === 1) {
-      _this.tabManager.setActiveTab(tab.id);
+    if (_this.tabManager) {
+      if (_this.options.focus) {
+        _this.tabManager.setActiveTab(tab.id);
+        _this.focus();
+      } else if (_this.tabManager.getTabCount() === 1) {
+        _this.tabManager.setActiveTab(tab.id);
+      }
     }
     _this.$el.trigger('heatMapLoaded', _this);
   };
@@ -541,8 +546,8 @@ phantasus.HeatMap = function (options) {
       if (_this.options.$loadingImage) {
         _this.options.$loadingImage.remove();
       }
-      if (_this.options.datasetError) {
-        _this.options.datasetError(message);
+      if (_this.options.error) {
+        _this.options.error(message);
       }
       phantasus.FormBuilder.showInModal({
         title: 'Error',
@@ -643,8 +648,8 @@ phantasus.HeatMap = function (options) {
         message.push(err.message);
 
       }
-      if (_this.options.datasetError) {
-        _this.options.datasetError(message);
+      if (_this.options.error) {
+        _this.options.error(message);
       }
       phantasus.FormBuilder.showInModal({
         title: 'Error',
@@ -1370,15 +1375,15 @@ phantasus.HeatMap.prototype = {
 
     this.project = new phantasus.Project(dataset);
 
-    this.tabManager.setTabTitle(this.tabId, this.project.getFullDataset()
-        .getRowCount()
-      + ' row'
-      + phantasus.Util.s(this.project.getFullDataset().getRowCount())
-      + ' x '
-      + this.project.getFullDataset().getColumnCount()
-      + ' column'
-      + phantasus.Util.s(this.project.getFullDataset()
-        .getColumnCount()));
+    if (this.tabManager) {
+      this.tabManager.setTabTitle(this.tabId, this.project.getFullDataset().getRowCount()
+        + ' row'
+        + phantasus.Util.s(this.project.getFullDataset().getRowCount())
+        + ' x '
+        + this.project.getFullDataset().getColumnCount()
+        + ' column'
+        + phantasus.Util.s(this.project.getFullDataset().getColumnCount()));
+    }
     if (this.options.inheritFromParent && this.options.parent != null) {
       phantasus.HeatMap.copyFromParent(this.project, this.options);
     }
@@ -1396,7 +1401,9 @@ phantasus.HeatMap.prototype = {
     this.$parent = $('<div></div>').css('position', 'relative');
 
     this.$parent.appendTo(this.$content);
-    this.toolbar = new phantasus.HeatMapToolBar(this);
+    if (!phantasus.Util.isHeadless()) {
+      this.toolbar = new phantasus.HeatMapToolBar(this);
+    }
     if (this.options.customUrls) {
       this.setCustomUrls(this.options.customUrls);
     }
@@ -2080,29 +2087,30 @@ phantasus.HeatMap.prototype = {
     this.$tipInfoWindow = $('<div class="phantasus-tip-dialog"></div>');
     this.$tipInfoWindow.appendTo(this.$parent);
 
-    this.$tipInfoWindow.dialog({
-      close: function (event, ui) {
-        if (!_this._togglingInfoWindow) {
-          _this.toggleInfoWindow();
-        }
-      },
-      autoOpen: false,
-      width: 220,
-      height: 280,
-      minHeight: 38,
-      minWidth: 10,
-      collision: 'fit',
-      position: {
-        my: 'right-30 bottom',
-        at: 'right top',
-        of: this.$parent
-      },
-      title: 'Info'
-    });
-    this.setTooltipMode(this.options.tooltipMode);
-    this
-    .getProject()
-    .on(
+    if (!phantasus.Util.isHeadless()) {
+      this.$tipInfoWindow.dialog({
+        close: function (event, ui) {
+          if (!_this._togglingInfoWindow) {
+            _this.toggleInfoWindow();
+          }
+        },
+        autoOpen: false,
+        width: 220,
+        height: 280,
+        minHeight: 38,
+        minWidth: 10,
+        collision: 'fit',
+        position: {
+          my: 'right-30 bottom',
+          at: 'right top',
+          of: this.$parent
+        },
+        title: 'Info'
+      });
+      this.setTooltipMode(this.options.tooltipMode);
+    }
+
+    this.getProject().on(
       'rowFilterChanged columnFilterChanged rowGroupByChanged columnGroupByChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
       function (e) {
         if (e.type === 'datasetChanged') { // remove
@@ -2351,7 +2359,7 @@ phantasus.HeatMap.prototype = {
         .on('beforecopy.phantasus', this.beforeCopyListener)
         .on('copy.phantasus', this.copyListener);
     }
-    if (this.options.keyboard) {
+    if (this.options.keyboard && !phantasus.Util.isHeadless()) {
       new phantasus.HeatMapKeyListener(this);
     }
     if (this.options.symmetric) {
@@ -3934,20 +3942,32 @@ phantasus.HeatMap.prototype = {
     return size;
   }
   ,
-  fitToWindow: function (repaint) {
-    this.heatmap.getRowPositions().setSize(this.getFitRowSize());
-    this.heatmap.getColumnPositions().setSize(this.getFitColumnSize());
-    if (repaint) {
-      var reval = {};
-      if (this.project.getHoverRowIndex() !== -1) {
-        reval.scrollTop = this.heatmap.getRowPositions().getPosition(
-          this.project.getHoverRowIndex());
+  /**
+   * @param options.fitRows
+   * @param options.fitColumns
+   * @param options.repaint
+   */
+  fitToWindow: function (options) {
+    if (options.fitRows) {
+      this.heatmap.getRowPositions().setSize(this.getFitRowSize());
+    }
+    if (options.fitColumns) {
+      this.heatmap.getColumnPositions().setSize(this.getFitColumnSize());
+    }
+    if (options.repaint) {
+      var revalOptions = {};
+      if (options.fitRows) {
+        if (this.project.getHoverRowIndex() !== -1) {
+          revalOptions.scrollTop = this.heatmap.getRowPositions().getPosition(
+            this.project.getHoverRowIndex());
+        }
       }
-      if (this.project.getHoverColumnIndex() !== -1) {
-        reval.scrollLeft = this.heatmap.getColumnPositions()
-          .getPosition(this.project.getHoverColumnIndex());
+      if (options.fitColumns) {
+        if (this.project.getHoverColumnIndex() !== -1) {
+          revalOptions.scrollLeft = this.heatmap.getColumnPositions().getPosition(this.project.getHoverColumnIndex());
+        }
       }
-      this.revalidate(reval);
+      this.revalidate(revalOptions);
     }
   }
   ,
@@ -3976,6 +3996,9 @@ phantasus.HeatMap.prototype = {
    * Layout all the components
    */
   revalidate: function (options) {
+    if (phantasus.Util.isHeadless()) {
+      return;
+    }
     options = $.extend({}, {
       paint: true
     }, options);

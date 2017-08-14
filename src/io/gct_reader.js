@@ -8,11 +8,10 @@ phantasus.GctReader.prototype = {
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    // console.log("gctreader.read", fileOrUrl, fileOrUrl instanceof File, phantasus.Util.isFetchSupported());
-    if (fileOrUrl instanceof File) {
+    if (phantasus.Util.isFile(fileOrUrl)) {
       this._readChunking(fileOrUrl, callback, false);
     } else {
-      if (phantasus.Util.isFetchSupported()) {
+      if (phantasus.Util.isFetchStreamingSupported()) {
         this._readChunking(fileOrUrl, callback, true);
       } else {
         this._readNoChunking(fileOrUrl, callback);
@@ -59,7 +58,6 @@ phantasus.GctReader.prototype = {
     var columnNamesArray;
 
     var handleTokens = function (tokens) {
-
       if (lineNumber === 0) {
         var text = tokens[0].trim();
         if ('#1.2' === text) {
@@ -212,7 +210,7 @@ phantasus.GctReader.prototype = {
       error: function (err) {
         callback(err);
       },
-      download: !(fileOrUrl instanceof File),
+      download: !phantasus.Util.isFile(fileOrUrl),
       skipEmptyLines: false,
       chunk: undefined,
       fastMode: true,
@@ -390,8 +388,9 @@ phantasus.GctReader.prototype = {
         }
       }
 
-      var rowAnnotationVectors = [dataset.getRowMetadata().add(
-        rowIdFieldName)];
+      var rowAnnotationVectors = [
+        dataset.getRowMetadata().add(
+          rowIdFieldName)];
       if (version === 3) {
         for (var j = 0; j < numRowAnnotations; j++) {
           var rowMetadataName = '' === columnNamesArray[1] ? 'description'
@@ -475,7 +474,6 @@ phantasus.GctReader.prototype = {
     var _this = this;
     var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    // console.log("_readNoChunking", name);
     phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);

@@ -274,7 +274,7 @@ phantasus.OpenFileTool.prototype = {
     }
     var fileColumnNamesToIncludeSet = null;
     if (fileColumnNamesToInclude) {
-      fileColumnNamesToIncludeSet = new morpheus.Set();
+      fileColumnNamesToIncludeSet = new phantasus.Set();
       fileColumnNamesToInclude.forEach(function (name) {
         fileColumnNamesToIncludeSet.add(name);
       });
