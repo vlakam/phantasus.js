@@ -23,7 +23,7 @@ phantasus.Array2dReaderInteractive.prototype = {
       ' width:10px;height:10px;background-color:#ccebc5;"></div><span> Row' +
       ' Annotations</span>');
 
-    html.push('<div class="slick-bordered-table" style="width:550px;height:400px;"></div>');
+    html.push('<div class="slick-bordered-table" style="width:550px;height:300px;"></div>');
     html.push('</div>');
     var $el = $(html.join(''));
 
@@ -133,6 +133,7 @@ phantasus.Array2dReaderInteractive.prototype = {
       footer
         .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
       var $footer = $(footer.join(''));
+
       phantasus.FormBuilder.showOkCancel({
         title: 'Open',
         content: $el,

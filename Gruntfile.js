@@ -68,7 +68,8 @@ module.exports = function (grunt) {
           'js/FileSaver.min.js', 'js/colorbrewer.js',
           'js/jquery.event.drag-2.2.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
-          'js/opencpu-0.5.js', 'js/jstat.min.js']
+          'js/opencpu-0.5.js', 'js/jstat.min.js', 'js/blob-stream.js',
+          'js/canvas2pdf.js', 'js/pdfkit.js']
       },
       phantasus: {
         options: {

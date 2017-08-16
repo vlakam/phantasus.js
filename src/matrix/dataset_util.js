@@ -218,7 +218,6 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
 
   if (isString || isFile) { // URL or file
     var deferred = $.Deferred();
-    // override toString so can determine file name
     if (options.background) {
       var path = phantasus.Util.getScriptPath();
       var blob = new Blob(
@@ -262,6 +261,7 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
 
     }
     var pr = deferred.promise();
+    // override toString so can determine file name
     pr.toString = function () {
       return '' + fileOrUrl;
     };

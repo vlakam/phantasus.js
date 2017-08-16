@@ -6,7 +6,9 @@ phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
 phantasus.CanvasUtil.FONT_COLOR = 'rgb(0, 0, 0)';
 phantasus.CanvasUtil.getFontFamily = function (context) {
   // older versions of Adobe choke when a font family contains a font that is not installed
-  return typeof C2S !== 'undefined' && context instanceof C2S ? 'Helvetica' : phantasus.CanvasUtil.FONT_NAME;
+  return (typeof C2S !== 'undefined' && context instanceof C2S) || (typeof canvas2pdf !== 'undefined' && context instanceof canvas2pdf.PdfContext)
+    ? 'Helvetica'
+    : phantasus.CanvasUtil.FONT_NAME;
 };
 phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
