@@ -280,12 +280,29 @@ phantasus.HeatMap = function (options) {
           'k-means',
           'limma',
           'PCA Plot'],
-        View: ['Zoom In', 'Zoom Out', 'Fit To Window', '100%', null, 'Options'],
-        Edit: ['Copy Image', 'Copy Selected Dataset', null, 'Move Selected Rows To Top', 'Annotate Selected Rows', 'Copy Selected Rows', 'Invert' +
-        ' Selected Rows', 'Select All Rows', 'Clear Selected Rows', null, 'Move Selected Columns To Top', 'Annotate Selected Columns', 'Copy Selected Columns', 'Invert' +
-        ' Selected Columns', 'Select All Columns', 'Clear Selected Columns'],
-        Help: ['Search Menus', null, 'Contact', 'Configuration', 'Tutorial', 'Source Code', null, 'Keyboard' +
-        ' Shortcuts']
+        View: ['Zoom In', 'Zoom Out', null, 'Fit To Window', 'Fit Rows To Window', 'Fit Columns To Window', null, '100%', null, 'Options'],
+        Edit: [
+          'Copy Image',
+          'Copy Selected Dataset',
+          null,
+          'Move Selected Rows To Top',
+          'Annotate Selected Rows',
+          'Copy Selected Rows',
+          'Invert' +
+          ' Selected Rows',
+          'Select All Rows',
+          'Clear Selected Rows',
+          null,
+          'Move Selected Columns To Top',
+          'Annotate Selected Columns',
+          'Copy Selected Columns',
+          'Invert' +
+          ' Selected Columns',
+          'Select All Columns',
+          'Clear Selected Columns'],
+        Help: [
+          'Search Menus', null, 'Contact', 'Configuration', 'Tutorial', 'Source Code', null, 'Keyboard' +
+          ' Shortcuts']
       },
       toolbar: {
         dimensions: true,

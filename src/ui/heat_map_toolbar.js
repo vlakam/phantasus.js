@@ -257,6 +257,10 @@ phantasus.HeatMapToolBar = function (heatMap) {
       ' fa-compress phantasus-menu-item-icon"></span><span class="pull-right">' +
       phantasus.Util.COMMAND_KEY +
       phantasus.KeyboardCharMap[heatMap.getActionManager().getAction('Fit To Window').which[0]] + '</span> </a></li>');
+    toolbarHtml.push(
+      '<li><a class="phantasus-menu-item" href="#" data-action="Fit Rows To Window">Fit Rows To Window</a></li>');
+    toolbarHtml.push(
+      '<li><a class="phantasus-menu-item" href="#" data-action="Fit Columns To Window">Fit Columns To Window</a></li>');
     toolbarHtml.push('<li role="separator" class="divider"></li>');
     toolbarHtml.push(
       '<li><a class="phantasus-menu-item" href="#" data-action="100%">100%</a></li>');
@@ -358,7 +362,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
   $el.find('[data-toggle="tooltip"]').tooltip({
     placement: 'bottom',
     container: 'body',
-    trigger: 'hover',
+    trigger: 'hover'
   }).on('click', function () {
     $(this).tooltip('hide');
   });
@@ -368,7 +372,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     new phantasus.HeatMapColorSchemeLegend(heatMap, $keyContent);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'colorKey',
+      eventAction: 'colorKey'
     });
   });
 
@@ -419,7 +423,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
       title: 'Search Help',
       html: $searchHelp,
       appendTo: heatMap.getContentEl(),
-      focus: heatMap.getFocusEl(),
+      focus: heatMap.getFocusEl()
     });
   });
   var $searchRowsGroup = $searchForm.find('[data-name=searchRowsGroup]');
@@ -446,7 +450,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
       $previousMatch: $group.find('[name=previousMatch]'),
       $nextMatch: $group.find('[name=nextMatch]'),
       $matchesToTop: $group.find('[name=matchesToTop]'),
-      $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').parent(),
+      $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').parent()
     };
   nameToSearchObject[searchName] = obj;
     return obj;
@@ -475,7 +479,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     if ($searchField) {
       $searchField.trigger($.Event('keyup', {
         keyCode: 13,
-        which: 13,
+        which: 13
       }));
       // trigger search again
     }
@@ -489,7 +493,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     }
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'searchMatchMode',
+      eventAction: 'searchMatchMode'
     });
   });
   this.rowSearchObject = getSearchElements($searchRowsGroup, 'rows',
@@ -540,13 +544,13 @@ phantasus.HeatMapToolBar = function (heatMap) {
   this.rowSearchObject.$search.css({
     'border-top': '3.8px solid #e6e6e6',
     'border-bottom': '3.8px solid #e6e6e6',
-    width: '240px',
+    width: '240px'
   });
 
   this.columnSearchObject.$search.css({
     'border-right': '3.8px solid #e6e6e6',
     'border-left': '3.8px solid #e6e6e6',
-    width: '240px',
+    width: '240px'
   });
 
   this.$valueSearchResults = $searchValuesGroup.find('[name=searchResults]');
@@ -616,7 +620,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     },
     select: function () {
       _this.search(true);
-    },
+    }
   });
 
   this.rowSearchObject.$search.on('keyup', _.debounce(function (e) {
@@ -626,7 +630,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     _this.search(true);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'searchRows',
+      eventAction: 'searchRows'
     });
   }, 500));
   phantasus.Util.autosuggest({
@@ -642,7 +646,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     },
     select: function () {
       _this.search(false);
-    },
+    }
   });
   this.columnSearchObject.$search.on('keyup', _.debounce(function (e) {
     if (e.which === 13) {
@@ -651,7 +655,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     _this.search(false);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'searchColumns',
+      eventAction: 'searchColumns'
     });
   }, 500));
 
@@ -678,7 +682,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     },
     select: function () {
       _this.searchDendrogram(false);
-    },
+    }
   });
 
   this.rowDendrogramSearchObject.$search.on('keyup', _.debounce(function (e) {
@@ -688,7 +692,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     _this.searchDendrogram(false);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'searchRowDendrogram',
+      eventAction: 'searchRowDendrogram'
     });
   }, 500));
 
@@ -713,7 +717,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     },
     select: function () {
       _this.searchDendrogram(true);
-    },
+    }
   });
 
   this.columnDendrogramSearchObject.$search.on('keyup',
@@ -724,7 +728,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
       _this.searchDendrogram(true);
       phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
-        eventAction: 'searchColumnDendrogram',
+        eventAction: 'searchColumnDendrogram'
       });
     }, 500));
 
@@ -739,7 +743,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
         dataset: project.getSortedFilteredDataset(),
         text: text,
         matchAllPredicates: _this.matchAllPredicates,
-        defaultMatchMode: _this.matchMode,
+        defaultMatchMode: _this.matchMode
       });
 
       project.getElementSelectionModel().setViewIndices(viewIndices);
@@ -756,7 +760,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     },
     select: function () {
       searchValues();
-    },
+    }
   });
 
   this.$valueTextField.on('keyup', _.debounce(function (e) {
@@ -797,11 +801,11 @@ phantasus.HeatMapToolBar = function (heatMap) {
       _this.setSelectionOnTop({
         isColumns: true,
         isOnTop: $this.hasClass('btn-primary'),
-        updateButtonStatus: false,
+        updateButtonStatus: false
       });
       phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
-        eventAction: 'columnMatchesToTop',
+        eventAction: 'columnMatchesToTop'
       });
     });
   this.rowSearchObject.$matchesToTop.on(
@@ -813,11 +817,11 @@ phantasus.HeatMapToolBar = function (heatMap) {
       _this.setSelectionOnTop({
         isColumns: false,
         isOnTop: $this.hasClass('btn-primary'),
-        updateButtonStatus: false,
+        updateButtonStatus: false
       });
       phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
-        eventAction: 'rowMatchesToTop',
+        eventAction: 'rowMatchesToTop'
       });
     });
   project.on('rowSortOrderChanged.phantasus', function (e) {
@@ -874,7 +878,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
           _this.columnSearchResultViewIndicesSorted[_this.currentColumnSearchIndex]));
       phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
-        eventAction: 'previousColumnMatch',
+        eventAction: 'previousColumnMatch'
       });
     });
   this.rowSearchObject.$previousMatch.on(
@@ -890,14 +894,14 @@ phantasus.HeatMapToolBar = function (heatMap) {
           _this.rowSearchResultViewIndicesSorted[_this.currentRowSearchIndex]));
       phantasus.Util.trackEvent({
         eventCategory: 'ToolBar',
-        eventAction: 'previousRowMatch',
+        eventAction: 'previousRowMatch'
       });
     });
   this.columnSearchObject.$nextMatch.on('click', function () {
     _this.next(true);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'nextColumnMatch',
+      eventAction: 'nextColumnMatch'
     });
 
   });
@@ -905,7 +909,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
     _this.next(false);
     phantasus.Util.trackEvent({
       eventCategory: 'ToolBar',
-      eventAction: 'nextRowMatch',
+      eventAction: 'nextRowMatch'
     });
   });
   this.updateDimensionsLabel();
@@ -1065,7 +1069,7 @@ phantasus.HeatMapToolBar.prototype = {
       rootNode: dendrogram.tree.rootNode,
       text: text,
       matchAllPredicates: this.matchAllPredicates,
-      defaultMatchMode: this.matchMode,
+      defaultMatchMode: this.matchMode
     });
     if (matches === -1) {
       $searchResults.html('');
@@ -1133,7 +1137,7 @@ phantasus.HeatMapToolBar.prototype = {
       text: searchText,
       isColumns: !isRows,
       matchAllPredicates: this.matchAllPredicates,
-      defaultMatchMode: this.matchMode,
+      defaultMatchMode: this.matchMode
     });
     if (searchText === '') {
       $searchResultsLabel.html('');
@@ -1276,7 +1280,7 @@ phantasus.HeatMapToolBar.prototype = {
     this._updateSearchIndices(options.isColumns);
     this.searching = false;
 
-  },
+  }
 };
 phantasus.HeatMapToolBar.COLUMN_SEARCH_FIELD = 'column';
 phantasus.HeatMapToolBar.ROW_SEARCH_FIELD = 'column';
