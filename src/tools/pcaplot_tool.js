@@ -23,36 +23,36 @@ phantasus.PcaPlotTool = function (chartOptions) {
   var numericOptions = [];
   var pcaOptions = [];
   var naOptions = [{
-    name: 'mean',
-    value: 'mean'
+    name: "mean",
+    value: "mean"
   }, {
-    name: 'median',
-    value: 'median'
+    name: "median",
+    value: "median"
   }];
   var updateOptions = function () {
     var dataset = project.getFullDataset();
     rowOptions = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     columnOptions = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     numericRowOptions = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     numericColumnOptions = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     options = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     numericOptions = [{
-      name: '(None)',
+      name: "(None)",
       value: ""
     }];
     pcaOptions = [];
@@ -71,15 +71,15 @@ phantasus.PcaPlotTool = function (chartOptions) {
           var dataType = phantasus.VectorUtil
             .getDataType(dataset.getRowMetadata()
               .getByName(name));
-          if (dataType === 'number'
-            || dataType === '[number]') {
+          if (dataType === "number"
+            || dataType === "[number]") {
             numericRowOptions.push({
-              name: name + ' (row)',
+              name: name + " (row)",
               value: name
             });
           }
           rowOptions.push({
-            name: name + ' (row)',
+            name: name + " (row)",
             value: name
           });
         });
@@ -90,15 +90,15 @@ phantasus.PcaPlotTool = function (chartOptions) {
           var dataType = phantasus.VectorUtil
             .getDataType(dataset.getColumnMetadata()
               .getByName(name));
-          if (dataType === 'number'
-            || dataType === '[number]') {
+          if (dataType === "number"
+            || dataType === "[number]") {
             numericColumnOptions.push({
-              name: name + ' (column)',
+              name: name + " (column)",
               value: name
             });
           }
           columnOptions.push({
-            name: name + ' (column)',
+            name: name + " (column)",
             value: name
           });
         });
@@ -106,77 +106,70 @@ phantasus.PcaPlotTool = function (chartOptions) {
 
   updateOptions();
 
-  //// console.log(options);
   formBuilder.append({
-    name: 'size',
-    type: 'bootstrap-select',
+    name: "size",
+    type: "bootstrap-select",
     options: numericColumnOptions
   });
   formBuilder.append({
-    name: 'color',
-    type: 'bootstrap-select',
+    name: "color",
+    type: "bootstrap-select",
     options: columnOptions
   });
   formBuilder.append({
-    name: 'x-axis',
-    type: 'bootstrap-select',
+    name: "x-axis",
+    type: "bootstrap-select",
     options: pcaOptions,
     value: 0
   });
   formBuilder.append({
-    name: 'y-axis',
-    type: 'bootstrap-select',
+    name: "y-axis",
+    type: "bootstrap-select",
     options: pcaOptions,
     value: 1
   });
   formBuilder.append({
-    name: 'label',
-    type: 'bootstrap-select',
+    name: "label",
+    type: "bootstrap-select",
     options: columnOptions
   });
   formBuilder.append({
-    name: 'replace_NA_with',
-    type: 'bootstrap-select',
+    name: "replace_NA_with",
+    type: "bootstrap-select",
     options: naOptions
   });
   formBuilder.append({
-    name: 'draw',
-    type: 'button'
+    name: "draw",
+    type: "button"
   });
 
 
   function setVisibility() {
-    formBuilder.setOptions('color', columnOptions, true);
-    formBuilder.setOptions('size', numericColumnOptions, true);
-    formBuilder.setOptions('label', columnOptions, true);
-    formBuilder.setOptions('replace_NA_with', naOptions, true);
+    formBuilder.setOptions("color", columnOptions, true);
+    formBuilder.setOptions("size", numericColumnOptions, true);
+    formBuilder.setOptions("label", columnOptions, true);
+    formBuilder.setOptions("replace_NA_with", naOptions, true);
   }
 
   this.tooltip = [];
-  formBuilder.$form.find('select').on('change', function (e) {
+  formBuilder.$form.find("select").on("change", function (e) {
     setVisibility();
 
   });
-  /*formBuilder.$form.find('input').on('click', function () {
-   _this.draw();
-   });*/
   setVisibility();
 
-  /*var draw = function () {
-   _.debounce(_this.draw(), 100);
-   };*/
   var trackChanged = function () {
     //// console.log("track changed");
     updateOptions();
     setVisibility();
-    formBuilder.setOptions('x-axis', pcaOptions, true);
-    formBuilder.setOptions('y-axis', pcaOptions, true);
+    formBuilder.setOptions("x-axis", pcaOptions, true);
+    formBuilder.setOptions("y-axis", pcaOptions, true);
   };
 
-  project.getColumnSelectionModel().on('selectionChanged.chart', trackChanged);
-  project.getRowSelectionModel().on('selectionChanged.chart', trackChanged);
-  project.on('trackChanged.chart', trackChanged);
-  this.$chart = this.$el.find('[data-name=chartDiv]');
+  project.getColumnSelectionModel().on("selectionChanged.chart", trackChanged);
+  project.getRowSelectionModel().on("selectionChanged.chart", trackChanged);
+  project.on("trackChanged.chart", trackChanged);
+  this.$chart = this.$el.find("[data-name=chartDiv]");
   var $dialog = $('<div style="background:white;" title="Chart"></div>');
   var $configPane = this.$el.find('[data-name=configPane]');
   formBuilder.$form.appendTo($configPane);
@@ -353,10 +346,6 @@ phantasus.PcaPlotTool.prototype = {
           size.push(sizeFunction(sizeByValue));
         }
       }
-      /*var idVector = getTrueVector(dataset.getColumnMetadata().getByName("id"));
-      for (var j = 0; j < idVector.indices.length; j++) {
-        text.push(idVector.getValue(j));
-      }*/
       if (textByVector) {
         for (var j = 0; j < textByVector.indices.length; j++) {
           text.push(textByVector.getValue(j));
@@ -429,10 +418,6 @@ phantasus.PcaPlotTool.prototype = {
 
       var expressionSetPromise = dataset.getESSession();
 
-      //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "selected dataset", dataset, ", columnIndices", columnIndices, ", rowIndices", rowIndices);
-
-      //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "color", colorBy, ", sizeBy", sizeBy, ", pc1", pc1, ", pc2", pc2, ", label", label);
-
       expressionSetPromise.then(function (essession) {
         var args = {
           es: essession,
@@ -447,8 +432,6 @@ phantasus.PcaPlotTool.prototype = {
         var drawResult = function () {
           var x = _this.pca.pca[pc1];
           var y = _this.pca.pca[pc2];
-          //// console.log(_this.pca);
-          //// console.log(_this.colorByVector, _this.categoriesIndices);
           if (_this.colorByVector) {
             for (var cat = 1; cat <= _this.categoriesIndices.size; cat++) {
               var curX = [];
@@ -457,8 +440,6 @@ phantasus.PcaPlotTool.prototype = {
                 curX.push(x[_this.categoriesIndices.get(cat)[j]]);
                 curY.push(y[_this.categoriesIndices.get(cat)[j]]);
               }
-              //// console.log(curX, curY);
-              //// console.log(data[cat]);
               data[cat - 1].x = curX;
               data[cat - 1].y = curY;
             }
@@ -487,40 +468,21 @@ phantasus.PcaPlotTool.prototype = {
           var $chart = $('<div></div>');
           var myPlot = $chart[0];
           $chart.appendTo(_this.$chart);
-          //// console.log(data, layout, config);
 
           layout.showlegend = !(size === 12 && color == null);
           Plotly.newPlot(myPlot, data, layout, config);
         };
 
-        //// console.log(arguments);
 
-        var req = ocpu.call("pcaPlot", args, function (session) {
-          //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "successful", session);
+        var req = ocpu.call("calcPCA", args, function (session) {
           session.getObject(function (success) {
-            //// console.log(success);
             _this.pca = JSON.parse(success);
             drawResult();
-            /*
-             var coolUrl = success.split("\n");
-             var json = JSON.parse($.parseHTML(coolUrl[1])[0].innerText);
-             var data = json.x.data;
-             var layout = json.x.layout;
-             Plotly.newPlot(myPlot, data, layout, {showLink: false});*/
-            //// console.log("phantasus.PcaPlotTool.prototype.draw ::", "plot json", json);
           });
-          /*var txt = session.txt.split("\n");
-           var imageLocationAr = txt[txt.length - 2].split("/"0);
-           var imageLocation = session.getLoc() + "files/" + imageLocationAr[imageLocationAr.length - 1];
-           // console.log(imageLocation);
-           var img = $('<img />', {src : imageLocation, style : "width:720px;height:540px"});
-           _this.$chart.prepend(img);*/
-          /*var img = $('<img />', {src : session.getLoc() + 'graphics/1/png', style : "width:720px;height:540px"});*/
 
         }, false, "::" + dataset.getESVariable());
         req.fail(function () {
           new Error("PcaPlot call failed" + req.responseText);
-          // console.log("PcaPlot ::", req.responseText);
         });
 
       });
@@ -528,7 +490,6 @@ phantasus.PcaPlotTool.prototype = {
 
       expressionSetPromise.catch(function (reason) {
         alert("Problems occured during transforming dataset to ExpressionSet\n" + reason);
-        // console.log("ExpressionSetCreation ::", "Problems occured during transforming dataset to ExpressionSet\n", reason);
       });
 
     });
