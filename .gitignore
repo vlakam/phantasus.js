@@ -6,3 +6,4 @@ phantasus-external.min.js
 .RData
 .Rhistory
 ctrp
+package-lock.json
