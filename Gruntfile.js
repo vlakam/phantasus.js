@@ -61,7 +61,7 @@ module.exports = function (grunt) {
           'js/xlsx.full.min.js', 'js/canvas2svg.js',
           'js/canvg.js', 'js/rgbcolor.js',
           'js/jquery-ui.min.js', 'js/parser.js',
-          'js/FileSaver.min.js', 'js/colorbrewer.js',
+          'js/colorbrewer.js',
           'js/jquery.event.drag-2.2.js',
           'js/clipboard.min.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
