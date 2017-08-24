@@ -57,6 +57,9 @@ phantasus.MafFileReader.VARIANT_MAP.set('Silent', 1);
 // in-frame indel
 phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Del', 2);
 phantasus.MafFileReader.VARIANT_MAP.set('In_Frame_Ins', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('Inframe_Del', 2);
+phantasus.MafFileReader.VARIANT_MAP.set('Inframe_Ins', 2);
+
 // other
 phantasus.MafFileReader.VARIANT_MAP.set('Translation_Start_Site', 3);
 phantasus.MafFileReader.VARIANT_MAP.set('Nonstop_Mutation', 3);
@@ -71,15 +74,24 @@ phantasus.MafFileReader.VARIANT_MAP.set('Targeted_Region', 3);
 phantasus.MafFileReader.VARIANT_MAP.set('Unknown', 3);
 // mis-sense
 phantasus.MafFileReader.VARIANT_MAP.set('Missense_Mutation', 4);
+phantasus.MafFileReader.VARIANT_MAP.set('Missense', 4);
+
 // splice site
 phantasus.MafFileReader.VARIANT_MAP.set('Splice_Site', 5);
+phantasus.MafFileReader.VARIANT_MAP.set('Splice_Acceptor', 5);
+phantasus.MafFileReader.VARIANT_MAP.set('Splice_Region', 5);
+
 // frame shift indel
 phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Del', 6);
 phantasus.MafFileReader.VARIANT_MAP.set('Frame_Shift_Ins', 6);
+phantasus.MafFileReader.VARIANT_MAP.set('Frameshift', 6);
+
 // non-sense
 phantasus.MafFileReader.VARIANT_MAP.set('Nonsense_Mutation', 7);
+phantasus.MafFileReader.VARIANT_MAP.set('Nonsense', 7);
 
-phantasus.MafFileReader.FIELD_NAMES = ['Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
+phantasus.MafFileReader.FIELD_NAMES = [
+  'Synonymous', 'In Frame Indel', 'Other Non-Synonymous',
   'Missense', 'Splice Site', 'Frame Shift', 'Nonsense'];
 
 phantasus.MafFileReader.prototype = {
@@ -118,7 +130,8 @@ phantasus.MafFileReader.prototype = {
     var encodingColumnIndex = encodingField == null ? -1 : encodingField.index;
     var sampleColumnName = sampleField.name;
     var sampleIdColumnIndex = sampleField.index;
-    var tumorFractionField = phantasus.MafFileReader.getField(['ccf_hat',
+    var tumorFractionField = phantasus.MafFileReader.getField([
+      'ccf_hat',
       'tumor_f', 'i_tumor_f'], headerToIndex);
     var ccfColumnName;
     var ccfColumnIndex;
@@ -276,8 +289,9 @@ phantasus.MafFileReader.prototype = {
         orderVector.setValue(i, order);
       }
       var project = new phantasus.Project(dataset);
-      project.setRowSortKeys([new phantasus.SortKey('order',
-        phantasus.SortKey.SortOrder.ASCENDING)], true); // sort
+      project.setRowSortKeys([
+        new phantasus.SortKey('order',
+          phantasus.SortKey.SortOrder.ASCENDING)], true); // sort
       // collapsed
       // dataset
       var tmp = project.getSortedFilteredDataset();
