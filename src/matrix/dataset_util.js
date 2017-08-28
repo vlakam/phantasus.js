@@ -427,29 +427,7 @@ phantasus.DatasetUtil.geneSetsToDataset = function (name, sets) {
   }
   return dataset;
 };
-phantasus.DatasetUtil.DATASET_FILE_FORMATS = 'GCT 1.3, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, or an Excel spreadsheet';
-phantasus.DatasetUtil.SESSION_FILE_FORMAT = 'a saved phantasus session';
 
-phantasus.DatasetUtil.DATASET_AND_SESSION_FILE_FORMATS = 'GCT 1.3, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, an Excel spreadsheet, or a saved phantasus session';
-phantasus.DatasetUtil.BASIC_DATASET_FILE_FORMATS = 'GCT 1.3, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + ' or a tab-delimited text file';
-phantasus.DatasetUtil.GCT_FILE_FORMAT = 'GCT 1.3';
-phantasus.DatasetUtil.ANNOTATION_FILE_FORMATS = 'an xlsx file, tab-delimited text file, or a <a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT file</a>';
-phantasus.DatasetUtil.DENDROGRAM_FILE_FORMATS = 'a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
-phantasus.DatasetUtil.OPEN_FILE_FORMATS = 'GCT 1.3, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, or a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
 phantasus.DatasetUtil.getRootDataset = function (dataset) {
   while (dataset.getDataset) {
     dataset = dataset.getDataset();
