@@ -208,9 +208,7 @@ phantasus.ActionManager = function () {
     name: 'Open',
     ellipsis: false,
     cb: function (options) {
-      phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
-        customUrls: options.heatMap._customUrls
-      }), options.heatMap);
+      phantasus.HeatMap.showTool(new phantasus.OpenFileTool(), options.heatMap);
     },
     which: [79],
     commandKey: true,

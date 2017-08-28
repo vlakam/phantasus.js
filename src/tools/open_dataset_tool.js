@@ -1,94 +1,6 @@
 phantasus.OpenDatasetTool = function () {
-  this.customUrls = [];
 };
 
-phantasus.OpenDatasetTool.fileExtensionPrompt = function (file, callback) {
-  var ext = phantasus.Util.getExtension(phantasus.Util.getFileName(file));
-  var deferred;
-  if (ext === 'seg' || ext === 'segtab') {
-    this._promptSegtab(function (regions) {
-      callback(regions);
-    });
-
-  } else {
-    callback(null);
-  }
-
-};
-phantasus.OpenDatasetTool._promptMaf = function (promptCallback) {
-  var formBuilder = new phantasus.FormBuilder();
-  formBuilder
-    .append({
-      name: 'MAF_gene_symbols',
-      value: '',
-      type: 'textarea',
-      required: true,
-      help: 'Enter one gene symbol per line to filter genes. Leave blank to show all genes.'
-    });
-  phantasus.FormBuilder
-    .showInModal({
-      title: 'Gene Symbols',
-      html: formBuilder.$form,
-      close: 'OK',
-      onClose: function () {
-        var text = formBuilder.getValue('MAF_gene_symbols');
-        var lines = phantasus.Util.splitOnNewLine(text);
-        var mafGeneFilter = new phantasus.Map();
-        for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
-          var line = lines[i];
-          if (line !== '') {
-            mafGeneFilter.set(line, counter++);
-          }
-        }
-        var readOptions = mafGeneFilter.size() > 0 ? {
-          mafGeneFilter: mafGeneFilter
-        } : null;
-        promptCallback(readOptions);
-      }
-    });
-};
-phantasus.OpenDatasetTool._promptSegtab = function (promptCallback) {
-  var formBuilder = new phantasus.FormBuilder();
-  formBuilder
-    .append({
-      name: 'regions',
-      value: '',
-      type: 'textarea',
-      required: true,
-      help: 'Define the regions over which you want to define the CNAs. Enter one region per line. Each line should contain region_id, chromosome, start, and end separated by a tab. Leave blank to use all unique segments in the segtab file as regions.'
-    });
-  phantasus.FormBuilder
-    .showInModal({
-      title: 'Regions',
-      html: formBuilder.$form,
-      close: 'OK',
-      onClose: function () {
-        var text = formBuilder.getValue('regions');
-        var lines = phantasus.Util.splitOnNewLine(text);
-        var regions = [];
-        var tab = /\t/;
-        for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
-          var line = lines[i];
-
-          if (line !== '') {
-            var tokens = line.split(tab);
-            if (tokens.length >= 4) {
-              regions.push({
-                id: tokens[0],
-                chromosome: tokens[1],
-                start: parseInt(tokens[2]),
-                end: parseInt(tokens[3])
-              });
-            }
-          }
-        }
-        var readOptions = regions.length > 0 ? {
-          regions: regions
-        } : null;
-        promptCallback(readOptions);
-      }
-    });
-};
 phantasus.OpenDatasetTool.prototype = {
   toString: function () {
     return 'Open Dataset';
@@ -348,8 +260,9 @@ phantasus.OpenDatasetTool.prototype = {
         } else {
           console.log('Unknown action: ' + action);
         }
-
-        heatMap.revalidate();
+        if (action !== 'open') {
+          heatMap.revalidate();
+        }
       });
   },
   execute: function (options) {
@@ -453,4 +366,92 @@ phantasus.OpenDatasetTool.prototype = {
     };
     phantasus.HeatMap.showTool(tool, heatMap, callback);
   }
+};
+
+phantasus.OpenDatasetTool.fileExtensionPrompt = function (file, callback) {
+  var ext = phantasus.Util.getExtension(phantasus.Util.getFileName(file));
+  var deferred;
+  if (ext === 'seg' || ext === 'segtab') {
+    this._promptSegtab(function (regions) {
+      callback(regions);
+    });
+
+  } else {
+    callback(null);
+  }
+
+};
+phantasus.OpenDatasetTool._promptMaf = function (promptCallback) {
+  var formBuilder = new phantasus.FormBuilder();
+  formBuilder
+    .append({
+      name: 'MAF_gene_symbols',
+      value: '',
+      type: 'textarea',
+      required: true,
+      help: 'Enter one gene symbol per line to filter genes. Leave blank to show all genes.'
+    });
+  phantasus.FormBuilder
+    .showInModal({
+      title: 'Gene Symbols',
+      html: formBuilder.$form,
+      close: 'OK',
+      onClose: function () {
+        var text = formBuilder.getValue('MAF_gene_symbols');
+        var lines = phantasus.Util.splitOnNewLine(text);
+        var mafGeneFilter = new phantasus.Map();
+        for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
+          var line = lines[i];
+          if (line !== '') {
+            mafGeneFilter.set(line, counter++);
+          }
+        }
+        var readOptions = mafGeneFilter.size() > 0 ? {
+          mafGeneFilter: mafGeneFilter
+        } : null;
+        promptCallback(readOptions);
+      }
+    });
+};
+phantasus.OpenDatasetTool._promptSegtab = function (promptCallback) {
+  var formBuilder = new phantasus.FormBuilder();
+  formBuilder
+    .append({
+      name: 'regions',
+      value: '',
+      type: 'textarea',
+      required: true,
+      help: 'Define the regions over which you want to define the CNAs. Enter one region per line. Each line should contain region_id, chromosome, start, and end separated by a tab. Leave blank to use all unique segments in the segtab file as regions.'
+    });
+  phantasus.FormBuilder
+    .showInModal({
+      title: 'Regions',
+      html: formBuilder.$form,
+      close: 'OK',
+      onClose: function () {
+        var text = formBuilder.getValue('regions');
+        var lines = phantasus.Util.splitOnNewLine(text);
+        var regions = [];
+        var tab = /\t/;
+        for (var i = 0, nlines = lines.length, counter = 0; i < nlines; i++) {
+          var line = lines[i];
+
+          if (line !== '') {
+            var tokens = line.split(tab);
+            if (tokens.length >= 4) {
+              regions.push({
+                id: tokens[0],
+                chromosome: tokens[1],
+                start: parseInt(tokens[2]),
+                end: parseInt(tokens[3])
+              });
+            }
+          }
+        }
+        var readOptions = regions.length > 0 ? {
+          regions: regions
+        } : null;
+        promptCallback(readOptions);
+      }
+    });
 };

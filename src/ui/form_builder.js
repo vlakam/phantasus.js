@@ -89,7 +89,8 @@ phantasus.FormBuilder.showProgressBar = function (options) {
   content.push('<div class="row">');
   content.push('<div class="col-xs-8">');
   content
-    .push('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div></div>');
+    .push(
+      '<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div></div>');
   content.push('</div>'); // col
   content.push('<div class="col-xs-2">');
   content
@@ -118,14 +119,14 @@ phantasus.FormBuilder.showInDraggableDiv = function (options) {
   var width = options.width || '300px';
   var html = [];
   html
-  .push('<div style="z-index: 1050; top: 100px; position:absolute; padding-left:10px; padding-right:10px; width:'
-    + width
-    + ' ; background:white; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid rgba(0,0,0,0.2); border-radius: 6px;">');
+    .push('<div style="z-index: 1050; top: 100px; position:absolute; padding-left:10px; padding-right:10px; width:'
+      + width
+      + ' ; background:white; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid rgba(0,0,0,0.2); border-radius: 6px;">');
 
   if (options.title != null) {
     html
-    .push('<h4 style="cursor:move; border-bottom: 1px solid #e5e5e5;" name="header">'
-      + options.title + '</h4>');
+      .push('<h4 style="cursor:move; border-bottom: 1px solid #e5e5e5;" name="header">'
+        + options.title + '</h4>');
   }
   html.push('<div name="content"></div>');
   html.push('</div>');
@@ -158,7 +159,7 @@ phantasus.FormBuilder.showMessageModal = function (options) {
       title: options.title,
       html: options.html,
       footer: ('<button type="button" class="btn btn-default"' +
-      ' data-dismiss="modal">OK</button>'),
+        ' data-dismiss="modal">OK</button>'),
       backdrop: options.backdrop,
       size: options.size,
       focus: options.focus,
@@ -216,7 +217,7 @@ phantasus.FormBuilder._showInModal = function (options) {
   $div.prependTo(options.appendTo != null ? options.appendTo : $(document.body));
   $div.modal({
     keyboard: true,
-    backdrop: options.backdrop === true ? true : false,
+    backdrop: options.backdrop === true ? true : false
   }).on('hidden.bs.modal', function (e) {
     $div.remove();
     if (options.onClose) {
@@ -248,7 +249,7 @@ phantasus.FormBuilder.showInModal = function (options) {
       title: options.title,
       html: options.html,
       footer: options.close ? ('<button type="button" class="btn btn-default" data-dismiss="modal">'
-      + options.close + '</button>')
+        + options.close + '</button>')
         : null,
       onClose: options.onClose,
       appendTo: options.appendTo,
@@ -307,9 +308,12 @@ phantasus.FormBuilder.showOkCancel = function (options) {
   // $div.css('left', $(window).width()
   // - $div.find('.modal-content').width() - 60);
   // }
+
   var $ok = $div.find('[name=ok]');
   $ok.on('click', function (e) {
-    options.okCallback();
+    if (options.okCallback) {
+      options.okCallback();
+    }
     $div.modal('hide');
   });
   $div.find('[name=cancel]').on('click', function (e) {
@@ -536,7 +540,7 @@ phantasus.FormBuilder.prototype = {
           function (evt) {
             evt.preventDefault();
             var $select = _this.$form
-            .find('[name=' + name + ']');
+              .find('[name=' + name + ']');
             $select.selectpicker('val', $.map($select
               .find('option'), function (o) {
               return $(o).val();
@@ -547,7 +551,7 @@ phantasus.FormBuilder.prototype = {
           function (evt) {
             evt.preventDefault();
             var $select = _this.$form
-            .find('[name=' + name + ']');
+              .find('[name=' + name + ']');
             $select.selectpicker('val', []);
             $select.trigger('change');
           });

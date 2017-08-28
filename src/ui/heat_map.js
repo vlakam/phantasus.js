@@ -215,7 +215,6 @@ phantasus.HeatMap = function (options) {
        * Heat map grid thickness in pixels
        */
       gridThickness: 0.1,
-      customUrls: undefined, // Custom urls for File>Open.
       height: 'window', // set the available height for the
       // heat map. If not
       // set, it will be determined automatically
@@ -713,8 +712,13 @@ phantasus.HeatMap = function (options) {
 
 phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS = 6;
 
+/**
+ *
+ * @param tool A tool instance
+ * @param heatMap The calling heat map instance
+ * @param callback Optional callback to invoke when tool is done
+ */
 phantasus.HeatMap.showTool = function (tool, heatMap, callback) {
-  // console.log("HeatMap.showTool::", tool, heatMap);
   if (tool.gui) {
     var gui = tool.gui(heatMap.getProject());
     var formBuilder = new phantasus.FormBuilder();
@@ -1327,10 +1331,6 @@ phantasus.HeatMap.prototype = {
       isColumns: isColumns
     });
   },
-
-  setCustomUrls: function (customUrls) {
-    this._customUrls = customUrls;
-  },
   getTabManager: function () {
     return this.tabManager;
   },
@@ -1420,9 +1420,6 @@ phantasus.HeatMap.prototype = {
     this.$parent.appendTo(this.$content);
     if (!phantasus.Util.isHeadless()) {
       this.toolbar = new phantasus.HeatMapToolBar(this);
-    }
-    if (this.options.customUrls) {
-      this.setCustomUrls(this.options.customUrls);
     }
 
     // scroll bars at the bottom of the heatmap, and right of the heatmap
