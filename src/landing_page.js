@@ -1,3 +1,9 @@
+/**
+ *
+ * @param pageOptions.el
+ * @param pageOptions.tabManager
+ * @constructor
+ */
 phantasus.LandingPage = function (pageOptions) {
   pageOptions = $.extend({}, {
     el: $('#vis')
@@ -42,9 +48,21 @@ phantasus.LandingPage = function (pageOptions) {
     }
     document.title = title;
   });
+  if (pageOptions.tabManager) {
+    this.tabManager = pageOptions.tabManager;
+  } else {
+    this.tabManager = new phantasus.TabManager({landingPage: this});
+    this.tabManager.on('change rename add remove', function (e) {
+      var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
+      if (title == null || title === '') {
+        title = 'phantasus';
+      }
+      document.title = title;
+    });
 
-  this.tabManager.$nav.appendTo($(this.pageOptions.el));
-  this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
+    this.tabManager.$nav.appendTo($(this.pageOptions.el));
+    this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
+  }
 // for (var i = 0; i < brands.length; i++) {
 // 	brands[i].style.color = colorScale(i);
 // }

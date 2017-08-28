@@ -395,19 +395,23 @@ phantasus.HeatMap = function (options) {
   if (this.options.parent == null) {
 
     if (!phantasus.Util.isHeadless()) {
-      this.tabManager = this.options.tabManager != null ? this.options.tabManager
-        : new phantasus.TabManager({
-          landingPage: function () {
-            if (_this.options.landingPage == null) {
-              _this.options.landingPage = new phantasus.LandingPage();
-              _this.options.landingPage.$el.prependTo(_this.$el);
-            }
-            return _this.options.landingPage;
-          },
-          autohideTabBar: this.options.autohideTabBar
-        });
+      if (this.options.tabManager == null) {
+        this.tabManager =
+          new phantasus.TabManager({
+            landingPage: function () {
+              if (_this.options.landingPage == null) {
+                _this.options.landingPage = new phantasus.LandingPage({tabManager: _this.tabManager});
+                _this.options.landingPage.$el.prependTo(_this.$el);
+              }
+              return _this.options.landingPage;
+            },
+            autohideTabBar: this.options.autohideTabBar
+          });
+      } else {
+        this.tabManager = this.options.tabManager;
+      }
 
-      if (!this.options.tabManager) {
+      if (this.options.tabManager == null) {
         this.tabManager.appendTo(this.$el);
       }
     }
