@@ -1543,7 +1543,7 @@ phantasus.Util.createPhantasusHeader = function () {
       setTimeout(step, 200);
     }
   };
-  setTimeout(step, 300);
+  setTimeout(step, 500);
   return $div;
 };
 phantasus.Util.createLoadingEl = function () {
