@@ -19,31 +19,32 @@ phantasus.HeatMapOptions = function (heatMap) {
       name: 'load_predefined_scheme',
       required: true,
       type: 'select',
-      options: [{
-        name: '',
-        value: ''
-      }, {
-        name: 'relative',
-        value: 'gene'
-      }, {
-        name: 'binary',
-        value: 'binary'
-      }, {
-        name: 'MAF',
-        value: 'MAF'
-      }, {
-        name: 'fixed (-1, -0.5, 0.5, 1)',
-        value: 'wtcs'
-      }, {
-        name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
-        value: 'cn'
-      }, {
-        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
-        value: '100scale2'
-      }, {
-        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
-        value: '100scale1'
-      }]
+      options: [
+        {
+          name: '',
+          value: ''
+        }, {
+          name: 'relative',
+          value: 'gene'
+        }, {
+          name: 'binary',
+          value: 'binary'
+        }, {
+          name: 'MAF',
+          value: 'MAF'
+        }, {
+          name: 'fixed (-1, -0.5, 0.5, 1)',
+          value: 'wtcs'
+        }, {
+          name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
+          value: 'cn'
+        }, {
+          name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
+          value: '100scale2'
+        }, {
+          name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
+          value: '100scale1'
+        }]
     }, {
       name: 'save_color_scheme',
       type: 'button'
@@ -84,6 +85,7 @@ phantasus.HeatMapOptions = function (heatMap) {
     {
       disabled: heatMap.getProject().getFullDataset().getColumnCount() !== heatMap.getProject().getFullDataset().getRowCount(),
       name: 'link_rows_and_columns',
+      help: 'For square matrices',
       required: true,
       type: 'checkbox',
       style: 'max-width: 100px;',
@@ -140,27 +142,27 @@ phantasus.HeatMapOptions = function (heatMap) {
     }];
   if (heatMap.rowDendrogram) {
     displayItems
-    .push({
-      name: 'row_dendrogram_line_thickness',
-      required: true,
-      type: 'text',
-      style: 'max-width: 100px;',
-      value: phantasus.Util
-      .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
-        : 1)
-    });
+      .push({
+        name: 'row_dendrogram_line_thickness',
+        required: true,
+        type: 'text',
+        style: 'max-width: 100px;',
+        value: phantasus.Util
+          .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
+            : 1)
+      });
   }
   if (heatMap.columnDendrogram) {
     displayItems
-    .push({
-      name: 'column_dendrogram_line_thickness',
-      required: true,
-      type: 'text',
-      style: 'max-width: 100px;',
-      value: phantasus.Util
-      .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
-        : 1)
-    });
+      .push({
+        name: 'column_dendrogram_line_thickness',
+        required: true,
+        type: 'text',
+        style: 'max-width: 100px;',
+        value: phantasus.Util
+          .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
+            : 1)
+      });
   }
 
   displayItems.push({
@@ -168,13 +170,14 @@ phantasus.HeatMapOptions = function (heatMap) {
     required: true,
     type: 'select',
     style: 'max-width:130px;',
-    options: [{
-      name: 'Fixed To Top',
-      value: 0
-    }, {
-      name: 'New Window',
-      value: 1
-    }],
+    options: [
+      {
+        name: 'Fixed To Top',
+        value: 0
+      }, {
+        name: 'New Window',
+        value: 1
+      }],
     value: heatMap.tooltipMode
   });
 
@@ -228,6 +231,7 @@ phantasus.HeatMapOptions = function (heatMap) {
     heatMap.heatmap.repaint();
     colorSchemeChooser.restoreCurrentValue();
   });
+
   function createMetadataField(isColumns) {
     var options = [];
     var value = {};
@@ -256,6 +260,7 @@ phantasus.HeatMapOptions = function (heatMap) {
   var annotationsBuilder = new phantasus.FormBuilder();
   annotationsBuilder.append(createMetadataField(false));
   annotationsBuilder.append(createMetadataField(true));
+
   function annotationsListener($select, isColumns) {
     var names = [];
     _.each(heatMap.getVisibleTrackNames(isColumns), function (name) {
@@ -329,7 +334,7 @@ phantasus.HeatMapOptions = function (heatMap) {
     'keyup input', _.debounce(
       function () {
         var n = parseInt($(this)
-        .val());
+          .val());
         if (n >= 0) {
           heatMap.heatmap.setDrawValuesFormat(phantasus.Util.createNumberFormat('.' + n + 'f'));
           heatMap.heatmap.setInvalid(true);
@@ -394,11 +399,11 @@ phantasus.HeatMapOptions = function (heatMap) {
     .getSeparateColorSchemeForRowMetadataField();
   if (separateSchemesField != null) {
     var v = heatMap.project.getFullDataset().getRowMetadata()
-    .getByName(separateSchemesField);
+      .getByName(separateSchemesField);
     if (v != null) {
       $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
-      .createValueToIndexMap(
-        v).keys()));
+        .createValueToIndexMap(
+          v).keys()));
     }
   }
 
@@ -515,19 +520,20 @@ phantasus.HeatMapOptions = function (heatMap) {
                 phantasus.HeatMapColorScheme
                   .createColorSupplier({
                     type: 'fixed',
-                    map: [{
-                      value: -1,
-                      color: 'blue'
-                    }, {
-                      value: -0.5,
-                      color: 'white'
-                    }, {
-                      value: 0.5,
-                      color: 'white'
-                    }, {
-                      value: 1,
-                      color: 'red'
-                    }]
+                    map: [
+                      {
+                        value: -1,
+                        color: 'blue'
+                      }, {
+                        value: -0.5,
+                        color: 'white'
+                      }, {
+                        value: 0.5,
+                        color: 'white'
+                      }, {
+                        value: 1,
+                        color: 'red'
+                      }]
                   }));
           } else if (val === 'MAF') {
             heatMap.heatmap
@@ -560,7 +566,7 @@ phantasus.HeatMapOptions = function (heatMap) {
                     .SUMMLY2()));
 
           } else {
-            // console.log('not found');
+            console.log('not found');
           }
           colorSchemeChooser
             .setColorScheme(heatMap.heatmap
@@ -569,7 +575,7 @@ phantasus.HeatMapOptions = function (heatMap) {
           heatMap.heatmap.repaint();
           $(this).val('');
         } else {
-          // console.log('empty option selected');
+          console.log('empty option selected');
         }
         colorSchemeChooser.restoreCurrentValue();
       });
