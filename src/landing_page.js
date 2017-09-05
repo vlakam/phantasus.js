@@ -85,6 +85,9 @@ phantasus.LandingPage.prototype = {
 
       if (options.dataset.options.isGEO) {
         var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
+          session.getMessages(function(success) {
+            console.log('checkGPLs messages', '::', success);
+          });
           session.getObject(function (filenames) {
             filenames = JSON.parse(filenames);
             // console.log(filenames);

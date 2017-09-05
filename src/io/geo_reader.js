@@ -4,8 +4,14 @@ phantasus.GeoReader = function () {
 phantasus.GeoReader.prototype = {
   read: function (name, callback) {
     var req = ocpu.call('loadGEO', { name: name }, function (session) {
+      session.getMessages(function (success) {
+        console.log('loadGEO messages', '::', success);
+      });
       session.getObject(function (success) {
         //// console.log('phantasus.GeoReader.prototype.read ::', success);
+
+
+
 
         var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
         //// console.log(filePath);

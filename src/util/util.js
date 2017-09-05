@@ -1842,3 +1842,13 @@ phantasus.Util.equalArrays = function (a, b) {
   }
   return true;
 };
+
+phantasus.Util.getMessages = function(session) {
+  var url = session.getLoc() + "messages";
+  $.ajax({
+    url : url,
+    success : function(result) {
+      console.log(result);
+    }
+  });
+};
