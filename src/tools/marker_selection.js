@@ -5,7 +5,8 @@ phantasus.MarkerSelection = function () {
 /**
  * @private
  */
-phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
+phantasus.MarkerSelection.Functions = [
+  phantasus.FisherExact,
   phantasus.FoldChange, phantasus.MeanDifference, phantasus.SignalToNoise,
   phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
@@ -94,7 +95,7 @@ phantasus.MarkerSelection.prototype = {
       {
         name: 'grouping_value',
         value: '1',
-        help: 'Class values are categorized into two groups based on whether dataset values are greater than or equal to this value',
+        help: 'Class values are categorized into two groups based on whether dataset values are greater than or equal to this value'
       },
       {
         name: 'field',
@@ -170,7 +171,7 @@ phantasus.MarkerSelection.prototype = {
     }
 
     var vectors = phantasus.MetadataUtil.getVectors(dataset
-    .getColumnMetadata(), fieldNames);
+      .getColumnMetadata(), fieldNames);
     var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
     var aIndices = [];
     var bIndices = [];
@@ -190,7 +191,7 @@ phantasus.MarkerSelection.prototype = {
     });
 
     var f = phantasus.MarkerSelection.Functions
-    .fromString(options.input.metric);
+      .fromString(options.input.metric);
 
     var classASet = {};
     for (var i = 0; i < aIndices.length; i++) {
@@ -237,6 +238,7 @@ phantasus.MarkerSelection.prototype = {
     for (var i = 0; i < bIndices.length; i++) {
       comparisonVector.setValue(bIndices[i], 'B');
     }
+
     function done(result) {
       if (result) {
         var pvalueVector = dataset.getRowMetadata().add('p_value');
@@ -248,6 +250,7 @@ phantasus.MarkerSelection.prototype = {
           kVector.setValue(i, result.k[i]);
           v.setValue(i, result.scores[i]);
         }
+        kVector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: 'i'});
         vectors.push(pvalueVector);
         vectors.push(fdrVector);
         vectors.push(kVector);
@@ -272,9 +275,10 @@ phantasus.MarkerSelection.prototype = {
       }
 
       project.setRowFilter(project.getRowFilter(), true);
-      project.setRowSortKeys([new phantasus.SortKey(vectors[0].getName(),
-        isFishy ? phantasus.SortKey.SortOrder.ASCENDING
-          : phantasus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([
+        new phantasus.SortKey(vectors[0].getName(),
+          isFishy ? phantasus.SortKey.SortOrder.ASCENDING
+            : phantasus.SortKey.SortOrder.DESCENDING)], true);
       // select samples used in comparison
       var selectedColumnIndices = new phantasus.Set();
       aIndices.forEach(function (index) {
@@ -285,8 +289,9 @@ phantasus.MarkerSelection.prototype = {
       });
       project.getColumnSelectionModel().setViewIndices(selectedColumnIndices, true);
 
-      project.setColumnSortKeys([new phantasus.SortKey(comparisonVector
-        .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
+      project.setColumnSortKeys([
+        new phantasus.SortKey(comparisonVector
+          .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
 
       project.trigger('trackChanged', {
         vectors: vectors,
@@ -341,10 +346,11 @@ phantasus.MarkerSelection.prototype = {
         options.input.npermutations = npermutations;
         if (options.input.background) {
           var blob = new Blob(
-            ['self.onmessage = function(e) {'
-            + 'importScripts(e.data.scripts);'
-            + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
-            + '}']);
+            [
+              'self.onmessage = function(e) {'
+              + 'importScripts(e.data.scripts);'
+              + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+              + '}']);
 
           var url = window.URL.createObjectURL(blob);
           var worker = new Worker(url);

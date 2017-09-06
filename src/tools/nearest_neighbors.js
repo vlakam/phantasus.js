@@ -21,7 +21,7 @@ phantasus.NearestNeighbors.execute = function (dataset, input) {
     rowSpecificPValues: permutations.rowSpecificPValues,
     k: permutations.k,
     fdr: permutations.fdr,
-    scores: permutations.scores,
+    scores: permutations.scores
   };
 };
 phantasus.NearestNeighbors.prototype = {
@@ -70,26 +70,26 @@ phantasus.NearestNeighbors.prototype = {
   gui: function () {
     return [
       {
-      name: 'metric',
-      options: phantasus.NearestNeighbors.Functions,
-      value: phantasus.Pearson.toString(),
-      type: 'select',
-    }, {
-      name: 'compute_nearest_neighbors_of',
-      options: ['selected rows', 'selected columns', 'column annotation', 'row annotation'],
-      value: 'selected rows',
-      type: 'radio',
-    }, {
-      name: 'use_selected_only',
-      type: 'checkbox',
-    }, {
-      name: 'annotation',
-      type: 'bootstrap-select',
-    }, {
-      name: 'permutations',
-      value: '0',
-      type: 'text',
-    }];
+        name: 'metric',
+        options: phantasus.NearestNeighbors.Functions,
+        value: phantasus.Pearson.toString(),
+        type: 'select'
+      }, {
+        name: 'compute_nearest_neighbors_of',
+        options: ['selected rows', 'selected columns', 'column annotation', 'row annotation'],
+        value: 'selected rows',
+        type: 'radio'
+      }, {
+        name: 'use_selected_only',
+        type: 'checkbox'
+      }, {
+        name: 'annotation',
+        type: 'bootstrap-select'
+      }, {
+        name: 'permutations',
+        value: '0',
+        type: 'text'
+      }];
   },
   execute: function (options) {
     var project = options.project;
@@ -132,7 +132,7 @@ phantasus.NearestNeighbors.prototype = {
         var newDataset = new phantasus.Dataset({
           name: '',
           rows: 1,
-          columns: d1.getColumnCount(),
+          columns: d1.getColumnCount()
         });
         for (var j = 0, ncols = d1.getColumnCount(); j < ncols; j++) {
           var v = phantasus.Percentile(columnView.setIndex(j), 50);
@@ -164,11 +164,12 @@ phantasus.NearestNeighbors.prototype = {
           kVector.setValue(i, result.k[i]);
           scoreVector.setValue(i, result.scores[i]);
         }
+        kVector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: 'i'});
         var vectors = [pvalueVector, fdrVector, kVector, scoreVector];
         project.trigger('trackChanged', {
           vectors: vectors,
           display: ['text'],
-          columns: isColumns,
+          columns: isColumns
         });
       };
 
@@ -194,9 +195,9 @@ phantasus.NearestNeighbors.prototype = {
           dataset: phantasus.Dataset.toJSON(dataset, {
             columnFields: [],
             rowFields: [],
-            seriesIndices: [0],
+            seriesIndices: [0]
           }),
-          input: options.input,
+          input: options.input
         });
 
         worker.onmessage = function (e) {
@@ -227,9 +228,9 @@ phantasus.NearestNeighbors.prototype = {
       project.trigger('trackChanged', {
         vectors: [scoreVector],
         display: ['text'],
-        columns: isColumns,
+        columns: isColumns
       });
     }
 
-  },
+  }
 };
