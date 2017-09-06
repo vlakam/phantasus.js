@@ -1118,7 +1118,7 @@ phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.2f') : function (d)
 };
 
 phantasus.Util.getNumberFormatPatternFractionDigits = function (pattern) {
-  return parseInt(pattern.substring(1, pattern.length - 1));
+  return parseInt(pattern.substring(1, pattern.length - 1)) || 0;
 };
 
 phantasus.Util.nf = function (n) {
