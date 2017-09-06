@@ -612,7 +612,10 @@ phantasus.HeatMapToolBar = function (heatMap) {
       var indices = [];
       var meta = project.getSortedFilteredDataset().getRowMetadata();
       heatMap.getVisibleTrackNames(false).forEach(function (name) {
-        indices.push(phantasus.MetadataUtil.indexOf(meta, name));
+        var index = phantasus.MetadataUtil.indexOf(meta, name);
+        if (index !== -1) {
+          indices.push(index);
+        }
       });
       meta = new phantasus.MetadataModelColumnView(meta, indices);
       phantasus.MetadataUtil.autocomplete(meta)(terms, cb);
@@ -638,7 +641,10 @@ phantasus.HeatMapToolBar = function (heatMap) {
       var indices = [];
       var meta = project.getSortedFilteredDataset().getColumnMetadata();
       heatMap.getVisibleTrackNames(true).forEach(function (name) {
-        indices.push(phantasus.MetadataUtil.indexOf(meta, name));
+        var index = phantasus.MetadataUtil.indexOf(meta, name);
+        if (index !== -1) {
+          indices.push(index);
+        }
       });
       meta = new phantasus.MetadataModelColumnView(meta, indices);
       phantasus.MetadataUtil.autocomplete(meta)(terms, cb);
@@ -1124,7 +1130,10 @@ phantasus.HeatMapToolBar.prototype = {
       : dataset.getColumnMetadata();
     var visibleIndices = [];
     heatMap.getVisibleTrackNames(!isRows).forEach(function (name) {
-      visibleIndices.push(phantasus.MetadataUtil.indexOf(metadata, name));
+      var index = phantasus.MetadataUtil.indexOf(metadata, name);
+      if (index !== -1) {
+        visibleIndices.push(index);
+      }
     });
     var fullModel = metadata;
     metadata = new phantasus.MetadataModelColumnView(metadata,

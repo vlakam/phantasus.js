@@ -211,6 +211,8 @@ phantasus.HeatMap = function (options) {
        * Heat map grid color
        */
       gridColor: '#808080',
+
+      showRowNumber: false,
       /*
        * Heat map grid thickness in pixels
        */
@@ -1164,6 +1166,7 @@ phantasus.HeatMap.prototype = {
     json.name = this.options.name;
 
     // TODO shapes
+    json.showRowNumber = this.isShowRowNumber();
 
     // annotation colors
     json.rowColorModel = this.getProject().getRowColorModel().toJSON(this.rowTracks);
@@ -1928,6 +1931,9 @@ phantasus.HeatMap.prototype = {
     reorderTracks(this.options.rows, false);
     reorderTracks(this.options.columns, true);
 
+    if (this.options.showRowNumber) {
+      this.setShowRowNumber(true);
+    }
     var colorSchemeSpecified = this.options.colorScheme != null;
     if (this.options.colorScheme == null) {
       var ext = '';
@@ -1997,6 +2003,7 @@ phantasus.HeatMap.prototype = {
       heatmap.getColorScheme().getSizer().setMax(
         this.options.sizeBy.max);
     }
+
     this.updateDataset();
 
     // tabOpened is inherited by child heat maps
@@ -3184,11 +3191,39 @@ phantasus.HeatMap.prototype = {
     var names = [];
     var tracks = isColumns ? this.columnTracks : this.rowTracks;
     for (var i = 0, length = tracks.length; i < length; i++) {
-      if (tracks[i].isVisible()) {
+      if (tracks[i].isVisible() && tracks[i].getFullVector() != null) { // don't return row #
         names.push(tracks[i].name);
       }
     }
     return names;
+  },
+  isShowRowNumber: function () {
+    return this.options.showRowNumber;
+  },
+  setShowRowNumber: function (visible) {
+    this.options.showRowNumber = visible;
+    if (!visible) {
+      this.removeTrack('#', false);
+    } else {
+      var track = this.addTrack('#', false, {popupEnabled: false, display: ['text']}, 0);
+      track.getVector = function (name) {
+        var v = new morpheus.AbstractVector('#', this.project.getSortedFilteredDataset().getRowCount());
+        v.getProperties().set(morpheus.VectorKeys.FORMATTER, {pattern: 'i'});
+        v.getValue = function (index) {
+          return index + 1;
+        };
+        return v;
+      };
+      track.getFullVector = function () {
+
+      };
+
+      track.showPopup = function (e, isHeader) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+      };
+    }
   }
   ,
   resizeTrack: function (name, width, height, isColumns) {
@@ -3196,21 +3231,18 @@ phantasus.HeatMap.prototype = {
     if (index === -1) {
       throw name + ' not found in resize track';
     }
+    var heatMapPrefWidth = null;
     if (!isColumns) {
       var track = this.rowTracks[index];
       var header = this.rowTrackHeaders[index];
       track.setPrefWidth(width); // can only set width
       header.setPrefWidth(width);
-      // set width of heat map so that heat map doesn't shrink
-      this.heatmap.setPrefWidth(this.heatmap.getUnscaledWidth());
     } else {
       var track = this.columnTracks[index];
       var header = this.columnTrackHeaders[index];
       if (height) {
         track.setPrefHeight(height);
         header.setPrefHeight(height);
-        // set heat of heat map so that heat map doesn't shrink
-        // this.heatmap.setPrefHeight(this.heatmap.getUnscaledWidth());
       }
       if (width) {
         for (var i = 0; i < this.columnTracks.length; i++) {

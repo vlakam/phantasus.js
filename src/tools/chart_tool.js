@@ -2,12 +2,9 @@
  * @param chartOptions.heatmap phantasus.HeatMap
  * @param chartOptions.project
  *            phantasus.Project
- * @param chartOptions.getVisibleTrackNames
- *            {Function}
  */
 phantasus.ChartTool = function (chartOptions) {
   var _this = this;
-  this.getVisibleTrackNames = chartOptions.getVisibleTrackNames;
   this.project = chartOptions.project;
   this.heatmap = chartOptions.heatmap;
   var project = this.project;
@@ -24,8 +21,9 @@ phantasus.ChartTool = function (chartOptions) {
   formBuilder.append({
     name: 'chart_type',
     type: 'bootstrap-select',
-    options: ['boxplot', 'row profile', 'column profile', 'row scatter matrix', 'column scatter' +
-    ' matrix']
+    options: [
+      'boxplot', 'row profile', 'column profile', 'row scatter matrix', 'column scatter' +
+      ' matrix']
   });
   var rowOptions = [];
   var columnOptions = [];
@@ -35,30 +33,36 @@ phantasus.ChartTool = function (chartOptions) {
   var numericOptions = [];
   var updateOptions = function () {
     var dataset = project.getFullDataset();
-    rowOptions = [{
-      name: '(None)',
-      value: ''
-    }];
-    columnOptions = [{
-      name: '(None)',
-      value: ''
-    }];
-    numericRowOptions = [{
-      name: '(None)',
-      value: ''
-    }];
-    numericColumnOptions = [{
-      name: '(None)',
-      value: ''
-    }];
-    options = [{
-      name: '(None)',
-      value: ''
-    }];
-    numericOptions = [{
-      name: '(None)',
-      value: ''
-    }];
+    rowOptions = [
+      {
+        name: '(None)',
+        value: ''
+      }];
+    columnOptions = [
+      {
+        name: '(None)',
+        value: ''
+      }];
+    numericRowOptions = [
+      {
+        name: '(None)',
+        value: ''
+      }];
+    numericColumnOptions = [
+      {
+        name: '(None)',
+        value: ''
+      }];
+    options = [
+      {
+        name: '(None)',
+        value: ''
+      }];
+    numericOptions = [
+      {
+        name: '(None)',
+        value: ''
+      }];
 
     phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata())
       .forEach(
@@ -534,7 +538,7 @@ phantasus.ChartTool.prototype = {
           onZero: false
         },
         type: 'value',
-        name: '',
+        name: ''
       },
       grid: {right: 120},
       series: series
@@ -611,7 +615,7 @@ phantasus.ChartTool.prototype = {
           onZero: false
         },
         type: 'value',
-        name: '',
+        name: ''
       },
       series: [
         {
@@ -647,7 +651,7 @@ phantasus.ChartTool.prototype = {
             normal: {
               borderWidth: 1,
               borderColor: 'black',
-              opacity: 0.8,
+              opacity: 0.8
             }
           },
           tooltip: {
@@ -740,7 +744,7 @@ phantasus.ChartTool.prototype = {
       }
       if (dataset.getRowCount() > 100) {
         $('<h4>Maximum chart size exceeded.</h4>')
-        .appendTo(this.$chart);
+          .appendTo(this.$chart);
         return;
       }
       // add horizontal space for legend
@@ -768,7 +772,8 @@ phantasus.ChartTool.prototype = {
           .appendTo(this.$chart);
         return;
       }
-      var $chart = $('<div style="width:' + (80 + (dataset.getRowCount() - 1) * (gridWidth + 20)) + 'px;height:' + (80 + dataset.getRowCount() * (gridHeight + 20)) + 'px;"></div>');
+      var $chart = $('<div style="width:' + (80 + (dataset.getRowCount() - 1) * (gridWidth + 20)) + 'px;height:' + (80 + dataset.getRowCount() * (gridHeight + 20)) +
+        'px;"></div>');
       $chart.appendTo(this.$chart);
       this._createScatter({
         el: $chart[0],
@@ -785,9 +790,9 @@ phantasus.ChartTool.prototype = {
       var ids = []; // 1-d array of grouping values
       if (groupBy) {
         var groupByInfo = phantasus.ChartTool
-        .getVectorInfo(groupBy);
+          .getVectorInfo(groupBy);
         var vector = groupByInfo.isColumns ? dataset
-        .getColumnMetadata().getByName(groupByInfo.field)
+            .getColumnMetadata().getByName(groupByInfo.field)
           : dataset.getRowMetadata().getByName(
             groupByInfo.field);
         var isArray = phantasus.VectorUtil.getDataType(vector)[0] === '[';
