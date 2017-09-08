@@ -65,7 +65,7 @@ module.exports = function (grunt) {
           'js/jquery.event.drag-2.2.js',
           'js/clipboard.min.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
-          'js/opencpu-0.5.js']
+          'js/opencpu-0.5.js', 'js/FileSaver.min.js']
       },
       phantasus: {
         options: {

@@ -39,9 +39,13 @@ phantasus.GctWriter.prototype = {
       .getColumnMetadata());
     this.writeHeader(rowMetadata, columnMetadata, pw);
     this.writeData(dataset, rowMetadata, pw);
+
+    //console.log(this, dataset, pw);
+
     return pw.join('');
   },
   writeData: function (dataset, rowMetadata, pw) {
+    //console.log("writeData")
     var ncols = dataset.getColumnCount();
     var rowMetadataCount = rowMetadata.getMetadataCount();
     for (var i = 0, rows = dataset.getRowCount(); i < rows; i++) {
