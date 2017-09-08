@@ -3207,8 +3207,8 @@ phantasus.HeatMap.prototype = {
     } else {
       var track = this.addTrack('#', false, {popupEnabled: false, display: ['text']}, 0);
       track.getVector = function (name) {
-        var v = new morpheus.AbstractVector('#', this.project.getSortedFilteredDataset().getRowCount());
-        v.getProperties().set(morpheus.VectorKeys.FORMATTER, {pattern: 'i'});
+        var v = new phantasus.AbstractVector('#', this.project.getSortedFilteredDataset().getRowCount());
+        v.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: 'i'});
         v.getValue = function (index) {
           return index + 1;
         };
