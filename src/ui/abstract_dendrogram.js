@@ -212,28 +212,29 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
 
                     setIndex(selectedNode);
 
-                    var currentOrder = [];
-                    var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject()
-                      .getSortedFilteredDataset()
-                      .getRowCount();
-                    for (var i = 0; i < count; i++) {
-                      currentOrder.push(isColumns ? project.convertViewColumnIndexToModel(i) : project.convertViewRowIndexToModel(i));
-                    }
-                    for (var i = min, j = max; i < j; i++, j--) {
-                      var tmp = currentOrder[j];
-                      currentOrder[j] = currentOrder[i];
-                      currentOrder[i] = tmp;
-                    }
-                    var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
-                    key.setPreservesDendrogram(true);
-                    key.setLockOrder(2);
-                    if (isColumns) {
-                      heatMap.getProject().setColumnSortKeys([key], true);
-                    } else {
-                      heatMap.getProject().setRowSortKeys([key], true);
-                    }
-                    heatMap.revalidate();
-                  }
+                var currentOrder = [];
+                var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject()
+                  .getSortedFilteredDataset()
+                  .getRowCount();
+                for (var i = 0; i < count; i++) {
+                  currentOrder.push(isColumns ? project.convertViewColumnIndexToModel(i) : project.convertViewRowIndexToModel(i));
+                }
+                for (var i = min, j = max; i < j; i++, j--) {
+                  var tmp = currentOrder[j];
+                  currentOrder[j] = currentOrder[i];
+                  currentOrder[i] = tmp;
+                }
+                var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
+                key.setPreservesDendrogram(true);
+                key.setLockOrder(2);
+                key.setUnlockable(false);
+                if (isColumns) {
+                  heatMap.getProject().setColumnSortKeys([key], true);
+                } else {
+                  heatMap.getProject().setRowSortKeys([key], true);
+                }
+                heatMap.revalidate();
+              }
 
                 } else if (item === 'Branch Color') {
                   if (selectedNode != null) {

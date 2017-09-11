@@ -7,6 +7,7 @@ phantasus.AbstractSortKey.prototype = {
   lockOrder: 0,
   columns: true,
   preservesDendrogram: false,
+  unlockable: true,
   /**
    * Indicates whether this key is sorting rows or columns.
    * @return {Boolean}
@@ -14,6 +15,10 @@ phantasus.AbstractSortKey.prototype = {
   isColumns: function () {
     return this.columns;
   },
+  /**
+   * Sets whether this key is columns (true) or rows (false).
+   * @param columns {Boolean}
+   */
   setColumns: function (columns) {
     this.columns = columns;
   },
@@ -26,6 +31,20 @@ phantasus.AbstractSortKey.prototype = {
   getLockOrder: function () {
     return this.lockOrder;
   },
+  /**
+   * When lock order is set, indicates whether lock order can be unlocked. For example, bring matches to top sort key can not be unlocked.
+   */
+  isUnlockable: function () {
+    return this.unlockable;
+  },
+  setUnlockable: function (unlockable) {
+    this.unlockable = unlockable;
+  },
+  /**
+   * Sets the sort key lock order. One is locked to beginning of sort keys, two is locked to end of sort keys. Zero clears lock order.
+   * Dendrogram sort key is locked to end. Selection on top sort key is locked to beginning.
+   * @param lockOrder {Number}
+   */
   setLockOrder: function (lockOrder) {
     this.lockOrder = lockOrder;
   },
@@ -726,6 +745,7 @@ phantasus.SortKey.fromJSON = function (project, json) {
       }
       if (key.lockOrder !== 0) {
         sortKey.setLockOrder(key.lockOrder);
+        sortKey.setUnlockable(key.unlockable);
       }
       sortKeys.push(sortKey);
     }
@@ -773,6 +793,7 @@ phantasus.SortKey.toJSON = function (sortKeys) {
       sortKey.preservesDendrogram = key.isPreservesDendrogram();
       if (key.getLockOrder && key.getLockOrder() !== 0) {
         sortKey.lockOrder = key.getLockOrder();
+        sortKey.unlockable = key.isUnlockable ? key.isUnlockable() : false;
       }
       json.push(sortKey);
     } else {

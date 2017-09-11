@@ -1273,6 +1273,7 @@ phantasus.HeatMap.prototype = {
           modelOrder.length, 'dendrogram', true);
         sortKey.setPreservesDendrogram(true);
         sortKey.setLockOrder(2);
+        sortKey.setUnlockable(false);
         this.project.setColumnSortKeys(
           [sortKey], true);
       } else {
@@ -1284,6 +1285,7 @@ phantasus.HeatMap.prototype = {
           modelOrder.length, 'dendrogram', false);
         sortKey.setPreservesDendrogram(true);
         sortKey.setLockOrder(2);
+        sortKey.setUnlockable(false);
         this.project.setRowSortKeys(
           [sortKey], true);
       }
@@ -1598,6 +1600,7 @@ phantasus.HeatMap.prototype = {
         rowDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           rowIndices, rowIndices.length, 'dendrogram');
         rowDendrogramSortKey.setLockOrder(2);
+        rowDendrogramSortKey.setUnlockable(false);
         rowDendrogramSortKey.setPreservesDendrogram(true);
       }
     }
@@ -1656,6 +1659,7 @@ phantasus.HeatMap.prototype = {
         columnDendrogramSortKey = new phantasus.SpecifiedModelSortOrder(
           columnIndices, columnIndices.length, 'dendrogram');
         columnDendrogramSortKey.setLockOrder(2);
+        columnDendrogramSortKey.setUnlockable(false);
         columnDendrogramSortKey.setPreservesDendrogram(true);
       }
     }
