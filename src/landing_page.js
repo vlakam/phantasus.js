@@ -74,9 +74,40 @@ phantasus.LandingPage = function (pageOptions) {
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
+    var createGEOHeatMap = function(options) {
+      var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
+        session.getMessages(function(success) {
+          console.log('checkGPLs messages', '::', success);
+        });
+        session.getObject(function (filenames) {
+          filenames = JSON.parse(filenames);
+          // console.log(filenames);
+          if (filenames.length === 0) {
+            alert("Dataset" + " " + options.dataset.file + " does not exist");
+            _this.show();
+          }
+          if (filenames.length === 1) {
+            new phantasus.HeatMap(options);
+          }
+          else {
+            for (var j = 0; j < filenames.length; j++) {
+              var specificOptions = options;
+              specificOptions.dataset.file = filenames[j];
+
+              new phantasus.HeatMap(specificOptions);
+            }
+          }
+        })
+      });
+      req.fail(function () {
+        throw new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
+      });
+    };
+
+
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
-    // console.log(optionsArray);
+    console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
@@ -84,33 +115,7 @@ phantasus.LandingPage.prototype = {
       options.landingPage = _this;
 
       if (options.dataset.options.isGEO) {
-        var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
-          session.getMessages(function(success) {
-            console.log('checkGPLs messages', '::', success);
-          });
-          session.getObject(function (filenames) {
-            filenames = JSON.parse(filenames);
-            // console.log(filenames);
-            if (filenames.length === 0) {
-              alert("Dataset" + " " + options.dataset.file + " does not exist");
-              _this.show();
-            }
-            if (filenames.length === 1) {
-              new phantasus.HeatMap(options);
-            }
-            else {
-              for (var j = 0; j < filenames.length; j++) {
-                var specificOptions = options;
-                specificOptions.dataset.file = filenames[j];
-
-                new phantasus.HeatMap(specificOptions);
-              }
-            }
-          })
-        });
-        req.fail(function () {
-          new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
-        });
+        createGEOHeatMap(options);
       }
       else {
         new phantasus.HeatMap(options);

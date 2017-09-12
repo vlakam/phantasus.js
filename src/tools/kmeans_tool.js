@@ -48,6 +48,9 @@ phantasus.KmeansTool.prototype = {
     }
     var replacena = options.input.replace_NA_with;
     var esPromise = dataset.getESSession();
+
+    console.log(dataset);
+
     esPromise.then(function (essession) {
       var args = {
         es: essession,
@@ -61,6 +64,9 @@ phantasus.KmeansTool.prototype = {
         args.rows = rowIndices;
       }
       var req = ocpu.call("performKmeans", args, function (session) {
+        session.getMessages(function (messages) {
+          console.log("kmeans::", messages);
+        });
         session.getObject(function (success) {
           var clusters = JSON.parse(success);
 
