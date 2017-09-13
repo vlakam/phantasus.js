@@ -9,12 +9,10 @@ phantasus.ParseDatasetFromProtoBin.parse = function (session, callback, options)
 
     r.onload = function (e) {
       var contents = e.target.result;
-      //// console.log(contents);
       var ProtoBuf = dcodeIO.ProtoBuf;
       ProtoBuf.protoFromFile("./message.proto", function (error, success) {
         if (error) {
-          alert(error);
-          // console.log("GeoReader ::", "ProtoBuilder failed", error);
+          throw new Error(error);
           return;
         }
         var builder = success,
@@ -26,7 +24,6 @@ phantasus.ParseDatasetFromProtoBin.parse = function (session, callback, options)
         var res = REXP.decode(contents);
 
         var jsondata = phantasus.Util.getRexpData(res, rclass);
-        //// console.log(jsondata);
 
         var datasets = [];
         for (var k = 0; k < Object.keys(jsondata).length; k++) {
@@ -35,7 +32,6 @@ phantasus.ParseDatasetFromProtoBin.parse = function (session, callback, options)
           dataset.setESVariable('es_' + (k + 1).toString());
           datasets.push(dataset);
         }
-        // console.log("resulting datasets", datasets);
         callback(null, datasets);
       });
     };
@@ -51,9 +47,7 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
   var nrowData = jsondata.data.dim[0];
   var ncolData = jsondata.data.dim[1];
   var flatPdata = jsondata.pdata.values;
-  //var participants = jsondata.participants.values;
   var annotation = jsondata.fdata.values;
-  //// console.log(annotation);
   var id = jsondata.rownames.values;
   var metaNames = jsondata.colMetaNames.values;
   var rowMetaNames = jsondata.rowMetaNames.values;
@@ -97,6 +91,5 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
   phantasus.MetadataUtil.maybeConvertStrings(dataset.getColumnMetadata(),
     1);
 
-  //// console.log("returned dataset", dataset);
   return dataset;
 };

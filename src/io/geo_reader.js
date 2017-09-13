@@ -11,7 +11,6 @@ phantasus.GeoReader.prototype = {
     });
     req.fail(function () {
       callback(req.responseText);
-      //// console.log('phantasus.GeoReader.prototype.read ::', req.responseText);
     });
 
   },
