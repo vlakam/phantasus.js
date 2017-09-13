@@ -123,7 +123,7 @@ phantasus.Grid = function (options) {
           sortAsc: c.sortAsc
         });
       } else {
-        console.log(c.name + ' not found.');
+        // console.log(c.name + ' not found.');
       }
     });
     this.setSortColumns(gridSortColumns);

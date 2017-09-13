@@ -326,14 +326,25 @@ phantasus.OpenDatasetTool.prototype = {
                 });
               });
         } else if (action === 'open') { // new tab
-          new phantasus.HeatMap({
-            dataset: newDataset,
-            parent: heatMap,
-            inheritFromParent: false
-          });
+          if (newDataset.length && newDataset.length > 0) {
+            for (var i = 0; i < newDataset.length; i++) {
+              new phantasus.HeatMap({
+                dataset: newDataset[i],
+                name: newDataset[i].seriesNames[0],
+                parent: heatMap,
+                inheritFromParent: false
+              });
+            }
+          } else {
+            new phantasus.HeatMap({
+              dataset: newDataset,
+              parent: heatMap,
+              inheritFromParent: false
+            });
+          }
 
         } else {
-          console.log('Unknown action: ' + action);
+          // console.log('Unknown action: ' + action);
         }
 
         heatMap.revalidate();

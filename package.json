@@ -4,8 +4,6 @@
   "description": "phantasus.js JavaScript Library",
   "license": "MIT",
   "version": "0.0.1",
-
-
   "repository": {
     "type": "git",
     "url": "https://github.com/baba-beda/phantasus.js.git"
@@ -29,6 +27,7 @@
     "phantasus"
   ],
   "devDependencies": {
+    "finalhandler": "^1.0.1",
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-copy": "~1.0.0",
@@ -37,8 +36,21 @@
     "grunt-contrib-uglify": "~2.0.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-jsdoc": "^2.1.0",
+    "jasmine": "^2.6.0",
+    "jasmine-core": "^2.6.4",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-requirejs": "^1.1.0",
+    "phantomjs-prebuilt": "^2.1.14",
     "protobufjs": "~3.7",
-    "serve-static": "^1.12.1",
-    "finalhandler": "^1.0.1"
+    "requirejs": "^2.3.4",
+    "serve-static": "^1.12.1"
+  },
+  "dependencies": {
+    "grunt-cli": "^1.2.0"
   }
 }

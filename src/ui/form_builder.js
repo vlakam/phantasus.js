@@ -578,7 +578,7 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
-      // data types are file, dropbox, url, GSE, and predefined
+      // data types are file, dropbox, url, GEO, and predefined
       options.push('My Computer');
       options.push('URL');
       options.push('GEO Datasets');
@@ -716,6 +716,8 @@ phantasus.FormBuilder.prototype = {
         var text = $.trim($(this).val());
         that.setValue(name, text);
         if (evt.which === 13) {
+          // console.log('environment', evt);
+          // console.log('object to trigger with result', that, 'name', name, 'text', text);
           that.trigger('change', {
             name: name,
             value: text.toUpperCase()
@@ -724,7 +726,6 @@ phantasus.FormBuilder.prototype = {
       });
       // browse file selected
       that.$form.on('change', '[name=' + name + '_file]', function (evt) {
-
         var files = evt.target.files; // FileList object
         that.setValue(name, isMultiple ? files : files[0]);
         that.trigger('change', {

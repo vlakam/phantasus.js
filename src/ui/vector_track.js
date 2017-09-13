@@ -181,7 +181,7 @@ phantasus.VectorTrack.prototype = {
         } else if (method === 'TOOLTIP') {
           settings.inlineTooltip = true;
         } else {
-          console.log(method + ' not found.');
+          // console.log(method + ' not found.');
         }
       }
     } else if (_.isNumber(conf)) {
@@ -489,7 +489,7 @@ phantasus.VectorTrack.prototype = {
       }
       var indices = valueToModelIndices.get(value);
       if (indices == null) {
-        console.log('valueToModelIndices error');
+        // console.log('valueToModelIndices error');
         return;
       }
       if (indices.length <= 1) {
@@ -1634,7 +1634,7 @@ phantasus.VectorTrack.prototype = {
             } else if (item === DISPLAY_BOX_PLOT) {
               item = phantasus.VectorTrack.RENDER.BOX_PLOT;
             } else {
-              console.log('Unknown item ' + item);
+              // console.log('Unknown item ' + item);
             }
             var show = !_this.isRenderAs(item);
             if (!show) {
@@ -1840,7 +1840,7 @@ phantasus.VectorTrack.prototype = {
             context.moveTo(startPix, arcRadius);
             context.quadraticCurveTo(midPix, 1, endPix, arcRadius);
           } else {
-            console.log(i, viewIndex, startPix, endPix);
+            // console.log(i, viewIndex, startPix, endPix);
             context.beginPath();
             context.moveTo(1, startPix);
             context.quadraticCurveTo(arcRadius, midPix, 1, endPix);

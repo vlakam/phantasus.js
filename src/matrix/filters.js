@@ -455,7 +455,7 @@ phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
         filter.isColumns
       ));
     } else {
-      console.log('Unknown filter type');
+      // console.log('Unknown filter type');
     }
   });
 };

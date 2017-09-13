@@ -678,7 +678,7 @@ phantasus.SortKey.fromJSON = function (project, json) {
       if (key.field != null) {
         sortKeys.push(new phantasus.SortKey(key.field, key.order));
       } else {
-        console.log('Unknown key: ' + key);
+        // console.log('Unknown key: ' + key);
       }
     }
   });
@@ -720,7 +720,7 @@ phantasus.SortKey.toJSON = function (sortKeys) {
         name: key.name
       });
     } else {
-      console.log('Unknown sort key type');
+      // console.log('Unknown sort key type');
     }
   });
   return json;

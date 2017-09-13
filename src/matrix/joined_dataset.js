@@ -168,7 +168,7 @@ phantasus.SlicedDatasetWithNulls.prototype = {
     if (index !== undefined) {
       this.dataset.setValue(i, index, value, seriesIndex);
     } else {
-      console.log(j + ' out of range');
+      // console.log(j + ' out of range');
     }
   }
 };

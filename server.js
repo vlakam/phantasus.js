@@ -13,7 +13,7 @@ var server = http.createServer(function (req, res) {
   serve(req, res, done);
 })
 server.listen(3000);
-console.log('Web server listening at: http://localhost:3000/');
+// console.log('Web server listening at: http://localhost:3000/');
 // var fs = require('fs');
 // var options = {
 //   key: fs.readFileSync('key.txt'),

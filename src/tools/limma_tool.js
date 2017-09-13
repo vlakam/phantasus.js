@@ -2,7 +2,7 @@ phantasus.LimmaTool = function () {
 };
 phantasus.LimmaTool.prototype = {
   toString: function () {
-    return 'limma';
+    return "limma";
   },
   init: function (project, form) {
     var _this = this;
@@ -18,13 +18,11 @@ phantasus.LimmaTool.prototype = {
         });
       }
       ids.sort();
-      form.setOptions('class_a', ids);
-      //form.setValue('class_a', ids[0].array[0]);
-      form.setOptions('class_b', ids);
-      // form.setValue('class_b', ids[0].array[0]);
+      form.setOptions("class_a", ids);
+      form.setOptions("class_b", ids);
     };
-    var $field = form.$form.find('[name=field]');
-    $field.on('change', function (e) {
+    var $field = form.$form.find("[name=field]");
+    $field.on("change", function (e) {
       updateAB($(this).val());
     });
     if ($field[0].options.length > 0) {
@@ -37,23 +35,23 @@ phantasus.LimmaTool.prototype = {
     var fields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getColumnMetadata());
     return [{
-      name: 'field',
+      name: "field",
       options: fields,
-      type: 'select',
+      type: "select",
       multiple: true
     }, {
-      name: 'class_a',
-      title: 'Class A',
+      name: "class_a",
+      title: "Class A",
       options: [],
-      value: '',
-      type: 'checkbox-list',
+      value: "",
+      type: "checkbox-list",
       multiple: true
     }, {
-      name: 'class_b',
-      title: 'Class B',
+      name: "class_b",
+      title: "Class B",
       options: [],
-      value: '',
-      type: 'checkbox-list',
+      value: "",
+      type: "checkbox-list",
       multiple: true
     }];
   },
@@ -67,12 +65,8 @@ phantasus.LimmaTool.prototype = {
       throw new Error("You must choose at least one option in each class");
     }
 
-    console.log("field", field);
-    console.log("classA", classA);
-    console.log("classB", classB);
-
     var dataset = project.getSortedFilteredDataset();
-    console.log(dataset);
+    // console.log(dataset);
     var es = dataset.getESSession();
 
     var v = dataset.getColumnMetadata().getByName("Comparison");
@@ -86,9 +80,10 @@ phantasus.LimmaTool.prototype = {
 
     var checkCortege = function (vectors, curClass, curColumn) {
       var columnInClass = false;
-      for (var j = 0; j < curClass.length; j++) {
-        var isEqual = true;
-        for (var k = 0; k < vectors.length; k++) {
+      var isEqual = true;
+      for (j = 0; j < curClass.length; j += 1) {
+        isEqual = true;
+        for (var k = 0; k < vectors.length; k += 1) {
           isEqual &= vectors[k].getValue(curColumn) == curClass[j].array[k];
         }
         columnInClass |= isEqual;
@@ -105,19 +100,9 @@ phantasus.LimmaTool.prototype = {
       v.setValue(i, columnInA ? "A" : (columnInB ? "B" : ""));
     }
 
-    /*for (var i = 0; i < dataset.getColumnCount(); i++) {
-     var a = true;
-     for (var j = 0; j < vs.length; j++) {
-     var oneof = false;
-     for (var k = 0; k < classA.length; k++) {
-     oneof |= vs[j].getValue(i) == classA[k][j];
-     }
-     }
-     v.setValue(i, v1.getValue(i) == classA ? "A" : (v1.getValue(i) == classB ? "B" : ""));
-     }*/
-    project.trigger('trackChanged', {
+    project.trigger("trackChanged", {
       vectors: [v],
-      render: ['color'],
+      render: ["color"],
       columns: true
     });
 
@@ -127,8 +112,6 @@ phantasus.LimmaTool.prototype = {
     for (var j = 0; j < dataset.getColumnCount(); j++) {
       values[dataset.columnIndices[j]] = v.getValue(j);
     }
-
-    console.log(values);
 
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
@@ -143,12 +126,11 @@ phantasus.LimmaTool.prototype = {
       if (trueIndices.columns.length > 0) {
         args.columns = trueIndices.columns;
       }
-      console.log(args);
+
       var req = ocpu.call("limmaAnalysis", args, function (session) {
         session.getObject(function (success) {
-          console.log(success);
           var r = new FileReader();
-          var filePath = phantasus.Util.getFilePath(session, success);
+          var filePath = phantasus.Util.getFilePath(session, JSON.parse(success)[0]);
 
           r.onload = function (e) {
             var contents = e.target.result;
@@ -156,7 +138,6 @@ phantasus.LimmaTool.prototype = {
             ProtoBuf.protoFromFile("./message.proto", function (error, success) {
               if (error) {
                 alert(error);
-                console.log("LimmaTool ::", "ProtoBuilder failed", error);
               }
               var builder = success,
                 rexp = builder.build("rexp"),
@@ -167,18 +148,9 @@ phantasus.LimmaTool.prototype = {
               var names = phantasus.Util.getFieldNames(res, rclass);
               var vs = [];
               var rows = trueIndices.rows.length > 0 ? trueIndices.rows : dataset.rowIndices;
-              console.log(trueIndices.rows);
-              /*if (trueIndices.rows.length > 0) {
-               var backRows = Array.apply(null, Array(dataset.rowIndices.length)).map(Number.prototype.valueOf,0);
-               for (var i = 0; i < trueIndices.rows.length; i++) {
-               backRows[rows[i]] = i;
-               }
-               rows = backRows;
-               }*/
-              console.log("rows", rows);
+
               names.forEach(function (name) {
                 if (name !== "symbol") {
-                  console.log(name, data[name]);
                   var v = dataset.getRowMetadata().add(name);
                   for (var i = 0; i < dataset.getRowCount(); i++) {
                     v.setValue(i, data[name].values[i]);
@@ -188,7 +160,7 @@ phantasus.LimmaTool.prototype = {
 
               });
               alert("Limma finished successfully");
-              project.trigger('trackChanged', {
+              project.trigger("trackChanged", {
                 vectors: vs,
                 render: []
               });
@@ -198,9 +170,9 @@ phantasus.LimmaTool.prototype = {
             r.readAsArrayBuffer(file);
           });
         })
-      }, false, "::es");
+      }, false, "::" + dataset.getESVariable());
       req.fail(function () {
-        console.log(req.responseText);
+        throw new Error("Limma call failed" + req.responseText);
       });
     });
   }

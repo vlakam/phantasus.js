@@ -74,14 +74,52 @@ phantasus.LandingPage = function (pageOptions) {
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
+    var createGEOHeatMap = function(options) {
+      var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
+        session.getMessages(function(success) {
+          console.log('checkGPLs messages', '::', success);
+        });
+        session.getObject(function (filenames) {
+          filenames = JSON.parse(filenames);
+          // console.log(filenames);
+          if (filenames.length === 0) {
+            alert("Dataset" + " " + options.dataset.file + " does not exist");
+            _this.show();
+          }
+          if (filenames.length === 1) {
+            new phantasus.HeatMap(options);
+          }
+          else {
+            for (var j = 0; j < filenames.length; j++) {
+              var specificOptions = options;
+              specificOptions.dataset.file = filenames[j];
+
+              new phantasus.HeatMap(specificOptions);
+            }
+          }
+        })
+      });
+      req.fail(function () {
+        throw new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
+      });
+    };
+
+
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
+    console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
       options.landingPage = _this;
-      new phantasus.HeatMap(options);
+
+      if (options.dataset.options.isGEO) {
+        createGEOHeatMap(options);
+      }
+      else {
+        new phantasus.HeatMap(options);
+      }
     }
 
   },
@@ -176,7 +214,10 @@ phantasus.LandingPage.prototype = {
       var options = {
         dataset: {
           file: value,
-          options: {interactive: true}
+          options: {
+            interactive: true,
+            isGEO: (fileName.toUpperCase().indexOf('GSE') === 0 || fileName.toUpperCase().indexOf('GDS') === 0) && fileName.indexOf('.') === -1
+          }
         }
       };
 

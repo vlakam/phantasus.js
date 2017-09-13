@@ -906,7 +906,7 @@ phantasus.ActionManager = function () {
     }
   });
   var _this = this;
-  console.log(_this);
+  //console.log(_this);
   [new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
     new phantasus.NearestNeighbors(), new phantasus.AdjustDataTool(),
     new phantasus.CollapseDatasetTool(), new phantasus.CreateAnnotation(), new phantasus.SimilarityMatrixTool(),
