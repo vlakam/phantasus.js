@@ -447,7 +447,7 @@ phantasus.ActionManager = function () {
     name: 'Tutorial',
     cb: function () {
       window
-        .open('https://github.com/ctlab/phantasus/blob/master/inst/tutorials/phantasus-tutorial.pdf');
+        .open('/phantasus-tutorial.html');
     }
   });
   this.add({
