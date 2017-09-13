@@ -75,6 +75,17 @@
         }
       };
       landingPage.open(options);
+    } else if (params.preloaded) {
+      var options = {
+        dataset : {
+          file : params.preloaded,
+          options : {
+            interactive : true,
+            preloaded : true
+          }
+        }
+      };
+      landingPage.open(options);
     } else {
       landingPage.show();
     }

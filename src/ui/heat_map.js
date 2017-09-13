@@ -237,7 +237,7 @@ phantasus.HeatMap = function (options) {
           ' Columns', 'Select' +
           ' All' +
           ' Columns'],
-          Help: ['Find Action', null, 'Contact', 'Linking', 'Tutorial', 'Source Code', null, 'Keymap' +
+          Help: ['Find Action', null, 'Contact', 'Tutorial', 'Source Code', null, 'Keymap' +
           ' Reference']
         },
         toolbar: {
