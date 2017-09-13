@@ -182,16 +182,20 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (options == null) {
     options = {};
   }
+
+  console.log(options);
+
   var isFile = fileOrUrl instanceof File;
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
   var datasetReader;
   var str = fileOrUrl.toString();
 
-  var isGSE = isString && (fileOrUrl.substring(0, 3) === 'GSE' || fileOrUrl.substring(0, 3) === 'GDS');
-
-  if (isGSE) {
-    datasetReader = new phantasus.GeoReader({type: fileOrUrl.substring(0, 3)});
+  if (options.isGEO) {
+    datasetReader = new phantasus.GeoReader();
+  }
+  else if (options.preloaded) {
+    datasetReader = new phantasus.PreloadedReader();
   }
   else if (ext === '' && str != null && str.indexOf('blob:') === 0) {
     datasetReader = new phantasus.TxtReader(); // copy from clipboard
@@ -235,8 +239,8 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
           // console.log(dataset);
           // console.log('ready to resolve with', dataset);
           deferred.resolve(dataset);
-          if (!isGSE) {
-            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          if (!options.isGEO && !options.preloaded) {
+            phantasus.DatasetUtil.toESSessionPromise({ dataset: dataset });
           }
         }
       });
@@ -1054,6 +1058,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
   while (dataset.dataset) {
     dataset = dataset.dataset;
   }
+  console.log(dataset);
   dataset.setESSession(new Promise(function (resolve, reject) {
     //// console.log("phantasus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof phantasus.Dataset, dataset instanceof phantasus.SlicedDatasetView);
     /*		if (dataset.dataset) {

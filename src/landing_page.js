@@ -43,6 +43,7 @@ phantasus.LandingPage = function (pageOptions) {
     required: true,
     help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
   });
+
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
   this.$sampleDatasetsEl = $el.find('[data-name=preloadedDataset]');
@@ -103,7 +104,6 @@ phantasus.LandingPage.prototype = {
         throw new Error("Checking GPLs call to OpenCPU failed" + req.responseText);
       });
     };
-
 
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;

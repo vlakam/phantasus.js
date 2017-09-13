@@ -578,7 +578,8 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
-      // data types are file, dropbox, url, GEO, and predefined
+
+      // data types are file, dropbox, url, GEO, preloaded and predefined
       options.push('My Computer');
       options.push('URL');
       options.push('GEO Datasets');
@@ -608,6 +609,9 @@ phantasus.FormBuilder.prototype = {
         } else if (optionValue === 'GEO Datasets') {
           html.push(' data-icon="fa fa-external-link"');
         }
+/*        else if (optionValue === 'Preloaded Datasets') {
+          html.push(' data-icon="fa fa-desktop"');
+        }*/
         html.push('>');
         html.push(optionText);
         html.push('</option>');
@@ -623,6 +627,14 @@ phantasus.FormBuilder.prototype = {
           + '" class="form-control" style="width:50%; display:none;" type="text" name="'
           + name + '_url">');
 
+/*      if (field.preloadedExists) {
+        html
+          .push('<input placeholder="'
+            + 'Enter a name of preloaded dataset this server provides them'
+            + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+            + name + '_pre">');
+      }*/
+
       if (field.gse !== false) {
         html.push('<div>');
         html
@@ -637,6 +649,7 @@ phantasus.FormBuilder.prototype = {
           .push('<input class="form-control" style="width:50%; display:none;" type="text" name="'
             + name + '_text">');
       }
+
       html.push('</div>');
 
       html.push('<input style="display:none;" type="file" name="' + name
