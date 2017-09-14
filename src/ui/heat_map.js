@@ -313,7 +313,7 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    this.options.name = this.options.dataset.options.exactName ? this.options.dataset.options.exactName :
+    this.options.name = (this.options.dataset.options && this.options.dataset.options.exactName) ? this.options.dataset.options.exactName :
       phantasus.Util
       .getBaseFileName(phantasus.Util
         .getFileName(this.options.dataset.file ? this.options.dataset.file
