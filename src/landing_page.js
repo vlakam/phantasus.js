@@ -75,7 +75,7 @@ phantasus.LandingPage = function (pageOptions) {
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
-    var createGEOHeatMap = function(options) {
+    var createGEOHeatMap = function(options)  {
       var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
         session.getMessages(function(success) {
           console.log('checkGPLs messages', '::', success);
@@ -105,6 +105,35 @@ phantasus.LandingPage.prototype = {
       });
     };
 
+    var createPreloadedHeatMap = function(options) {
+      var req = ocpu.call('checkPreloadedNames', { name : options.dataset.file }, function(session) {
+        session.getMessages(function(success) {
+          console.log('checkPreloadedNames messages', success);
+        });
+        session.getObject(function(success) {
+          var names = JSON.parse(success);
+          console.log(names);
+
+          if (names.length === 0) {
+            alert("Dataset" + " " + options.dataset.file + " does not exist");
+            _this.show();
+          }
+
+          for (var j = 0; j < names.length; j++) {
+            var specificOptions = options;
+
+            specificOptions.dataset.options.exactName = names[j];
+            console.log("specific", specificOptions);
+
+            new phantasus.HeatMap(specificOptions);
+          }
+
+        })
+      });
+      req.fail(function () {
+        throw new Error("Checking inside names call to OpenCPU failed" + req.responseText);
+      });
+    };
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
     console.log(optionsArray);
@@ -116,6 +145,8 @@ phantasus.LandingPage.prototype = {
 
       if (options.dataset.options.isGEO) {
         createGEOHeatMap(options);
+      } else if (options.dataset.options.preloaded) {
+        createPreloadedHeatMap(options);
       }
       else {
         new phantasus.HeatMap(options);

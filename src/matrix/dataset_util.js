@@ -196,6 +196,10 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   }
   else if (options.preloaded) {
     datasetReader = new phantasus.PreloadedReader();
+    fileOrUrl = {
+      name : fileOrUrl,
+      exactName : options.exactName
+    }
   }
   else if (ext === '' && str != null && str.indexOf('blob:') === 0) {
     datasetReader = new phantasus.TxtReader(); // copy from clipboard
@@ -1066,7 +1070,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
     //// console.log("before going further", options);
-    if (options.isGEO) {
+    if (options.isGEO || options.preloaded) {
       //// console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;

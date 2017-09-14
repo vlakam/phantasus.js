@@ -13,7 +13,6 @@ phantasus.ParseDatasetFromProtoBin.parse = function (session, callback, options)
       ProtoBuf.protoFromFile("./message.proto", function (error, success) {
         if (error) {
           throw new Error(error);
-          return;
         }
         var builder = success,
           rexp = builder.build("rexp"),

@@ -285,7 +285,7 @@ phantasus.HeatMap = function (options) {
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
         phantasus.DatasetUtil.read(file).done(function (dataset) {
-          // console.log('now resolving here?');
+          console.log('now resolving here?');
           if (dataset.length && dataset.length > 0) {
             _this.options.dataset.resolve(dataset[0]);
             _this.setName(dataset[0].seriesNames[0]);
@@ -313,7 +313,8 @@ phantasus.HeatMap = function (options) {
     });
   }
   if (this.options.name == null) {
-    this.options.name = phantasus.Util
+    this.options.name = this.options.dataset.options.exactName ? this.options.dataset.options.exactName :
+      phantasus.Util
       .getBaseFileName(phantasus.Util
         .getFileName(this.options.dataset.file ? this.options.dataset.file
           : this.options.dataset));
@@ -545,20 +546,21 @@ phantasus.HeatMap = function (options) {
       options.dataset.file, options.dataset.options)
       : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
-      // console.log('resolving here?', dataset);
+      console.log('resolving here?', dataset);
 
       if (dataset.length && dataset.length > 0) {
         _this.options.dataset = dataset[0];
         _this.setName(dataset[0].seriesNames[0]);
 
         for (var i = 1; i < dataset.length; i++) {
+
           var heatmap = new phantasus.HeatMap({
             name: dataset[i].seriesNames[0],
             dataset: dataset[i],
             symmetric: _this.options.symmetric,
             inheritFromParent: false
           });
-          // console.log(i, dataset[i], heatmap);
+          console.log(i, dataset[i], heatmap);
         }
       }
       else {
