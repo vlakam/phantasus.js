@@ -134,6 +134,7 @@ phantasus.LandingPage.prototype = {
         throw new Error("Checking inside names call to OpenCPU failed" + req.responseText);
       });
     };
+
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
     console.log(optionsArray);
@@ -232,10 +233,13 @@ phantasus.LandingPage.prototype = {
   openFile: function (value) {
     var _this = this;
     var isGEO;
+    var preloaded;
     if (value.name) {
       isGEO = value.isGEO;
+      preloaded = value.preloaded;
       value = value.name;
     }
+
     var fileName = phantasus.Util.getFileName(value);
     if (fileName.toLowerCase().indexOf('.json') === fileName.length - 5) {
       phantasus.Util.getText(value).done(function (text) {
@@ -252,7 +256,8 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGEO: isGEO
+            isGEO: isGEO,
+            preloaded: preloaded
           }
         }
       };

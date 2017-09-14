@@ -586,6 +586,7 @@ phantasus.FormBuilder.prototype = {
       if (typeof Dropbox !== 'undefined') {
         options.push('Dropbox');
       }
+      options.push('Saved on server datasets');
       if (field.text != null) {
         options.push(field.text);
       }
@@ -608,10 +609,9 @@ phantasus.FormBuilder.prototype = {
           html.push(' data-icon="fa fa-external-link"');
         } else if (optionValue === 'GEO Datasets') {
           html.push(' data-icon="fa fa-external-link"');
-        }
-/*        else if (optionValue === 'Preloaded Datasets') {
+        } else if (optionValue === 'Saved on server datasets') {
           html.push(' data-icon="fa fa-desktop"');
-        }*/
+        }
         html.push('>');
         html.push(optionText);
         html.push('</option>');
@@ -650,6 +650,12 @@ phantasus.FormBuilder.prototype = {
             + name + '_text">');
       }
 
+      html
+        .push('<input placeholder="'
+          + 'Enter a dataset name here'
+          + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+          + name + '_pre">');
+
       html.push('</div>');
 
       html.push('<input style="display:none;" type="file" name="' + name
@@ -666,6 +672,8 @@ phantasus.FormBuilder.prototype = {
             var showUrlInput = val === 'URL';
             var showGSEInput = val === 'GEO Datasets';
             var showTextInput = val === field.text;
+            var showPreInput = val === 'Saved on server datasets';
+
             if ('Dropbox' === val) {
               var options = {
                 success: function (results) {
@@ -696,6 +704,9 @@ phantasus.FormBuilder.prototype = {
             that.$form.find('[name=' + name + '_geo]')
               .css('display',
                 showGSEInput ? '' : 'none');
+            that.$form.find('[name=' + name + '_pre]')
+              .css('display',
+                showPreInput ? '' : 'none');
           });
       // URL
       that.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
@@ -736,6 +747,22 @@ phantasus.FormBuilder.prototype = {
             value: {
               name: text.toUpperCase(),
               isGEO: true
+            }
+          })
+        }
+      });
+      // Preloaded
+      that.$form.on('keyup', '[name=' + name + '_pre]', function (evt) {
+        var text = $.trim($(this).val());
+        that.setValue(name, text);
+        if (evt.which === 13) {
+          // console.log('environment', evt);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
+          that.trigger('change', {
+            name: name,
+            value: {
+              name: text,
+              preloaded: true
             }
           })
         }

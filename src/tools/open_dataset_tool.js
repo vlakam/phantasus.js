@@ -364,6 +364,9 @@ phantasus.OpenDatasetTool.prototype = {
           if (options.input.isGEO) {
             readOptions.isGEO = true;
           }
+          if (options.input.preloaded) {
+            readOptions.preloaded = true;
+          }
           var deferred = phantasus.DatasetUtil.read(file,
             readOptions);
           _this._read(options, deferred);

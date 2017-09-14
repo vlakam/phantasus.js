@@ -114,7 +114,6 @@ phantasus.OpenFileTool.prototype = {
   },
 
   execute: function (options) {
-    console.log("OpenDatasetTool.execute", options);
     var that = this;
     var isInteractive = this.options.file == null;
     var heatMap = options.heatMap;
@@ -123,6 +122,10 @@ phantasus.OpenFileTool.prototype = {
     }
     if (options.input.file.isGEO) {
       options.input.isGEO = options.input.file.isGEO;
+      options.input.file = options.input.file.name;
+    }
+    if (options.input.file.preloaded) {
+      options.input.preloaded = options.input.file.preloaded;
       options.input.file = options.input.file.name;
     }
     var project = options.project;
@@ -144,7 +147,6 @@ phantasus.OpenFileTool.prototype = {
       || options.input.open_file_action === 'append'
       || options.input.open_file_action === 'open'
       || options.input.open_file_action === 'overlay') {
-      console.log("I'm here", options);
       new phantasus.OpenDatasetTool().execute(options);
     } else if (options.input.open_file_action === 'Open dendrogram') {
       phantasus.HeatMap.showTool(new phantasus.OpenDendrogramTool(
