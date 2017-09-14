@@ -730,10 +730,13 @@ phantasus.FormBuilder.prototype = {
         that.setValue(name, text);
         if (evt.which === 13) {
           // console.log('environment', evt);
-          // console.log('object to trigger with result', that, 'name', name, 'text', text);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
           that.trigger('change', {
             name: name,
-            value: text.toUpperCase()
+            value: {
+              name: text.toUpperCase(),
+              isGEO: true
+            }
           })
         }
       });

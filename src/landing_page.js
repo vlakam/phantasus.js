@@ -200,6 +200,11 @@ phantasus.LandingPage.prototype = {
   },
   openFile: function (value) {
     var _this = this;
+    var isGEO;
+    if (value.name) {
+      isGEO = value.isGEO;
+      value = value.name;
+    }
     var fileName = phantasus.Util.getFileName(value);
     if (fileName.toLowerCase().indexOf('.json') === fileName.length - 5) {
       phantasus.Util.getText(value).done(function (text) {
@@ -216,12 +221,13 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGEO: (fileName.toUpperCase().indexOf('GSE') === 0 || fileName.toUpperCase().indexOf('GDS') === 0) && fileName.indexOf('.') === -1
+            isGEO: isGEO
           }
         }
       };
 
       phantasus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
+        console.log("fileExtensionPrompt", readOptions);
         if (readOptions) {
           for (var key in readOptions) {
             options.dataset.options[key] = readOptions[key];
