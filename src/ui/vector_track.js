@@ -238,11 +238,11 @@ phantasus.VectorTrack.prototype = {
           delete settings.render;
         }
       }
-      if (!this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) &&
-        (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR) || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT))) {
-        settings.display.push(phantasus.VectorTrack.RENDER.TEXT);
-      }
       this.settings = settings;
+    }
+    if (!this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT) &&
+      (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR) || this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT))) {
+      settings.display.push(phantasus.VectorTrack.RENDER.TEXT);
     }
     this._update();
 
