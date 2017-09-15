@@ -964,8 +964,8 @@ phantasus.ActionManager = function () {
       var model = trackInfo.isColumns ? project
         .getColumnFontModel() : project
         .getRowFontModel();
-      var chooser = new morpheus.FontChooser({fontModel: model, track: options.heatMap.getTrack(trackInfo.name, trackInfo.isColumns), heatMap: options.heatMap});
-      morpheus.FormBuilder.showInModal({
+      var chooser = new phantasus.FontChooser({fontModel: model, track: options.heatMap.getTrack(trackInfo.name, trackInfo.isColumns), heatMap: options.heatMap});
+      phantasus.FormBuilder.showInModal({
         title: 'Edit Fonts',
         html: chooser.$div,
         close: 'Close',

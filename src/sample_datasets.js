@@ -245,35 +245,27 @@ phantasus.SampleDatasets.getTcgaDataset = function (options) {
 phantasus.SampleDatasets.getCCLEDataset = function (options) {
   var datasets = [];
   if (options.sig_genes) {
-    datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
-    // datasets
-    // .push({
-    // dataset :
-    // '//s3.amazonaws.com/data.clue.io/phantasus/1650_HC_plus_RD_muts.maf.txt'
-    // });
+    datasets.push(
+      'https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
   }
   if (options.cn) {
-    datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_copynumber_byGene_2013-12-03.gct');
+    datasets.push('https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_copynumber_byGene_2013-12-03.gct');
   }
 
   if (options.mrna) {
-    datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_Expression_Entrez_2012-09-29.txt');
+    datasets.push('https://software.broadinstitute.org/morpheus/preloaded-datasets/CCLE_Expression_Entrez_2012-09-29.txt');
   }
   if (options.ach) {
-    datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/Achilles_QC_v2.4.3.rnai.Gs.gct');
+    datasets.push('https://software.broadinstitute.org/morpheus/preloaded-datasets/Achilles_QC_v2.4.3.rnai.Gs.gct');
   }
   var columnAnnotations = [];
   if (options.ach) {
     // there are several cell lines that are in Achilles but not CCLE
     columnAnnotations.push({
-        file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/Achilles_v2.4_SampleInfo_small.txt',
-        datasetField: 'id',
-        fileField: 'id'
-      });
+      file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/Achilles_v2.4_SampleInfo_small.txt',
+      datasetField: 'id',
+      fileField: 'id'
+    });
 
   }
   columnAnnotations.push({
