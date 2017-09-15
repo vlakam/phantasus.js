@@ -1165,8 +1165,15 @@ phantasus.HeatMap.prototype = {
 
     json.name = this.options.name;
 
-    // TODO shapes
     json.showRowNumber = this.isShowRowNumber();
+
+    // annotation shapes
+    json.rowShapeModel = this.getProject().getRowShapeModel().toJSON(this.rowTracks);
+    json.columnShapeModel = this.getProject().getColumnShapeModel().toJSON(this.columnTracks);
+
+    // annotation font
+    json.rowFontModel = this.getProject().getRowFontModel().toJSON(this.rowTracks);
+    json.columnFontModel = this.getProject().getColumnFontModel().toJSON(this.columnTracks);
 
     // annotation colors
     json.rowColorModel = this.getProject().getRowColorModel().toJSON(this.rowTracks);
@@ -1838,11 +1845,14 @@ phantasus.HeatMap.prototype = {
           }
 
         }
+        if (option.formatter) {
+          v.getProperties().set(phantasus.VectorKeys.FORMATTER, phantasus.Util.createNumberFormat(option.formatter));
+        }
         if (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
           && option.color) {
           var m = isColumns ? _this.project.getColumnColorModel()
             : _this.project.getRowColorModel();
-          if (track.isDiscrete()) {
+          if (track.getFullVector().getProperties.get(phantasus.VectorKeys.DISCRETE)) {
             _.each(options.color, function (p) {
               m.setMappedValue(v, p.value, p.color);
             });
@@ -2040,6 +2050,18 @@ phantasus.HeatMap.prototype = {
     }
     if (this.options.columnColorModel) {
       this.getProject().getColumnColorModel().fromJSON(this.options.columnColorModel);
+    }
+    if (this.options.rowShapeModel) {
+      this.getProject().getRowShapeModel().fromJSON(this.options.rowShapeModel);
+    }
+    if (this.options.columnShapeModel) {
+      this.getProject().getColumnShapeModel().fromJSON(this.options.columnShapeModel);
+    }
+    if (this.options.rowFontModel) {
+      this.getProject().getRowFontModel().fromJSON(this.options.rowFontModel);
+    }
+    if (this.options.columnFontModel) {
+      this.getProject().getColumnFontModel().fromJSON(this.options.columnFontModel);
     }
     if (this.options.rowSize === 'fit' || this.options.columnSize === 'fit') {
       // note that we have to revalidate twice because column sizes are
@@ -3429,6 +3451,9 @@ phantasus.HeatMap.prototype = {
   getSelectedTrackName: function (isColumns) {
     return isColumns ? this.selectedColumnTrackName : this.selectedRowTrackName;
   },
+  getLastSelectedTrackInfo: function () {
+    return this.selectedTrackInfo;
+  },
   setSelectedTrack: function (name, isColumns) {
     var previousName = isColumns ? this.selectedColumnTrackName : this.selectedRowTrackName;
     if (name !== previousName) {
@@ -3438,8 +3463,10 @@ phantasus.HeatMap.prototype = {
       }
       if (isColumns) {
         this.selectedColumnTrackName = name;
+        this.selectedTrackInfo = {name: name, isColumns: true};
       } else {
         this.selectedRowTrackName = name;
+        this.selectedTrackInfo = {name: name, isColumns: false};
       }
 
       var index = this.getTrackIndex(name, isColumns);
@@ -4231,16 +4258,21 @@ phantasus.HeatMap.copyFromParent = function (project, options) {
   project.rowShapeModel = options.parent.getProject().getRowShapeModel().copy();
   project.columnShapeModel = options.parent.getProject().getColumnShapeModel().copy();
 
+  project.rowFontModel = options.parent.getProject().getRowFontModel().copy();
+  project.columnFontModel = options.parent.getProject().getColumnFontModel().copy();
+
   var parentRowTracks = options.parent.rowTracks || [];
   var parentColumnTracks = options.parent.columnTracks || [];
   if (options.inheritFromParentOptions.rows) { // row similarity matrix
     project.columnShapeModel = project.rowShapeModel;
     project.columnColorModel = project.rowColorModel;
+    project.columnFontModel = project.rowFontModel;
     parentColumnTracks = parentRowTracks.slice().reverse();
   }
   if (options.inheritFromParentOptions.columns) { // column similarity matrix
     project.rowShapeModel = project.columnShapeModel;
     project.rowColorModel = project.columnColorModel;
+    project.rowFontModel = project.columnFontModel;
     parentRowTracks = parentColumnTracks.slice().reverse();
   }
 
@@ -4252,6 +4284,10 @@ phantasus.HeatMap.copyFromParent = function (project, options) {
     tmp = project.rowColorModel;
     project.rowColorModel = project.columnColorModel;
     project.columnColorModel = tmp;
+
+    tmp = project.rowFontModel;
+    project.rowFontModel = project.columnFontModel;
+    project.columnFontModel = tmp;
 
     tmp = parentRowTracks.slice().reverse();
     // swap tracks

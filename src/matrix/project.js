@@ -13,6 +13,8 @@ phantasus.Project = function (dataset) {
   this.columnColorModel = new phantasus.VectorColorModel();
   this.rowShapeModel = new phantasus.VectorShapeModel();
   this.columnShapeModel = new phantasus.VectorShapeModel();
+  this.rowFontModel = new phantasus.VectorFontModel();
+  this.columnFontModel = new phantasus.VectorFontModel();
   this.hoverColumnIndex = -1;
   this.hoverRowIndex = -1;
   this.columnSelectionModel = new phantasus.SelectionModel(this, true);
@@ -21,8 +23,8 @@ phantasus.Project = function (dataset) {
   this.symmetricProjectListener = null;
   phantasus.Project._recomputeCalculatedColumnFields(this.originalDataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
   phantasus.Project
-  ._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(
-    this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
+    ._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(
+      this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
 };
 phantasus.Project.Events = {
   DATASET_CHANGED: 'datasetChanged',
@@ -98,6 +100,12 @@ phantasus.Project.prototype = {
   },
   getColumnShapeModel: function () {
     return this.columnShapeModel;
+  },
+  getRowFontModel: function () {
+    return this.rowFontModel;
+  },
+  getColumnFontModel: function () {
+    return this.columnFontModel;
   },
   getGroupRows: function () {
     return this.groupRows;

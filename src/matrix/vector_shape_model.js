@@ -1,9 +1,10 @@
 phantasus.VectorShapeModel = function () {
   this.shapes = phantasus.VectorShapeModel.SHAPES;
-  this.vectorNameToShapeMap = new phantasus.Map();
+  this.vectorNameToMappedValue = new phantasus.Map();
 };
 
-phantasus.VectorShapeModel.SHAPES = ['circle', 'square', 'plus', 'x',
+phantasus.VectorShapeModel.SHAPES = [
+  'circle', 'square', 'plus', 'x',
   'asterisk', 'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
   'triangle-right', 'minus'];
 phantasus.VectorShapeModel.STANDARD_SHAPES = {
@@ -15,22 +16,41 @@ phantasus.VectorShapeModel.STANDARD_SHAPES = {
 };
 
 phantasus.VectorShapeModel.prototype = {
+  toJSON: function (tracks) {
+    var _this = this;
+    var json = {};
+    tracks.forEach(function (track) {
+      if (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)) {
+        var map = _this.vectorNameToMappedValue.get(track.getName());
+        if (map != null) {
+          json[track.getName()] = map;
+        }
+      }
+    });
+    return json;
+  },
+  fromJSON: function (json) {
+    for (var name in json) {
+      var obj = json[name];
+      this.vectorNameToMappedValue.set(name, phantasus.Map.fromJSON(obj));
+    }
+  },
   clear: function (vector) {
-    this.vectorNameToShapeMap.remove(vector.getName());
+    this.vectorNameToMappedValue.remove(vector.getName());
   },
   copy: function () {
     var c = new phantasus.VectorShapeModel();
     c.shapes = this.shapes.slice(0);
-    this.vectorNameToShapeMap.forEach(function (shapeMap, name) {
+    this.vectorNameToMappedValue.forEach(function (shapeMap, name) {
       var newShapeMap = new phantasus.Map();
       newShapeMap.setAll(shapeMap); // copy existing values
-      c.vectorNameToShapeMap.set(name, newShapeMap);
+      c.vectorNameToMappedValue.set(name, newShapeMap);
     });
 
     return c;
   },
   clearAll: function () {
-    this.vectorNameToShapeMap = new phantasus.Map();
+    this.vectorNameToMappedValue = new phantasus.Map();
   },
   _getShapeForValue: function (value) {
     if (value == null) {
@@ -43,7 +63,7 @@ phantasus.VectorShapeModel.prototype = {
     }
 
     // try to reuse existing map
-    var existingMetadataValueToShapeMap = this.vectorNameToShapeMap
+    var existingMetadataValueToShapeMap = this.vectorNameToMappedValue
       .values();
     for (var i = 0, length = existingMetadataValueToShapeMap.length; i < length; i++) {
       var shape = existingMetadataValueToShapeMap[i].get(value);
@@ -54,14 +74,14 @@ phantasus.VectorShapeModel.prototype = {
 
   },
   getMap: function (name) {
-    return this.vectorNameToShapeMap.get(name);
+    return this.vectorNameToMappedValue.get(name);
   },
   getMappedValue: function (vector, value) {
-    var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
+    var metadataValueToShapeMap = this.vectorNameToMappedValue.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
       metadataValueToShapeMap = new phantasus.Map();
-      this.vectorNameToShapeMap.set(vector.getName(),
+      this.vectorNameToMappedValue.set(vector.getName(),
         metadataValueToShapeMap);
       // set all possible shapes
       var values = phantasus.VectorUtil.getValues(vector);
@@ -85,11 +105,11 @@ phantasus.VectorShapeModel.prototype = {
     return shape;
   },
   setMappedValue: function (vector, value, shape) {
-    var metadataValueToShapeMap = this.vectorNameToShapeMap.get(vector
+    var metadataValueToShapeMap = this.vectorNameToMappedValue.get(vector
       .getName());
     if (metadataValueToShapeMap === undefined) {
       metadataValueToShapeMap = new phantasus.Map();
-      this.vectorNameToShapeMap.set(vector.getName(),
+      this.vectorNameToMappedValue.set(vector.getName(),
         metadataValueToShapeMap);
     }
     metadataValueToShapeMap.set(value, shape);

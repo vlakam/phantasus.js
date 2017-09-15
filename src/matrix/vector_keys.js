@@ -31,6 +31,9 @@ phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'phantasus.recompute.funct.s
 /**Number format spec/function */
 phantasus.VectorKeys.FORMATTER = 'phantasus.formatter';
 
+/** Whether vector values should be treated discretely or continuously */
+phantasus.VectorKeys.DISCRETE = 'phantasus.discrete';
+
 phantasus.VectorKeys.COPY_IGNORE = new phantasus.Set();
 phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.HEADER_SUMMARY);
 phantasus.VectorKeys.COPY_IGNORE.add(phantasus.VectorKeys.DATA_TYPE);
