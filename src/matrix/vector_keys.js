@@ -31,6 +31,9 @@ phantasus.VectorKeys.RECOMPUTE_FUNCTION_SELECTION = 'phantasus.recompute.funct.s
 /**Number format spec/function */
 phantasus.VectorKeys.FORMATTER = 'phantasus.formatter';
 
+/* Indicates that a "fake" vector to show row/column number */
+phantasus.VectorKeys.IS_INDEX = 'phantasus.isIndex';
+
 /** Whether vector values should be treated discretely or continuously */
 phantasus.VectorKeys.DISCRETE = 'phantasus.discrete';
 
