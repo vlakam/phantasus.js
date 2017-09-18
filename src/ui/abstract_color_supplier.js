@@ -44,7 +44,7 @@ phantasus.AbstractColorSupplier.fromJSON = function (json) {
   var cs = json.stepped ? new phantasus.SteppedColorSupplier()
     : new phantasus.GradientColorSupplier();
 
-  if (json.scalingMode == null) {
+  if (json.scalingMode == null && json.type != null) {
     json.scalingMode = json.type; // old
   }
   if (json.scalingMode === 'relative' || json.scalingMode === 0) {

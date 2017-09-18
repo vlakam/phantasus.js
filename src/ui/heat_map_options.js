@@ -25,7 +25,7 @@ phantasus.HeatMapOptions = function (heatMap) {
           value: ''
         }, {
           name: 'relative',
-          value: 'gene'
+          value: 'relative'
         }, {
           name: 'binary',
           value: 'binary'
@@ -34,16 +34,10 @@ phantasus.HeatMapOptions = function (heatMap) {
           value: 'MAF'
         }, {
           name: 'fixed (-1, -0.5, 0.5, 1)',
-          value: 'wtcs'
+          value: '-1_to_1'
         }, {
           name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
           value: 'cn'
-        }, {
-          name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
-          value: '100scale2'
-        }, {
-          name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
-          value: '100scale1'
         }]
     }, {
       name: 'save_color_scheme',
