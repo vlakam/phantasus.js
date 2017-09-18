@@ -1146,7 +1146,7 @@ phantasus.VectorTrack.prototype = {
         });
 
       }
-      if (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_FONT)) {
+      if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT)) {
         sectionToItems.Display.push({
           name: 'Edit Fonts...'
         });

@@ -3707,13 +3707,12 @@ phantasus.HeatMap.prototype = {
       //   .getColorScheme().getNames().length * 14
       //   : 40;
     }
-
-    context.save();
     var legendOffset = 15;
-    context.translate(legendOffset, legendHeight);
     var maxLegendHeight = 0;
-    // column color legend
+
+    // color legend
     context.save();
+    context.translate(legendOffset, legendHeight);
     var trackLegend = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.columnTracks,
@@ -3722,13 +3721,14 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
         }), this.getProject().getColumnColorModel());
     trackLegend.draw({}, context);
-    context.restore();
     var legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     // shape legend
     context.save();
-    context.translate(legendOffset + legendSize.width, legendHeight);
+    context.translate(legendOffset, legendHeight);
     trackLegend = new phantasus.HeatMapTrackShapeLegend(
       _.filter(
         this.columnTracks,
@@ -3737,13 +3737,14 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
         }), this.getProject().getColumnShapeModel());
     trackLegend.draw({}, context);
-    context.restore();
     legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     // font legend
     context.save();
-    context.translate(legendOffset + legendSize.width, legendHeight);
+    context.translate(legendOffset, legendHeight);
     trackLegend = new phantasus.HeatMapTrackFontLegend(
       _.filter(
         this.columnTracks,
@@ -3752,13 +3753,14 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
         }), this.getProject().getColumnFontModel());
     trackLegend.draw({}, context);
-    context.restore();
     legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     // row color legend
     context.save();
-    context.translate(legendOffset + legendSize.width, legendHeight);
+    context.translate(legendOffset, legendHeight);
     trackLegend = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.rowTracks,
@@ -3767,13 +3769,14 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
         }), this.getProject().getRowColorModel());
     trackLegend.draw({}, context);
-    context.restore();
     legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     // shape legend
     context.save();
-    context.translate(legendOffset + legendSize.width, legendHeight);
+    context.translate(legendOffset, legendHeight);
     trackLegend = new phantasus.HeatMapTrackShapeLegend(
       _.filter(
         this.rowTracks,
@@ -3782,13 +3785,14 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
         }), this.getProject().getRowShapeModel());
     trackLegend.draw({}, context);
-    context.restore();
     legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     // font legend
     context.save();
-    context.translate(legendOffset + legendSize.width, legendHeight);
+    context.translate(legendOffset, legendHeight);
     trackLegend = new phantasus.HeatMapTrackFontLegend(
       _.filter(
         this.rowTracks,
@@ -3797,9 +3801,10 @@ phantasus.HeatMap.prototype = {
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
         }), this.getProject().getRowFontModel());
     trackLegend.draw({}, context);
-    context.restore();
     legendSize = trackLegend.getPreferredSize();
+    legendOffset += legendSize.width;
     maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+    context.restore();
 
     legendHeight += maxLegendHeight;
 
