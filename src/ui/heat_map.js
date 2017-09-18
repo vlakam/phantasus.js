@@ -1842,7 +1842,7 @@ phantasus.HeatMap.prototype = {
 
         }
         if (option.formatter) {
-          v.getProperties().set(morpheus.VectorKeys.FORMATTER, morpheus.Util.createNumberFormat(option.formatter));
+          v.getProperties().set(phantasus.VectorKeys.FORMATTER, phantasus.Util.createNumberFormat(option.formatter));
         }
         if (option.formatter) {
           v.getProperties().set(phantasus.VectorKeys.FORMATTER, phantasus.Util.createNumberFormat(option.formatter));
@@ -3213,7 +3213,7 @@ phantasus.HeatMap.prototype = {
   }
   ,
   getVisibleTrackNames: function (isColumns) {
-    this.getVisibleTracks(isColumns).map(function (track) {
+    return this.getVisibleTracks(isColumns).map(function (track) {
       return track.name;
     });
   },
@@ -3598,6 +3598,8 @@ phantasus.HeatMap.prototype = {
       totalSize.height = totalSize.height + maxLegendHeight;
       totalSize.width = Math.max(totalSize.width, totalLegendWidth);
     }
+
+    // color
     var trackLegendSize = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.columnTracks,
@@ -3607,6 +3609,7 @@ phantasus.HeatMap.prototype = {
         }), this.getProject().getColumnColorModel()).getPreferredSize();
     totalSize.height += trackLegendSize.height;
     totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
+
     trackLegendSize = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.rowTracks,
@@ -3614,8 +3617,50 @@ phantasus.HeatMap.prototype = {
           return track.isVisible()
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
         }), this.getProject().getRowColorModel()).getPreferredSize();
-    totalSize.height += phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + trackLegendSize.height;
-    totalSize.width = phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS + Math.max(totalSize.width, trackLegendSize.width);
+    totalSize.height += trackLegendSize.height;
+    totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
+
+    // shape
+    trackLegendSize = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.columnTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
+        }), this.getProject().getColumnShapeModel()).getPreferredSize();
+    totalSize.height += trackLegendSize.height;
+    totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
+
+    trackLegendSize = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.rowTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
+        }), this.getProject().getRowShapeModel()).getPreferredSize();
+    totalSize.height += trackLegendSize.height;
+    totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
+
+    // font
+    trackLegendSize = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.columnTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
+        }), this.getProject().getColumnFontModel()).getPreferredSize();
+    totalSize.height += trackLegendSize.height;
+    totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
+
+    trackLegendSize = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.rowTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
+        }), this.getProject().getRowFontModel()).getPreferredSize();
+    totalSize.height += trackLegendSize.height;
+    totalSize.width = Math.max(totalSize.width, trackLegendSize.width);
     return totalSize;
   }
   ,
@@ -3666,32 +3711,97 @@ phantasus.HeatMap.prototype = {
     context.save();
     var legendOffset = 15;
     context.translate(legendOffset, legendHeight);
+    var maxLegendHeight = 0;
     // column color legend
-    var columnTrackLegend = new phantasus.HeatMapTrackColorLegend(
+    context.save();
+    var trackLegend = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.columnTracks,
         function (track) {
           return track.isVisible()
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
         }), this.getProject().getColumnColorModel());
-    columnTrackLegend.draw({}, context);
+    trackLegend.draw({}, context);
     context.restore();
+    var legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
 
-    // row color legend to the right of column color legend
-    var columnTrackLegendSize = columnTrackLegend.getPreferredSize();
+    // shape legend
     context.save();
-    context.translate(legendOffset + columnTrackLegendSize.width, legendHeight);
-    var rowTrackLegend = new phantasus.HeatMapTrackColorLegend(
+    context.translate(legendOffset + legendSize.width, legendHeight);
+    trackLegend = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.columnTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
+        }), this.getProject().getColumnShapeModel());
+    trackLegend.draw({}, context);
+    context.restore();
+    legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+
+    // font legend
+    context.save();
+    context.translate(legendOffset + legendSize.width, legendHeight);
+    trackLegend = new phantasus.HeatMapTrackFontLegend(
+      _.filter(
+        this.columnTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
+        }), this.getProject().getColumnFontModel());
+    trackLegend.draw({}, context);
+    context.restore();
+    legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+
+    // row color legend
+    context.save();
+    context.translate(legendOffset + legendSize.width, legendHeight);
+    trackLegend = new phantasus.HeatMapTrackColorLegend(
       _.filter(
         this.rowTracks,
         function (track) {
           return track.isVisible()
             && (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR) || track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_COLOR));
         }), this.getProject().getRowColorModel());
-    rowTrackLegend.draw({}, context);
+    trackLegend.draw({}, context);
     context.restore();
-    legendHeight += Math.max(rowTrackLegend.getPreferredSize().height,
-      columnTrackLegendSize.height);
+    legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+
+    // shape legend
+    context.save();
+    context.translate(legendOffset + legendSize.width, legendHeight);
+    trackLegend = new phantasus.HeatMapTrackShapeLegend(
+      _.filter(
+        this.rowTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE));
+        }), this.getProject().getRowShapeModel());
+    trackLegend.draw({}, context);
+    context.restore();
+    legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+
+    // font legend
+    context.save();
+    context.translate(legendOffset + legendSize.width, legendHeight);
+    trackLegend = new phantasus.HeatMapTrackFontLegend(
+      _.filter(
+        this.rowTracks,
+        function (track) {
+          return track.isVisible()
+            && (track.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT));
+        }), this.getProject().getRowFontModel());
+    trackLegend.draw({}, context);
+    context.restore();
+    legendSize = trackLegend.getPreferredSize();
+    maxLegendHeight = Math.max(maxLegendHeight, legendSize.height);
+
+    legendHeight += maxLegendHeight;
 
     var heatmapY = this.isDendrogramVisible(true) ? (this.columnDendrogram.getUnscaledHeight() +
       phantasus.HeatMap.SPACE_BETWEEN_HEAT_MAP_AND_ANNOTATIONS) : 0;
