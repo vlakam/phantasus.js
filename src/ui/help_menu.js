@@ -15,7 +15,7 @@ phantasus.HelpMenu = function () {
   // html.push('<li><a data-name="contact" href="#">Contact</a></li>');
 
   // html.push('<li><a data-name="linking" href="#">Linking</a></li>');
-  // html.push('<li><a data-name="tutorial" href="tutorial.html">Tutorial</a></li>');
+  html.push('<li><a data-name="tutorial" href="phantasus-tutorial.html">Tutorial</a></li>');
   // html.push('<li><a data-name="source" href="#">Source Code</a></li>');
   // html.push('<li role="presentation" class="divider"></li>');
   // html.push('<li><a data-name="keymap" href="#">Keymap Reference</a></li>');

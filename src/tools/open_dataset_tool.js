@@ -353,6 +353,7 @@ phantasus.OpenDatasetTool.prototype = {
   execute: function (options) {
     var file = options.input.file;
 
+    console.log("openDatasetTool.execute", file);
     var _this = this;
     phantasus.OpenDatasetTool
       .fileExtensionPrompt(file,

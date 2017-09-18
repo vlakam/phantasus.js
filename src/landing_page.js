@@ -150,6 +150,7 @@ phantasus.LandingPage.prototype = {
         createPreloadedHeatMap(options);
       }
       else {
+        console.log("before loading heatmap from landing_page", options);
         new phantasus.HeatMap(options);
       }
     }
@@ -234,7 +235,7 @@ phantasus.LandingPage.prototype = {
     var _this = this;
     var isGEO;
     var preloaded;
-    if (value.name) {
+    if (value.name && (value.isGEO || value.preloaded)) {
       isGEO = value.isGEO;
       preloaded = value.preloaded;
       value = value.name;

@@ -447,7 +447,7 @@ phantasus.ActionManager = function () {
     name: 'Tutorial',
     cb: function () {
       window
-        .open('/phantasus-tutorial.html');
+        .open('phantasus-tutorial.html');
     }
   });
   this.add({

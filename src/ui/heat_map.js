@@ -271,6 +271,8 @@ phantasus.HeatMap = function (options) {
     options.landingPage.$el.prependTo(this.$el);
   }
 
+  console.log("heatmap full options", this.options);
+
   if (this.options.dataset == null) {
     var datasetFormBuilder = new phantasus.FormBuilder();
     datasetFormBuilder.append({

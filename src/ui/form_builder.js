@@ -770,6 +770,7 @@ phantasus.FormBuilder.prototype = {
       // browse file selected
       that.$form.on('change', '[name=' + name + '_file]', function (evt) {
         var files = evt.target.files; // FileList object
+        console.log(files);
         that.setValue(name, isMultiple ? files : files[0]);
         that.trigger('change', {
           name: name,
