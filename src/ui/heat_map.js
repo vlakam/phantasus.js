@@ -596,7 +596,7 @@ phantasus.HeatMap = function (options) {
             _this.heatmap.getColorScheme().setCurrentValue(
               phantasus.Util.getBaseFileName(phantasus.Util.getFileName(option.dataset)));
             _this.heatmap.getColorScheme().setColorSupplierForCurrentValue(
-              phantasus.HeatMapColorScheme.createColorSupplier(option.colorScheme));
+              phantasus.AbstractColorSupplier.fromJSON(option.colorScheme));
 
           } else {
             try {
@@ -904,16 +904,13 @@ phantasus.HeatMap.prototype = {
     if (options.extension === 'segtab' || options.extension === 'seg') {
       colorScheme = {
         scalingMode: 'fixed',
-        map: phantasus.HeatMapColorScheme.Predefined.CN().map.map(function (item) {
-          return {
-            value: Math.pow(2, 1 + item.value),
-            color: item.color
-          };
-        })
+        values: phantasus.HeatMapColorScheme.Predefined.CN().values.map(function (value) {
+          return Math.pow(2, 1 + value);
+        }),
+        colors: phantasus.HeatMapColorScheme.Predefined.CN().colors
       };
     } else if (options.extension === 'maf') {
       colorScheme = phantasus.HeatMapColorScheme.Predefined.MAF();
-      var colorMap = phantasus.HeatMapColorScheme.Predefined.MAF().map;
       var rowMutProfile = this.project.getFullDataset().getRowMetadata().getByName('mutation_summary');
       var fieldNames = rowMutProfile.getProperties().get(phantasus.VectorKeys.FIELDS);
       var useMafColorMap = true;
@@ -931,20 +928,14 @@ phantasus.HeatMap.prototype = {
         colorScheme = {
           scalingMode: 'fixed',
           stepped: true,
-          map: [
-            {
-              value: 0,
-              color: 'rgb(255,255,255)'
-            }]
+          values: [0],
+          colors: ['rgb(255,255,255)']
         };
         for (var i = 0; i < fieldNames.length; i++) {
-          colorScheme.map.push({
-            value: i + 1,
-            color: phantasus.VectorColorModel.TWENTY_COLORS[i % phantasus.VectorColorModel.TWENTY_COLORS.length],
-            name: fieldNames[i]
-          });
+          colorScheme.values.push(i + 1);
+          colorScheme.colors.push(phantasus.VectorColorModel.TWENTY_COLORS[i % phantasus.VectorColorModel.TWENTY_COLORS.length]);
+          colorScheme.names.push(fieldNames[i]);
         }
-        colorMap = colorScheme.map;
       }
       var columnMutationSummaryVectors = [];
       var columnMutationSummaryNames = ['mutation_summary', 'mutation_summary_selection'];
@@ -967,14 +958,14 @@ phantasus.HeatMap.prototype = {
         track.settingFromConfig('stacked_bar');
       }
 
-      for (var i = 1; i < colorMap.length; i++) {
+      for (var i = 1; i < colorScheme.colors.length; i++) {
         if (rowMutProfile) {
           this.getProject().getRowColorModel().setMappedValue(
-            rowMutProfile, i - 1, colorMap[i].color);
+            rowMutProfile, i - 1, colorScheme.colors[i]);
         }
         for (var j = 0; j < columnMutationSummaryVectors.length; j++) {
           this.getProject().getColumnColorModel().setMappedValue(
-            columnMutationSummaryVectors[j], i - 1, colorMap[i].color);
+            columnMutationSummaryVectors[j], i - 1, colorScheme.colors[i]);
         }
 
       }
@@ -983,59 +974,29 @@ phantasus.HeatMap.prototype = {
     } else if (options.filename === 'all_lesions.conf_99'
       || options.filename === 'all_data_by_genes.txt' || options.filename.toLowerCase().indexOf('gistic') !== -1) {
       colorScheme = {
-        type: 'fixed',
-        map: [
-          {
-            value: -0.5,
-            color: 'blue'
-          }, {
-            value: 0,
-            color: 'white'
-          }, {
-            value: 0.5,
-            color: 'red'
-          }]
+        scalingMode: 'fixed',
+        values: [-0.5, 0, 0.5],
+        colors: ['blue', 'white', 'red']
       };
     } else if (options.filename.toLowerCase().indexOf('copynumber') !== -1 ||
       options.filename.toLowerCase().indexOf('copy number') !== -1) {
       colorScheme = {
-        type: 'fixed',
-        map: [
-          {
-            value: -1.5,
-            color: 'blue'
-          }, {
-            value: 0,
-            color: 'white'
-          }, {
-            value: 1.5,
-            color: 'red'
-          }]
+        scalingMode: 'fixed',
+        values: [-1.5, 0, 1.5],
+        colors: ['blue', 'white', 'red']
       };
     } else if (options.filename.toLowerCase().indexOf('achilles') !== -1) {
       colorScheme = {
-        type: 'fixed',
-        map: [
-          {
-            value: -3,
-            color: 'blue'
-          }, {
-            value: -1,
-            color: 'white'
-          }, {
-            value: 1,
-            color: 'white'
-          }, {
-            value: 3,
-            color: 'red'
-          }]
+        scalingMode: 'fixed',
+        values: [-3, -1, 1, 3],
+        colors: ['blue', 'white', 'white', 'red']
       };
     }
 
     if (colorScheme && options.filename && this.heatmap.getColorScheme()) {
       this.heatmap.getColorScheme().setCurrentValue(options.filename);
       this.heatmap.getColorScheme().setColorSupplierForCurrentValue(
-        phantasus.HeatMapColorScheme.createColorSupplier(colorScheme));
+        phantasus.AbstractColorSupplier.fromJSON(colorScheme));
     }
     return colorScheme;
   },
