@@ -352,6 +352,8 @@ phantasus.OpenDatasetTool.prototype = {
   },
   execute: function (options) {
     var file = options.input.file;
+
+    console.log("openDatasetTool.execute", file);
     var _this = this;
     phantasus.OpenDatasetTool
       .fileExtensionPrompt(file,
@@ -360,6 +362,12 @@ phantasus.OpenDatasetTool.prototype = {
             readOptions = {};
           }
           readOptions.interactive = true;
+          if (options.input.isGEO) {
+            readOptions.isGEO = true;
+          }
+          if (options.input.preloaded) {
+            readOptions.preloaded = true;
+          }
           var deferred = phantasus.DatasetUtil.read(file,
             readOptions);
           _this._read(options, deferred);

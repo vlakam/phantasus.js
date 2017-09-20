@@ -578,13 +578,15 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
-      // data types are file, dropbox, url, GEO, and predefined
+
+      // data types are file, dropbox, url, GEO, preloaded and predefined
       options.push('My Computer');
       options.push('URL');
       options.push('GEO Datasets');
       if (typeof Dropbox !== 'undefined') {
         options.push('Dropbox');
       }
+      options.push('Saved on server datasets');
       if (field.text != null) {
         options.push(field.text);
       }
@@ -607,6 +609,8 @@ phantasus.FormBuilder.prototype = {
           html.push(' data-icon="fa fa-external-link"');
         } else if (optionValue === 'GEO Datasets') {
           html.push(' data-icon="fa fa-external-link"');
+        } else if (optionValue === 'Saved on server datasets') {
+          html.push(' data-icon="fa fa-desktop"');
         }
         html.push('>');
         html.push(optionText);
@@ -623,6 +627,14 @@ phantasus.FormBuilder.prototype = {
           + '" class="form-control" style="width:50%; display:none;" type="text" name="'
           + name + '_url">');
 
+/*      if (field.preloadedExists) {
+        html
+          .push('<input placeholder="'
+            + 'Enter a name of preloaded dataset this server provides them'
+            + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+            + name + '_pre">');
+      }*/
+
       if (field.gse !== false) {
         html.push('<div>');
         html
@@ -637,6 +649,13 @@ phantasus.FormBuilder.prototype = {
           .push('<input class="form-control" style="width:50%; display:none;" type="text" name="'
             + name + '_text">');
       }
+
+      html
+        .push('<input placeholder="'
+          + 'Enter a dataset name here'
+          + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+          + name + '_pre">');
+
       html.push('</div>');
 
       html.push('<input style="display:none;" type="file" name="' + name
@@ -653,6 +672,8 @@ phantasus.FormBuilder.prototype = {
             var showUrlInput = val === 'URL';
             var showGSEInput = val === 'GEO Datasets';
             var showTextInput = val === field.text;
+            var showPreInput = val === 'Saved on server datasets';
+
             if ('Dropbox' === val) {
               var options = {
                 success: function (results) {
@@ -683,6 +704,9 @@ phantasus.FormBuilder.prototype = {
             that.$form.find('[name=' + name + '_geo]')
               .css('display',
                 showGSEInput ? '' : 'none');
+            that.$form.find('[name=' + name + '_pre]')
+              .css('display',
+                showPreInput ? '' : 'none');
           });
       // URL
       that.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
@@ -717,16 +741,36 @@ phantasus.FormBuilder.prototype = {
         that.setValue(name, text);
         if (evt.which === 13) {
           // console.log('environment', evt);
-          // console.log('object to trigger with result', that, 'name', name, 'text', text);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
           that.trigger('change', {
             name: name,
-            value: text.toUpperCase()
+            value: {
+              name: text.toUpperCase(),
+              isGEO: true
+            }
+          })
+        }
+      });
+      // Preloaded
+      that.$form.on('keyup', '[name=' + name + '_pre]', function (evt) {
+        var text = $.trim($(this).val());
+        that.setValue(name, text);
+        if (evt.which === 13) {
+          // console.log('environment', evt);
+          console.log('object to trigger with result', that, 'name', name, 'text', text);
+          that.trigger('change', {
+            name: name,
+            value: {
+              name: text,
+              preloaded: true
+            }
           })
         }
       });
       // browse file selected
       that.$form.on('change', '[name=' + name + '_file]', function (evt) {
         var files = evt.target.files; // FileList object
+        console.log(files);
         that.setValue(name, isMultiple ? files : files[0]);
         that.trigger('change', {
           name: name,

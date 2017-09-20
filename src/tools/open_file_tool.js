@@ -120,7 +120,14 @@ phantasus.OpenFileTool.prototype = {
     if (!isInteractive) {
       options.input.file = this.options.file;
     }
-
+    if (options.input.file.isGEO) {
+      options.input.isGEO = options.input.file.isGEO;
+      options.input.file = options.input.file.name;
+    }
+    if (options.input.file.preloaded) {
+      options.input.preloaded = options.input.file.preloaded;
+      options.input.file = options.input.file.name;
+    }
     var project = options.project;
     if (options.input.open_file_action === 'Open session') {
       phantasus.Util.getText(options.input.file).done(function (text) {

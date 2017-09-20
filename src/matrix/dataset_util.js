@@ -182,22 +182,35 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (options == null) {
     options = {};
   }
+
+
   var isFile = fileOrUrl instanceof File;
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
+
+  console.log("before reading", fileOrUrl, options, isFile, isString, ext);
+
   var datasetReader;
   var str = fileOrUrl.toString();
 
-  var isGSE = isString && (fileOrUrl.substring(0, 3) === 'GSE' || fileOrUrl.substring(0, 3) === 'GDS');
-
-  if (isGSE) {
-    datasetReader = new phantasus.GeoReader({type: fileOrUrl.substring(0, 3)});
+  if (options.isGEO) {
+    datasetReader = new phantasus.GeoReader();
+  }
+  else if (options.preloaded) {
+    datasetReader = new phantasus.PreloadedReader();
+    fileOrUrl = {
+      name : fileOrUrl,
+      exactName : options.exactName
+    }
   }
   else if (ext === '' && str != null && str.indexOf('blob:') === 0) {
     datasetReader = new phantasus.TxtReader(); // copy from clipboard
   } else {
     datasetReader = phantasus.DatasetUtil.getDatasetReader(ext, options);
   }
+
+  console.log(typeof datasetReader);
+
   if (isString || isFile) { // URL or file
     var deferred = $.Deferred();
     // override toString so can determine file name
@@ -235,8 +248,8 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
           // console.log(dataset);
           // console.log('ready to resolve with', dataset);
           deferred.resolve(dataset);
-          if (!isGSE) {
-            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset, isGEO: isGSE});
+          if (!options.isGEO && !options.preloaded) {
+            phantasus.DatasetUtil.toESSessionPromise({ dataset: dataset });
           }
         }
       });
@@ -1054,6 +1067,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
   while (dataset.dataset) {
     dataset = dataset.dataset;
   }
+  console.log(dataset);
   dataset.setESSession(new Promise(function (resolve, reject) {
     //// console.log("phantasus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof phantasus.Dataset, dataset instanceof phantasus.SlicedDatasetView);
     /*		if (dataset.dataset) {
@@ -1061,7 +1075,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
      phantasus.DatasetUtil.toESSessionPromise(dataset.dataset);
      }*/
     //// console.log("before going further", options);
-    if (options.isGEO) {
+    if (options.isGEO || options.preloaded) {
       //// console.log("toESSession::", "resolving as geo dataset");
       resolve(dataset.getESSession());
       return;

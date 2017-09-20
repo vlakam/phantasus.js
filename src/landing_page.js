@@ -43,6 +43,7 @@ phantasus.LandingPage = function (pageOptions) {
     required: true,
     help: phantasus.DatasetUtil.DATASET_FILE_FORMATS
   });
+
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
   this.$sampleDatasetsEl = $el.find('[data-name=preloadedDataset]');
@@ -74,7 +75,7 @@ phantasus.LandingPage = function (pageOptions) {
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
-    var createGEOHeatMap = function(options) {
+    var createGEOHeatMap = function(options)  {
       var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
         session.getMessages(function(success) {
           console.log('checkGPLs messages', '::', success);
@@ -104,6 +105,35 @@ phantasus.LandingPage.prototype = {
       });
     };
 
+    var createPreloadedHeatMap = function(options) {
+      var req = ocpu.call('checkPreloadedNames', { name : options.dataset.file }, function(session) {
+        session.getMessages(function(success) {
+          console.log('checkPreloadedNames messages', success);
+        });
+        session.getObject(function(success) {
+          var names = JSON.parse(success);
+          console.log(names);
+
+          if (names.length === 0) {
+            alert("Dataset" + " " + options.dataset.file + " does not exist");
+            _this.show();
+          }
+
+          for (var j = 0; j < names.length; j++) {
+            var specificOptions = options;
+
+            specificOptions.dataset.options.exactName = names[j];
+            console.log("specific", specificOptions);
+
+            new phantasus.HeatMap(specificOptions);
+          }
+
+        })
+      });
+      req.fail(function () {
+        throw new Error("Checking inside names call to OpenCPU failed" + req.responseText);
+      });
+    };
 
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
     var _this = this;
@@ -116,8 +146,11 @@ phantasus.LandingPage.prototype = {
 
       if (options.dataset.options.isGEO) {
         createGEOHeatMap(options);
+      } else if (options.dataset.options.preloaded) {
+        createPreloadedHeatMap(options);
       }
       else {
+        console.log("before loading heatmap from landing_page", options);
         new phantasus.HeatMap(options);
       }
     }
@@ -200,6 +233,14 @@ phantasus.LandingPage.prototype = {
   },
   openFile: function (value) {
     var _this = this;
+    var isGEO;
+    var preloaded;
+    if (value.name && (value.isGEO || value.preloaded)) {
+      isGEO = value.isGEO;
+      preloaded = value.preloaded;
+      value = value.name;
+    }
+
     var fileName = phantasus.Util.getFileName(value);
     if (fileName.toLowerCase().indexOf('.json') === fileName.length - 5) {
       phantasus.Util.getText(value).done(function (text) {
@@ -216,12 +257,14 @@ phantasus.LandingPage.prototype = {
           file: value,
           options: {
             interactive: true,
-            isGEO: (fileName.toUpperCase().indexOf('GSE') === 0 || fileName.toUpperCase().indexOf('GDS') === 0) && fileName.indexOf('.') === -1
+            isGEO: isGEO,
+            preloaded: preloaded
           }
         }
       };
 
       phantasus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
+        console.log("fileExtensionPrompt", readOptions);
         if (readOptions) {
           for (var key in readOptions) {
             options.dataset.options[key] = readOptions[key];

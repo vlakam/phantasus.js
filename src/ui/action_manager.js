@@ -447,14 +447,14 @@ phantasus.ActionManager = function () {
     name: 'Tutorial',
     cb: function () {
       window
-        .open('https://clue.io/phantasus/tutorial.html');
+        .open('phantasus-tutorial.html');
     }
   });
   this.add({
     icon: 'fa fa-code',
     name: 'Source Code',
     cb: function () {
-      window.open('https://github.com/cmap/phantasus.js');
+      window.open('https://github.com/ctlab/phantasus');
     }
   });
   var $findModal;
@@ -556,20 +556,20 @@ phantasus.ActionManager = function () {
     }
   });
 
-  this.add({
+  /*this.add({
     name: 'Linking',
     cb: function () {
       window
-        .open('https://clue.io/phantasus/linking.html');
+        .open('/linking.html');
     }
-  });
+  });*/
   this.add({
     name: 'Contact',
     icon: 'fa fa-envelope-o',
     cb: function (options) {
       phantasus.FormBuilder.showInModal({
         title: 'Contact',
-        html: 'Please email us at phantasus@broadinstitute.org',
+        html: 'Please email us at daria.zenkova.cs@gmail.com',
         focus: options.heatMap.getFocusEl()
       });
     }
