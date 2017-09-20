@@ -79,10 +79,13 @@ phantasus.SampleDatasets = function (options) {
             + options.openText + '</button></td>');
         exampleHtml.push('</tr></tbody></table>');
 
-        exampleHtml
-          .push('<div class="text-muted">TCGA data (1/28/2016)</div><span class="text-muted">Please adhere to <a target="_blank" href="http://cancergenome.nih.gov/abouttcga/policies/publicationguidelines"> the TCGA publication guidelines</a></u> when using TCGA data in your publications.</span>');
+      exampleHtml.push(
+        '<div>TCGA data <a target="_blank" href="https://confluence.broadinstitute.org/display/GDAC/Dashboard-Stddata">(Broad GDAC 1/28/2016)</a></div><span>Please adhere to the' +
+        ' <a target="_blank"' +
+        ' href="http://cancergenome.nih.gov/abouttcga/policies/publicationguidelines">TCGA' +
+        ' publication guidelines</a></u> when using TCGA data in your publications.</span>');
 
-        exampleHtml.push('<div data-name="tcga"></div>');
+      exampleHtml.push('<div data-name="tcga"></div>');
         $(exampleHtml.join('')).appendTo($el);
         if (options.show) {
           $el.show();
