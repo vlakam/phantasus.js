@@ -139,8 +139,6 @@ phantasus.HeatMap = function (options) {
        * ids in row dendrogram Newick file
        */
       rowDendrogramField: 'id',
-      overrideRowDefaults: true,
-      overrideColumnDefaults: true,
       /*
        * Array of objects describing how to display row
        * metadata fields. Each object in the array must have
@@ -1724,10 +1722,7 @@ phantasus.HeatMap.prototype = {
             : options[i].field, options[i]);
         }
       }
-      var overrideDefaults = isColumns ? _this.options.overrideColumnDefaults : _this.options.overrideRowDefaults;
-      if (!overrideDefaults) {
-        displaySpecified = false;
-      }
+
       var displayMetadata = isColumns ? dataset.getColumnMetadata()
         : dataset.getRowMetadata();
       // see if default fields found
