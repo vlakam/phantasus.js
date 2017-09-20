@@ -35,7 +35,7 @@ phantasus.ConditionalRenderingUI = function (heatmap) {
   });
   var html = [];
   html
-    .push('<div class="phantasus-entry">');
+  .push('<div class="phantasus-entry">');
   html.push('<div class="row">');
   html
     .push('<div style="padding-bottom:20px;" class="col-xs-8"><a class="btn btn-default btn-xs"' +
@@ -98,9 +98,7 @@ phantasus.ConditionalRenderingUI.prototype = {
     // shape
     html.push('<div class="form-group">');
     html.push('<label class="col-xs-2">Shape</label>');
-    var shapeField = new phantasus.ShapeField(['circle', 'square',
-      'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
-      'triangle-right']);
+    var shapeField = new phantasus.ShapeField({shapes: phantasus.VectorShapeModel.FILLED_SHAPES, showNone: false});
     html.push('<div class="col-xs-4">');
     html.push('<div style="display:inline;" data-name="shapeHolder"></div>');
     html.push('</div>');
@@ -129,6 +127,10 @@ phantasus.ConditionalRenderingUI.prototype = {
     html.push('</div></div>');
     html.push('</div>'); // phantasus-entry
     var $el = $(html.join(''));
+    console.log($el.find('form').length);
+    $el.find('form').on('submit', function (e) {
+      e.preventDefault();
+    });
     shapeField.$el.appendTo($el.find('[data-name=shapeHolder]'));
     var $color = $el.find('[name=color]');
     var $series = $el.find('[name=cond_series]');
@@ -149,6 +151,7 @@ phantasus.ConditionalRenderingUI.prototype = {
     }
     $v1Op.val(condition.v1Op);
     $v2Op.val(condition.v2Op);
+
     function updateAccept() {
       var v1 = parseFloat($($v1).val());
       var v2 = parseFloat($($v2).val());

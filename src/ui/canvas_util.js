@@ -51,12 +51,12 @@ phantasus.CanvasUtil.setBounds = function (canvas, bounds) {
   }
 };
 
-phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
+phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2, isFill) {
   if (size2 < 0) {
     return;
   }
   context.beginPath();
-  if (shape === 'minus') {
+  if (shape === 'circle-minus') {
     context.arc(x, y, size2, 0, 2 * Math.PI, false);
     context.moveTo(x - size2, y);
     context.lineTo(x + size2, y);
@@ -130,7 +130,7 @@ phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
     context.lineTo(x - size2, y - size2);
     context.lineTo(x + size2, y);
   }
-  context.stroke();
+  isFill ? context.fill() : context.stroke();
 
 };
 phantasus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {

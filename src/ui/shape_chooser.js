@@ -17,7 +17,7 @@ phantasus.ShapeChooser = function (options) {
     value: html.join('')
   });
 
-  var shapeField = new phantasus.ShapeField();
+  var shapeField = new phantasus.ShapeField({showNone: true});
 
   formBuilder.append({
     style: 'max-width:50px;',

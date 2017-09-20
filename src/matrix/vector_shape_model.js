@@ -6,14 +6,11 @@ phantasus.VectorShapeModel = function () {
 phantasus.VectorShapeModel.SHAPES = [
   'circle', 'square', 'plus', 'x',
   'asterisk', 'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
-  'triangle-right', 'minus'];
-phantasus.VectorShapeModel.STANDARD_SHAPES = {
-  cp: 'diamond',
-  oe: 'plus',
-  pcl: 'asterisk',
-  kd: 'minus',
-  ctrl: 'circle'
-};
+  'triangle-right', 'circle-minus'];
+
+phantasus.VectorShapeModel.FILLED_SHAPES = [
+  'circle', 'square', 'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
+  'triangle-right'];
 
 phantasus.VectorShapeModel.prototype = {
   toJSON: function (tracks) {
@@ -55,11 +52,6 @@ phantasus.VectorShapeModel.prototype = {
   _getShapeForValue: function (value) {
     if (value == null) {
       return 'none';
-    }
-    var str = value.toString().toLowerCase();
-    var mapped = phantasus.VectorShapeModel.STANDARD_SHAPES[str];
-    if (mapped !== undefined) {
-      return mapped;
     }
 
     // try to reuse existing map
