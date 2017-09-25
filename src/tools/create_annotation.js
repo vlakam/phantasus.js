@@ -38,7 +38,7 @@ phantasus.CreateAnnotation.prototype = {
     var isColumns = options.input.annotate == 'Columns';
     var __formula = options.input.formula;
     var __dataset = options.input.use_selected_rows_and_columns_only ? __project
-    .getSelectedDataset()
+        .getSelectedDataset()
       : __project.getSortedFilteredDataset();
     if (isColumns) {
       __dataset = phantasus.DatasetUtil.transposedView(__dataset);
@@ -88,6 +88,7 @@ phantasus.CreateAnnotation.prototype = {
       }
       __vector.setValue(__index, __val);
     }
+    phantasus.VectorUtil.maybeConvertStringToNumber(__vector);
     __project.trigger('trackChanged', {
       vectors: [__vector],
       display: ['text'],
