@@ -326,8 +326,20 @@ phantasus.SampleDatasets.prototype = {
     });
   },
   openCCLE: function (options) {
+    var name = [];
+    if (options.sig_genes) {
+      name.push('Mut');
+    }
+    if (options.cn) {
+      name.push('CN');
+    }
+    if (options.mrna) {
+      name.push('Exp');
+    }
+    if (options.ach) {
+      name.push('Ach');
+    }
     this.callback({
-      name: 'CCLE',
       rows: [
         {
           field: 'id',
@@ -353,7 +365,8 @@ phantasus.SampleDatasets.prototype = {
           field: 'site',
           display: 'color, highlight'
         }],
-      dataset: phantasus.SampleDatasets.getCCLEDataset(options)
+      dataset: phantasus.SampleDatasets.getCCLEDataset(options),
+      name: 'CCLE - ' + name.join(', ')
     });
   }
 };
