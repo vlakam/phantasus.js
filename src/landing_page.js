@@ -82,10 +82,9 @@ phantasus.LandingPage.prototype = {
         });
         session.getObject(function (filenames) {
           filenames = JSON.parse(filenames);
-          // console.log(filenames);
-          if (filenames.length === 0) {
-            alert("Dataset" + " " + options.dataset.file + " does not exist");
-            _this.show();
+          console.log("filenames", filenames, filenames.length);
+          if (!filenames.length) {
+            throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
           }
           if (filenames.length === 1) {
             new phantasus.HeatMap(options);
