@@ -75,6 +75,8 @@ phantasus.LandingPage = function (pageOptions) {
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
     this.dispose();
+    var _this = this;
+
     var createGEOHeatMap = function(options)  {
       var req = ocpu.call('checkGPLs', { name : options.dataset.file }, function (session) {
         session.getMessages(function(success) {
@@ -84,6 +86,7 @@ phantasus.LandingPage.prototype = {
           filenames = JSON.parse(filenames);
           console.log("filenames", filenames, filenames.length);
           if (!filenames.length) {
+            _this.show();
             throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
           }
           if (filenames.length === 1) {
@@ -114,8 +117,9 @@ phantasus.LandingPage.prototype = {
           console.log(names);
 
           if (names.length === 0) {
-            alert("Dataset" + " " + options.dataset.file + " does not exist");
             _this.show();
+            throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
+
           }
 
           for (var j = 0; j < names.length; j++) {
@@ -135,7 +139,7 @@ phantasus.LandingPage.prototype = {
     };
 
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
-    var _this = this;
+
     console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
