@@ -147,9 +147,9 @@ phantasus.LandingPage.prototype = {
       options.focus = i === 0;
       options.landingPage = _this;
 
-      if (options.dataset.options.isGEO) {
+      if (options.dataset.options && options.dataset.options.isGEO) {
         createGEOHeatMap(options);
-      } else if (options.dataset.options.preloaded) {
+      } else if (options.dataset.options && options.dataset.options.preloaded) {
         createPreloadedHeatMap(options);
       }
       else {
