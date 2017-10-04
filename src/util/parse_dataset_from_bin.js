@@ -47,7 +47,7 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
   var ncolData = jsondata.data.dim[1];
   var flatPdata = jsondata.pdata.values;
   var annotation = jsondata.fdata.values;
-  var id = jsondata.rownames.values;
+  //var id = jsondata.rownames.values;
   var metaNames = jsondata.colMetaNames.values;
   var rowMetaNames = jsondata.rowMetaNames.values;
 
@@ -77,13 +77,15 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
     }
   }
 
-  var rowIds = dataset.getRowMetadata().add('id');
+  //var rowIds = dataset.getRowMetadata().add('id');
+
+  // console.log(rowMetaNames);
 
   for (i = 0; i < rowMetaNames.length; i++) {
     curVec = dataset.getRowMetadata().add(rowMetaNames[i]);
     for (j = 0; j < nrowData; j++) {
       curVec.setValue(j, annotation[j + i * nrowData]);
-      rowIds.setValue(j, id[j])
+      //rowIds.setValue(j, id[j])
     }
   }
   phantasus.MetadataUtil.maybeConvertStrings(dataset.getRowMetadata(), 1);
