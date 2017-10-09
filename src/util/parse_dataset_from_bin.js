@@ -51,6 +51,8 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
   var metaNames = jsondata.colMetaNames.values;
   var rowMetaNames = jsondata.rowMetaNames.values;
 
+  console.log(seriesName, jsondata);
+
   var matrix = [];
   for (var i = 0; i < nrowData; i++) {
     var curArray = new Float32Array(ncolData);
@@ -70,12 +72,18 @@ phantasus.ParseDatasetFromProtoBin.getDataset = function (session, seriesName, j
     preloaded: options.preloaded
   });
 
-  for (i = 0; i < metaNames.length; i++) {
-    var curVec = dataset.getColumnMetadata().add(metaNames[i]);
-    for (j = 0; j < ncolData; j++) {
-      curVec.setValue(j, flatPdata[j + i * ncolData]);
+  console.log(seriesName, dataset);
+
+  if (metaNames) {
+    for (i = 0; i < metaNames.length; i++) {
+      var curVec = dataset.getColumnMetadata().add(metaNames[i]);
+      for (j = 0; j < ncolData; j++) {
+        curVec.setValue(j, flatPdata[j + i * ncolData]);
+      }
     }
   }
+  console.log(seriesName, "meta?");
+
 
   //var rowIds = dataset.getRowMetadata().add('id');
 
