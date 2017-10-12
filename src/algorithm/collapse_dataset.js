@@ -39,26 +39,34 @@ phantasus.CollapseDataset = function (dataset, collapseToFields,
   }
   var counter = 0;
   idToIndices
-    .forEach(function (rowIndices, key) {
-      // collapse each column separately
-      var slice = phantasus.DatasetUtil.slicedView(dataset,
-        rowIndices, null);
-      var view = new phantasus.DatasetColumnView(slice);
-      for (var series = 0; series < nseries; series++) {
-        view.setSeriesIndex(series);
-        for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
-          view.setIndex(j);
-          collapsedDataset.setValue(counter, j,
-            summarizeFunction(view), series);
-        }
+  .forEach(function (rowIndices, key) {
+    // collapse each column separately
+    var slice = phantasus.DatasetUtil.slicedView(dataset,
+      rowIndices, null);
+    var view = new phantasus.DatasetColumnView(slice);
+    for (var series = 0; series < nseries; series++) {
+      view.setSeriesIndex(series);
+      for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
+        view.setIndex(j);
+        collapsedDataset.setValue(counter, j,
+          summarizeFunction(view), series);
       }
-      for (var i = 0; i < nfields; i++) {
-        var collapsedToVector = collapseToVectors[i];
-        var vector = vectors[i];
-        collapsedToVector.setValue(counter, vector
-          .getValue(rowIndices[0]));
+    }
+    for (var i = 0; i < nfields; i++) {
+      var collapsedToVector = collapseToVectors[i];
+      var vector = vectors[i];
+      collapsedToVector.setValue(counter, vector
+      .getValue(rowIndices[0]));
+    }
+    counter++;
+  });
+  if (nfields === 1) {
+    var newVector = collapseToVectors[0];
+    vectors[0].getProperties().forEach(function (val, key) {
+      if (!phantasus.VectorKeys.COPY_IGNORE.has(key)) {
+        newVector.properties.set(key, val);
       }
-      counter++;
     });
+  }
   return collapsedDataset;
 };

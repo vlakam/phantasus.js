@@ -266,7 +266,7 @@ phantasus.PcaPlotTool.prototype = {
               .maybeConvertStringToNumber(rowVector);
             _this.project.trigger('trackChanged', {
               vectors: [rowVector],
-              render: existingRowVector != null ? []
+              display: existingRowVector != null ? []
                 : [phantasus.VectorTrack.RENDER.TEXT],
               columns: false
             });
@@ -276,7 +276,7 @@ phantasus.PcaPlotTool.prototype = {
               .maybeConvertStringToNumber(columnVector);
             _this.project.trigger('trackChanged', {
               vectors: [columnVector],
-              render: existingColumnVector != null ? []
+              display: existingColumnVector != null ? []
                 : [phantasus.VectorTrack.RENDER.TEXT],
               columns: true
             });
@@ -287,7 +287,7 @@ phantasus.PcaPlotTool.prototype = {
   },
   draw: function () {
     var _this = this;
-    var plotlyDefaults = phantasus.ChartTool.getPlotlyDefaults();
+    var plotlyDefaults = phantasus.PcaPlotTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
     var chartWidth = 400;
@@ -499,3 +499,77 @@ phantasus.PcaPlotTool.prototype = {
 
 
 
+
+phantasus.PcaPlotTool.getPlotlyDefaults = function () {
+  var layout = {
+    hovermode: 'closest',
+    autosize: true,
+    // paper_bgcolor: 'rgb(255,255,255)',
+    // plot_bgcolor: 'rgb(229,229,229)',
+    showlegend: false,
+    margin: {
+      l: 80,
+      r: 10,
+      t: 8, // leave space for modebar
+      b: 14,
+      autoexpand: true
+    },
+    titlefont: {
+      size: 12
+    },
+    xaxis: {
+      zeroline: false,
+      titlefont: {
+        size: 12
+      },
+      // gridcolor: 'rgb(255,255,255)',
+      showgrid: true,
+      //   showline: true,
+      showticklabels: true,
+      tickcolor: 'rgb(127,127,127)',
+      ticks: 'outside'
+    },
+    yaxis: {
+      zeroline: false,
+      titlefont: {
+        size: 12
+      },
+      // gridcolor: 'rgb(255,255,255)',
+      showgrid: true,
+      //   showline: true,
+      showticklabels: true,
+      tickcolor: 'rgb(127,127,127)',
+      ticks: 'outside'
+    }
+  };
+
+  // var toImage = {
+  //   name: 'toImage',
+  //   title: 'Download plot as a svg',
+  //   icon: Icons.camera,
+  //   click: function (gd) {
+  //     var format = 'svg';
+  //     Lib.notifier('Taking snapshot - this may take a few seconds', 'long');
+  //     downloadImage(gd, {'format': format})
+  //     .then(function (filename) {
+  //       Lib.notifier('Snapshot succeeded - ' + filename, 'long');
+  //     })
+  //     .catch(function () {
+  //       Lib.notifier('Sorry there was a problem downloading your snapshot!', 'long');
+  //     });
+  //   }
+  // };
+  var config = {
+    modeBarButtonsToAdd: [],
+    showLink: false,
+    displayModeBar: true, // always show modebar
+    displaylogo: false,
+    staticPlot: false,
+    showHints: true,
+    modeBarButtonsToRemove: ['sendDataToCloud', 'zoomIn2d', 'zoomOut2d', 'hoverCompareCartesian', 'hoverClosestCartesian']
+  };
+  return {
+    layout: layout,
+    config: config
+  };
+};

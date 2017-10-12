@@ -48,7 +48,7 @@ module.exports = function (grunt) {
       },
       extJsAll: {
         src: ['js/phantasus-external.min.js',
-          'js/plotly-latest.min.js', 'js/papaparse.min.js'],
+          'js/plotly-latest.min.js', 'js/echarts.min.js', 'js/papaparse.min.js'],
         dest: 'js/phantasus-external-latest.min.js'
       },
       extJs: {

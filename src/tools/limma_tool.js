@@ -102,7 +102,7 @@ phantasus.LimmaTool.prototype = {
 
     project.trigger("trackChanged", {
       vectors: [v],
-      render: ["color"],
+      display: ["color"],
       columns: true
     });
 
@@ -162,7 +162,7 @@ phantasus.LimmaTool.prototype = {
               alert("Limma finished successfully");
               project.trigger("trackChanged", {
                 vectors: vs,
-                render: []
+                display: []
               });
             })
           };

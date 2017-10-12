@@ -242,10 +242,10 @@ phantasus.ActionManager = function () {
       phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
-    shiftKey: true,
-    which: [83],
-    commandKey: true,
-    global: true,
+    // shiftKey: true,
+    // which: [83],
+    // commandKey: true,
+    // global: true,
     icon: 'fa fa-floppy-o'
   });
 
@@ -261,18 +261,21 @@ phantasus.ActionManager = function () {
     icon: 'fa fa-anchor'
   });
 
-  if (typeof Plotly !== 'undefined') {
+  if (typeof echarts !== 'undefined') {
     this.add({
       name: 'Chart',
       cb: function (options) {
         new phantasus.ChartTool({
           project: options.heatMap.getProject(),
+          heatmap: options.heatMap,
           getVisibleTrackNames: _.bind(
             options.heatMap.getVisibleTrackNames, options.heatMap)
         });
       },
       icon: 'fa fa-line-chart'
     });
+  }
+  if (typeof Plotly !== 'undefined') {
     this.add({
       name: 'PCA Plot',
       cb: function (options) {
@@ -849,7 +852,7 @@ phantasus.ActionManager = function () {
               'trackChanged',
               {
                 vectors: [v],
-                render: existingVector != null ? []
+                display: existingVector != null ? []
                   : [phantasus.VectorTrack.RENDER.TEXT],
                 columns: isColumns
               });

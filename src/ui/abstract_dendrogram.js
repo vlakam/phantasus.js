@@ -530,9 +530,9 @@ phantasus.AbstractDendrogram.prototype = {
       var settings = {
         discrete: true,
         discreteAutoDetermined: true,
-        render: {}
+        display: ['color']
       };
-      settings.render[phantasus.VectorTrack.RENDER.COLOR] = true;
+
       this.heatMap.addTrack(clusterIdVector.getName(),
         this.type === phantasus.AbstractDendrogram.Type.COLUMN,
         settings);

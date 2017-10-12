@@ -3,12 +3,12 @@ phantasus.HeatMapToolBar = function (heatMap) {
   this.rowSearchResultModelIndices = [];
   this.columnSearchResultModelIndices = [];
   var _this = this;
-  var $el = $('<div class="hidden-print container-fluid">'
-    + '<div class="row"><div style="padding-left:0px;padding-right:0px;"' +
-    ' class="col-xs-12"><div' +
-    ' data-name="toolbar"></div></div></div>'
-    + '<div class="row"><div class="col-xs-12"><div data-name="tip" style="white-space:nowrap; border-top: thin solid #e7e7e7;margin-bottom:2px;height: 14px; font-size: 10px;overflow:hidden;"></div></div></div>'
-    + '</div>');
+  var layout = ['<div class="hidden-print">'];
+  layout.push('<div data-name="toolbar"></div>');
+  layout.push('<div data-name="tip" style="white-space:nowrap; border-top: thin solid #e7e7e7;margin-bottom:2px;height: 14px; font-size: 10px;overflow:hidden;"></div>');
+  layout.push('</div>');
+
+  var $el = $(layout.join(''));
   var searchHtml = [];
   var $searchForm = $('<form style="display:inline-block;margin-right:14px;" name="searchForm"' +
     ' class="form' +
@@ -308,7 +308,7 @@ phantasus.HeatMapToolBar = function (heatMap) {
       .push('<button data-action="Filter" data-toggle="tooltip" title="Filter" type="button"' +
         ' class="btn btn-default btn-xxs"><span class="fa fa-filter"></span></button>');
   }
-  if (heatMap.options.toolbar.chart && typeof Plotly !== 'undefined') {
+  if (heatMap.options.toolbar.chart && typeof echarts !== 'undefined') {
     toolbarHtml
       .push('<button data-action="Chart" data-toggle="tooltip" title="Chart" type="button" class="btn' +
         ' btn-default btn-xxs"><span class="fa fa-line-chart"></span></button>');

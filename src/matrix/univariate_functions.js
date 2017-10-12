@@ -26,6 +26,9 @@
 phantasus.Percentile = function (vector, p, isSorted) {
   return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), p, isSorted);
 };
+phantasus.Percentile.toString = function () {
+  return 'Percentile';
+};
 /**
  * @private
  * @ignore
@@ -319,6 +322,10 @@ phantasus.BoxPlotItem = function (list) {
       upperAdjacentValue: NaN
     };
   }
+  return phantasus.BoxPlotArrayItem(values);
+};
+
+phantasus.BoxPlotArrayItem = function (values) {
   var median = phantasus.ArrayPercentile(values, 50, true);
   var q1 = phantasus.ArrayPercentile(values, 25, true);
   var q3 = phantasus.ArrayPercentile(values, 75, true);

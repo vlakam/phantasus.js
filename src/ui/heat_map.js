@@ -7,8 +7,13 @@ phantasus.HeatMap = function (options) {
   phantasus.Util.loadTrackingCode();
   var _this = this;
   // don't extend
-  var parent = options.parent;
-  options.parent = null;
+  var dontExtend = ['parent', 'columnDendrogram', 'rowDendrogram'];
+  var cache = [];
+  for (var i = 0; i < dontExtend.length; i++) {
+    var field = dontExtend[i];
+    cache[i] = options[field];
+    options[field] = null;
+  }
   options = $
     .extend(
       true,
@@ -134,12 +139,14 @@ phantasus.HeatMap = function (options) {
        * ids in row dendrogram Newick file
        */
       rowDendrogramField: 'id',
+      overrideRowDefaults: true,
+      overrideColumnDefaults: true,
       /*
        * Array of objects describing how to display row
        * metadata fields. Each object in the array must have
        * field, and optionally display, order, and renameTo.
        * Field is the metadata field name. Display is a comma
-       * delimited string that describes how to render a
+       * delimited string that describes how to display a
        * metadata field. Options are text, color, stacked_bar,
        * bar, highlight, shape, discrete, and continuous.
        * Order is a number that indicates the order in which
@@ -152,7 +159,7 @@ phantasus.HeatMap = function (options) {
        * metadata fields. Each object in the array must have
        * field, and optionally display, order, and renameTo.
        * Field is the metadata field name. Display is a comma
-       * delimited string that describes how to render a
+       * delimited string that describes how to display a
        * metadata field. Options are text, color, stacked_bar,
        * bar, highlight, shape, discrete, and continuous.
        * Order is a number that indicates the order in which
@@ -243,8 +250,9 @@ phantasus.HeatMap = function (options) {
       inlineTooltip: true,
       $loadingImage: phantasus.Util.createLoadingEl(),
       menu: {
-        File: ['Open', 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename Tab'],
-        Tools: ['New Heat Map', null, 'Hierarchical Clustering', null, 'Marker Selection', 'Nearest Neighbors', 'Adjust', 'Collapse', 'Create Calculated Annotation', 'Similarity Matrix', 'Transpose', 't-SNE', null, 'Chart', null, 'Sort/Group', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
+        File: ['Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename' +
+        ' Tab'],
+        Tools: ['New Heat Map', null, 'Hierarchical Clustering', null, 'Marker Selection', 'Nearest Neighbors', 'Create Calculated Annotation', null, 'Adjust', 'Collapse', 'Similarity Matrix', 'Transpose', 't-SNE', null, 'Chart', null, 'Sort/Group', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
         View: ['Zoom In', 'Zoom Out', 'Fit To Window', '100%', null, 'Options'],
         Edit: ['Copy Image', 'Copy Selected Dataset', null, 'Move Selected Rows To Top', 'Annotate Selected Rows', 'Copy Selected Rows', 'Invert' +
         ' Selected Rows', 'Select All Rows', 'Clear Selected Rows', null, 'Move Selected Columns To Top', 'Annotate Selected Columns', 'Copy Selected Columns', 'Invert' +
@@ -264,7 +272,11 @@ phantasus.HeatMap = function (options) {
         colorKey: true
       }
     }, options);
-  options.parent = parent;
+
+  for (var i = 0; i < dontExtend.length; i++) {
+    var field = dontExtend[i];
+    options[field] = cache[i];
+  }
   if (options.menu == null) {
     options.menu = {};
   }
@@ -804,7 +816,10 @@ phantasus.HeatMap.createGroupBySpaces = function (dataset, groupByKeys, gapSize,
 };
 phantasus.HeatMap.isDendrogramVisible = function (project, isColumns) {
   var sortKeys = isColumns ? project.getColumnSortKeys() : project
-    .getRowSortKeys();
+  .getRowSortKeys();
+  if (sortKeys.length === 0) {
+    return true;
+  }
   // var filter = isColumns ? this.project.getColumnFilter()
   //   : this.project.getRowFilter();
   // // FIXME compare filters
@@ -1098,33 +1113,31 @@ phantasus.HeatMap.prototype = {
     // TODO shapes
 
     // annotation colors
-    json.rowColorModel = this.getProject().getRowColorModel().toJSON();
-    json.columnColorModel = this.getProject().getColumnColorModel().toJSON();
+    json.rowColorModel = this.getProject().getRowColorModel().toJSON(this.rowTracks);
+    json.columnColorModel = this.getProject().getColumnColorModel().toJSON(this.columnTracks);
     // annotation display
     json.rows = this.rowTracks.filter(function (track) {
       return track.isVisible();
     }).map(function (track) {
       var size = phantasus.CanvasUtil.getPreferredSize(_this.getTrackHeaderByIndex(_this.getTrackIndex(track.getName(), false), false));
-      return {
-        size: {
-          width: size.widthSet ? size.width : undefined
-        },
-        field: track.getName(),
-        display: track.settings
+      var obj = track.settings;
+      obj.field = track.getName();
+      obj.size = {
+        width: size.widthSet ? size.width : undefined
       };
+      return obj;
     });
     json.columns = this.columnTracks.filter(function (track) {
       return track.isVisible();
     }).map(function (track) {
       var size = phantasus.CanvasUtil.getPreferredSize(_this.getTrackHeaderByIndex(_this.getTrackIndex(track.getName(), true), true));
-      return {
-        size: {
-          width: size.widthSet ? size.width : undefined,
-          height: size.heightSet ? size.height : undefined
-        },
-        field: track.getName(),
-        display: track.settings
+      var obj = track.settings;
+      obj.field = track.getName();
+      obj.size = {
+        width: size.widthSet ? size.width : undefined,
+        height: size.heightSet ? size.height : undefined
       };
+      return obj;
     });
 
     // sort
@@ -1486,12 +1499,13 @@ phantasus.HeatMap.prototype = {
     var rowDendrogramSortKey = null;
     if (rowDendrogram != undefined) {
       var tree = rowDendrogram;
-      if (tree.leafNodes.length !== this.project.getFullDataset()
-          .getRowCount()) {
+      if (tree.leafNodes.length !== this.project.getSortedFilteredDataset()
+        .getRowCount()) {
         throw '# leaf nodes in row dendrogram ' + tree.leafNodes.length
-        + ' != ' + this.project.getFullDataset().getRowCount();
+        + ' != ' + this.project.getSortedFilteredDataset().getRowCount();
       }
       var rowIndices = null;
+      // when saving a session the dataset is reordered to reflect the clustering
       if (this.options.rowDendrogramField != null) {
         var vector = dataset.getRowMetadata().getByName(
           this.options.rowDendrogramField);
@@ -1547,10 +1561,10 @@ phantasus.HeatMap.prototype = {
     if (columnDendrogram !== undefined) {
       var tree = columnDendrogram;
 
-      if (tree.leafNodes.length !== this.project.getFullDataset()
-          .getColumnCount()) {
+      if (tree.leafNodes.length !== this.project.getSortedFilteredDataset()
+        .getColumnCount()) {
         throw '# leaf nodes ' + tree.leafNodes.length + ' != '
-        + this.project.getFullDataset().getColumnCount();
+        + this.project.getSortedFilteredDataset().getColumnCount();
       }
       var columnIndices = null;
       if (this.options.columnDendrogramField != null) {
@@ -1691,15 +1705,19 @@ phantasus.HeatMap.prototype = {
       // one
       // display option
       // supplied
-      var displaySpecified = (_this.options.parent != null && _this.options.inheritFromParent);
-      _.each(options, function (option) {
-        if (!displaySpecified) {
-          displaySpecified = option.display != null;
-        }
-        nameToOption.set(option.renameTo != null ? option.renameTo
-          : option.field, option);
-      });
 
+      var displaySpecified = (_this.options.parent != null && _this.options.inheritFromParent);
+      if (options != null && options.length > 0) {
+        displaySpecified = true;
+        for (var i = 0; i < options.length; i++) {
+          nameToOption.set(options[i].renameTo != null ? options[i].renameTo
+            : options[i].field, options[i]);
+        }
+      }
+      var overrideDefaults = isColumns ? _this.options.overrideColumnDefaults : _this.options.overrideRowDefaults;
+      if (!overrideDefaults) {
+        displaySpecified = false;
+      }
       var displayMetadata = isColumns ? dataset.getColumnMetadata()
         : dataset.getRowMetadata();
       // see if default fields found
@@ -1713,30 +1731,30 @@ phantasus.HeatMap.prototype = {
         for (var i = 0, metadataCount = displayMetadata
           .getMetadataCount(); i < metadataCount; i++) {
           var v = displayMetadata.get(i);
-          if (defaultFieldsToShow.has(v.getName())) {
+          if (defaultFieldsToShow.has(v.getName()) && !nameToOption.has(v.getName())) {
             nameToOption.set(v.getName(), {
-              display: 'text'
+              display: ['text']
             });
             displaySpecified = true;
           }
         }
-
       }
       var isFirst = true;
       // console.log("heat_map ::", displayMetadata, displaySpecified);
       for (var i = 0, metadataCount = displayMetadata.getMetadataCount(); i < metadataCount; i++) {
-        var display = displaySpecified ? 'None' : undefined;
         var v = displayMetadata.get(i);
         var name = v.getName();
         var option = nameToOption.get(name);
-
+        if (displaySpecified && option == null) {
+          continue;
+        }
         if (phantasus.MetadataUtil.DEFAULT_HIDDEN_FIELDS.has(name)
           && option == null) {
           continue;
         }
         var count = isColumns ? dataset.getColumnCount() : dataset
-          .getRowCount();
-        if (!option && !displaySpecified && count > 1
+        .getRowCount();
+        if (option == null && !displaySpecified && count > 1
           && !phantasus.VectorUtil.containsMoreThanOneValue(v)) {
           continue;
         }
@@ -1747,80 +1765,72 @@ phantasus.HeatMap.prototype = {
           v.getProperties().set(phantasus.VectorKeys.TITLE,
             option.title);
         }
-        if (option.display) {
-          if (typeof option.display == 'function') {
-            display = option.display(name);
+
+        if (option.display == null) {
+          if (name === 'pert_iname' || name === 'id' || isFirst) {
+            option.inlineTooltip = true;
+            option.display = ['text'];
           } else {
-            display = option.display;
+            option.display = isColumns ? 'color,highlight' : 'text';
           }
         }
+        isFirst = false;
+        var track = _this.addTrack(name, isColumns, option);
 
-        var add = display !== 'None';
-        if (add) {
-          if (display == null) {
-            if (name === 'pert_iname' || name === 'id' || isFirst) {
-              display = 'text,tooltip';
-            } else {
-              display = isColumns ? 'color,highlight' : 'text';
+        if (option.size) {
+          if (!isColumns && option.size.width != null) {
+            var header = _this.getTrackHeaderByIndex(_this.getTrackIndex(name, isColumns), isColumns);
+            track.setPrefWidth(option.size.width); // can only set width
+            header.setPrefWidth(option.size.width);
+          } else if (isColumns && (option.size.width != null || option.size.height != null)) {
+            var header = _this.getTrackHeaderByIndex(_this.getTrackIndex(name, isColumns), isColumns);
+            if (option.size.height) {
+              track.setPrefHeight(option.size.height);
+              header.setPrefHeight(option.size.height);
             }
-          }
-          isFirst = false;
-          var track = _this.addTrack(name, isColumns, display);
-
-          if (option.size) {
-            if (!isColumns && option.size.width != null) {
-              var header = _this.getTrackHeaderByIndex(_this.getTrackIndex(name, isColumns), isColumns);
-              track.setPrefWidth(option.size.width); // can only set width
+            if (option.size.width) {
+              // TODO set width for all tracks since they all have same width
+              track.setPrefWidth(option.size.width);
               header.setPrefWidth(option.size.width);
-            } else if (isColumns && (option.size.width != null || option.size.height != null)) {
-              var header = _this.getTrackHeaderByIndex(_this.getTrackIndex(name, isColumns), isColumns);
-              if (option.size.height) {
-                track.setPrefHeight(option.size.height);
-                header.setPrefHeight(option.size.height);
-              }
-              if (option.size.width) {
-                // TODO set width for all tracks since they all have same width
-                track.setPrefWidth(option.size.width);
-                header.setPrefWidth(option.size.width);
-              }
-            }
-
-          }
-          if (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
-            && option.color) {
-            var m = isColumns ? _this.project.getColumnColorModel()
-              : _this.project.getRowColorModel();
-            if (track.isDiscrete()) {
-              _.each(options.color, function (p) {
-                m.setMappedValue(v, p.value, p.color);
-              });
-            } else {
-              var cs = m.createContinuousColorMap(v);
-              var min = Number.MAX_VALUE;
-              var max = -Number.MAX_VALUE;
-              _.each(options.color, function (p) {
-                min = Math.min(min, p.value);
-                max = Math.max(max, p.value);
-              });
-
-              cs.setMin(min);
-              cs.setMax(max);
-              var valueToFraction = d3.scale.linear().domain(
-                [cs.getMin(), cs.getMax()]).range(
-                [0, 1]).clamp(true);
-              var fractions = [];
-              var colors = [];
-              _.each(options.color, function (p) {
-                fractions.push(valueToFraction(p.value));
-                colors.push(p.color);
-              });
-
-              cs.setFractions({
-                fractions: fractions,
-                colors: colors
-              });
             }
           }
+
+        }
+        if (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
+          && option.color) {
+          var m = isColumns ? _this.project.getColumnColorModel()
+            : _this.project.getRowColorModel();
+          if (track.isDiscrete()) {
+            _.each(options.color, function (p) {
+              m.setMappedValue(v, p.value, p.color);
+            });
+          } else {
+            var cs = m.createContinuousColorMap(v);
+            var min = Number.MAX_VALUE;
+            var max = -Number.MAX_VALUE;
+            _.each(options.color, function (p) {
+              min = Math.min(min, p.value);
+              max = Math.max(max, p.value);
+            });
+
+            cs.setMin(min);
+            cs.setMax(max);
+            var valueToFraction = d3.scale.linear().domain(
+              [cs.getMin(), cs.getMax()]).range(
+              [0, 1]).clamp(true);
+            var fractions = [];
+            var colors = [];
+            _.each(options.color, function (p) {
+              fractions.push(valueToFraction(p.value));
+              colors.push(p.color);
+            });
+
+            cs.setFractions({
+              fractions: fractions,
+              colors: colors
+            });
+          }
+
           if (track.isRenderAs(phantasus.VectorTrack.RENDER.SHAPE)
             && option.shape) {
             var m = isColumns ? _this.project.getColumnShapeModel()
@@ -2085,13 +2095,13 @@ phantasus.HeatMap.prototype = {
       _.each(e.vectors, function (v, i) {
         var index = _this.getTrackIndex(v.getName(), columns);
         if (index === -1) {
-          _this.addTrack(v.getName(), columns, e.render[i]);
+          _this.addTrack(v.getName(), columns, e.display[i]);
         } else {
           // repaint
           var track = _this.getTrackByIndex(index, columns);
-          var render = e.render[i];
-          if (render) {
-            track.settingFromConfig(render);
+          var display = e.display[i];
+          if (display) {
+            track.settingFromConfig(display);
           }
           track.setInvalid(true);
         }
@@ -2910,9 +2920,7 @@ phantasus.HeatMap.prototype = {
     if (name === undefined) {
       throw 'Name not specified';
     }
-    if ('None' === renderSettings) {
-      return;
-    }
+
     var tracks = isColumns ? this.columnTracks : this.rowTracks;
     var headers = isColumns ? this.columnTrackHeaders : this.rowTrackHeaders;
     // see if already visible
@@ -2922,8 +2930,8 @@ phantasus.HeatMap.prototype = {
     }
     if (renderSettings == null) {
       var metadata = isColumns ? this.project.getFullDataset().getColumnMetadata() : this.project.getFullDataset().getRowMetadata();
-      renderSettings = phantasus.VectorUtil.getDataType(metadata.getByName(name)) === '[number]' ? 'bar'
-        : phantasus.VectorTrack.RENDER.TEXT;
+      renderSettings = phantasus.VectorUtil.getDataType(metadata.getByName(name)) === '[number]' ? {display: ['bar']}
+        : {display: ['text']};
     }
 
     var positions = isColumns ? this.heatmap.getColumnPositions() : this.heatmap.getRowPositions();

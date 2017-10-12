@@ -241,20 +241,9 @@ phantasus.HeatMapColorScheme.Predefined.MAF = function () {
 // };
 phantasus.HeatMapColorScheme.Predefined.ZS = function () {
   return {
-    type: 'fixed',
-    map: [{
-      value: -10,
-      color: '#0000ff'
-    }, {
-      value: -2,
-      color: '#ffffff'
-    }, {
-      value: 2,
-      color: '#ffffff'
-    }, {
-      value: 10,
-      color: '#ff0000'
-    }]
+    scalingMode: 'fixed',
+    values: [-10, -2, 2, 10],
+    colors: ['#0000ff', '#ffffff', '#ffffff', '#ff0000']
   };
 };
 phantasus.HeatMapColorScheme.ScalingMode = {

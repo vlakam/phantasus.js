@@ -89,7 +89,7 @@ phantasus.CreateAnnotation.prototype = {
     }
     __project.trigger('trackChanged', {
       vectors: [__vector],
-      render: ['text'],
+      display: ['text'],
       columns: isColumns
     });
   }

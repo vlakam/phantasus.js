@@ -6,7 +6,7 @@ phantasus.MarkerSelection = function () {
  * @private
  */
 phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
-  phantasus.FoldChange, phantasus.LogFoldChange, phantasus.SignalToNoise,
+  phantasus.FoldChange, phantasus.MeanDifference, phantasus.SignalToNoise,
   phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
 phantasus.MarkerSelection.Functions.fromString = function (s) {
@@ -203,7 +203,7 @@ phantasus.MarkerSelection.prototype = {
     }
     var isFishy = f.toString() === phantasus.FisherExact.toString();
     if ((aIndices.length === 1 || bIndices.length === 1)
-      && !isFishy && f.toString() !== phantasus.LogFoldChange.toString()) {
+      && !isFishy && f.toString() !== phantasus.MeanDifference.toString()) {
       f = phantasus.FoldChange;
     }
     var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
@@ -291,14 +291,14 @@ phantasus.MarkerSelection.prototype = {
 
       project.trigger('trackChanged', {
         vectors: vectors,
-        render: vectors.map(function () {
+        display: vectors.map(function () {
           return 'text';
         }),
         columns: false
       });
       project.trigger('trackChanged', {
         vectors: [comparisonVector],
-        render: ['color'],
+        display: ['color'],
         columns: true
       });
     }

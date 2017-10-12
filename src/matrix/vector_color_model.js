@@ -84,15 +84,23 @@ phantasus.VectorColorModel.getColorMapForNumber = function (length) {
   return colors ? colors : phantasus.VectorColorModel.TWENTY_COLORS;
 };
 phantasus.VectorColorModel.prototype = {
-  toJSON: function () {
+  toJSON: function (tracks) {
+    var _this = this;
     var json = {};
-    this.vectorNameToColorScheme.forEach(function (colorScheme, name) {
-      // colorScheme is instanceof phantasus.HeatMapColorScheme
-      var colorSchemeJSON = phantasus.AbstractColorSupplier.toJSON(colorScheme.getCurrentColorSupplier());
-      json[name] = colorSchemeJSON;
-    });
-    this.vectorNameToColorMap.forEach(function (colorMap, name) {
-      json[name] = colorMap;
+    tracks.forEach(function (track) {
+      if (track.settings.discrete) {
+        var colorMap = _this.vectorNameToColorMap.get(track.getName());
+        if (colorMap != null) {
+          json[track.getName()] = colorMap;
+        }
+      } else {
+        // colorScheme is instanceof phantasus.HeatMapColorScheme
+        var colorScheme = _this.vectorNameToColorScheme.get(track.getName());
+        if (colorScheme != null) {
+          var colorSchemeJSON = phantasus.AbstractColorSupplier.toJSON(colorScheme.getCurrentColorSupplier());
+          json[track.getName()] = colorSchemeJSON;
+        }
+      }
     });
     return json;
   },

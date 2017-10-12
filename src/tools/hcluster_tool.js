@@ -205,16 +205,7 @@ phantasus.HClusterTool.prototype = {
         heatmap.setDendrogram(result.columnsHcl.tree, true, modelOrder);
       }
     } else {
-      var subtitle = ['clustering '];
-      if (rows) {
-        subtitle.push(dataset.getRowCount() + ' row'
-          + phantasus.Util.s(dataset.getRowCount()));
-      }
-      if (columns) {
-        subtitle.push(rows ? ', ' : '');
-        subtitle.push(dataset.getColumnCount() + ' column'
-          + phantasus.Util.s(dataset.getColumnCount()));
-      }
+
 
       var blob = new Blob(
         ['self.onmessage = function(e) {'

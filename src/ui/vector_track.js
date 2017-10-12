@@ -99,7 +99,7 @@ phantasus.VectorTrack = function (project, name, positions, isColumns, heatmap) 
     discreteAutoDetermined: false,
     colorBarSize: 12,
     stackedBar: false,
-    render: {},
+    display: [],
     selectionColor: 'rgb(182,213,253)',
     colorByField: null, // color this vector by another vector
     barColor: '#bdbdbd',
@@ -177,16 +177,17 @@ phantasus.VectorTrack.vectorToString = function (vector) {
 phantasus.VectorTrack.prototype = {
   settingFromConfig: function (conf) {
     var settings = this.settings;
-    // old style, comma separated list of text, color, etc.
-    if (_.isString(conf)) {
-      settings.render = {};
-      var tokens = conf.split(',');
+    // new style= rows:[{field: 'test', display:['text']}]
+    // old style= rows:[{field: 'test', display:'text,color'}]
+    var fromString = function (s) {
+      settings.display = [];
+      var tokens = s.split(',');
       for (var i = 0, length = tokens.length; i < length; i++) {
         var method = $.trim(tokens[i]);
         method = method.toUpperCase();
         var mapped = phantasus.VectorTrack.RENDER[method];
         if (mapped !== undefined) {
-          settings.render[mapped] = true;
+          settings.display.push(mapped);
         } else if (method === 'DISCRETE') {
           settings.discrete = true;
           settings.discreteAutoDetermined = true;
@@ -197,29 +198,66 @@ phantasus.VectorTrack.prototype = {
           settings.highlightMatchingValues = true;
         } else if (method === 'STACKED_BAR') {
           settings.stackedBar = true;
-          settings.render[phantasus.VectorTrack.RENDER.BAR] = true;
+          settings.display.push(phantasus.VectorTrack.RENDER.BAR);
         } else if (method === 'TOOLTIP') {
           settings.inlineTooltip = true;
         } else {
           // console.log(method + ' not found.');
         }
       }
-    } else if (_.isObject(conf)) { // new style display:{max:10, render:['text']}
-      conf.maxTextWidth = undefined;
-      this.settings = $.extend({}, this.settings, conf);
-      if (conf.discrete != null) {
-        this.settings.discreteAutoDetermined = true;
+    };
+    var fromArray = function (array) {
+      settings.display = [];
+      for (var i = 0; i < array.length; i++) {
+        var method = array[i].toUpperCase();
+        var mapped = phantasus.VectorTrack.RENDER[method];
+        if (mapped !== undefined) {
+          settings.display.push(mapped);
+        } else {
+          console.log(method + ' not found.');
+        }
       }
-
-      if (conf.render) {
-        for (var i = 0; i < conf.render.length; i++) {
-          var method = conf.render[i].toUpperCase();
+    };
+    var fromObject = function (obj) {
+      settings.display = [];
+      for (var key in obj) {
+        if (obj[key]) {
+          var method = key.toUpperCase();
           var mapped = phantasus.VectorTrack.RENDER[method];
           if (mapped !== undefined) {
-            this.settings.render[mapped] = true;
+            settings.display.push(mapped);
           }
         }
       }
+    };
+
+    if (conf != null) {
+      if (_.isString(conf)) { // deprecated, comma separated list of text, color, etc
+        fromString(conf);
+      } else if (_.isArray(conf)) {
+        fromArray(conf);
+      } else {
+        var userSuppliedSettings = conf;
+        if (!_.isArray(conf.display) && _.isObject(conf.display)) { // deprecated
+          userSuppliedSettings = conf.display;
+        }
+        settings = $.extend({}, settings, userSuppliedSettings);
+        settings.maxTextWidth = undefined;
+        if (userSuppliedSettings.discrete != null) {
+          settings.discreteAutoDetermined = true;
+        }
+
+        if (_.isArray(userSuppliedSettings.display)) {
+          settings.display = userSuppliedSettings.display;
+        } else if (_.isString(userSuppliedSettings.display)) {
+          fromString(userSuppliedSettings.display);
+        }
+        if (!_.isArray(settings.render) && _.isObject(settings.render)) {// deprecated
+          fromObject(settings.render);
+          delete settings.render;
+        }
+      }
+      this.settings = settings;
     }
     this._update();
 
@@ -234,7 +272,7 @@ phantasus.VectorTrack.prototype = {
     return this.settings.tooltip;
   },
   isRenderAs: function (value) {
-    return this.settings.render[value];
+    return this.settings.display.indexOf(value) !== -1;
   },
   dispose: function () {
     phantasus.AbstractCanvas.prototype.dispose.call(this);
@@ -307,7 +345,7 @@ phantasus.VectorTrack.prototype = {
       width += 100;
     }
     // 2 pixel spacing between display types
-    var nkeys = _.keys(this.settings.render).length;
+    var nkeys = this.settings.display.length;
 
     if (nkeys > 0) {
       width += (nkeys - 1) * 2;
@@ -1712,9 +1750,9 @@ phantasus.VectorTrack.prototype = {
           }
           var show = !_this.isRenderAs(item);
           if (!show) {
-            delete _this.settings.render[item];
+            _this.settings.display.splice(_this.settings.display.indexOf(item), 1);
           } else {
-            _this.settings.render[item] = true;
+            _this.settings.display.push(item);
           }
           _this._update();
           heatmap.revalidate();
@@ -1847,7 +1885,7 @@ phantasus.VectorTrack.prototype = {
     var gridColor = this.heatmap.getHeatMapElementComponent().getGridColor();
     var gridThickness = this.heatmap.getHeatMapElementComponent().getGridThickness();
     for (var i = start; i < end; i++) {
-      var value = vector.getValue(i); // value is an array of values to render as a heat map
+      var value = vector.getValue(i); // value is an array of values to display as a heat map
       if (value != null) {
         var pix = positions.getPosition(i);
         var itemSize = positions.getItemSize(i);
