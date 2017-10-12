@@ -212,4 +212,4 @@ phantasus.Positions.prototype = {
   }
 };
 
-morpheus.Util.extend(morpheus.Positions, morpheus.Events);
+phantasus.Util.extend(phantasus.Positions, phantasus.Events);

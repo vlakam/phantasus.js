@@ -202,8 +202,8 @@ phantasus.MarkerSelection.prototype = {
       }
     }
     var isFishy = f.toString() === phantasus.FisherExact.toString();
-    if (aIndices.length === 1 || bIndices.length === 1
-      && !(f instanceof phantasus.FisherExact)) {
+    if ((aIndices.length === 1 || bIndices.length === 1)
+      && !isFishy && f.toString() !== phantasus.LogFoldChange.toString()) {
       f = phantasus.FoldChange;
     }
     var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(

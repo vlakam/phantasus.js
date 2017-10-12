@@ -212,8 +212,8 @@ phantasus.VectorTrack.prototype = {
       }
 
       if (conf.render) {
-        for (var method in conf.render) {
-          method = method.toUpperCase();
+        for (var i = 0; i < conf.render.length; i++) {
+          var method = conf.render[i].toUpperCase();
           var mapped = phantasus.VectorTrack.RENDER[method];
           if (mapped !== undefined) {
             this.settings.render[mapped] = true;

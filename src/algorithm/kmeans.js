@@ -366,7 +366,7 @@ phantasus.KMeansPlusPlusClusterer = function (k, maxIterations, distanceFunction
       }
       centroid[i] = (sum / count);
     }
-    return new PointWrapper(morpheus.VectorUtil.arrayAsVector(centroid));
+    return new PointWrapper(phantasus.VectorUtil.arrayAsVector(centroid));
   }
 
   this.execute = function (vectors) {
