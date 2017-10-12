@@ -951,6 +951,7 @@ phantasus.ActionManager.prototype = {
 
     args.heatMap = this.heatMap;
     action.cb(args);
+
     phantasus.Util.trackEvent({
       eventCategory: 'Tool',
       eventAction: name

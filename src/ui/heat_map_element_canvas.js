@@ -284,15 +284,16 @@ phantasus.HeatMapElementCanvas.prototype = {
     var top = phantasus.Positions.getTop(clip, rowPositions);
     var bottom = phantasus.Positions.getBottom(clip, rowPositions);
 
-    context.translate(-clip.x, -clip.y);
-    this._draw({
-      left: left,
-      right: right,
-      top: top,
-      bottom: bottom,
-      context: context
-    });
-    context.translate(clip.x, clip.y);
+      context.translate(-clip.x, -clip.y);
+      this._draw({
+        left: left,
+        right: right,
+        top: top,
+        bottom: bottom,
+        context: context
+      });
+      context.translate(clip.x, clip.y);
+
     if (this.drawCallback) {
       this.drawCallback({
         clip: clip,
@@ -331,6 +332,7 @@ phantasus.HeatMapElementCanvas.prototype = {
       context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
       var textWidth = context.measureText('-99.9').width;
       fontSize = ( (columnPositions.getSize() - 1) / textWidth) * fontSize;
+      fontSize = Math.min(fontSize, 17);
       fontSize = Math.min(fontSize, 17);
       context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
     }

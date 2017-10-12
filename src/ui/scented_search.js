@@ -38,7 +38,6 @@ phantasus.ScentedSearch = function (model, positions, isVertical, scrollbar,
     heatMap.setToolTip(-1, -1, {event: e});
   };
   $(scrollbar.canvas).on('mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit);
-
 };
 
 phantasus.ScentedSearch.LINE_HEIGHT = 3.5;

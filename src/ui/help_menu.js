@@ -13,7 +13,7 @@ phantasus.HelpMenu = function () {
 
   html.push('<li><a data-name="tutorial" href="#">Tutorial</a></li>');
   html.push('<li><a data-name="source" href="#">Source Code</a></li>');
-  html.push('<li><a data-name="about" href="about.html">About</a></li>');
+  html.push('<li><a data-name="about" href="#">About</a></li>');
 
   html.push('</ul>');
   html.push('</div>');
@@ -40,4 +40,9 @@ phantasus.HelpMenu = function () {
 
   });
 
+  this.$el.find('[data-name=about]').on('click', function (e) {
+    window.open('about.html');
+    e.preventDefault();
+
+  });
 };

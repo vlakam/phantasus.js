@@ -118,8 +118,8 @@ phantasus.SortDialog.prototype = {
   isColumns: false,
   build: function (project, isColumns) {
     var fields = phantasus.MetadataUtil.getMetadataNames(isColumns ? project
-      .getFullDataset().getColumnMetadata() : project
-      .getFullDataset().getRowMetadata());
+    .getFullDataset().getColumnMetadata() : project
+    .getFullDataset().getRowMetadata());
     this.fields = fields;
     var html = [];
     var sortKeys = isColumns ? project.getColumnSortKeys() : project

@@ -159,9 +159,12 @@ phantasus.HeatMapToolBar = function (heatMap) {
       } else {
         var action = heatMap.getActionManager().getAction(name);
         if (action != null) {
+
         menu.push('<li>');
         menu.push('<a class="phantasus-menu-item" data-action="' + action.name + '" href="#">');
-        menu.push(action.name);
+        menu.push(action.name);if (action.ellipsis) {
+            menu.push('...');
+          }
         if (action.ellipsis) {
           menu.push('...');
         }
@@ -431,23 +434,19 @@ phantasus.HeatMapToolBar = function (heatMap) {
       $matchesToTop: $group.find('[name=matchesToTop]'),
       $toggleButton: $searchToggle.filter('[data-search=' + searchName + ']').parent()
     };
-
-    nameToSearchObject[searchName] = obj;
+  nameToSearchObject[searchName] = obj;
     return obj;
-  }
-
-  var $searchOptions = $el.find('[data-name=searchOptions]');
-  $searchOptions.on('click', 'li > a', function (e) {
-    e.preventDefault();
-    var $this = $(this);
-    var group = $this.data('group');
-    if (group === 'matchMode') {
-      _this.matchMode = $this.data('name');
-    } else {
-      _this.matchAllPredicates = $this.data('name') === 'matchAll';
-    }
-
-    var $searchField;
+  }  var $searchOptions = $el.find('[data-name=searchOptions]');
+    $searchOptions.on('click', 'li > a', function (e) {
+      e.preventDefault();
+      var $this = $(this);
+      var group = $this.data('group');
+      if (group === 'matchMode') {
+        _this.matchMode = $this.data('name');
+      } else {
+        _this.matchAllPredicates = $this.data('name') === 'matchAll';
+      }
+      var $searchField;
     if (_this.rowSearchObject.$search.is(':visible')) {
       $searchField = _this.rowSearchObject.$search;
     } else if (_this.columnSearchObject.$search.is(':visible')) {
@@ -466,19 +465,19 @@ phantasus.HeatMapToolBar = function (heatMap) {
       }));
       // trigger search again
     }
-
-    var $span = $(this).find('span');
-    if ($span.data('type') === 'toggle') {
-      $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').removeClass('dropdown-checkbox' +
-        ' fa' +
-        ' fa-check');
-      $span.addClass('dropdown-checkbox fa fa-check');
-    }
-    phantasus.Util.trackEvent({
-      eventCategory: 'ToolBar',
-      eventAction: 'searchMatchMode'
+      var $span = $(this).find('span');
+      if ($span.data('type') === 'toggle') {
+        $searchOptions.find('[data-group=' + group + '] > [data-type=toggle]').removeClass('dropdown-checkbox' +
+          ' fa' +
+          ' fa-check');
+        $span.addClass('dropdown-checkbox fa fa-check');
+      }
+      phantasus.Util.trackEvent({
+        eventCategory: 'ToolBar',
+        eventAction: 'searchMatchMode'
+      });
     });
-  });
+
   this.rowSearchObject = getSearchElements($searchRowsGroup, 'rows', function () {
     _this.search(true);
   });

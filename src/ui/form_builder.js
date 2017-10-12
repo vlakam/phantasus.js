@@ -665,7 +665,7 @@ phantasus.FormBuilder.prototype = {
           .push('<input class="form-control" style="width:50%; display:none;" type="text" name="'
             + name + '_text">');
       }
-      
+
       html
         .push('<input placeholder="'
           + 'Enter a dataset name here'
@@ -727,7 +727,7 @@ phantasus.FormBuilder.prototype = {
               .css('display',
                 showPreInput ? '' : 'none');
         });
-      
+
       // URL
       _this.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
         var text = $.trim($(this).val());

@@ -141,27 +141,27 @@ phantasus.HeatMapOptions = function (heatMap) {
     }];
   if (heatMap.rowDendrogram) {
     displayItems
-      .push({
-        name: 'row_dendrogram_line_thickness',
-        required: true,
-        type: 'text',
-        style: 'max-width: 100px;',
-        value: phantasus.Util
-          .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
-            : 1)
-      });
+    .push({
+      name: 'row_dendrogram_line_thickness',
+      required: true,
+      type: 'text',
+      style: 'max-width: 100px;',
+      value: phantasus.Util
+      .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
+        : 1)
+    });
   }
   if (heatMap.columnDendrogram) {
     displayItems
-      .push({
-        name: 'column_dendrogram_line_thickness',
-        required: true,
-        type: 'text',
-        style: 'max-width: 100px;',
-        value: phantasus.Util
-          .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
-            : 1)
-      });
+    .push({
+      name: 'column_dendrogram_line_thickness',
+      required: true,
+      type: 'text',
+      style: 'max-width: 100px;',
+      value: phantasus.Util
+      .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
+        : 1)
+    });
   }
 
   displayItems.push({

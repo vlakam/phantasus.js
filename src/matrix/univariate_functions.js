@@ -101,6 +101,21 @@ phantasus.MaxPercentiles = function (percentiles) {
   };
   return f;
 };
+
+phantasus.CountIf = function (vector, criteria) {
+  if (!/[<>=!]/.test(criteria)) {
+    criteria = '=="' + criteria + '"';
+  }
+  var matches = 0;
+  for (var i = 0, size = vector.size(); i < size; i++) {
+    var value = vector.getValue(i);
+    if (eval(value + criteria)) {
+      matches++;
+    }
+  }
+  return matches;
+
+};
 phantasus.Mean = function (vector) {
   var sum = 0;
   var count = 0;

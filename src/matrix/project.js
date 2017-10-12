@@ -45,7 +45,6 @@ phantasus.Project._recomputeCalculatedColumnFields = function (dataset, key) {
   var metadata = dataset.getColumnMetadata();
   var view = new phantasus.DatasetColumnView(dataset);
   var nfound = 0;
-
   for (var metadataIndex = 0,
          count = metadata.getMetadataCount(); metadataIndex < count; metadataIndex++) {
     var vector = metadata.get(metadataIndex);

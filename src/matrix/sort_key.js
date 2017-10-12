@@ -716,6 +716,12 @@ phantasus.SortKey.fromJSON = function (project, json) {
       }
       sortKeys.push(sortKey);
     }
+    if (sortKey != null) {
+      if (key.lockOrder !== 0) {
+        sortKey.setLockOrder(key.lockOrder);
+      }
+      sortKeys.push(sortKey);
+    }
   });
   return sortKeys;
 };
