@@ -301,7 +301,7 @@ phantasus.HeatMap = function (options) {
     options.landingPage.$el.prependTo(this.$el);
   }
 
-  console.log("heatmap full options", this.options);
+  // console.log("heatmap full options", this.options);
 
   if (this.options.dataset == null) {
     var datasetFormBuilder = new phantasus.FormBuilder();
@@ -318,7 +318,7 @@ phantasus.HeatMap = function (options) {
       okCallback: function () {
         var file = datasetFormBuilder.getValue('file');
         phantasus.DatasetUtil.read(file).done(function (dataset) {
-          console.log('now resolving here?');
+          // console.log('now resolving here?');
           if (dataset.length && dataset.length > 0) {
             _this.options.dataset.resolve(dataset[0]);
             _this.setName(dataset[0].seriesNames[0]);
@@ -580,7 +580,7 @@ phantasus.HeatMap = function (options) {
       options.dataset.file, options.dataset.options)
       : phantasus.DatasetUtil.read(options.dataset);
     deferred.done(function (dataset) {
-      console.log('resolving here?', dataset);
+      // console.log('resolving here?', dataset);
 
       if (dataset.length && dataset.length > 0) {
         _this.options.dataset = dataset[0];

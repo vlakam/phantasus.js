@@ -763,7 +763,7 @@ phantasus.FormBuilder.prototype = {
         _this.setValue(name, text);
         if (evt.which === 13) {
           // console.log('environment', evt);
-          console.log('object to trigger with result', _this, 'name', name, 'text', text);
+          // console.log('object to trigger with result', _this, 'name', name, 'text', text);
           _this.trigger('change', {
             name: name,
             value: {

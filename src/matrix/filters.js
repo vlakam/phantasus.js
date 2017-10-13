@@ -47,7 +47,7 @@ phantasus.CombinedFilter.prototype = {
     this.filters.push(filter);
     if (notify) {
       this.trigger('add', {
-        filter: filter
+        filter: filter,
       });
     }
   },
@@ -70,7 +70,7 @@ phantasus.CombinedFilter.prototype = {
     this.filters.splice(index, 1);
     if (notify) {
       this.trigger('remove', {
-        index: index
+        index: index,
       });
     }
   },
@@ -116,7 +116,7 @@ phantasus.CombinedFilter.prototype = {
   },
   isEnabled: function () {
     return this.enabledFilters.length > 0;
-  }
+  },
 };
 phantasus.Util.extend(phantasus.CombinedFilter, phantasus.Events);
 /**
@@ -160,7 +160,7 @@ phantasus.IndexFilter.prototype = {
    */
   accept: function (index) {
     return this.acceptIndicesSet.has(index);
-  }
+  },
 };
 phantasus.VectorFilter = function (set, maxSetSize, name, isColumns) {
   this.set = set;
@@ -199,7 +199,7 @@ phantasus.VectorFilter.prototype = {
    */
   accept: function (index) {
     return this.set.has(this.vector.getValue(index));
-  }
+  },
 };
 
 phantasus.NotNullFilter = function (name, isColumns) {
@@ -235,7 +235,7 @@ phantasus.NotNullFilter.prototype = {
    */
   accept: function (index) {
     return this.vector.getValue(index) != null;
-  }
+  },
 };
 
 phantasus.RangeFilter = function (min, max, name, isColumns) {
@@ -283,7 +283,7 @@ phantasus.RangeFilter.prototype = {
   accept: function (index) {
     var value = this.vector.getValue(index);
     return value >= this.min && value <= this.max;
-  }
+  },
 };
 
 phantasus.TopNFilter = function (n, direction, name, isColumns) {
@@ -325,7 +325,8 @@ phantasus.TopNFilter.prototype = {
   },
 
   init: function (dataset) {
-    if (!this.vector || this.vector !== dataset.getRowMetadata().getByName(this.name)) {
+    if (!this.vector ||
+      this.vector !== dataset.getRowMetadata().getByName(this.name)) {
       var vector = dataset.getRowMetadata().getByName(this.name);
       if (vector == null) {
         vector = {
@@ -333,7 +334,7 @@ phantasus.TopNFilter.prototype = {
           },
           size: function () {
             return 0;
-          }
+          },
         };
       }
       this.vector = vector;
@@ -351,7 +352,8 @@ phantasus.TopNFilter.prototype = {
       });
       this.sortedValues = values;
     }
-    var topAndBottomIndices = [(this.sortedValues.length - this.n),
+    var topAndBottomIndices = [
+      (this.sortedValues.length - this.n),
       (this.n - 1)];
 
     for (var i = 0; i < topAndBottomIndices.length; i++) {
@@ -360,7 +362,8 @@ phantasus.TopNFilter.prototype = {
         topAndBottomIndices[i]);
     }
 
-    var topAndBottomValues = [this.sortedValues[topAndBottomIndices[0]],
+    var topAndBottomValues = [
+      this.sortedValues[topAndBottomIndices[0]],
       this.sortedValues[topAndBottomIndices[1]]];
 
     if (this.direction === phantasus.TopNFilter.TOP) {
@@ -390,7 +393,7 @@ phantasus.TopNFilter.prototype = {
   },
   toString: function () {
     return this.name;
-  }
+  },
 };
 
 phantasus.AlwaysTrueFilter = function () {
@@ -422,12 +425,13 @@ phantasus.AlwaysTrueFilter.prototype = {
    */
   accept: function (index) {
     return true;
-  }
+  },
 };
 
 phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
   combinedFilter.setAnd(json.isAnd);
   json.filters.forEach(function (filter) {
+    var name = filter.name != null ? filter.name : filter.field;
     if (filter.type === 'set') {
       var set = new phantasus.Set();
       filter.values.forEach(function (value) {
@@ -436,21 +440,30 @@ phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
       combinedFilter.add(new phantasus.VectorFilter(
         set,
         filter.maxSetSize,
-        filter.name,
+        name,
         filter.isColumns
       ));
     } else if (filter.type === 'range') {
       combinedFilter.add(new phantasus.RangeFilter(
         filter.min,
         filter.max,
-        filter.name,
+        name,
         filter.isColumns
       ));
     } else if (filter.type === 'top') {
+      if (_.isString(filter.direction)) {
+        if (filter.direction === 'top') {
+          filter.direction = phantasus.TopNFilter.TOP;
+        } else if (filter.direction === 'bottom') {
+          filter.direction = phantasus.TopNFilter.BOTTOM;
+        } else if (filter.direction === 'topAndBottom') {
+          filter.direction = phantasus.TopNFilter.TOP_BOTTOM;
+        }
+      }
       combinedFilter.add(new phantasus.TopNFilter(
         filter.n,
         filter.direction,
-        filter.name,
+        name,
         filter.isColumns
       ));
     } else if (filter.type === 'index') {
@@ -460,7 +473,7 @@ phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
       });
       combinedFilter.add(new phantasus.IndexFilter(
         set,
-        filter.name,
+        name,
         filter.isColumns
       ));
     } else {
@@ -472,7 +485,7 @@ phantasus.CombinedFilter.fromJSON = function (combinedFilter, json) {
 phantasus.CombinedFilter.toJSON = function (filter) {
   var json = {
     isAnd: filter.isAnd(),
-    filters: []
+    filters: [],
   };
   filter.getFilters().forEach(function (filter) {
     if (filter.isEnabled()) {
@@ -483,7 +496,7 @@ phantasus.CombinedFilter.toJSON = function (filter) {
           isColumns: filter.isColumns(),
           values: filter.set.values(),
           maxSetSize: filter.maxSetSize,
-          type: 'set'
+          type: 'set',
         });
       } else if (filter instanceof phantasus.RangeFilter) {
         // phantasus.RangeFilter = function (min, max, name, isColumns)
@@ -492,16 +505,17 @@ phantasus.CombinedFilter.toJSON = function (filter) {
           isColumns: filter.isColumns(),
           min: filter.min,
           max: filter.max,
-          type: 'range'
+          type: 'range',
         });
       } else if (filter instanceof phantasus.TopNFilter) {
         // phantasus.TopNFilter = function (n, direction, name, isColumns)
+
         json.filters.push({
           name: filter.name,
           isColumns: filter.isColumns(),
-          min: filter.n,
-          max: filter.direction,
-          type: 'top'
+          n: filter.n,
+          direction: filter.direction,
+          type: 'top',
         });
       } else if (filter instanceof phantasus.IndexFilter) {
         // phantasus.IndexFilter = function (acceptIndicesSet, name, isColumns
@@ -509,7 +523,7 @@ phantasus.CombinedFilter.toJSON = function (filter) {
           name: filter.name,
           isColumns: filter.isColumns(),
           indices: filter.acceptIndicesSet.values(),
-          type: 'index'
+          type: 'index',
         });
       }
     }

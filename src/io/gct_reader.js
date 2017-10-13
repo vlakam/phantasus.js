@@ -8,7 +8,7 @@ phantasus.GctReader.prototype = {
   },
   read: function (fileOrUrl, callback) {
     var _this = this;
-    console.log("gctreader.read", fileOrUrl, fileOrUrl instanceof File, phantasus.Util.isFetchSupported());
+    // console.log("gctreader.read", fileOrUrl, fileOrUrl instanceof File, phantasus.Util.isFetchSupported());
     if (fileOrUrl instanceof File) {
       this._readChunking(fileOrUrl, callback, false);
     } else {
@@ -475,7 +475,7 @@ phantasus.GctReader.prototype = {
     var _this = this;
     var name = phantasus.Util.getBaseFileName(phantasus.Util
       .getFileName(fileOrUrl));
-    console.log("_readNoChunking", name);
+    // console.log("_readNoChunking", name);
     phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err, arrayBuffer) {
       if (err) {
         callback(err);

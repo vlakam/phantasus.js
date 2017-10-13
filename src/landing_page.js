@@ -63,7 +63,7 @@ phantasus.LandingPage.prototype = {
         });
         session.getObject(function (filenames) {
           filenames = JSON.parse(filenames);
-          console.log("filenames", filenames, filenames.length);
+          // console.log("filenames", filenames, filenames.length);
           if (!filenames.length) {
             _this.show();
             throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
@@ -93,7 +93,7 @@ phantasus.LandingPage.prototype = {
         });
         session.getObject(function(success) {
           var names = JSON.parse(success);
-          console.log(names);
+          // console.log(names);
 
           if (names.length === 0) {
             _this.show();
@@ -105,7 +105,7 @@ phantasus.LandingPage.prototype = {
             var specificOptions = options;
 
             specificOptions.dataset.options.exactName = names[j];
-            console.log("specific", specificOptions);
+            // console.log("specific", specificOptions);
 
             new phantasus.HeatMap(specificOptions);
           }
@@ -119,7 +119,7 @@ phantasus.LandingPage.prototype = {
 
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
 
-    console.log(optionsArray);
+    // console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
@@ -132,7 +132,7 @@ phantasus.LandingPage.prototype = {
         createPreloadedHeatMap(options);
       }
       else {
-        console.log("before loading heatmap from landing_page", options);
+        // console.log("before loading heatmap from landing_page", options);
         new phantasus.HeatMap(options);
       }
     }

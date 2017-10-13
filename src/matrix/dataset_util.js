@@ -187,7 +187,7 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
 
-  console.log("before reading", fileOrUrl, options, isFile, isString, ext);
+  // console.log("before reading", fileOrUrl, options, isFile, isString, ext);
 
   var datasetReader;
   var str = fileOrUrl.toString();
@@ -211,7 +211,7 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     }
   }
 
-  console.log(typeof datasetReader);
+  // console.log(typeof datasetReader);
 
   if (isString || isFile) { // URL or file
     var deferred = $.Deferred();
@@ -1069,7 +1069,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
   while (dataset.dataset) {
     dataset = dataset.dataset;
   }
-  console.log(dataset);
+  // console.log(dataset);
   dataset.setESSession(new Promise(function (resolve, reject) {
     //// console.log("phantasus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof phantasus.Dataset, dataset instanceof phantasus.SlicedDatasetView);
     /*		if (dataset.dataset) {
