@@ -308,7 +308,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var top = options.top;
     var bottom = options.bottom;
     var context = options.context;
-
+    var fontFamily = phantasus.CanvasUtil.getFontFamily(context);
     var columnPositions = this.columnPositions;
     var rowPositions = this.rowPositions;
     //if (rowPositions.getSize() < 1 || columnPositions.getSize() < 1) {
@@ -329,12 +329,11 @@ phantasus.HeatMapElementCanvas.prototype = {
     if (drawValues) {
       nf = this.drawValuesFormat;
       var fontSize = columnPositions.getSize();
-      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+      context.font = fontSize + 'px ' + fontFamily;
       var textWidth = context.measureText('-99.9').width;
       fontSize = ( (columnPositions.getSize() - 1) / textWidth) * fontSize;
       fontSize = Math.min(fontSize, 17);
-      fontSize = Math.min(fontSize, 17);
-      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+      context.font = fontSize + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     }
     var seriesNameToIndex = {};
     for (var i = 0; i < dataset.getSeriesCount(); i++) {

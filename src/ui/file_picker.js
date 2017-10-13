@@ -38,7 +38,6 @@ phantasus.FilePicker = function (options) {
       ' aria-controls="' + preloaded + '" role="tab" data-toggle="tab"><i class="fa fa-database"></i>' +
       ' Preloaded Datasets</a></li>');
 
-    // lazy load
     new phantasus.SampleDatasets({
       $el: $sampleDatasetsEl,
       show: true,

@@ -354,7 +354,7 @@ phantasus.VectorTrackHeader.prototype = {
   getPrintSize: function () {
     var context = this.canvas.getContext('2d');
     context.font = this.defaultFontHeight + 'px '
-      + phantasus.CanvasUtil.FONT_NAME;
+      + phantasus.CanvasUtil.getFontFamily(context);
     var textWidth = 4 + context.measureText(this.name).width;
     return {
       width: textWidth,
@@ -468,11 +468,11 @@ phantasus.VectorTrackHeader.prototype = {
       context.textAlign = 'right';
       context.font = Math.min(this.defaultFontHeight, clip.height
           - phantasus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+        + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     } else {
       context.textAlign = 'left';
       context.font = (clip.height - phantasus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+        + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     }
     context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(this.name, 0, 0);
@@ -511,7 +511,7 @@ phantasus.VectorTrackHeader.prototype = {
       .getUnscaledHeight()
       - phantasus.VectorTrackHeader.FONT_OFFSET);
     fontHeight = Math.min(fontHeight, phantasus.VectorTrack.MAX_FONT_SIZE);
-    context.font = fontHeight + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.font = fontHeight + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     var textWidth = context.measureText(name).width;
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
@@ -696,7 +696,7 @@ phantasus.VectorTrackHeader.prototype = {
       phantasus.CanvasUtil.resetTransform(context);
       if (sortKeys[existingSortKeyIndex.index].getLockOrder() === 0 && unlockedSortKeys.length > 1) {
         context.textAlign = 'left';
-        context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
+        context.font = '8px ' + phantasus.CanvasUtil.getFontFamily(context);
         context.fillText('' + (existingSortKeyIndex.number), x + 4,
           ypix - 3);
       }

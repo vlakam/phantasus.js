@@ -750,6 +750,7 @@ phantasus.HeatMap.showTool = function (tool, heatMap, callback) {
       title: tool.toString(),
       apply: tool.apply,
       ok: guiOptions.ok,
+      cancel: guiOptions.cancel,
       size: guiOptions.size,
       draggable: true,
       content: formBuilder.$form,
@@ -3420,6 +3421,13 @@ phantasus.HeatMap.prototype = {
       var context = new C2S(bounds.width, bounds.height);
       this.snapshot(context);
       var svg = context.getSerializedSvg();
+      var prefix = [];
+
+      prefix.push('<?xml version="1.0" encoding="utf-8"?>\n');
+      prefix.push('<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"' +
+        ' "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n');
+
+      svg = prefix.join('') + svg;
       var blob = new Blob([svg], {
         type: 'text/plain;charset=utf-8'
       });

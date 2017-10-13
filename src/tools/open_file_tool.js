@@ -164,7 +164,7 @@ phantasus.OpenFileTool.prototype = {
         });
       } else if (phantasus.Util.endsWith(fileName, '.gmt')) {
         phantasus.ArrayBufferReader.getArrayBuffer(fileOrUrl, function (err,
-                                                                       buf) {
+                                                                        buf) {
           if (err) {
             throw new Error('Unable to read ' + fileOrUrl);
           }

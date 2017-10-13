@@ -170,8 +170,11 @@ phantasus.DatasetUtil.annotate = function (options) {
 };
 /**
  * Reads a dataset at the specified URL or file
- * @param file
+ * @param fileOrUrl
  *            a File or URL
+ * @param options.background
+ * @params options.interactive
+ * @params options.extension
  * @return A promise that resolves to phantasus.DatasetInterface
  */
 phantasus.DatasetUtil.read = function (fileOrUrl, options) {

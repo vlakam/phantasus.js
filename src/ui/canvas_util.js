@@ -4,6 +4,10 @@ phantasus.CanvasUtil.dragging = false;
 
 phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
 phantasus.CanvasUtil.FONT_COLOR = 'rgb(0, 0, 0)';
+phantasus.CanvasUtil.getFontFamily = function (context) {
+  // older versions of Adobe choke when a font family contains a font that is not installed
+  return context instanceof C2S ? 'Helvetica' : phantasus.CanvasUtil.FONT_NAME;
+};
 phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
   var prefWidth = c.getPrefWidth();
@@ -161,7 +165,7 @@ phantasus.CanvasUtil.createCanvas = function () {
   return $c[0];
 };
 phantasus.CanvasUtil.getHeaderStringWidth = function (context, s) {
-  context.font = '14px ' + phantasus.CanvasUtil.FONT_NAME;
+  context.font = '14px ' + phantasus.CanvasUtil.getFontFamily(context);
   return context.measureText(s).width + 18;
 };
 
@@ -177,7 +181,7 @@ phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions
   if (fontSize <= 0) {
     return 0;
   }
-  context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+  context.font = fontSize + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
   var toString = phantasus.VectorTrack.vectorToString(vector);
   var maxWidth = 0;
   // var maxWidth2 = 0;

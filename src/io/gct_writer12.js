@@ -4,10 +4,11 @@ phantasus.GctWriter12 = function () {
     rowId: 'id',
     columnId: 'id'
   };
+  this.nf = phantasus.Util.createNumberFormat('.2f');
 };
 phantasus.GctWriter12.prototype = {
-  toString: function (value) {
-    return phantasus.Util.toString(value);
+  setNumberFormat: function (nf) {
+    this.nf = nf;
   },
   getExtension: function () {
     return 'gct';
@@ -33,9 +34,10 @@ phantasus.GctWriter12.prototype = {
     if (!columnIds) {
       columnIds = columnMetadata.get(0);
     }
+    var columnIdToString = phantasus.VectorTrack.vectorToString(columnIds);
     for (var j = 0; j < columns; j++) {
       pw.push('\t');
-      pw.push(this.toString(columnIds.getValue(j)));
+      pw.push(columnIdToString(columnIds.getValue(j)));
     }
     var rowIds = rowMetadata.get(this.options.rowId);
     if (!rowIds) {
@@ -46,19 +48,21 @@ phantasus.GctWriter12.prototype = {
     if (rowDescriptions == null && rowMetadata.getMetadataCount() > 1) {
       rowDescriptions = rowMetadata.get(1);
     }
-
+    var rowIdToString = phantasus.VectorTrack.vectorToString(rowIds);
+    var rowDescriptionToString = rowDescriptions != null ? phantasus.VectorTrack.vectorToString(rowDescriptions) : null;
+    var nf = this.nf;
     for (var i = 0; i < rows; i++) {
       pw.push('\n');
-      pw.push(this.toString(rowIds.getValue(i)));
+      pw.push(rowIdToString(rowIds.getValue(i)));
       pw.push('\t');
       var rowDescription = rowDescriptions != null ? rowDescriptions
-        .getValue(i) : null;
+      .getValue(i) : null;
       if (rowDescription != null) {
-        pw.push(this.toString(rowDescription));
+        pw.push(rowDescriptionToString(rowDescription));
       }
       for (var j = 0; j < columns; j++) {
         pw.push('\t');
-        pw.push(phantasus.Util.nf(dataset.getValue(i, j)));
+        pw.push(nf(dataset.getValue(i, j)));
       }
     }
     pw.push('\n');

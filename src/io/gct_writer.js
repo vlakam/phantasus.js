@@ -1,4 +1,5 @@
 phantasus.GctWriter = function () {
+  this.nf = phantasus.Util.createNumberFormat('.2f');
 };
 
 phantasus.GctWriter.idFirst = function (model) {
@@ -24,8 +25,8 @@ phantasus.GctWriter.idFirst = function (model) {
 };
 
 phantasus.GctWriter.prototype = {
-  toString: function (value) {
-    return phantasus.Util.toString(value);
+  setNumberFormat: function (nf) {
+    this.nf = nf;
   },
   getExtension: function () {
     return 'gct';
@@ -48,22 +49,24 @@ phantasus.GctWriter.prototype = {
     //console.log("writeData")
     var ncols = dataset.getColumnCount();
     var rowMetadataCount = rowMetadata.getMetadataCount();
+    var nf = this.nf;
     for (var i = 0, rows = dataset.getRowCount(); i < rows; i++) {
       for (var rowMetadataIndex = 0; rowMetadataIndex < rowMetadataCount; rowMetadataIndex++) {
         if (rowMetadataIndex > 0) {
           pw.push('\t');
         }
-        var value = rowMetadata.get(rowMetadataIndex).getValue(i);
+        var vector = rowMetadata.get(rowMetadataIndex);
+        var value = vector.getValue(i);
+
         if (value !== null) {
-          pw.push(this.toString(value));
+          var toString = phantasus.VectorTrack.vectorToString(vector);
+          pw.push(toString(value));
         }
       }
       for (var j = 0; j < ncols; j++) {
         pw.push('\t');
         var value = dataset.getValue(i, j);
-        // pw.push((value != null && value.toObject) ? JSON
-        // .stringify(value.toObject()) : phantasus.Util.nf(value));
-        pw.push(phantasus.Util.nf(value));
+        pw.push(nf(value));
       }
       pw.push('\n');
     }
@@ -86,9 +89,10 @@ phantasus.GctWriter.prototype = {
       }
       pw.push(name);
     }
+    var toString = phantasus.VectorTrack.vectorToString(columnMetadata.get(0));
     for (var j = 0; j < ncols; j++) {
       pw.push('\t');
-      pw.push(this.toString(columnMetadata.get(0).getValue(j)));
+      pw.push(toString(columnMetadata.get(0).getValue(j)));
     }
     pw.push('\n');
     for (var columnMetadataIndex = 1, metadataSize = columnMetadata
@@ -100,9 +104,11 @@ phantasus.GctWriter.prototype = {
       }
       for (var j = 0; j < ncols; j++) {
         pw.push('\t');
-        var value = columnMetadata.get(columnMetadataIndex).getValue(j);
+        var vector = columnMetadata.get(columnMetadataIndex);
+        var value = vector.getValue(j);
         if (value != null) {
-          pw.push(this.toString(value));
+          toString = phantasus.VectorTrack.vectorToString(columnMetadata.get(0));
+          pw.push(toString(value));
         }
       }
       pw.push('\n');
