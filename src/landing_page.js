@@ -45,10 +45,11 @@ phantasus.LandingPage = function (pageOptions) {
 
   this.tabManager.$nav.appendTo($(this.pageOptions.el));
   this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
-  // for (var i = 0; i < brands.length; i++) {
-  // 	brands[i].style.color = colorScale(i);
-  // }
-};
+// for (var i = 0; i < brands.length; i++) {
+// 	brands[i].style.color = colorScale(i);
+// }
+}
+;
 
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {

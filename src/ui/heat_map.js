@@ -250,7 +250,7 @@ phantasus.HeatMap = function (options) {
       inlineTooltip: true,
       $loadingImage: phantasus.Util.createLoadingEl(),
       menu: {
-        File: ['Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', 'Rename' +
+        File: ['Open', null, 'Save Image', 'Save Dataset', 'Save Session', null, 'Close Tab', null, 'Rename' +
         ' Tab'],
         Tools: ['New Heat Map', null, 'Hierarchical Clustering', null, 'Marker Selection', 'Nearest Neighbors', 'Create Calculated Annotation', null, 'Adjust', 'Collapse', 'Similarity Matrix', 'Transpose', 't-SNE', null, 'Chart', null, 'Sort/Group', 'Filter', null, 'API', null, 'k-means', 'limma', 'PCA Plot'],
         View: ['Zoom In', 'Zoom Out', 'Fit To Window', '100%', null, 'Options'],

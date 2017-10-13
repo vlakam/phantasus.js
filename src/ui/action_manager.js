@@ -15,7 +15,7 @@ phantasus.ActionManager = function () {
   // pin/unpin tab,
   // header stuff-display, delete.
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Sort/Group',
     cb: function (options) {
       new phantasus.SortDialog(options.heatMap.getProject());
@@ -26,7 +26,7 @@ phantasus.ActionManager = function () {
   var $filterModal = null;
   this.add({
     name: 'Filter',
-    ellipsis: true,
+    ellipsis: false,
     cb: function (options) {
       if ($filterModal == null) {
         var filterModal = [];
@@ -111,7 +111,7 @@ phantasus.ActionManager = function () {
 
   this.add({
     name: 'Options',
-    ellipsis: true,
+    ellipsis: false,
     cb: function (options) {
       options.heatMap.showOptions();
     },
@@ -170,7 +170,7 @@ phantasus.ActionManager = function () {
   });
   this.add({
     name: 'Rename Tab',
-    ellipsis: true,
+    ellipsis: false,
     cb: function (options) {
       options.heatMap.getTabManager().rename(options.heatMap.tabId);
     }
@@ -205,7 +205,7 @@ phantasus.ActionManager = function () {
   this.add({
     global: true,
     name: 'Open',
-    ellipsis: true,
+    ellipsis: false,
     cb: function (options) {
       phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
         customUrls: options.heatMap._customUrls
@@ -217,7 +217,7 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Save Image',
     gui: function () {
       return new phantasus.SaveImageTool();
@@ -233,7 +233,7 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Save Dataset',
     gui: function () {
       return new phantasus.SaveDatasetTool();
@@ -250,7 +250,7 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Save Session',
     gui: function () {
       return new phantasus.SaveSessionTool();
@@ -471,7 +471,7 @@ phantasus.ActionManager = function () {
 
   this.add({
     which: [65],
-    ellipsis: true,
+    ellipsis: false,
     shiftKey: true,
     commandKey: true,
     name: 'Search Menus',
@@ -860,14 +860,14 @@ phantasus.ActionManager = function () {
       });
   };
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Annotate Selected Rows',
     cb: function (options) {
       annotateSelection(options, false);
     }
   });
   this.add({
-    ellipsis: true,
+    ellipsis: false,
     name: 'Annotate Selected Columns',
     cb: function (options) {
       annotateSelection(options, true);
@@ -928,7 +928,7 @@ phantasus.ActionManager = function () {
     new phantasus.TransposeTool(), new phantasus.TsneTool(), new phantasus.DevAPI(),
     new phantasus.KmeansTool(), new phantasus.LimmaTool()].forEach(function (tool) {
     _this.add({
-      ellipsis: true,
+      ellipsis: false,
       name: tool.toString(),
       gui: function () {
         return tool;

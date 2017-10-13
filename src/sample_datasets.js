@@ -5,7 +5,7 @@ phantasus.SampleDatasets = function (options) {
   var _this = this;
   var $el = options.$el;
   this.callback = options.callback;
-  $el.on('click', '[name=ccle]', function (e) {
+  $el.on('click', '[name=ccle]', function (e) { // button click
     var $this = $(this);
     var obj = {};
     $this.parents('tr').find('input:checked').each(function (i, c) {
@@ -250,7 +250,7 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
   var datasets = [];
   if (options.sig_genes) {
     datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets//CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
+      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//CCLE_hybrid_capture1650_hg19_NoCommonSNPs_NoNeutralVariants_CDS_2012.05.07.maf.txt');
     // datasets
     // .push({
     // dataset :
@@ -259,30 +259,30 @@ phantasus.SampleDatasets.getCCLEDataset = function (options) {
   }
   if (options.cn) {
     datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets//CCLE_copynumber_byGene_2013-12-03.gct');
+      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//CCLE_copynumber_byGene_2013-12-03.gct');
   }
 
   if (options.mrna) {
     datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets//CCLE_Expression_Entrez_2012-09-29.txt');
+      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//CCLE_Expression_Entrez_2012-09-29.txt');
   }
   if (options.ach) {
     datasets
-      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets//Achilles_QC_v2.4.3.rnai.Gs.gct');
+      .push('https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//Achilles_QC_v2.4.3.rnai.Gs.gct');
   }
   var columnAnnotations = [];
   if (options.ach) {
     // there are several cell lines that are in Achilles but not CCLE
     columnAnnotations
       .push({
-        file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets//Achilles_v2.4_SampleInfo_small.txt',
+        file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//Achilles_v2.4_SampleInfo_small.txt',
         datasetField: 'id',
         fileField: 'id'
       });
 
   }
   columnAnnotations.push({
-    file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets//CCLE_Sample_Info.txt',
+    file: 'https://software.broadinstitute.org/morpheus/preloaded-datasets/preloaded-datasets//CCLE_Sample_Info.txt',
     datasetField: 'id',
     fileField: 'id'
   });

@@ -1473,7 +1473,7 @@ phantasus.Util.createPhantasusHeader = function () {
   html.push('</div>');
   var $div = $(html.join(''));
   var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
-  var brands = $div.find('[data-name="brand"] > span');
+  var brands = $div.find('span');
   var index = 0;
   var step = function () {
     brands[index].style.color = colorScale(index);
