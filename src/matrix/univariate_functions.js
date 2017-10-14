@@ -26,6 +26,9 @@
 phantasus.Percentile = function (vector, p, isSorted) {
   return phantasus.ArrayPercentile(phantasus.RemoveNaN(vector), p, isSorted);
 };
+phantasus.Percentile.toString = function () {
+  return 'Percentile';
+};
 /**
  * @private
  * @ignore
@@ -100,6 +103,21 @@ phantasus.MaxPercentiles = function (percentiles) {
     return s.join('');
   };
   return f;
+};
+
+phantasus.CountIf = function (vector, criteria) {
+  if (!/[<>=!]/.test(criteria)) {
+    criteria = '=="' + criteria + '"';
+  }
+  var matches = 0;
+  for (var i = 0, size = vector.size(); i < size; i++) {
+    var value = vector.getValue(i);
+    if (eval(value + criteria)) {
+      matches++;
+    }
+  }
+  return matches;
+
 };
 phantasus.Mean = function (vector) {
   var sum = 0;
@@ -304,6 +322,10 @@ phantasus.BoxPlotItem = function (list) {
       upperAdjacentValue: NaN
     };
   }
+  return phantasus.BoxPlotArrayItem(values);
+};
+
+phantasus.BoxPlotArrayItem = function (values) {
   var median = phantasus.ArrayPercentile(values, 50, true);
   var q1 = phantasus.ArrayPercentile(values, 25, true);
   var q3 = phantasus.ArrayPercentile(values, 75, true);

@@ -15,16 +15,18 @@ phantasus.ActionManager = function () {
   // pin/unpin tab,
   // header stuff-display, delete.
   this.add({
-    name: 'Sort',
+    ellipsis: false,
+    name: 'Sort/Group',
     cb: function (options) {
       new phantasus.SortDialog(options.heatMap.getProject());
     },
-    icon: 'fa fa-sort-alpha-asc',
+    icon: 'fa fa-sort-alpha-asc'
   });
 
   var $filterModal = null;
   this.add({
     name: 'Filter',
+    ellipsis: false,
     cb: function (options) {
       if ($filterModal == null) {
         var filterModal = [];
@@ -104,15 +106,16 @@ phantasus.ActionManager = function () {
       }
       $filterModal.modal('show');
     },
-    icon: 'fa fa-filter',
+    icon: 'fa fa-filter'
   });
 
   this.add({
     name: 'Options',
+    ellipsis: false,
     cb: function (options) {
       options.heatMap.showOptions();
     },
-    icon: 'fa fa-cog',
+    icon: 'fa fa-cog'
   });
 
   this.add({
@@ -151,7 +154,8 @@ phantasus.ActionManager = function () {
       // 		'<img src="' + url + '">');
       // });
 
-      phantasus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([
+        {
         format: 'text/html',
         data: '<img src="' + url + '">'
       }], true);
@@ -167,6 +171,7 @@ phantasus.ActionManager = function () {
   });
   this.add({
     name: 'Rename Tab',
+    ellipsis: false,
     cb: function (options) {
       options.heatMap.getTabManager().rename(options.heatMap.tabId);
     }
@@ -201,10 +206,9 @@ phantasus.ActionManager = function () {
   this.add({
     global: true,
     name: 'Open',
+    ellipsis: false,
     cb: function (options) {
-      phantasus.HeatMap.showTool(new phantasus.OpenFileTool({
-        customUrls: options.heatMap._customUrls
-      }), options.heatMap);
+      phantasus.HeatMap.showTool(new phantasus.OpenFileTool(), options.heatMap);
     },
     which: [79],
     commandKey: true,
@@ -212,6 +216,7 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
+    ellipsis: false,
     name: 'Save Image',
     gui: function () {
       return new phantasus.SaveImageTool();
@@ -227,6 +232,7 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
+    ellipsis: false,
     name: 'Save Dataset',
     gui: function () {
       return new phantasus.SaveDatasetTool();
@@ -235,14 +241,15 @@ phantasus.ActionManager = function () {
       phantasus.HeatMap.showTool(this.gui(),
         options.heatMap);
     },
-    shiftKey: true,
-    which: [83],
-    commandKey: true,
-    global: true,
+    // shiftKey: true,
+    // which: [83],
+    // commandKey: true,
+    // global: true,
     icon: 'fa fa-floppy-o'
   });
 
   this.add({
+    ellipsis: false,
     name: 'Save Session',
     gui: function () {
       return new phantasus.SaveSessionTool();
@@ -253,18 +260,21 @@ phantasus.ActionManager = function () {
     icon: 'fa fa-anchor'
   });
 
-  if (typeof Plotly !== 'undefined') {
+  if (typeof echarts !== 'undefined') {
     this.add({
       name: 'Chart',
       cb: function (options) {
         new phantasus.ChartTool({
           project: options.heatMap.getProject(),
+          heatmap: options.heatMap,
           getVisibleTrackNames: _.bind(
             options.heatMap.getVisibleTrackNames, options.heatMap)
         });
       },
       icon: 'fa fa-line-chart'
     });
+  }
+  if (typeof Plotly !== 'undefined') {
     this.add({
       name: 'PCA Plot',
       cb: function (options) {
@@ -281,27 +291,39 @@ phantasus.ActionManager = function () {
     cb: function (options) {
       options.heatMap.zoom(true);
     },
-    which: [107, 61, 187],
-    icon: 'fa fa-plus'
+    which: [107, 61, 187]
   });
   this.add({
     name: 'Zoom Out',
     cb: function (options) {
       options.heatMap.zoom(false);
     },
-    which: [173, 189, 109],
-    icon: 'fa fa-minus'
+    which: [173, 189, 109]
   });
 
   this.add({
     name: 'Fit To Window',
     cb: function (options) {
-      options.heatMap.fitToWindow(true);
+      options.heatMap.fitToWindow({fitRows: true, fitColumns: true, repaint: true});
     },
+    which: [48], // zero
+    commandKey: true,
     icon: 'fa fa-compress'
   });
   this.add({
-    name: 'Reset Zoom',
+    name: 'Fit Columns To Window',
+    cb: function (options) {
+      options.heatMap.fitToWindow({fitRows: false, fitColumns: true, repaint: true});
+    }
+  });
+  this.add({
+    name: 'Fit Rows To Window',
+    cb: function (options) {
+      options.heatMap.fitToWindow({fitRows: true, fitColumns: false, repaint: true});
+    }
+  });
+  this.add({
+    name: '100%',
     cb: function (options) {
       options.heatMap.resetZoom();
     },
@@ -462,9 +484,10 @@ phantasus.ActionManager = function () {
 
   this.add({
     which: [65],
+    ellipsis: false,
     shiftKey: true,
     commandKey: true,
-    name: 'Find Action',
+    name: 'Search Menus',
     cb: function (options) {
       if ($findModal == null) {
         var findModal = [];
@@ -548,11 +571,9 @@ phantasus.ActionManager = function () {
     }
   });
   this.add({
-    name: 'Keymap Reference',
-    cb: function () {
-      new phantasus.HeatMapKeyListener({
-        $tabPanel: $()
-      }).showKeyMapReference();
+    name: 'Keyboard Shortcuts',
+    cb: function (options) {
+      new phantasus.HeatMapKeyListener(options.heatMap).showKeyMapReference();
     }
   });
 
@@ -647,7 +668,7 @@ phantasus.ActionManager = function () {
     var project = options.heatMap.getProject();
     var selectionModel = !isColumns ? project.getRowSelectionModel()
       : project
-      .getColumnSelectionModel();
+        .getColumnSelectionModel();
     var viewIndices = selectionModel.getViewIndices().values();
     if (viewIndices.length === 0) {
       return;
@@ -662,26 +683,31 @@ phantasus.ActionManager = function () {
     for (var i = 0, n = viewIndices.length; i < n; i++) {
       modelIndices.push(converter(viewIndices[i]));
     }
-    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on' +
-      ' top', isColumns);
+    var sortKey = new phantasus.MatchesOnTopSortKey(project, modelIndices, 'selection on top', isColumns);
+    sortKey.setLockOrder(1);
+    sortKey.setUnlockable(false);
     if (isColumns) {
       project
-        .setColumnSortKeys(
-          phantasus.SortKey
-            .keepExistingSortKeys(
-              [sortKey],
-              project
-                .getColumnSortKeys()),
-          true);
+      .setColumnSortKeys(
+        phantasus.SortKey
+        .keepExistingSortKeys(
+          [sortKey],
+          project
+          .getColumnSortKeys().filter(function (key) {
+            return !(key instanceof phantasus.MatchesOnTopSortKey && key.toString() === sortKey.toString());
+          })),
+        true);
     } else {
       project
-        .setRowSortKeys(
-          phantasus.SortKey
-            .keepExistingSortKeys(
-              [sortKey],
-              project
-                .getRowSortKeys()),
-          true);
+      .setRowSortKeys(
+        phantasus.SortKey
+        .keepExistingSortKeys(
+          [sortKey],
+          project
+          .getRowSortKeys().filter(function (key) {
+            return !(key instanceof phantasus.MatchesOnTopSortKey && key.toString() === sortKey.toString());
+          })),
+        true);
     }
   };
   this.add({
@@ -700,7 +726,7 @@ phantasus.ActionManager = function () {
     var project = options.heatMap.getProject();
     var selectionModel = !isColumns ? project.getRowSelectionModel()
       : project
-      .getColumnSelectionModel();
+        .getColumnSelectionModel();
     var count = !isColumns ? project
       .getSortedFilteredDataset()
       .getRowCount() : project
@@ -744,12 +770,14 @@ phantasus.ActionManager = function () {
       .getColumnSelectionModel() : project
       .getRowSelectionModel();
     var text = [];
+    var toStringFunction = phantasus.VectorTrack.vectorToString(v);
     selectionModel.getViewIndices().forEach(
       function (index) {
-        text.push(phantasus.Util.toString(v
+        text.push(toStringFunction(v
           .getValue(index)));
       });
-    phantasus.Util.setClipboardData([{
+    phantasus.Util.setClipboardData([
+      {
       format: 'text/plain',
       data: text.join('\n')
     }]);
@@ -771,9 +799,9 @@ phantasus.ActionManager = function () {
 
     var project = options.heatMap.getProject();
     var selectionModel = isColumns ? project
-      .getColumnSelectionModel()
+        .getColumnSelectionModel()
       : project
-      .getRowSelectionModel();
+        .getRowSelectionModel();
     if (selectionModel.count() === 0) {
       phantasus.FormBuilder
         .showMessageModal({
@@ -839,7 +867,7 @@ phantasus.ActionManager = function () {
               'trackChanged',
               {
                 vectors: [v],
-                render: existingVector != null ? []
+                display: existingVector != null ? []
                   : [phantasus.VectorTrack.RENDER.TEXT],
                 columns: isColumns
               });
@@ -847,12 +875,14 @@ phantasus.ActionManager = function () {
       });
   };
   this.add({
+    ellipsis: false,
     name: 'Annotate Selected Rows',
     cb: function (options) {
       annotateSelection(options, false);
     }
   });
   this.add({
+    ellipsis: false,
     name: 'Annotate Selected Columns',
     cb: function (options) {
       annotateSelection(options, true);
@@ -898,7 +928,8 @@ phantasus.ActionManager = function () {
 
       var text = new phantasus.GctWriter()
         .write(dataset);
-      phantasus.Util.setClipboardData([{
+      phantasus.Util.setClipboardData([
+        {
         format: 'text/plain',
         data: text
       }]);
@@ -907,13 +938,14 @@ phantasus.ActionManager = function () {
   });
   var _this = this;
   //console.log(_this);
-  [new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
+  [
+    new phantasus.HClusterTool(), new phantasus.MarkerSelection(),
     new phantasus.NearestNeighbors(), new phantasus.AdjustDataTool(),
     new phantasus.CollapseDatasetTool(), new phantasus.CreateAnnotation(), new phantasus.SimilarityMatrixTool(),
     new phantasus.TransposeTool(), new phantasus.TsneTool(), new phantasus.DevAPI(),
     new phantasus.KmeansTool(), new phantasus.LimmaTool()].forEach(function (tool) {
     _this.add({
-
+      ellipsis: false,
       name: tool.toString(),
       gui: function () {
         return tool;
@@ -922,6 +954,24 @@ phantasus.ActionManager = function () {
         phantasus.HeatMap.showTool(tool, options.heatMap);
       }
     });
+  });
+  this.add({
+    name: 'Edit Fonts',
+    ellipse: true,
+    cb: function (options) {
+      var trackInfo = options.heatMap.getLastSelectedTrackInfo();
+      var project = options.heatMap.getProject();
+      var model = trackInfo.isColumns ? project
+        .getColumnFontModel() : project
+        .getRowFontModel();
+      var chooser = new phantasus.FontChooser({fontModel: model, track: options.heatMap.getTrack(trackInfo.name, trackInfo.isColumns), heatMap: options.heatMap});
+      phantasus.FormBuilder.showInModal({
+        title: 'Edit Fonts',
+        html: chooser.$div,
+        close: 'Close',
+        focus: options.heatMap.getFocusEl()
+      });
+    }
   });
 
 };
@@ -940,8 +990,9 @@ phantasus.ActionManager.prototype = {
 
     args.heatMap = this.heatMap;
     action.cb(args);
+
     phantasus.Util.trackEvent({
-      eventCategory: '',
+      eventCategory: 'Tool',
       eventAction: name
     });
   },

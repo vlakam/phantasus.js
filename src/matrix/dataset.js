@@ -60,7 +60,7 @@ phantasus.Dataset.toJSON = function (dataset, options) {
       }
     }
   }
-  var vectortoJSON = function (vector) {
+  var vectorToJSON = function (vector) {
     var array = [];
     for (var i = 0, size = vector.size(); i < size; i++) {
       array[i] = vector.getValue(i);
@@ -88,12 +88,14 @@ phantasus.Dataset.toJSON = function (dataset, options) {
     }
     for (var i = 0, count = metadata.getMetadataCount(); i < count; i++) {
       var v = metadata.get(i);
-      if (filter) {
-        if (filter.has(v.getName())) {
-          vectors.push(vectortoJSON(v));
+      if (!v.getProperties().has(phantasus.VectorKeys.IS_INDEX)) {
+        if (filter) {
+          if (filter.has(v.getName())) {
+            vectors.push(vectorToJSON(v));
+          }
+        } else {
+          vectors.push(vectorToJSON(v));
         }
-      } else {
-        vectors.push(vectortoJSON(v));
       }
     }
     return vectors;
@@ -161,6 +163,18 @@ phantasus.Dataset.fromJSON = function (options) {
           }
         }
         options.seriesDataTypes[seriesIndex] = 'Number';
+      }
+    }
+  }
+
+  for (var seriesIndex = 0; seriesIndex < options.seriesArrays.length; seriesIndex++) {
+    var array = options.seriesArrays[seriesIndex];
+    for (var i = 0; i < options.rows; i++) {
+      for (var j = 0; j < options.columns; j++) {
+        var value = array[i][j];
+        if (value == null) {
+          array[i][j] = NaN;
+        }
       }
     }
   }

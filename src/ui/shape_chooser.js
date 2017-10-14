@@ -17,10 +17,10 @@ phantasus.ShapeChooser = function (options) {
     value: html.join('')
   });
 
-  var shapeField = new phantasus.ShapeField();
+  var shapeField = new phantasus.ShapeField({showNone: true});
 
   formBuilder.append({
-    col: 'col-xs-2',
+    style: 'max-width:50px;',
     name: 'selected_shape',
     type: 'custom',
     value: '<div data-name="shape"></div>'

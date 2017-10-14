@@ -13,17 +13,18 @@ phantasus.Project = function (dataset) {
   this.columnColorModel = new phantasus.VectorColorModel();
   this.rowShapeModel = new phantasus.VectorShapeModel();
   this.columnShapeModel = new phantasus.VectorShapeModel();
+  this.rowFontModel = new phantasus.VectorFontModel();
+  this.columnFontModel = new phantasus.VectorFontModel();
   this.hoverColumnIndex = -1;
   this.hoverRowIndex = -1;
   this.columnSelectionModel = new phantasus.SelectionModel(this, true);
   this.rowSelectionModel = new phantasus.SelectionModel(this, false);
   this.elementSelectionModel = new phantasus.ElementSelectionModel(this);
   this.symmetricProjectListener = null;
-  phantasus.Project._recomputeCalculatedFields(this.originalDataset);
+  phantasus.Project._recomputeCalculatedColumnFields(this.originalDataset, phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
   phantasus.Project
-    ._recomputeCalculatedFields(new phantasus.TransposedDatasetView(
-      this.originalDataset));
-  this.history = [];
+    ._recomputeCalculatedColumnFields(new phantasus.TransposedDatasetView(
+      this.originalDataset), phantasus.VectorKeys.RECOMPUTE_FUNCTION_NEW_HEAT_MAP);
 };
 phantasus.Project.Events = {
   DATASET_CHANGED: 'datasetChanged',
@@ -37,22 +38,31 @@ phantasus.Project.Events = {
   COLUMN_TRACK_REMOVED: 'columnTrackRemoved'
 };
 
-phantasus.Project._recomputeCalculatedFields = function (dataset) {
+phantasus.Project._recomputeCalculatedColumnFields = function (dataset, key) {
   var metadata = dataset.getColumnMetadata();
   var view = new phantasus.DatasetColumnView(dataset);
+  var nfound = 0;
   for (var metadataIndex = 0,
          count = metadata.getMetadataCount(); metadataIndex < count; metadataIndex++) {
     var vector = metadata.get(metadataIndex);
     if (vector.getProperties().get(phantasus.VectorKeys.FUNCTION) != null
-      && vector.getProperties().get(phantasus.VectorKeys.RECOMPUTE_FUNCTION)) {
+      && vector.getProperties().get(key)) {
+
+      // // copy properties
+      // var v = metadata.add(name);
+      // vector.getProperties().forEach(function (val, key) {
+      //   v.getProperties().set(key, val);
+      // });
+      // vector = v;
       var f = phantasus.VectorUtil.jsonToFunction(vector, phantasus.VectorKeys.FUNCTION);
       for (var j = 0, size = vector.size(); j < size; j++) {
         view.setIndex(j);
         vector.setValue(j, f(view, dataset, j));
       }
+      nfound++;
     }
   }
-
+  return nfound;
 };
 phantasus.Project.prototype = {
   isSymmetric: function () {
@@ -90,6 +100,12 @@ phantasus.Project.prototype = {
   },
   getColumnShapeModel: function () {
     return this.columnShapeModel;
+  },
+  getRowFontModel: function () {
+    return this.rowFontModel;
+  },
+  getColumnFontModel: function () {
+    return this.columnFontModel;
   },
   getGroupRows: function () {
     return this.groupRows;

@@ -18,6 +18,7 @@ phantasus.SortDialog = function (project) {
   html.push('</form>');
   html.push('</div>');
   $chooserDiv.html(html.join(''));
+
   function toggle(isColumns) {
     _this.isColumns = isColumns;
     var $element = _this.build(project, isColumns);
@@ -47,70 +48,79 @@ phantasus.SortDialog = function (project) {
   $chooserDiv.appendTo($outer);
   $div.appendTo($outer);
   phantasus.FormBuilder
-    .showOkCancel({
-      title: 'Sort',
-      content: $outer,
-      okCallback: function () {
-        var $forms = $div.find('form');
-        var sortBy = $forms.find('[name=sortBy]').map(function () {
-          return $(this).val();
+  .showOkCancel({
+    title: 'Sort',
+    content: $outer,
+    okCallback: function () {
+      var $forms = $div.find('form');
+      var sortBy = $forms.find('[name=sortBy]').map(function () {
+        return $(this).val();
+      });
+      var lockOrder = $forms.find('[name=lockOrder]').map(function () {
+          return $(this).prop('checked');
         });
-        var sortOrder = $forms.find('[name=sortOrder]:checked')
-          .map(function () {
-            return $(this).val();
-          });
-        var groupBy = $div.find('[name=groupBy]').val();
-        var newSortKeys = [];
-        var modelIndices = _this.isColumns ? project
-          .getRowSelectionModel().toModelIndices() : project
-          .getColumnSelectionModel().toModelIndices();
-        var existingSortKeys = _this.isColumns ? project
-          .getColumnSortKeys() : project.getRowSortKeys();
-        // keep MatchesOnTopSortKey and dendrogram
-        var keysToKeep = _
-          .filter(
-            existingSortKeys,
-            function (key) {
-              return key instanceof phantasus.MatchesOnTopSortKey
-                || (key instanceof phantasus.SpecifiedModelSortOrder && key.name === 'dendrogram');
-            });
-        if (keysToKeep.length > 0) {
-          _.each(keysToKeep, function (key) {
-            newSortKeys.push(key);
-          });
-        }
-        var newSortKeyFields = new phantasus.Set();
-        for (var i = 0; i < sortBy.length; i++) {
-          if (!newSortKeyFields.has(sortBy[i])) {
-            newSortKeyFields.add(sortBy[i]);
-            if (sortBy[i] === 'selection') {
-              newSortKeys.push(new phantasus.SortByValuesKey(
-                modelIndices, sortOrder[i],
-                _this.isColumns));
-            } else if (sortBy[i] !== '') {
-              newSortKeys.push(new phantasus.SortKey(
-                sortBy[i], sortOrder[i]));
-            }
+        varsortOrder = $forms.find('[name=sortOrder]:checked')
+      .map(function () {
+        return $(this).val();
+      });
+
+      var groupBy = $div.find('[name=groupBy]').val();
+      var newSortKeys = [];
+      var modelIndices = _this.isColumns ? project
+      .getRowSelectionModel().toModelIndices() : project
+      .getColumnSelectionModel().toModelIndices();
+      var existingSortKeys = _this.isColumns ? project
+      .getColumnSortKeys() : project.getRowSortKeys();
+      for (
+      var i = 0; i <
+        existingSortKeys.length; i++) {
+        // delete existing sort keys that were locked and were deleted by user
+      if (existingSortKeys[i].isUnlockable()) {
+        existingSortKeys.splice(i, 1) ;
+          i--;
           }
         }
-        var newGroupKeys = [];
-        if (groupBy != null) {
-          for (var i = 0; i < groupBy.length; i++) {
-            newGroupKeys.push(new phantasus.SortKey(groupBy[i],
-              phantasus.SortKey.SortOrder.UNSORTED));
+
+      var newSortKeyFields = new phantasus.Set();
+      for (var i = 0; i < sortBy.length; i++) {
+        if (!newSortKeyFields.has(sortBy[i])) {// don't add 2x
+          newSortKeyFields.add(sortBy[i]);
+          var key = null;if (sortBy[i] === 'selection') {
+            key =new phantasus.SortByValuesKey(
+              modelIndices, sortOrder[i],
+              _this.isColumns);
+          } else if (sortBy[i] !== '') {
+            key =new phantasus.SortKey(
+              sortBy[i], sortOrder[i]);}
+            if (key != null) {
+              newSortKeys.push(key);
+              if (lockOrder[i]) {
+                key.setLockOrder(1);
+              }
           }
+        if (key != null) {
+              newSortKeys.push(key);
+              if (lockOrder[i]) {
+                key.setLockOrder(1);
+              }
+            }}
+      }
+      var newGroupKeys = [];
+      if (groupBy != null) {
+        for (var i = 0; i < groupBy.length; i++) {
+          newGroupKeys.push(new phantasus.SortKey(groupBy[i],
+            phantasus.SortKey.SortOrder.UNSORTED));
         }
+      }
 
         if (_this.isColumns) {
           project.setGroupColumns(newGroupKeys, true);
           project.setColumnSortKeys(phantasus.SortKey
-            .keepExistingSortKeys(newSortKeys, project
-              .getColumnSortKeys()), true);
+            .keepExistingSortKeys(newSortKeys, existingSortKeys), true);
         } else {
           project.setGroupRows(newGroupKeys, true);
           project.setRowSortKeys(phantasus.SortKey
-            .keepExistingSortKeys(newSortKeys, project
-              .getRowSortKeys()), true);
+            .keepExistingSortKeys(newSortKeys, existingSortKeys), true);
         }
       }
     });
@@ -125,13 +135,10 @@ phantasus.SortDialog.prototype = {
     var html = [];
     var sortKeys = isColumns ? project.getColumnSortKeys() : project
       .getRowSortKeys();
+
     this.createLevel0(html);
     for (var i = 0; i < sortKeys.length; i++) { // add existing keys
-      // ignoring
-      // MatchesOnTopSortKey and
-      // dendrogram
-      if (!(sortKeys[i] instanceof phantasus.MatchesOnTopSortKey)
-        && !(sortKeys[i] instanceof phantasus.SpecifiedModelSortOrder && sortKeys[i].name === 'dendrogram')) {
+      if (sortKeys[i].isUnlockable()) {
         this.createLevel(html, sortKeys[i], fields);
       }
     }
@@ -191,7 +198,7 @@ phantasus.SortDialog.prototype = {
       + '>selection</option>');
     _.each(fields, function (field) {
       html.push('<option value="' + field + '"');
-      if (field == key.field) {
+      if (field == key.toString()) {
         html.push(' selected');
       }
       html.push('>');
@@ -213,9 +220,13 @@ phantasus.SortDialog.prototype = {
         + '>Descending</label></div>');
     html.push('</div>');
     html.push('<div class="col-xs-1">');
-    html.push('<a data-name="delete" class="pull-right">Delete</a>');
+    html.push('<a data-name="delete">Delete</a>');
     html.push('</div>');
-    html.push('<div class="col-xs-8">');
+    html.push('<div class="col-xs-12">');
+    html.push('<div class="checkbox"><label><input name="lockOrder" type="checkbox"' + (key.getLockOrder() !== 0 ? ' checked' : '') + '> Lock sort level</label></div>');
+    html.push('</div>');
+    html.push('<div class="col-xs-12">');
+    html.push('<br />');
     html.push('<a data-name="add" href="#">Add sort level</a>');
     html.push('</div>');
     html.push('</form>');

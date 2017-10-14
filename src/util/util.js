@@ -4,18 +4,17 @@
  */
 var phantasus = (typeof phantasus !== 'undefined') ? phantasus : {};
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = phantasus; // Node
+    module.exports = phantasus; // Node
 } else if (typeof define === 'function' && define.amd) {
-  define(function () { // AMD module
-    return phantasus;
-  });
+    define(function () { // AMD module
+        return phantasus;
+    });
 } else {
   global.phantasus = phantasus; // browser global
 }
 phantasus.Util = function () {
 };
 
-phantasus.Util.URL = 'https://clue.io/phantasus/';
 phantasus.Util.RIGHT_ARROW = String.fromCharCode(8594);
 /**
  * Add properties in c2 to c1
@@ -32,8 +31,8 @@ phantasus.Util.extend = function (c1, c2) {
     }
   }
 };
-phantasus.Util.isFetchSupported = function () {
-  return navigator.userAgent.indexOf('Chrome') !== -1;
+phantasus.Util.isFetchStreamingSupported = function () {
+  return typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Chrome') !== -1;
 };
 
 phantasus.Util.viewPortSize = function () {
@@ -41,9 +40,10 @@ phantasus.Util.viewPortSize = function () {
     /"/g, '');
 };
 
+phantasus.Util.TRACKING_ENABLED = true;
 phantasus.Util.TRACKING_CODE_LOADED = false;
 phantasus.Util.loadTrackingCode = function () {
-  if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
+  if (phantasus.Util.TRACKING_ENABLED && typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.onLine) {
     if (phantasus.Util.TRACKING_CODE_LOADED) {
       return;
     } else if (typeof ga === 'undefined') {
@@ -51,8 +51,8 @@ phantasus.Util.loadTrackingCode = function () {
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments);
-          }, i[r].l = 1 * new Date();
+          (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date();
         a = s.createElement(o),
           m = s.getElementsByTagName(o)[0];
         a.async = 1;
@@ -127,7 +127,8 @@ phantasus.Util.getDataType = function (val) {
  * Checks whether supplied argument is an array
  */
 phantasus.Util.isArray = function (array) {
-  var types = [Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
+  var types = [
+    Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array,
     Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array,];
   // handle native arrays
   for (var i = 0, length = types.length; i < length; i++) {
@@ -222,7 +223,10 @@ phantasus.Util.forceDelete = function (obj) {
   }
 };
 phantasus.Util.getFileName = function (fileOrUrl) {
-  if (fileOrUrl instanceof File) {
+  if (phantasus.Util.isFile(fileOrUrl)) {
+    return fileOrUrl.name;
+  }
+  if (fileOrUrl.name !== undefined) {
     return fileOrUrl.name;
   }
   var name = '' + fileOrUrl;
@@ -247,8 +251,6 @@ phantasus.Util.getFileName = function (fileOrUrl) {
     }
     if (slash !== -1) {
       name = name.substring(slash + 1); // get stuff after slash
-      // https://s3.amazonaws.com/data.clue.io/icv/dosval/BRD-K45711268_10_UM_24_H/pcl_cell.gct?AWSAccessKeyId=AKIAJZQISWLUKFS3VUKA&Expires=1455761050&Signature=HVle9MvXV3OGRZHOngdm2frqER8%3D
-
     }
   }
   return name;
@@ -339,16 +341,25 @@ phantasus.Util.paramsToObject = function (hash) {
   }
   return result;
 };
+
+phantasus.Util.isHeadless = function () {
+  return typeof $.ui === 'undefined';
+};
+
+phantasus.Util.isFile = function (f) {
+  return typeof File !== 'undefined' && f instanceof File;
+};
 phantasus.Util.endsWith = function (string, suffix) {
   return string.length >= suffix.length
     && string.substr(string.length - suffix.length) === suffix;
 };
 phantasus.Util.measureSvgText = function (text, classname) {
-  if (!text || text.length === 0)
+  if (!text || text.length === 0) {
     return {
       height: 0,
       width: 0
     };
+  }
   var container = d3.select('body').append('svg');
   if (classname) {
     container.attr('class', classname);
@@ -372,54 +383,79 @@ if (typeof navigator !== 'undefined') {
 phantasus.Util.COMMAND_KEY = phantasus.Util.IS_MAC ? '&#8984;' : 'Ctrl+';
 
 phantasus.Util.hammer = function (el, recognizers) {
-  var hammer = new Hammer(el, {
-    recognizers: []
-  });
+  if (typeof Hammer !== 'undefined') {
+    var hammer = new Hammer(el, {
+      recognizers: []
+    });
 
-  if (_.indexOf(recognizers, 'pan') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_ALL
-    }));
-  } else if (_.indexOf(recognizers, 'panh') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_HORIZONTAL
-    }));
-  } else if (_.indexOf(recognizers, 'panv') !== -1) {
-    hammer.add(new Hammer.Pan({
-      threshold: 1,
-      direction: Hammer.DIRECTION_VERTICAL
-    }));
-  }
-  if (_.indexOf(recognizers, 'tap') !== -1) {
-    // var singleTap = new Hammer.Tap({
-    // event : 'singletap',
-    // interval : 50
-    // });
-    // var doubleTap = new Hammer.Tap({
-    // event : 'doubletap',
-    // taps : 2
-    // });
-    // doubleTap.recognizeWith(singleTap);
-    // singleTap.requireFailure([ doubleTap ]);
-    // hammer.add([ doubleTap, singleTap ]);
-    hammer.add(new Hammer.Tap());
-  }
-  if (_.indexOf(recognizers, 'pinch') !== -1) {
-    hammer.add(new Hammer.Pinch());
-  }
-  if (_.indexOf(recognizers, 'longpress') !== -1) {
-    hammer.add(new Hammer.Press({
-      event: 'longpress',
-      time: 1000
-    }));
-  }
-  if (_.indexOf(recognizers, 'press') !== -1) {
-    hammer.add(new Hammer.Press());
+    if (_.indexOf(recognizers, 'pan') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_ALL
+      }));
+    } else if (_.indexOf(recognizers, 'panh') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_HORIZONTAL
+      }));
+    } else if (_.indexOf(recognizers, 'panv') !== -1) {
+      hammer.add(new Hammer.Pan({
+        threshold: 1,
+        direction: Hammer.DIRECTION_VERTICAL
+      }));
+    }
+    if (_.indexOf(recognizers, 'tap') !== -1) {
+      // var singleTap = new Hammer.Tap({
+      // event : 'singletap',
+      // interval : 50
+      // });
+      // var doubleTap = new Hammer.Tap({
+      // event : 'doubletap',
+      // taps : 2
+      // });
+      // doubleTap.recognizeWith(singleTap);
+      // singleTap.requireFailure([ doubleTap ]);
+      // hammer.add([ doubleTap, singleTap ]);
+      hammer.add(new Hammer.Tap());
+    }
+    if (_.indexOf(recognizers, 'pinch') !== -1) {
+      hammer.add(new Hammer.Pinch());
+    }
+    if (_.indexOf(recognizers, 'longpress') !== -1) {
+      hammer.add(new Hammer.Press({
+        event: 'longpress',
+        time: 1000
+      }));
+    }
+    if (_.indexOf(recognizers, 'press') !== -1) {
+      hammer.add(new Hammer.Press());
+    }
+    if (_.indexOf(recognizers, 'swipe') !== -1) {
+      hammer.add(new Hammer.Swipe());
+    }
+    return hammer;
+  } else {
+    return $();
   }
 
-  return hammer;
+};
+
+phantasus.Util.createTextDecoder = function () {
+  if (typeof TextDecoder !== 'undefined') {
+    var textDecoder = new TextDecoder();
+    return function (buf, start, end) {
+      return textDecoder.decode(buf.subarray(start, end));
+    };
+  } else {
+    return function (buf, start, end) {
+      // TODO convert in chunks
+      var s = [];
+      for (var i = start; i < end; i++) {
+        s.push(String.fromCharCode(buf[i]));
+      }
+      return s.join('');
+    };
+  }
 };
 phantasus.Util.autocompleteArrayMatcher = function (token, cb, array, fields, max) {
   var filteredSet = new phantasus.Set();
@@ -832,6 +868,7 @@ phantasus.Util.sheetToArray = function (sheet, delim) {
   }
   for (var R = r.s.r; R <= r.e.r; ++R) {
     var row = [];
+    var isRowEmpty = true;
     for (var C = r.s.c; C <= r.e.c; ++C) {
       var val = sheet[XLSX.utils.encode_cell({
         c: C,
@@ -841,9 +878,9 @@ phantasus.Util.sheetToArray = function (sheet, delim) {
         row.push('');
         continue;
       }
-
+      isRowEmpty = false;
       var txt = String(XLSX.utils.format_cell(val));
-      if (val.s != null) {
+      if (val.s != null && val.s.fgColor != null) {
         var color = '#' + val.s.fgColor.rgb;
         colors.push({
           header: header[row.length],
@@ -853,9 +890,10 @@ phantasus.Util.sheetToArray = function (sheet, delim) {
       }
       row.push(txt);
     }
-    rows.push(delim ? row.join(delim) : row);
+    if (!isRowEmpty) {
+      rows.push(delim ? row.join(delim) : row);
+    }
   }
-
   rows.colors = colors;
   return rows;
 };
@@ -896,11 +934,12 @@ phantasus.Util.xlsxTo2dArray = function (options, callback) {
       type: 'bootstrap-select',
       options: sheetNames,
       required: true,
-      col: 'col-xs-2'
+      style: 'max-width:100px;'
     });
     phantasus.FormBuilder.showInModal({
       title: 'Choose Sheet',
       html: formBuilder.$form,
+      focus: document.activeElement,
       onClose: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
         var lines = phantasus.Util.sheetToArray(worksheet);
@@ -936,12 +975,13 @@ phantasus.Util.xlsxTo1dArray = function (options, callback) {
       type: 'bootstrap-select',
       options: sheetNames,
       required: true,
-      col: 'col-xs-2'
+      style: 'max-width:100px;'
     });
 
     phantasus.FormBuilder.showOkCancel({
       title: 'Choose Sheet',
       cancel: false,
+      focus: document.activeElement,
       content: formBuilder.$form,
       okCallback: function () {
         var worksheet = workbook.Sheets[formBuilder.getValue('sheet')];
@@ -959,25 +999,30 @@ phantasus.Util.xlsxTo1dArray = function (options, callback) {
 /**
  * Returns a promise that resolves to a string
  */
-phantasus.Util.getText = function (urlOrFile) {
+phantasus.Util.getText = function (fileOrUrl) {
   var deferred = $.Deferred();
-  if (phantasus.Util.isString(urlOrFile)) {
-    $.ajax({
-      contentType: 'text/plain',
-      url: urlOrFile,
-    }).done(function (text, status, xhr) {
+  if (phantasus.Util.isString(fileOrUrl)) {
+    fetch(fileOrUrl).then(function (response) {
+      if (response.ok) {
+        return response.text();
+      } else {
+        deferred.reject(response.status + ' ' + response.statusText);
+      }
+    }).then(function (text) {
       // var type = xhr.getResponseHeader('Content-Type');
       deferred.resolve(text);
+    }).catch(function (err) {
+      deferred.reject(err);
     });
-  } else if (urlOrFile instanceof File) {
+  } else if (phantasus.Util.isFile(fileOrUrl)) {
     var reader = new FileReader();
     reader.onload = function (event) {
       deferred.resolve(event.target.result);
     };
-    reader.readAsText(urlOrFile);
+    reader.readAsText(fileOrUrl);
   } else {
-    // what is urlOrFile?
-    deferred.resolve(urlOrFile);
+    // what is fileOrUrl?
+    deferred.resolve(fileOrUrl);
   }
   return deferred.promise();
 };
@@ -1014,12 +1059,12 @@ phantasus.Util.rankIndexArray = function (index) {
 
 phantasus.Util.indexSort = function (array, ascending) {
   var pairs = [];
-  array.forEach(function (value, index) {
+  for(var i = 0, length = array.length; i < length; i++) {
     pairs.push({
-      value: value,
-      index: index
+      value: array[i],
+      index: i
     });
-  });
+  }
   return phantasus.Util.indexSortPairs(pairs, ascending);
 };
 phantasus.Util.indexSortPairs = function (array, ascending) {
@@ -1039,8 +1084,9 @@ phantasus.Util.indexSortPairs = function (array, ascending) {
   return indices;
 };
 phantasus.Util.arrayEquals = function (array1, array2, comparator) {
-  if (array1 == array2)
+  if (array1 == array2) {
     return true;
+  }
   if (array1 == null || array2 == null) {
     return false;
   }
@@ -1067,19 +1113,24 @@ phantasus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
 phantasus.Util.intFormat = function (n) {
   return phantasus.Util._intFormat(n);
 };
-phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.4f') : function (d) {
+phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.2f') : function (d) {
   return '' + d;
 };
-phantasus.Util.nf = function (n) {
-  var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
-    .toPrecision(4) : phantasus.Util._nf(n);
-  return phantasus.Util.removeTrailingZerosInFraction(str);
+
+phantasus.Util.getNumberFormatPatternFractionDigits = function (pattern) {
+  return parseInt(pattern.substring(1, pattern.length - 1)) || 0;
 };
-phantasus.Util.createNumberFormat = function (nfractionDigits) {
-  var d3Formatter = d3.format('.' + nfractionDigits + 'f');
-  var f = function (value) {
-    var str = d3Formatter(value);
-    return phantasus.Util.removeTrailingZerosInFraction(str);
+
+phantasus.Util.nf = function (n) {
+  // var str = (n < 1 && n > -1 && n.toPrecision !== undefined) ? n
+  // .toPrecision(4) : phantasus.Util._nf(n);
+  // return phantasus.Util.removeTrailingZerosInFraction(str);
+  return phantasus.Util._nf(n);
+};
+phantasus.Util.createNumberFormat = function (pattern) {
+  var f = d3.format(pattern);
+  f.toJSON = function () {
+    return {pattern: pattern};
   };
   return f;
 };
@@ -1364,19 +1415,27 @@ phantasus.Util.splitLines = function (lines) {
  * @return A deferred object that resolves to an array of strings
  */
 phantasus.Util.readLines = function (fileOrUrl, interactive) {
-  var isFile = fileOrUrl instanceof File;
+  var isFile = phantasus.Util.isFile(fileOrUrl);
   var isString = phantasus.Util.isString(fileOrUrl);
   var name = phantasus.Util.getFileName(fileOrUrl);
   var ext = phantasus.Util.getExtension(name);
   var deferred = $.Deferred();
   if (isString) { // URL
     if (ext === 'xlsx') {
-      var oReq = new XMLHttpRequest();
-      oReq.open('GET', fileOrUrl, true);
-      $.ajaxPrefilter({url: fileOrUrl}, {}, oReq);
-      oReq.responseType = 'arraybuffer';
-      oReq.onload = function (oEvent) {
-        var arrayBuffer = oReq.response;
+      var fetchOptions = {};
+      if (fileOrUrl.headers) {
+        fetchOptions.headers = new Headers();
+        for (var header in fileOrUrl.headers) {
+          fetchOptions.headers.append(header, fileOrUrl.headers[header]);
+        }
+      }
+      fetch(fileOrUrl, fetchOptions).then(function (response) {
+        if (response.ok) {
+          return response.arrayBuffer();
+        } else {
+          deferred.reject(response);
+        }
+      }).then(function (arrayBuffer) {
         if (arrayBuffer) {
           var data = new Uint8Array(arrayBuffer);
           var arr = [];
@@ -1392,19 +1451,28 @@ phantasus.Util.readLines = function (fileOrUrl, interactive) {
           });
 
         } else {
-          throw 'not found';
+          deferred.reject();
         }
-      };
-      oReq.send(null);
+      });
     } else {
-      $.ajax({
-        url: fileOrUrl,
-      }).done(function (text, status, xhr) {
+      fetch(fileOrUrl, fetchOptions).then(function (response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          deferred.reject();
+        }
+      }).then(function (text) {
         deferred.resolve(phantasus.Util.splitOnNewLine(text));
+      }).catch(function (err) {
+        deferred.reject(err);
       });
     }
   } else if (isFile) {
     var reader = new FileReader();
+    reader.onerror = function () {
+      console.log('Unable to read file');
+      deferred.reject('Unable to read file');
+    };
     reader.onload = function (event) {
       if (ext === 'xlsx' || ext === 'xls') {
         var data = new Uint8Array(event.target.result);
@@ -1449,8 +1517,38 @@ phantasus.Util.createValueToIndices = function (array, field) {
   return map;
 };
 
+phantasus.Util.createPhantasusHeader = function () {
+  var html = [];
+
+  html.push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
+  html.push('<span>P</span>');
+  html.push('<span>h</span>');
+  html.push('<span>a</span>');
+  html.push('<span>n</span>');
+  html.push('<span>t</span>');
+  html.push('<span>a</span>');
+  html.push('<span>s</span>');
+  html.push('<span>u</span>');
+  html.push('<span>s</span>');
+  html.push('</span>');
+  html.push('</div>');
+  var $div = $(html.join(''));
+  var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
+  var brands = $div.find('span');
+  var index = 0;
+  var step = function () {
+    brands[index].style.color = colorScale(index);
+    index++;
+    if (index < brands.length) {
+      setTimeout(step, 200);
+    }
+  };
+  setTimeout(step, 500);
+  return $div;
+};
 phantasus.Util.createLoadingEl = function () {
-  return $('<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
+  return $(
+    '<div style="overflow:hidden;text-align:center;"><i class="fa fa-spinner fa-spin fa-3x"></i><span style="padding-left:4px;vertical-align:middle;font-weight:bold;">Loading...</span></div>');
 };
 /**
  * Splits a string by the new line character, trimming whitespace
@@ -1468,8 +1566,9 @@ phantasus.Util.splitOnNewLine = function (text, commentChar) {
   }
 
   var rows = [];
+  var rtrim = /\s+$/;
   for (var i = 0, nlines = lines.length; i < nlines; i++) {
-    var line = lines[i].trim();
+    var line = lines[i].replace(rtrim, '');
     if (line !== '') {
       if (commentCharCode !== undefined) {
         if (line.charCodeAt(0) !== commentCharCode) {
@@ -1628,15 +1727,15 @@ phantasus.Util.GreaterThanOrEqualPredicate = function (field, val) {
   this.val = val;
 };
 phantasus.Util.GreaterThanOrEqualPredicate.prototype = {
-  accept: function (value) {
-    return value >= this.val;
-  },
-  getField: function () {
-    return this.field;
-  },
-  isNumber: function () {
-    return true;
-  }
+    accept: function (value) {
+        return value >= this.val;
+    },
+    getField: function () {
+        return this.field;
+    },
+    isNumber: function () {
+        return true;
+    }
 };
 phantasus.Util.LessThanPredicate = function (field, val) {
   this.field = field;

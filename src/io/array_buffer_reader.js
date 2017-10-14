@@ -2,21 +2,7 @@ phantasus.ArrayBufferReader = function (buffer) {
   this.buffer = buffer;
   this.bufferLength = buffer.length;
   this.index = 0;
-  if (typeof TextDecoder !== 'undefined') {
-    var textDecoder = new TextDecoder();
-    this.decoder = function (buf, start, end) {
-      return textDecoder.decode(buf.subarray(start, end));
-    };
-  } else {
-    this.decoder = function (buf, start, end) {
-      // TODO convert in chunks
-      var s = [];
-      for (var i = start; i < end; i++) {
-        s.push(String.fromCharCode(buffer[i]));
-      }
-      return s.join('');
-    };
-  }
+  this.decoder = phantasus.Util.createTextDecoder();
 };
 
 phantasus.ArrayBufferReader.prototype = {
@@ -55,30 +41,25 @@ phantasus.ArrayBufferReader.prototype = {
 phantasus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
   var isString = typeof fileOrUrl === 'string' || fileOrUrl instanceof String;
   if (isString) { // URL
-    var oReq = new XMLHttpRequest();
-    oReq.open('GET', fileOrUrl, true);
-    oReq.responseType = 'arraybuffer';
-    oReq.onload = function (oEvent) {
-      callback(null, oReq.response);
-    };
-
-    oReq.onerror = function (oEvent) {
-      callback(oEvent);
-    };
-    oReq.onreadystatechange = function (oEvent) {
-      if (oReq.readyState === 4 && oReq.status !== 200) {
-        oReq.onload = null;
-        oReq.onerror = null;
-        if (oReq.status === 404) {
-          callback(new Error(fileOrUrl + ' not found.'));
-        } else {
-          callback(new Error('Unable to read ' + fileOrUrl + '.'));
-        }
+    var fetchOptions = {};
+    if (fileOrUrl.headers) {
+      fetchOptions.headers = new Headers();
+      for (var header in fileOrUrl.headers) {
+        fetchOptions.headers.append(header, fileOrUrl.headers[header]);
       }
-    };
-
-    oReq.send(null);
-    return oReq;
+    }
+    fetch(fileOrUrl, fetchOptions).then(function (response) {
+      if (response.ok) {
+        return response.arrayBuffer();
+      } else {
+        callback(new Error(fileOrUrl + ' status: ' + response.status));
+      }
+    }).then(function (buf) {
+      callback(null, buf);
+    }).catch(function (error) {
+      console.log('Fetch error', error);
+      callback(error);
+    });
 
   } else {
     var reader = new FileReader();
@@ -89,6 +70,5 @@ phantasus.ArrayBufferReader.getArrayBuffer = function (fileOrUrl, callback) {
       callback(event);
     };
     reader.readAsArrayBuffer(fileOrUrl);
-    return reader;
   }
 };

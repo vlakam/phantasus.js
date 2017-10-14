@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * @param tree An object with maxHeight, rootNode, leafNodes, nLeafNodes. Each node has an id
  * (integer), name (string), children, depth, height, minIndex, maxIndex, parent. Leaf nodes also
  * have an index.
@@ -88,14 +88,13 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
           e.preventDefault();
           e.stopPropagation();
           e.stopImmediatePropagation();
-          var position = phantasus.CanvasUtil
-            .getMousePosWithScroll(e.target,
+          var position = phantasus.CanvasUtil.getMousePosWithScroll(e.target,
               e, _this.lastClip.x,
               _this.lastClip.y);
           var selectedNode = _this.getNode(position);
-          phantasus.Popup
-            .showPopup(
-              [{
+          phantasus.Popup.showPopup(
+              [
+                {
                 name: 'Flip',
                 disabled: selectedNode == null
               }, {
@@ -135,16 +134,33 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                     type: 'text',
                     required: true,
                   });
+                  formBuilder.append({
+                    name: 'leaf_node_id_field',
+                    type: 'bootstrap-select',
+                    required: true,
+                    options: phantasus.MetadataUtil.getMetadataNames(
+                      type === phantasus.AbstractDendrogram.Type.COLUMN
+                        ? project.getFullDataset().getColumnMetadata()
+                        : project.getFullDataset().getRowMetadata())
+                  });
                   phantasus.FormBuilder.showOkCancel({
                     title: 'Save Dendrogram',
                     content: formBuilder.$form,
+                    focus: document.activeElement,
                     okCallback: function () {
                       var fileName = formBuilder.getValue('file_name');
                       if (fileName === '') {
                         fileName = 'dendrogram.txt';
                       }
+                      var leafNodeIdField = formBuilder.getValue('leaf_node_id_field');
                       var out = [];
-                      phantasus.DendrogramUtil.writeNewick(tree.rootNode, out);
+                      var vector = type === phantasus.AbstractDendrogram.Type.COLUMN
+                        ? project.getFullDataset().getColumnMetadata().getByName(leafNodeIdField)
+                        : project.getFullDataset().getRowMetadata().getByName(leafNodeIdField);
+                      var leafNodeToString = function (n) {
+                        return vector.getValue(n.index);
+                      };
+                      phantasus.DendrogramUtil.writeNewick(tree.rootNode, out, leafNodeToString);
                       var blob = new Blob([out.join('')], {type: 'text/plain;charset=charset=utf-8'});
                       saveAs(blob, fileName, true);
                     }
@@ -196,24 +212,29 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
 
                     setIndex(selectedNode);
 
-                    var currentOrder = [];
-                    var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject().getSortedFilteredDataset().getRowCount();
-                    for (var i = 0; i < count; i++) {
-                      currentOrder.push(isColumns ? project.convertViewColumnIndexToModel(i) : project.convertViewRowIndexToModel(i));
-                    }
-                    for (var i = min, j = max; i < j; i++, j--) {
-                      var tmp = currentOrder[j];
-                      currentOrder[j] = currentOrder[i];
-                      currentOrder[i] = tmp;
-                    }
-                    var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
-                    if (isColumns) {
-                      heatMap.getProject().setColumnSortKeys([key], true);
-                    } else {
-                      heatMap.getProject().setRowSortKeys([key], true);
-                    }
-                    heatMap.revalidate();
-                  }
+                var currentOrder = [];
+                var count = isColumns ? heatMap.getProject().getSortedFilteredDataset().getColumnCount() : heatMap.getProject()
+                  .getSortedFilteredDataset()
+                  .getRowCount();
+                for (var i = 0; i < count; i++) {
+                  currentOrder.push(isColumns ? project.convertViewColumnIndexToModel(i) : project.convertViewRowIndexToModel(i));
+                }
+                for (var i = min, j = max; i < j; i++, j--) {
+                  var tmp = currentOrder[j];
+                  currentOrder[j] = currentOrder[i];
+                  currentOrder[i] = tmp;
+                }
+                var key = new phantasus.SpecifiedModelSortOrder(currentOrder, currentOrder.length, 'dendrogram', isColumns);
+                key.setPreservesDendrogram(true);
+                key.setLockOrder(2);
+                key.setUnlockable(false);
+                if (isColumns) {
+                  heatMap.getProject().setColumnSortKeys([key], true);
+                } else {
+                  heatMap.getProject().setRowSortKeys([key], true);
+                }
+                heatMap.revalidate();
+              }
 
                 } else if (item === 'Branch Color') {
                   if (selectedNode != null) {
@@ -223,7 +244,7 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
                       type: 'color',
                       value: selectedNode.color,
                       required: true,
-                      col: 'col-xs-2'
+                      style: 'max-width:50px;'
                     });
                     formBuilder.find('color').on(
                       'change',
@@ -244,27 +265,23 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
 
                   }
                 } else if (item === 'Annotate...') {
-                  phantasus.HeatMap
-                    .showTool(
+                  phantasus.HeatMap.showTool(
                       new phantasus.AnnotateDendrogramTool(
                         type === phantasus.AbstractDendrogram.Type.COLUMN),
                       _this.heatMap);
                 } else if (item === 'Enrichment...') {
-                  phantasus.HeatMap
-                    .showTool(
+                  phantasus.HeatMap.showTool(
                       new phantasus.DendrogramEnrichmentTool(
                         type === phantasus.AbstractDendrogram.Type.COLUMN),
                       _this.heatMap);
                 } else if (item === 'Squish Singleton Clusters') {
                   _this.squishEnabled = !_this.squishEnabled;
                   if (!_this.squishEnabled) {
-                    _this.positions
-                      .setSquishedIndices(null);
+                    _this.positions.setSquishedIndices(null);
                   }
                 } else if (item === 'Delete') {
                   _this.resetCutHeight();
-                  _this.heatMap
-                    .setDendrogram(
+                  _this.heatMap.setDendrogram(
                       null,
                       type === phantasus.AbstractDendrogram.Type.COLUMN);
                 }
@@ -279,18 +296,14 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
   var dragStartScaledCutHeight = 0;
   this.cutTreeHotSpot = false;
   if (type !== phantasus.AbstractDendrogram.Type.RADIAL) {
-    this.hammer = phantasus.Util
-      .hammer(this.canvas, ['pan', 'tap'])
-      .on(
+    this.hammer = phantasus.Util.hammer(this.canvas, ['pan', 'tap']).on(
         'tap',
         this.tap = function (event) {
           if (!phantasus.CanvasUtil.dragging) {
-            var position = phantasus.CanvasUtil
-              .getMousePosWithScroll(event.target,
+            var position = phantasus.CanvasUtil.getMousePosWithScroll(event.target,
                 event, _this.lastClip.x,
                 _this.lastClip.y);
-            _this.cutTreeHotSpot = _this
-              .isDragHotSpot(position);
+            _this.cutTreeHotSpot = _this.isDragHotSpot(position);
             if (_this.cutTreeHotSpot) {
               return;
             }
@@ -303,60 +316,46 @@ phantasus.AbstractDendrogram = function (heatMap, tree, positions, project,
             _this.setSelectedNode(node,
               event.srcEvent.shiftKey || commandKey);
           }
-        })
-      .on('panend', this.panend = function (event) {
+        }).on('panend', this.panend = function (event) {
         phantasus.CanvasUtil.dragging = false;
         _this.canvas.style.cursor = 'default';
         _this.cutTreeHotSpot = true;
-      })
-      .on(
+      }).on(
         'panstart',
         this.panstart = function (event) {
-          var position = phantasus.CanvasUtil
-            .getMousePosWithScroll(event.target, event,
+          var position = phantasus.CanvasUtil.getMousePosWithScroll(event.target, event,
               _this.lastClip.x, _this.lastClip.y,
               true);
-          _this.cutTreeHotSpot = _this
-            .isDragHotSpot(position);
+          _this.cutTreeHotSpot = _this.isDragHotSpot(position);
           if (_this.cutTreeHotSpot) { // make sure start event
             // was on hotspot
             phantasus.CanvasUtil.dragging = true;
-            _this.canvas.style.cursor = _this
-              .getResizeCursor();
-            dragStartScaledCutHeight = _this
-              .scale(_this.cutHeight);
+            _this.canvas.style.cursor = _this.getResizeCursor();
+            dragStartScaledCutHeight = _this.scale(_this.cutHeight);
           }
-        })
-      .on(
+        }).on(
         'panmove',
         this.panmove = function (event) {
           if (_this.cutTreeHotSpot) {
             var cutHeight;
             if (_this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
               var delta = event.deltaY;
-              cutHeight = Math
-                .max(
+              cutHeight = Math.max(
                   0,
-                  Math
-                    .min(
+                  Math.min(
                       _this.tree.maxHeight,
-                      _this.scale
-                        .invert(dragStartScaledCutHeight
+                      _this.scale.invert(dragStartScaledCutHeight
                           + delta)));
             } else if (_this.type === phantasus.AbstractDendrogram.Type.ROW) {
               var delta = event.deltaX;
-              cutHeight = Math
-                .max(
+              cutHeight = Math.max(
                   0,
-                  Math
-                    .min(
+                  Math.min(
                       _this.tree.maxHeight,
-                      _this.scale
-                        .invert(dragStartScaledCutHeight
+                      _this.scale.invert(dragStartScaledCutHeight
                           + delta)));
             } else {
-              var point = phantasus.CanvasUtil
-                .getMousePos(event.target, event);
+              var point = phantasus.CanvasUtil.getMousePos(event.target, event);
               point.x = _this.radius - point.x;
               point.y = _this.radius - point.y;
               var radius = Math.sqrt(point.x * point.x
@@ -388,8 +387,7 @@ phantasus.AbstractDendrogram.prototype = {
   setSelectedNode: function (node, add) {
     var _this = this;
     var viewIndices;
-    var selectionModel = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? this.project
-      .getColumnSelectionModel()
+    var selectionModel = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? this.project.getColumnSelectionModel()
       : this.project.getRowSelectionModel();
     if (node == null) {
       // clear selection
@@ -490,8 +488,7 @@ phantasus.AbstractDendrogram.prototype = {
     var roots = phantasus.DendrogramUtil.cutAtHeight(this.tree.rootNode,
       this.cutHeight);
     var dataset = this.project.getSortedFilteredDataset();
-    var clusterIdVector = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? dataset
-      .getColumnMetadata().add('dendrogram_cut')
+    var clusterIdVector = this.type === phantasus.AbstractDendrogram.Type.COLUMN ? dataset.getColumnMetadata().add('dendrogram_cut')
       : dataset.getRowMetadata().add('dendrogram_cut');
     for (var i = 0, nroots = roots.length; i < nroots; i++) {
       var root = roots[i];
@@ -528,20 +525,18 @@ phantasus.AbstractDendrogram.prototype = {
       var settings = {
         discrete: true,
         discreteAutoDetermined: true,
-        render: {}
+        display: ['color']
       };
-      settings.render[phantasus.VectorTrack.RENDER.COLOR] = true;
+
       this.heatMap.addTrack(clusterIdVector.getName(),
         this.type === phantasus.AbstractDendrogram.Type.COLUMN,
         settings);
     }
 
     if (this.type === phantasus.AbstractDendrogram.Type.COLUMN) {
-      this.project.setGroupColumns([new phantasus.SortKey(clusterIdVector
-        .getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
+      this.project.setGroupColumns([new phantasus.SortKey(clusterIdVector.getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
     } else {
-      this.project.setGroupRows([new phantasus.SortKey(clusterIdVector
-        .getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
+      this.project.setGroupRows([new phantasus.SortKey(clusterIdVector.getName(), phantasus.SortKey.SortOrder.UNSORTED)], true);
     }
   },
   dispose: function () {

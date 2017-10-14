@@ -176,6 +176,15 @@ phantasus.FoldChange = function (list1, list2) {
 phantasus.FoldChange.toString = function () {
   return 'Fold Change';
 };
+
+phantasus.MeanDifference = function (list1, list2) {
+  var m1 = phantasus.Mean(list1);
+  var m2 = phantasus.Mean(list2);
+  return m1 - m2;
+};
+phantasus.MeanDifference.toString = function () {
+  return 'Mean Difference';
+};
 phantasus.TTest = function (list1, list2) {
   var m1 = phantasus.Mean(list1);
   var m2 = phantasus.Mean(list2);
@@ -188,6 +197,19 @@ phantasus.TTest = function (list1, list2) {
 phantasus.TTest.toString = function () {
   return 'T-Test';
 };
+/**
+ * Computes approximate degrees of freedom for 2-sample t-test.
+ *
+ * @param v1 first sample variance
+ * @param v2 second sample variance
+ * @param n1 first sample n
+ * @param n2 second sample n
+ * @return approximate degrees of freedom
+ */
+phantasus.DegreesOfFreedom = function (v1, v2, n1, n2) {
+  return (((v1 / n1) + (v2 / n2)) * ((v1 / n1) + (v2 / n2))) / ((v1 * v1) / (n1 * n1 * (n1 - 1.0)) + (v2 * v2) / (n2 * n2 * (n2 - 1.0)));
+};
+
 phantasus.Spearman = function (list1, list2) {
   var flist1 = [];
   var flist2 = [];

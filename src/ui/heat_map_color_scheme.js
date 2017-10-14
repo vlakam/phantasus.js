@@ -6,7 +6,7 @@
  */
 phantasus.HeatMapColorScheme = function (project, scheme) {
   this.project = project;
-  var that = this;
+  var _this = this;
 
   this.separateColorSchemeForRowMetadataField = null;
   this.rowValueToColorSupplier = {};
@@ -15,8 +15,7 @@ phantasus.HeatMapColorScheme = function (project, scheme) {
     if (scheme.valueToColorScheme) { // json representation
       this.fromJSON(scheme);
     } else {
-      this.rowValueToColorSupplier[null] = phantasus.HeatMapColorScheme
-        .createColorSupplier(scheme);
+      this.rowValueToColorSupplier[null] = this.fromJSON(scheme);
       this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     }
   }
@@ -24,174 +23,39 @@ phantasus.HeatMapColorScheme = function (project, scheme) {
     .on(
       'rowFilterChanged columnFilterChanged rowSortOrderChanged columnSortOrderChanged datasetChanged',
       function () {
-        that.projectUpdated();
+        _this.projectUpdated();
       });
   this.projectUpdated();
 };
 phantasus.HeatMapColorScheme.Predefined = {};
-phantasus.HeatMapColorScheme.Predefined.SUMMLY = function () {
-  return {
-    name: '(-100, -97.5, -95, 95, 97.5, 100)',
-    type: 'fixed',
-    map: [{
-      value: -100,
-      color: '#0000ff'
-    }, {
-      value: -97.5,
-      color: '#abdda4'
-    }, {
-      value: -95,
-      color: '#ffffff'
-    }, {
-      value: 95,
-      color: '#ffffff'
-    }, {
-      value: 97.5,
-      color: '#fdae61'
-    }, {
-      value: 100,
-      color: '#ff0000'
-    }]
-  };
-};
-
-phantasus.HeatMapColorScheme.Predefined.SUMMLY2 = function () {
-  return {
-    name: '(-100, -95, -90, 90, 95, 100)',
-    type: 'fixed',
-    map: [{
-      value: -100,
-      color: '#0000ff'
-    }, {
-      value: -95,
-      color: '#abdda4'
-    }, {
-      value: -90,
-      color: '#ffffff'
-    }, {
-      value: 90,
-      color: '#ffffff'
-    }, {
-      value: 95,
-      color: '#fdae61'
-    }, {
-      value: 100,
-      color: '#ff0000'
-    }]
-  };
-};
-
-phantasus.HeatMapColorScheme.Predefined.SUMMLY3 = function () {
-  return {
-    type: 'fixed',
-    map: [{
-      value: -100,
-      color: '#0000ff'
-    }, {
-      value: -90,
-      color: '#abdda4'
-    }, {
-      value: -80,
-      color: '#e6f598'
-    }, {
-      value: -70,
-      color: '#ffffff'
-    }, {
-      value: 70,
-      color: '#ffffff'
-    }, {
-      value: 80,
-      color: '#fee08b'
-    }, {
-      value: 90,
-      color: '#fdae61'
-    }, {
-      value: 100,
-      color: '#ff0000'
-    }]
-  };
-};
 
 phantasus.HeatMapColorScheme.Predefined.CN = function () {
   return {
-    type: 'fixed',
-    map: [{
-      value: -2,
-      color: '#0000ff'
-    }, {
-      value: -0.1,
-      color: '#ffffff'
-    }, {
-      value: 0.1,
-      color: '#ffffff'
-    }, {
-      value: 2,
-      color: '#ff0000'
-    }]
+    scalingMode: 'fixed',
+    values: [-2, -0.1, 0.1, 2],
+    colors: ['#0000ff', '#ffffff', '#ffffff', '#ff0000']
   };
 };
 phantasus.HeatMapColorScheme.Predefined.BINARY = function () {
   return {
-    type: 'fixed',
-    map: [{
-      value: 0,
-      color: '#ffffff'
-    }, {
-      value: 1,
-      color: 'black'
-    }]
+    scalingMode: 'fixed',
+    values: [0, 1],
+    colors: ['#ffffff', 'black']
   };
 };
 phantasus.HeatMapColorScheme.Predefined.RELATIVE = function () {
   return {
-    type: 'relative'
+    scalingMode: 'relative'
   };
 };
 phantasus.HeatMapColorScheme.Predefined.MAF = function () {
   // coMut plot colors
-
-  var canvas = document.createElement('canvas');
-  var ctx = canvas.getContext('2d');
-  var toHex = function (rgb) {
-    ctx.fillStyle = rgb;
-    return ctx.fillStyle;
-  };
-
   return {
-    type: 'fixed',
+    scalingMode: 'fixed',
     stepped: true,
-    map: [{
-      value: 0,
-      color: toHex('rgb(' + [255, 255, 255].join(',') + ')')
-    }, {
-      value: 1,
-      color: toHex('rgb(' + [77, 175, 74].join(',') + ')'),
-      name: 'Synonymous'
-    }, {
-      value: 2,
-      color: toHex('rgb(' + [255, 255, 51].join(',') + ')'),
-      name: 'In Frame Indel'
-    }, {
-      value: 3,
-      color: toHex('rgb(' + [166, 86, 40].join(',') + ')'),
-      name: 'Other Non-Synonymous'
-    }, {
-      value: 4,
-      color: toHex('rgb(' + [55, 126, 184].join(',') + ')'),
-      name: 'Missense'
-    }, {
-      value: 5,
-      color: toHex('rgb(' + [152, 78, 163].join(',') + ')'),
-      name: 'Splice Site'
-    }, {
-      value: 6,
-      color: toHex('rgb(' + [255, 127, 0].join(',') + ')'),
-      name: 'Frame Shift'
-    }, {
-      value: 7,
-      color: toHex('rgb(' + [228, 26, 28].join(',') + ')'),
-      name: 'Nonsense'
-    }]
+    values: [0, 1, 2, 3, 4, 5, 6, 7],
+    names: ['', 'Synonymous', 'In Frame Indel', 'Other Non-Synonymous', 'Missense', 'Splice Site', 'Frame Shift', 'Nonsense'],
+    colors: ['#ffffff', '#4daf4a', '#ffff33', '#a65628', '#377eb8', '#984ea3', '#ff7f00', '#e41a1c']
   };
 };
 // phantasus.HeatMapColorScheme.Predefined.MAF_NEW = function() {
@@ -242,20 +106,9 @@ phantasus.HeatMapColorScheme.Predefined.MAF = function () {
 // };
 phantasus.HeatMapColorScheme.Predefined.ZS = function () {
   return {
-    type: 'fixed',
-    map: [{
-      value: -10,
-      color: '#0000ff'
-    }, {
-      value: -2,
-      color: '#ffffff'
-    }, {
-      value: 2,
-      color: '#ffffff'
-    }, {
-      value: 10,
-      color: '#ff0000'
-    }]
+    scalingMode: 'fixed',
+    values: [-10, -2, 2, 10],
+    colors: ['#0000ff', '#ffffff', '#ffffff', '#ff0000']
   };
 };
 phantasus.HeatMapColorScheme.ScalingMode = {
@@ -265,7 +118,7 @@ phantasus.HeatMapColorScheme.ScalingMode = {
 
 phantasus.HeatMapConditions = function () {
   this.array = [];
-  // each condition is a object with: series, shape, color and
+  // each condition is a object with: seriesName (series is old deprecated field), shape, color and
   // accept(val) function
 
 };
@@ -291,69 +144,6 @@ phantasus.HeatMapConditions.prototype = {
   }
 };
 
-phantasus.HeatMapColorScheme.createColorSupplier = function (options) {
-  var type = options.type;
-  var stepped = options.stepped;
-  var map = options.map;
-  var scalingMode;
-  var min = 0;
-  var max = 1;
-  if (type === 'fixed') {
-    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.FIXED;
-    if (map) { // get min/max
-      min = Number.MAX_VALUE;
-      max = -Number.MAX_VALUE;
-      for (var i = 0; i < map.length; i++) {
-        min = Math.min(min, map[i].value);
-        max = Math.max(max, map[i].value);
-      }
-    }
-  } else {
-    scalingMode = phantasus.HeatMapColorScheme.ScalingMode.RELATIVE;
-  }
-
-  var fractions = [];
-  var colors = [];
-  var names = [];
-  var hasNames = false;
-  if (map) {
-    var valueToFraction = d3.scale.linear().domain(
-      [min, max]).range(
-      [0, 1]).clamp(true);
-
-    for (var i = 0; i < map.length; i++) {
-      fractions.push(valueToFraction(map[i].value));
-      colors.push(map[i].color);
-      var name = map[i].name;
-      if (!hasNames && name !== undefined) {
-        hasNames = true;
-      }
-      names.push(name);
-    }
-  }
-
-  var json = {
-    stepped: options.stepped,
-    scalingMode: scalingMode,
-    fractions: fractions,
-    colors: colors,
-    names: hasNames ? names : null,
-    min: min,
-    max: max,
-    transformValues: options.transformValues
-  };
-  if (options.missingColor != null) {
-    json.missingColor = options.missingColor;
-  }
-
-  if (options.conditions != null) {
-    json.conditions = options.conditions;
-  }
-  if (options.size != null) {
-    json.size = options.size;
-  }
-  return phantasus.AbstractColorSupplier.fromJSON(json);
-};
 phantasus.HeatMapColorScheme.prototype = {
   getColors: function () {
     return this.currentColorSupplier.getColors();
@@ -363,7 +153,7 @@ phantasus.HeatMapColorScheme.prototype = {
   },
   getHiddenValues: function () {
     return this.currentColorSupplier.getHiddenValues ? this.currentColorSupplier
-      .getHiddenValues()
+        .getHiddenValues()
       : null;
   },
   getMissingColor: function () {
@@ -452,11 +242,17 @@ phantasus.HeatMapColorScheme.prototype = {
     }
     this.rowValueToColorSupplier = {};
     var obj = json.valueToColorScheme || json.colorSchemes;
-    _.each(_.keys(obj), function (key) {
+    if (obj == null) {
       var colorSupplier = phantasus.AbstractColorSupplier
-        .fromJSON(obj[key]);
-      _this.rowValueToColorSupplier[key] = colorSupplier;
-    });
+        .fromJSON(json);
+      _this.rowValueToColorSupplier['null'] = colorSupplier;
+    } else {
+      _.each(_.keys(obj), function (key) {
+        var colorSupplier = phantasus.AbstractColorSupplier
+          .fromJSON(obj[key]);
+        _this.rowValueToColorSupplier[key] = colorSupplier;
+      });
+    }
     this._ensureColorSupplierExists();
 
   },
@@ -488,10 +284,10 @@ phantasus.HeatMapColorScheme.prototype = {
       this.vector = this.project.getSortedFilteredDataset()
         .getRowMetadata().getByName(
           separateColorSchemeForRowMetadataField);
-      var that = this;
+      var _this = this;
       _.each(_.keys(this.rowValueToColorSupplier), function (key) {
         // remove old color schemes
-        delete that.rowValueToColorSupplier[key];
+        delete _this.rowValueToColorSupplier[key];
       });
     }
   },
@@ -524,6 +320,9 @@ phantasus.HeatMapColorScheme.prototype = {
   isSizeBy: function () {
     this.currentColorSupplier.isSizeBy();
   },
+  getCurrentColorSupplier: function () {
+    return this.currentColorSupplier;
+  },
   getColor: function (row, column, val) {
     if (this.vector !== undefined) {
       var tmp = this.vector.getValue(row);
@@ -551,8 +350,8 @@ phantasus.HeatMapColorScheme.prototype = {
   _ensureColorSupplierExists: function () {
     this.currentColorSupplier = this.rowValueToColorSupplier[this.value];
     if (this.currentColorSupplier === undefined) {
-      var cs = phantasus.HeatMapColorScheme.createColorSupplier({
-        type: 'relative'
+      var cs = phantasus.AbstractColorSupplier.fromJSON({
+        scalingMode: 'relative'
       });
       this.rowValueToColorSupplier[this.value] = cs;
       this.currentColorSupplier = cs;

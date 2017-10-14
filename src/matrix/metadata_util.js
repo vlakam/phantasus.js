@@ -50,7 +50,7 @@ phantasus.MetadataUtil.search = function (options) {
   if (tokens.length == 0) {
     return null;
   }
-  var indexField = 'INDEX';
+  var indexField = '#';
   var fieldNames = phantasus.MetadataUtil.getMetadataNames(fullModel);
   fieldNames.push(indexField);
   var predicates = phantasus.Util.createSearchPredicates({

@@ -1,57 +1,44 @@
 phantasus.LegendWithStops = function () {
+  var _this = this;
   phantasus.AbstractCanvas.call(this, false);
   this.setBounds({
     width: 300,
     height: 40
   });
-  var that = this;
-  this.hammer = phantasus.Util.hammer(this.canvas, ['pan', 'tap', 'press'])
-    .on(
-      'panmove',
-      this.panmove = function (event) {
-        if (that.panStartSelectedIndex !== -1) {
-          var position = phantasus.CanvasUtil.getMousePos(
-            event.target, event);
-          var fraction = that.fractionToStopPix
-            .invert(position.x);
-          fraction = Math.max(0, fraction);
-          fraction = Math.min(1, fraction);
-          that.trigger('moved', {
-            fraction: fraction
-          });
-        }
-      }).on(
-      'panstart',
-      this.panstart = function (event) {
-        that.panStartSelectedIndex = that
-          .findIndexForPosition(phantasus.CanvasUtil
-            .getMousePos(event.target, event, true));
-      }).on('panend', this.panend = function (event) {
-      that.panStartSelectedIndex = -1;
-    }).on(
-      'tap',
-      this.tap = function (event) {
+  $(this.canvas).on('mousedown', function (event) {
+    var position = phantasus.CanvasUtil.getMousePos(
+      event.target, event);
+    _this.selectedIndex = _this
+    .findIndexForPosition(position);
+    _this.trigger('selectedIndex', {
+      selectedIndex: _this.selectedIndex
+    });
+  });
+  this.hammer = phantasus.Util.hammer(this.canvas, ['pan'])
+  .on(
+    'panmove',
+    this.panmove = function (event) {
+      if (_this.selectedIndex !== -1) {
         var position = phantasus.CanvasUtil.getMousePos(
           event.target, event);
-        if (event.tapCount > 1) {
-          // don't add on double-click
-          // var fraction = that.fractionToStopPix
-          // .invert(position.x);
-          // that.trigger('added', {
-          //   fraction: fraction
-          // });
-        } else {
-          that.selectedIndex = that
-            .findIndexForPosition(position);
-          that.trigger('selectedIndex', {
-            selectedIndex: that.selectedIndex
-          });
-        }
-      });
+        var fraction = _this.fractionToStopPix
+        .invert(position.x);
+        fraction = Math.max(0, fraction);
+        fraction = Math.min(1, fraction);
+        _this.trigger('moved', {
+          fraction: fraction
+        });
+      }
+    }).on(
+    'panstart',
+    this.panstart = function (event) {
+    }).on('panend', this.panend = function (event) {
+    _this.selectedIndex = -1;
+  });
   $(this.canvas).on('keydown', function (e) {
     // 8=backspace, 46=delete
-    if ((e.which == 8 || e.which == 46) && that.selectedIndex !== -1) {
-      that.trigger('delete');
+    if ((e.which == 8 || e.which == 46) && _this.selectedIndex !== -1) {
+      _this.trigger('delete');
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -59,18 +46,17 @@ phantasus.LegendWithStops = function () {
   });
 };
 phantasus.LegendWithStops.prototype = {
-  selectedIndex: -1,
   border: 7,
   stopHalfSize: 5,
-  panStartSelectedIndex: -1,
+  selectedIndex: -1,
   destroy: function () {
-    $(this.canvas).off('keyup');
+    $(this.canvas).off('keyup').off('mousedown');
     this.hammer.off('panstart',
-      this.panstart).off('panmove', this.panmove).off('tap', this.tap);
+      this.panstart).off('panmove', this.panmove);
     this.hammer.destroy();
   },
   setSelectedIndex: function (index) {
-    this.panStartSelectedIndex = -1;
+    this.selectedIndex = index;
   },
   findIndexForPosition: function (position) {
     // pix - stopHalfSize to pix + stopHalfSize

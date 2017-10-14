@@ -35,7 +35,7 @@ phantasus.FilterUI = function (project, isColumns) {
       .remove(index);
     $row.remove();
     isColumns ? _this.project.setColumnFilter(_this.project
-      .getColumnFilter(), true) : _this.project.setRowFilter(
+    .getColumnFilter(), true) : _this.project.setRowFilter(
       _this.project.getRowFilter(), true);
     e.preventDefault();
   });
@@ -48,10 +48,14 @@ phantasus.FilterUI = function (project, isColumns) {
     var fieldName = $this.val();
     var $row = $this.closest('.phantasus-entry');
     var index = $row.index() - 1;
-    _this.createFilter({
-      fieldName: fieldName,
-      $div: $this
-    });
+    if (fieldName == '') {
+      $row.find('[data-name=ui]').empty();
+    } else {
+      _this.createFilter({
+        fieldName: fieldName,
+        $div: $this
+      });
+    }
 
     isColumns ? _this.project.setColumnFilter(_this.project
       .getColumnFilter(), true) : _this.project.setRowFilter(
@@ -59,7 +63,7 @@ phantasus.FilterUI = function (project, isColumns) {
   });
   // show initial filters
   var combinedFilter = (isColumns ? project.getColumnFilter() : project
-    .getRowFilter());
+  .getRowFilter());
   var filters = combinedFilter.getFilters ? combinedFilter.getFilters() : [];
   for (var i = 0; i < filters.length; i++) {
     this.createFilter({
@@ -135,13 +139,13 @@ phantasus.FilterUI.rangeFilter = function (project, name, isColumns, $ui, filter
     isColumns ? project.setColumnFilter(project.getColumnFilter(), true)
       : project.setRowFilter(project.getRowFilter(), true);
 
-  }, 100));
+  }, 500));
   $max.on('keyup', _.debounce(function (e) {
     filter.setMax(parseFloat($.trim($(this).val())));
     isColumns ? project.setColumnFilter(project.getColumnFilter(), true)
       : project.setRowFilter(project.getRowFilter(), true);
 
-  }, 100));
+  }, 500));
 
   return filter;
 
@@ -220,7 +224,7 @@ phantasus.FilterUI.topFilter = function (project, name, isColumns, $ui, filter) 
     isColumns ? project.setColumnFilter(project.getColumnFilter(), true)
       : project.setRowFilter(project.getRowFilter(), true);
 
-  }, 100));
+  }, 500));
 
   return filter;
 };
@@ -253,8 +257,8 @@ phantasus.FilterUI.prototype = {
 
     $ui.empty();
     var vector = (isColumns ? this.project.getFullDataset()
-      .getColumnMetadata() : this.project.getFullDataset()
-      .getRowMetadata()).getByName(fieldName);
+    .getColumnMetadata() : this.project.getFullDataset()
+    .getRowMetadata()).getByName(fieldName);
 
     if (filter instanceof phantasus.RangeFilter) {
       phantasus.FilterUI.rangeFilter(project, fieldName, isColumns, $ui,

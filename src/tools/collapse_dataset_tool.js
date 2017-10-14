@@ -1,7 +1,7 @@
 phantasus.CollapseDatasetTool = function () {
 };
 phantasus.CollapseDatasetTool.Functions = [phantasus.Mean, phantasus.Median,
-  new phantasus.MaxPercentiles([25, 75]), phantasus.Min, phantasus.Max, phantasus.Sum];
+  new phantasus.MaxPercentiles([25, 75]), phantasus.Min, phantasus.Max, phantasus.Percentile, phantasus.Sum];
 phantasus.CollapseDatasetTool.Functions.fromString = function (s) {
   for (var i = 0; i < phantasus.CollapseDatasetTool.Functions.length; i++) {
     if (phantasus.CollapseDatasetTool.Functions[i].toString() === s) {
@@ -18,13 +18,18 @@ phantasus.CollapseDatasetTool.prototype = {
     var setValue = function (val) {
       var isRows = val === 'Rows';
       var names = phantasus.MetadataUtil.getMetadataNames(isRows ? project
-        .getFullDataset().getRowMetadata() : project
-        .getFullDataset().getColumnMetadata());
+      .getFullDataset().getRowMetadata() : project
+      .getFullDataset().getColumnMetadata());
       form.setOptions('collapse_to_fields', names);
     };
     form.$form.find('[name=collapse]').on('change', function (e) {
       setValue($(this).val());
     });
+    form.setVisible('percentile', false);
+    form.$form.find('[name=collapse_method]').on('change', function (e) {
+      form.setVisible('percentile', $(this).val() === phantasus.Percentile.toString());
+    });
+
     setValue('Rows');
   },
   gui: function () {
@@ -33,6 +38,10 @@ phantasus.CollapseDatasetTool.prototype = {
       options: phantasus.CollapseDatasetTool.Functions,
       value: phantasus.CollapseDatasetTool.Functions[1].toString(),
       type: 'select'
+    }, {
+      name: 'percentile',
+      value: 75,
+      type: 'text'
     }, {
       name: 'collapse',
       options: ['Columns', 'Rows'],
@@ -49,7 +58,13 @@ phantasus.CollapseDatasetTool.prototype = {
     var project = options.project;
     var heatMap = options.heatMap;
     var f = phantasus.CollapseDatasetTool.Functions
-      .fromString(options.input.collapse_method);
+    .fromString(options.input.collapse_method);
+    if (f.toString() === phantasus.Percentile.toString()) {
+      var p = parseFloat(options.input.percentile);
+      f = function (vector) {
+        return phantasus.Percentile(vector, p);
+      };
+    }
     var collapseToFields = options.input.collapse_to_fields;
     if (collapseToFields.length === 0) {
       throw new Error('Please select one or more fields to collapse to');
@@ -77,7 +92,11 @@ phantasus.CollapseDatasetTool.prototype = {
     set.forEach(function (val, name) {
       heatMap.setTrackVisible(name, false, !rows);
     });
-    project.setFullDataset(dataset, true);
-    phantasus.DatasetUtil.toESSessionPromise(dataset);
+    return new phantasus.HeatMap({
+      name: heatMap.getName(),
+      dataset: dataset,
+      parent: heatMap,
+      symmetric: false
+    });
   }
 };

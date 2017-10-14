@@ -80,7 +80,7 @@ phantasus.KmeansTool.prototype = {
           v.getProperties().set("phantasus.dataType", "string");
           project.trigger("trackChanged", {
             vectors: [v],
-            render: ["color"]
+            display: ["color"]
           });
         })
       }, false, "::" + dataset.getESVariable());

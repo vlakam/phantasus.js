@@ -3,7 +3,7 @@ phantasus.GeoReader = function () {
 
 phantasus.GeoReader.prototype = {
   read: function (name, callback) {
-    console.log("read", name);
+    // console.log("read", name);
     var req = ocpu.call('loadGEO', { name: name }, function (session) {
       session.getMessages(function (success) {
         console.log('loadGEO messages', '::', success);

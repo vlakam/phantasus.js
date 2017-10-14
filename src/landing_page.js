@@ -1,3 +1,9 @@
+/**
+ *
+ * @param pageOptions.el
+ * @param pageOptions.tabManager
+ * @constructor
+ */
 phantasus.LandingPage = function (pageOptions) {
   pageOptions = $.extend({}, {
     el: $('#vis')
@@ -8,21 +14,8 @@ phantasus.LandingPage = function (pageOptions) {
   var $el = $('<div class="container" style="display: none;"></div>');
   this.$el = $el;
   var html = [];
+  phantasus.Util.createPhantasusHeader().appendTo($el);
   html.push('<div data-name="help" class="pull-right"></div>');
-
-  html
-    .push('<div style="margin-bottom:10px;"><svg width="32px" height="32px"><g><rect x="0" y="0" width="32" height="14" style="fill:#ca0020;stroke:none"/><rect x="0" y="18" width="32" height="14" style="fill:#0571b0;stroke:none"/></g></svg> <div data-name="brand" style="display:inline-block; vertical-align: top;font-size:24px;font-family:sans-serif;">');
-  html.push('<span>P</span>');
-  html.push('<span>h</span>');
-  html.push('<span>a</span>');
-  html.push('<span>n</span>');
-  html.push('<span>t</span>');
-  html.push('<span>a</span>');
-  html.push('<span>s</span>');
-  html.push('<span>u</span>');
-  html.push('<span>s</span>');
-  html.push('</span>');
-  html.push('</div>');
 
   html.push('<h4>Open your own file</h4>');
   html.push('<div data-name="formRow" class="center-block"></div>');
@@ -30,8 +23,7 @@ phantasus.LandingPage = function (pageOptions) {
     ' dataset</h4></div>');
   html.push('</div>');
   var $html = $(html.join(''));
-  var colorScale = d3.scale.linear().domain([0, 4, 7]).range(['#ca0020', '#999999', '#0571b0']).clamp(true);
-  var brands = $html.find('[data-name="brand"] > span');
+
   $html.appendTo($el);
   new phantasus.HelpMenu().$el.appendTo($el.find('[data-name=help]'));
   var formBuilder = new phantasus.FormBuilder();
@@ -47,15 +39,7 @@ phantasus.LandingPage = function (pageOptions) {
   formBuilder.$form.appendTo($el.find('[data-name=formRow]'));
   this.formBuilder = formBuilder;
   this.$sampleDatasetsEl = $el.find('[data-name=preloadedDataset]');
-  var index = 0;
-  var step = function () {
-    brands[index].style.color = colorScale(index);
-    index++;
-    if (index < brands.length) {
-      setTimeout(step, 200);
-    }
-  };
-  setTimeout(step, 300);
+
   this.tabManager = new phantasus.TabManager({landingPage: this});
   this.tabManager.on('change rename add remove', function (e) {
     var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
@@ -64,13 +48,24 @@ phantasus.LandingPage = function (pageOptions) {
     }
     document.title = title;
   });
+  if (pageOptions.tabManager) {
+    this.tabManager = pageOptions.tabManager;
+  } else {
+    this.tabManager = new phantasus.TabManager({landingPage: this});
+    this.tabManager.on('change rename add remove', function (e) {
+      var title = _this.tabManager.getTabText(_this.tabManager.getActiveTabId());
+      if (title == null || title === '') {
+        title = 'phantasus';
+      }
+      document.title = title;
+    });
 
-  this.tabManager.$nav.appendTo($(this.pageOptions.el));
-  this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
-  // for (var i = 0; i < brands.length; i++) {
-  // 	brands[i].style.color = colorScale(i);
-  // }
-};
+    this.tabManager.$nav.appendTo($(this.pageOptions.el));
+    this.tabManager.$tabContent.appendTo($(this.pageOptions.el));
+  }
+
+}
+;
 
 phantasus.LandingPage.prototype = {
   open: function (openOptions) {
@@ -84,7 +79,7 @@ phantasus.LandingPage.prototype = {
         });
         session.getObject(function (filenames) {
           filenames = JSON.parse(filenames);
-          console.log("filenames", filenames, filenames.length);
+          // console.log("filenames", filenames, filenames.length);
           if (!filenames.length) {
             _this.show();
             throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
@@ -114,7 +109,7 @@ phantasus.LandingPage.prototype = {
         });
         session.getObject(function(success) {
           var names = JSON.parse(success);
-          console.log(names);
+          // console.log(names);
 
           if (names.length === 0) {
             _this.show();
@@ -126,7 +121,7 @@ phantasus.LandingPage.prototype = {
             var specificOptions = options;
 
             specificOptions.dataset.options.exactName = names[j];
-            console.log("specific", specificOptions);
+            // console.log("specific", specificOptions);
 
             new phantasus.HeatMap(specificOptions);
           }
@@ -140,11 +135,12 @@ phantasus.LandingPage.prototype = {
 
     var optionsArray = _.isArray(openOptions) ? openOptions : [openOptions];
 
-    console.log(optionsArray);
+    // console.log(optionsArray);
     for (var i = 0; i < optionsArray.length; i++) {
       var options = optionsArray[i];
       options.tabManager = _this.tabManager;
       options.focus = i === 0;
+      options.standalone = true;
       options.landingPage = _this;
 
       if (options.dataset.options && options.dataset.options.isGEO) {
@@ -153,7 +149,7 @@ phantasus.LandingPage.prototype = {
         createPreloadedHeatMap(options);
       }
       else {
-        console.log("before loading heatmap from landing_page", options);
+        // console.log("before loading heatmap from landing_page", options);
         new phantasus.HeatMap(options);
       }
     }
@@ -169,16 +165,6 @@ phantasus.LandingPage.prototype = {
   },
   show: function () {
     var _this = this;
-    if (navigator.onLine && !this.sampleDatasets) {
-      this.sampleDatasets = new phantasus.SampleDatasets({
-        $el: this.$sampleDatasetsEl,
-        show: true,
-        callback: function (heatMapOptions) {
-          _this.open(heatMapOptions);
-        }
-      });
-    }
-
     this.$el.show();
 
     this.formBuilder.on('change', function (e) {
@@ -233,6 +219,15 @@ phantasus.LandingPage.prototype = {
           _this.openFile(url);
         }
       });
+    if (navigator.onLine && !this.sampleDatasets) {
+      this.sampleDatasets = new phantasus.SampleDatasets({
+        $el: this.$sampleDatasetsEl,
+        show: true,
+        callback: function (heatMapOptions) {
+          _this.open(heatMapOptions);
+        }
+      });
+    }
   },
   openFile: function (value) {
     var _this = this;

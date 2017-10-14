@@ -13,16 +13,13 @@ phantasus.HeatMapTrackColorLegend.prototype = {
     var maxYPix = 0;
     var canvas = this.canvas;
     var context = canvas.getContext('2d');
-    context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
+    context.font = '12px ' + phantasus.CanvasUtil.getFontFamily(context);
     for (var i = 0; i < tracks.length; i++) {
       ypix = 0;
       var maxWidth = 0;
-      var vector = tracks[i].getVector();
-      var map = colorModel.getDiscreteColorScheme(vector);
-      if (map == null) { // continuous
-        maxWidth = 220;
-        ypix += 40;
-      } else {
+      var vector = tracks[i].getVector(tracks[i].settings.colorByField);
+      if (vector.getProperties().get(phantasus.VectorKeys.DISCRETE)) {
+        var map = colorModel.getDiscreteColorScheme(vector);
         map.forEach(function (color, key) {
           var width = context.measureText(key).width;
           if (!isNaN(width)) {
@@ -30,6 +27,10 @@ phantasus.HeatMapTrackColorLegend.prototype = {
           }
           ypix += 14;
         });
+      } else {
+        maxWidth = 220;
+        ypix += 40;
+
       }
       maxWidth = Math.max(maxWidth,
         context.measureText(vector.getName()).width);
@@ -48,9 +49,9 @@ phantasus.HeatMapTrackColorLegend.prototype = {
     // legends are placed side by side
     for (var i = 0; i < tracks.length; i++) {
       var ypix = 0;
-      var vector = tracks[i].getVector();
+      var vector = tracks[i].getVector(tracks[i].settings.colorByField);
       context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
-      context.font = '12px ' + phantasus.CanvasUtil.FONT_NAME;
+      context.font = '12px ' + phantasus.CanvasUtil.getFontFamily(context);
       context.textAlign = 'left';
       // draw name
       context.textBaseline = 'top';
@@ -63,9 +64,32 @@ phantasus.HeatMapTrackColorLegend.prototype = {
         maxWidth = Math.max(0, textWidth);
       }
       ypix += 14;
-
-      var scheme = colorModel.getContinuousColorScheme(vector);
-      if (scheme != null) { // draw continuous color legend
+      if (vector.getProperties().get(phantasus.VectorKeys.DISCRETE)) {
+        var toStringFunction = phantasus.VectorTrack.vectorToString(vector);
+        var map = colorModel.getDiscreteColorScheme(vector);
+        var values = map.keys().sort(phantasus.SortKey.ASCENDING_COMPARATOR);
+        values.forEach(function (key) {
+          if (key != null) {
+            key = toStringFunction(key);
+            var color = colorModel.getMappedValue(vector, key);
+            var textWidth = context.measureText(key).width;
+            if (!isNaN(textWidth)) {
+              maxWidth = Math.max(maxWidth, textWidth);
+            }
+            context.fillStyle = color;
+            var xoffset = 0;
+            if (tracks[i].isRenderAs(phantasus.VectorTrack.RENDER.COLOR)) {
+              context.fillRect(xpix, ypix, 12, 12);
+              context.strokeRect(xpix, ypix, 12, 12);
+              context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+              xoffset = 16;
+            }
+            context.fillText(key, xpix + xoffset, ypix);
+            ypix += 14;
+          }
+        });
+      } else {
+        var scheme = colorModel.getContinuousColorScheme(vector);
         context.save();
         context.translate(xpix, ypix);
         phantasus.HeatMapColorSchemeLegend.drawColorScheme(context,
@@ -73,25 +97,6 @@ phantasus.HeatMapTrackColorLegend.prototype = {
         context.restore();
         maxWidth = Math.max(maxWidth, 220);
         ypix += 40;
-      } else {
-        var map = colorModel.getDiscreteColorScheme(vector);
-        var values = map.keys().sort(
-          phantasus.SortKey.ASCENDING_COMPARATOR);
-        values.forEach(function (key) {
-          if (key != null) {
-            var color = colorModel.getMappedValue(vector, key);
-            var textWidth = context.measureText(key).width;
-            if (!isNaN(textWidth)) {
-              maxWidth = Math.max(maxWidth, textWidth);
-            }
-            context.fillStyle = color;
-            context.fillRect(xpix, ypix, 12, 12);
-            context.strokeRect(xpix, ypix, 12, 12);
-            context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
-            context.fillText(key, xpix + 16, ypix);
-            ypix += 14;
-          }
-        });
       }
       xpix += maxWidth + 10 + 14; // space between tracks + color chip
     }

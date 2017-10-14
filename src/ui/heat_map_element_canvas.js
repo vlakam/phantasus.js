@@ -12,6 +12,8 @@ phantasus.HeatMapElementCanvas = function (project) {
     top: -1,
     bottom: -1
   };
+  // drag to select rows and columns
+  this.selectionBox = null;
   this.selectedRowElements = [];
   this.selectedColumnElements = [];
   project.getElementSelectionModel().on('selectionChanged', function (e) {
@@ -21,6 +23,7 @@ phantasus.HeatMapElementCanvas = function (project) {
   this.gridThickness = 0.1;
   this.elementDrawCallback = null;
   this.drawCallback = null;
+  this.drawValuesFormat = phantasus.Util.createNumberFormat('.2f');
 };
 phantasus.HeatMapElementCanvas.GRID_COLOR = '#808080';
 phantasus.HeatMapElementCanvas.prototype = {
@@ -65,6 +68,15 @@ phantasus.HeatMapElementCanvas.prototype = {
   setDrawGrid: function (drawGrid) {
     this.drawGrid = drawGrid;
   },
+  getDrawValuesFormat: function () {
+    return this.drawValuesFormat;
+  },
+  setDrawValuesFormat: function (f) {
+    if (typeof f === 'object') { // convert to function
+      f = phantasus.Util.createNumberFormat(f.pattern);
+    }
+    this.drawValuesFormat = f;
+  },
   setDrawValues: function (drawValues) {
     this.drawValues = drawValues;
   },
@@ -97,8 +109,8 @@ phantasus.HeatMapElementCanvas.prototype = {
       + this.rowPositions
         .getItemSize(this.rowPositions.getLength() - 1));
     return {
-      width: Math.max(12, w),
-      height: Math.max(12, h)
+      width: w,
+      height: h
     };
   },
   prePaint: function (clip, context) {
@@ -129,7 +141,6 @@ phantasus.HeatMapElementCanvas.prototype = {
     var columnPositions = this.getColumnPositions();
     if (project.getHoverColumnIndex() >= 0
       || project.getHoverRowIndex() >= 0) {
-
       var height = rowPositions
         .getItemSize(project.getHoverColumnIndex());
       var width = columnPositions.getItemSize(project
@@ -200,7 +211,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var selectedColumnElements = this.selectedColumnElements;
 
     if (!(selectedRowElements.length === 0 &&
-      selectedColumnElements.length === 0)) {
+        selectedColumnElements.length === 0)) {
       if (selectedRowElements.length === 0) {
         selectedRowElements = [[top, bottom - 1]];
       }
@@ -224,9 +235,43 @@ phantasus.HeatMapElementCanvas.prototype = {
         }
       }
     }
+    if (this.selectionBox) {
+      context.strokeStyle = 'rgb(0,0,0)';
+      context.lineWidth = 2;
+      if (context.setLineDash) {
+        context.setLineDash([5]);
+      }
+      var x1 = columnPositions.getPosition(this.selectionBox.x[0]);
+      var x2 = columnPositions.getPosition(this.selectionBox.x[1]);
+      if (x2 < x1) {
+        var tmp = x1;
+        x1 = x2;
+        x2 = tmp + columnPositions.getItemSize(this.selectionBox.x[0]);
+      } else {
+        x2 += columnPositions.getItemSize(this.selectionBox.x[1]);
+      }
+      var y1 = rowPositions.getPosition(this.selectionBox.y[0]);
+      var y2 = rowPositions.getPosition(this.selectionBox.y[1]);
+      if (y2 < y1) {
+        var tmp = y1;
+        y1 = y2;
+        y2 = tmp + rowPositions.getItemSize(this.selectionBox.y[0]);
+      } else {
+        y2 += rowPositions.getItemSize(this.selectionBox.y[1]);
+      }
+
+      context.strokeRect(x1, y1, x2 - x1, y2 - y1);
+      if (context.setLineDash) {
+        context.setLineDash([]);
+      }
+      context.lineWidth = 1;
+    }
   },
   setElementDrawCallback: function (elementDrawCallback) {
     this.elementDrawCallback = elementDrawCallback;
+  },
+  setSelectionBox: function (selectionBox) {
+    this.selectionBox = selectionBox;
   },
   setDrawCallback: function (drawCallback) {
     this.drawCallback = drawCallback;
@@ -238,9 +283,7 @@ phantasus.HeatMapElementCanvas.prototype = {
     var right = phantasus.Positions.getRight(clip, columnPositions);
     var top = phantasus.Positions.getTop(clip, rowPositions);
     var bottom = phantasus.Positions.getBottom(clip, rowPositions);
-    if (this.dataset.getRowCount() === 0 || this.dataset.getColumnCount() === 0) {
-      return context.fillText('No data', 0, 6);
-    } else {
+
       context.translate(-clip.x, -clip.y);
       this._draw({
         left: left,
@@ -250,7 +293,7 @@ phantasus.HeatMapElementCanvas.prototype = {
         context: context
       });
       context.translate(clip.x, clip.y);
-    }
+
     if (this.drawCallback) {
       this.drawCallback({
         clip: clip,
@@ -265,12 +308,12 @@ phantasus.HeatMapElementCanvas.prototype = {
     var top = options.top;
     var bottom = options.bottom;
     var context = options.context;
-
+    var fontFamily = phantasus.CanvasUtil.getFontFamily(context);
     var columnPositions = this.columnPositions;
     var rowPositions = this.rowPositions;
     //if (rowPositions.getSize() < 1 || columnPositions.getSize() < 1) {
     //force sub-pixel rendering
-    context.getImageData(0, 0, 1, 1);
+    phantasus.CanvasUtil.forceSubPixelRendering(context);
     //}
 
     context.textAlign = 'center';
@@ -284,14 +327,13 @@ phantasus.HeatMapElementCanvas.prototype = {
     var drawValues = this.drawValues && columnPositions.getSize() > 7 && rowPositions.getSize() > 7;
     var nf;
     if (drawValues) {
-      nf = typeof d3 !== 'undefined' ? d3.format('.2f') : function (d) {
-        return '' + d;
-      };
-      var fontSize = rowPositions.getSize() - 2;
-      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
-      var textWidth = context.measureText('-9999.99').width;
-      fontSize = ((  rowPositions.getSize() - 2) / textWidth) * fontSize;
-      context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+      nf = this.drawValuesFormat;
+      var fontSize = columnPositions.getSize();
+      context.font = fontSize + 'px ' + fontFamily;
+      var textWidth = context.measureText('-99.9').width;
+      fontSize = ( (columnPositions.getSize() - 1) / textWidth) * fontSize;
+      fontSize = Math.min(fontSize, 17);
+      context.font = fontSize + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     }
     var seriesNameToIndex = {};
     for (var i = 0; i < dataset.getSeriesCount(); i++) {
@@ -303,7 +345,7 @@ phantasus.HeatMapElementCanvas.prototype = {
 
     var conditions;
     var conditionSeriesIndices;
-    var minSize = 2;
+    var sizeFractionRemapper = d3.scale.linear().domain([0, 1]).range([0.2, 1]);
     for (var row = top; row < bottom; row++) {
       var rowSize = rowPositions.getItemSize(row);
       var py = rowPositions.getPosition(row);
@@ -322,7 +364,7 @@ phantasus.HeatMapElementCanvas.prototype = {
           conditions = colorScheme.getConditions().getConditions();
           for (var ci = 0, nconditions = conditions.length; ci < nconditions; ci++) {
             conditionSeriesIndices
-              .push(seriesNameToIndex[conditions[ci].series]);
+              .push(seriesNameToIndex[conditions[ci].seriesName]);
           }
 
         }
@@ -334,9 +376,12 @@ phantasus.HeatMapElementCanvas.prototype = {
           var sizeByValue = dataset.getValue(row, column,
             sizeBySeriesIndex);
           if (!isNaN(sizeByValue)) {
-            var f = sizer.valueToFraction(sizeByValue);
-            cellRowSize = Math.min(rowSize, Math.max(minSize, cellRowSize * f));
-            yoffset = rowSize - cellRowSize;
+            var sizeFraction = sizeFractionRemapper(sizer.valueToFraction(sizeByValue)); // remap 0-1 to 0.2-1
+            cellRowSize = cellRowSize * sizeFraction;
+            yoffset = (rowSize - cellRowSize) / 2;
+
+            cellColumnSize = cellColumnSize * sizeFraction;
+            xoffset = (columnSize - cellColumnSize) / 2;
 
           }
         }
@@ -356,12 +401,17 @@ phantasus.HeatMapElementCanvas.prototype = {
           if (condition !== null) {
             if (condition.shape != null) {
               if (condition.inheritColor) {
+                if (sizeBySeriesIndex === undefined) {
+                  xoffset = 1;
+                  yoffset = 1;
+                  cellRowSize -= 2;
+                  cellColumnSize -= 2;
+                }
                 var x = px + xoffset + cellRowSize / 2;
                 var y = py + yoffset + cellColumnSize / 2;
                 phantasus.CanvasUtil.drawShape(context, condition.shape,
-                  x, y, Math.min(cellColumnSize, cellRowSize) / 2);
-                context.fill();
-              } else {
+                  x, y, Math.min(cellColumnSize, cellRowSize) / 2, true);
+              } else { // e.g. filled circle on top of heat map
                 context.fillRect(px + xoffset, py + yoffset, cellColumnSize,
                   cellRowSize);
                 // x and y are at center
@@ -369,8 +419,7 @@ phantasus.HeatMapElementCanvas.prototype = {
                 var y = py + yoffset + cellColumnSize / 2;
                 context.fillStyle = condition.color;
                 phantasus.CanvasUtil.drawShape(context, condition.shape,
-                  x, y, Math.min(cellColumnSize, cellRowSize) / 4);
-                context.fill();
+                  x, y, Math.min(cellColumnSize, cellRowSize) / 4, true);
               }
 
             } else {
@@ -384,7 +433,7 @@ phantasus.HeatMapElementCanvas.prototype = {
         } else {
           context.fillRect(px + xoffset, py + yoffset, cellColumnSize, cellRowSize);
         }
-        if (drawValues && cellColumnSize > 7 && cellRowSize > 7) {
+        if (drawValues && cellColumnSize > 7 && cellRowSize > 7 && !isNaN(value)) {
           context.fillStyle = 'rgb(0,0,0)';
           context.fillText(nf(value), px + xoffset + cellColumnSize / 2, py + yoffset + cellRowSize / 2, cellColumnSize);
         }

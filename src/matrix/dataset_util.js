@@ -45,7 +45,7 @@ phantasus.DatasetUtil.getDatasetReader = function (ext, options) {
   if (options == null) {
     options = {};
   }
-  var datasetReader;
+  var datasetReader = null;
   if (ext === 'maf') {
     datasetReader = new phantasus.MafFileReader();
     if (options && options.mafGeneFilter) {
@@ -67,12 +67,11 @@ phantasus.DatasetUtil.getDatasetReader = function (ext, options) {
     datasetReader = options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.TxtReader();
   } else if (ext === 'json') {
     datasetReader = new phantasus.JsonDatasetReader();
-  } else {
+  } else if (ext === 'gct') {
     datasetReader = new phantasus.GctReader();
   }
   return datasetReader;
-}
-;
+};
 
 phantasus.DatasetUtil.readDatasetArray = function (datasets) {
   var retDef = $.Deferred();
@@ -85,7 +84,8 @@ phantasus.DatasetUtil.readDatasetArray = function (datasets) {
       loadedDatasets[this.index] = dataset;
     });
     p.fail(function (err) {
-      var message = ['Error opening ' + phantasus.Util
+      var message = [
+        'Error opening ' + phantasus.Util
         .getFileName(url) + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
@@ -112,9 +112,10 @@ phantasus.DatasetUtil.readDatasetArray = function (datasets) {
  * Annotate a dataset from external file or text.
  *
  * @param options.annotations -
- *            Array of file, datasetField, and fileField.
- * @param options.isColumns -
+ *            Array of file, datasetField, and fileField, and transposed.
+ * @param options.isColumns
  *            Whether to annotate columns
+ *
  * @return A jQuery Deferred object that resolves to an array of functions to
  *         execute with a dataset parameter.
  */
@@ -157,7 +158,7 @@ phantasus.DatasetUtil.annotate = function (options) {
           functions[annotationIndex] = function (dataset) {
             new phantasus.OpenFileTool().annotate(lines, dataset,
               isColumns, null, ann.datasetField,
-              ann.fileField, ann.include);
+              ann.fileField, ann.include, ann.transposed);
           };
           deferred.resolve();
         }
@@ -171,8 +172,11 @@ phantasus.DatasetUtil.annotate = function (options) {
 };
 /**
  * Reads a dataset at the specified URL or file
- * @param file
+ * @param fileOrUrl
  *            a File or URL
+ * @param options.background
+ * @params options.interactive
+ * @params options.extension
  * @return A promise that resolves to phantasus.DatasetInterface
  */
 phantasus.DatasetUtil.read = function (fileOrUrl, options) {
@@ -182,14 +186,9 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (options == null) {
     options = {};
   }
-
-
-  var isFile = fileOrUrl instanceof File;
+  var isFile = phantasus.Util.isFile(fileOrUrl);
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
-
-  console.log("before reading", fileOrUrl, options, isFile, isString, ext);
-
   var datasetReader;
   var str = fileOrUrl.toString();
 
@@ -207,17 +206,20 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
     datasetReader = new phantasus.TxtReader(); // copy from clipboard
   } else {
     datasetReader = phantasus.DatasetUtil.getDatasetReader(ext, options);
+    if (datasetReader == null) {
+      datasetReader = isFile ? (options.interactive ? new phantasus.Array2dReaderInteractive() : new phantasus.TxtReader()) : new phantasus.GctReader();
+    }
   }
 
-  console.log(typeof datasetReader);
+  // console.log(typeof datasetReader);
 
   if (isString || isFile) { // URL or file
     var deferred = $.Deferred();
-    // override toString so can determine file name
     if (options.background) {
       var path = phantasus.Util.getScriptPath();
       var blob = new Blob(
-        ['self.onmessage = function(e) {'
+        [
+          'self.onmessage = function(e) {'
         + 'importScripts(e.data.path);'
         + 'var ext = phantasus.Util.getExtension(phantasus.Util'
         + '.getFileName(e.data.fileOrUrl));'
@@ -256,6 +258,7 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
 
     }
     var pr = deferred.promise();
+    // override toString so can determine file name
     pr.toString = function () {
       return '' + fileOrUrl;
     };
@@ -421,30 +424,7 @@ phantasus.DatasetUtil.geneSetsToDataset = function (name, sets) {
   }
   return dataset;
 };
-phantasus.DatasetUtil.DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, or an Excel spreadsheet';
-phantasus.DatasetUtil.SESSION_FILE_FORMAT = 'a saved phantasus session';
 
-phantasus.DatasetUtil.DATASET_AND_SESSION_FILE_FORMATS = '<a target="_blank"' +
-  ' href="https://clue.io/help#datasets">GCT 1.3</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, an Excel spreadsheet, or a saved phantasus session';
-phantasus.DatasetUtil.BASIC_DATASET_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + ' or a tab-delimited text file';
-phantasus.DatasetUtil.GCT_FILE_FORMAT = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>';
-phantasus.DatasetUtil.ANNOTATION_FILE_FORMATS = 'an xlsx file, tab-delimited text file, or a <a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT file</a>';
-phantasus.DatasetUtil.DENDROGRAM_FILE_FORMATS = 'a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
-phantasus.DatasetUtil.OPEN_FILE_FORMATS = '<a target="_blank" href="https://clue.io/help#datasets">GCT 1.3</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/genepattern/gp_guides/file-formats/sections/gct">GCT 1.2</a>, '
-  + '<a target="_blank" href="https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification">MAF</a>, '
-  + '<a target="_blank" href="http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT</a>, '
-  + ' a tab-delimited text file, or a <a href="http://en.wikipedia.org/wiki/Newick_format" target="_blank">Newick</a> file';
 phantasus.DatasetUtil.getRootDataset = function (dataset) {
   while (dataset.getDataset) {
     dataset = dataset.getDataset();
@@ -1067,7 +1047,7 @@ phantasus.DatasetUtil.toESSessionPromise = function (options) {
   while (dataset.dataset) {
     dataset = dataset.dataset;
   }
-  console.log(dataset);
+  // console.log(dataset);
   dataset.setESSession(new Promise(function (resolve, reject) {
     //// console.log("phantasus.DatasetUtil.toESSessionPromise ::", dataset, dataset instanceof phantasus.Dataset, dataset instanceof phantasus.SlicedDatasetView);
     /*		if (dataset.dataset) {

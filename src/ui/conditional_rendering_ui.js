@@ -8,7 +8,7 @@ phantasus.ConditionalRenderingUI = function (heatmap) {
     // add after
     var index = $row.index();
     var condition = {
-      series: null,
+      seriesName: null,
       color: 'rgb(0,0,0)',
       shape: null,
       inheritColor: true,
@@ -35,7 +35,7 @@ phantasus.ConditionalRenderingUI = function (heatmap) {
   });
   var html = [];
   html
-    .push('<div class="phantasus-entry">');
+  .push('<div class="phantasus-entry">');
   html.push('<div class="row">');
   html
     .push('<div style="padding-bottom:20px;" class="col-xs-8"><a class="btn btn-default btn-xs"' +
@@ -60,13 +60,13 @@ phantasus.ConditionalRenderingUI.prototype = {
     // shape: shapes and line
     // color: if no color cell is drawn using this shape, otherwise draw
     // shape on top of cell
-    // series name
+    // seriesName name
     // value >= x and <= x
     var html = [];
     html.push('<div style="border-top:1px solid LightGrey;padding-bottom:6px;padding-top:6px;"' +
       ' class="phantasus-entry">');
     html.push('<form class="form-horizontal">');
-    // series
+    // seriesName
     html.push('<div class="form-group">');
     html
       .push('<label class="col-xs-2">Series</label>');
@@ -98,9 +98,7 @@ phantasus.ConditionalRenderingUI.prototype = {
     // shape
     html.push('<div class="form-group">');
     html.push('<label class="col-xs-2">Shape</label>');
-    var shapeField = new phantasus.ShapeField(['circle', 'square',
-      'diamond', 'triangle-up', 'triangle-down', 'triangle-left',
-      'triangle-right']);
+    var shapeField = new phantasus.ShapeField({shapes: phantasus.VectorShapeModel.FILLED_SHAPES, showNone: false});
     html.push('<div class="col-xs-4">');
     html.push('<div style="display:inline;" data-name="shapeHolder"></div>');
     html.push('</div>');
@@ -129,6 +127,10 @@ phantasus.ConditionalRenderingUI.prototype = {
     html.push('</div></div>');
     html.push('</div>'); // phantasus-entry
     var $el = $(html.join(''));
+    console.log($el.find('form').length);
+    $el.find('form').on('submit', function (e) {
+      e.preventDefault();
+    });
     shapeField.$el.appendTo($el.find('[data-name=shapeHolder]'));
     var $color = $el.find('[name=color]');
     var $series = $el.find('[name=cond_series]');
@@ -139,7 +141,7 @@ phantasus.ConditionalRenderingUI.prototype = {
     var $inherit_color = $el.find('[name=inherit_color]');
     $color.prop('disabled', condition.inheritColor);
     $color.val(condition.color);
-    $series.val(condition.series);
+    $series.val(condition.seriesName);
     shapeField.setShapeValue(condition.shape);
     if (condition.v1 != null && !isNaN(condition.v1)) {
       $v1.val(condition.v1);
@@ -149,6 +151,7 @@ phantasus.ConditionalRenderingUI.prototype = {
     }
     $v1Op.val(condition.v1Op);
     $v2Op.val(condition.v2Op);
+
     function updateAccept() {
       var v1 = parseFloat($($v1).val());
       var v2 = parseFloat($($v2).val());
@@ -212,10 +215,10 @@ phantasus.ConditionalRenderingUI.prototype = {
       _this.heatmap.revalidate();
     });
     $series.on('change', function (e) {
-      condition.series = $(this).val();
+      condition.seriesName = $(this).val();
       _this.heatmap.revalidate();
     });
-    condition.series = $series.val();
+    condition.seriesName = $series.val();
     return $el;
 
   }

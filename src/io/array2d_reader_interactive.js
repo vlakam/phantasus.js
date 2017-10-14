@@ -23,7 +23,7 @@ phantasus.Array2dReaderInteractive.prototype = {
       ' width:10px;height:10px;background-color:#ccebc5;"></div><span> Row' +
       ' Annotations</span>');
 
-    html.push('<div class="slick-bordered-table" style="width:550px;height:400px;"></div>');
+    html.push('<div class="slick-bordered-table" style="width:550px;height:300px;"></div>');
     html.push('</div>');
     var $el = $(html.join(''));
 
@@ -133,10 +133,12 @@ phantasus.Array2dReaderInteractive.prototype = {
       footer
         .push('<button name="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>');
       var $footer = $(footer.join(''));
+
       phantasus.FormBuilder.showOkCancel({
         title: 'Open',
         content: $el,
         close: false,
+        focus: document.activeElement,
         cancelCallback: function () {
           callback(null);
         },
@@ -168,7 +170,7 @@ phantasus.Array2dReaderInteractive.prototype = {
       for (var i = 0; i < dataRowStart; i++) {
         var name = lines[i][0];
         if (name == null || name === '' || name === 'na') {
-          name = 'Annotation';
+          name = 'id';
         }
         var unique = 1;
         while (dataset.getColumnMetadata().getByName(name) != null) {
@@ -195,7 +197,7 @@ phantasus.Array2dReaderInteractive.prototype = {
       for (var j = 0; j < dataColumnStart; j++) {
         var name = lines[0][j];
         if (name == null || name === '') {
-          name = 'Annotation';
+          name = 'id';
         }
         var unique = 1;
         while (dataset.getRowMetadata().get(name) != null) {

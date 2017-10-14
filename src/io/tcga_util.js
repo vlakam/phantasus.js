@@ -69,10 +69,13 @@ phantasus.TcgaUtil.SAMPLE_TYPES = {
 };
 
 phantasus.TcgaUtil.barcode = function (s) {
+  // e.g. TCGA-AC-A23H-01A-11D-A159-09
+  // see https://wiki.nci.nih.gov/display/TCGA/TCGA+barcode
+  // TCGA, Tissue source site, Study participant, Sample type
   var tokens = s.split('-');
   var id = tokens[2];
   var sampleType;
-  // e.g. TCGA-AC-A23H-01A-11D-A159-09
+
   if (tokens.length > 3) {
     sampleType = tokens[3];
     if (sampleType.length > 2) {
@@ -111,11 +114,12 @@ phantasus.TcgaUtil.getDataset = function (options) {
     promises.push(mrna);
     new phantasus.TxtReader().read(options.mrna, function (err, dataset) {
       if (err) {
-        // console.log('Error reading file:' + err);
+        console.log('Error reading file:' + err);
       } else {
         datasets.push(dataset);
         phantasus.TcgaUtil.setIdAndSampleType(dataset);
       }
+      console.log("mrna promise", datasets);
       mrna.resolve();
     });
   }
@@ -189,7 +193,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
     var rppa = $.Deferred();
     promises.push(rppa);
 
-    new phantasus.TxtReader().read(options.rppa, function (err, dataset) {
+    new phantasus.TxtReader({dataColumnStart: 2}).read(options.rppa, function (err, dataset) {
       if (err) {
         // console.log('Error reading file:' + err);
       } else {
@@ -205,8 +209,9 @@ phantasus.TcgaUtil.getDataset = function (options) {
     // id + type
     var methylation = $.Deferred();
     promises.push(methylation);
-    new phantasus.TxtReader({}).read(options.methylation, function (err,
-                                                                   dataset) {
+    new phantasus.TxtReader({}).read(options.methylation, function (
+      err,
+      dataset) {
       if (err) {
         // console.log('Error reading file:' + err);
       } else {
@@ -239,6 +244,7 @@ phantasus.TcgaUtil.getDataset = function (options) {
   var annotationCallbacks = [];
   var annotationDef = null;
   if (options.columnAnnotations) {
+    // match datasetField: 'participant_id' to fileField: 'patient_id', // e.g. tcga-5l-aat0
     annotationDef = phantasus.DatasetUtil.annotate({
       annotations: options.columnAnnotations,
       isColumns: true

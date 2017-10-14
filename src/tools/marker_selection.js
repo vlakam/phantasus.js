@@ -5,8 +5,9 @@ phantasus.MarkerSelection = function () {
 /**
  * @private
  */
-phantasus.MarkerSelection.Functions = [phantasus.FisherExact,
-  phantasus.FoldChange, phantasus.SignalToNoise,
+phantasus.MarkerSelection.Functions = [
+  phantasus.FisherExact,
+  phantasus.FoldChange, phantasus.MeanDifference, phantasus.SignalToNoise,
   phantasus.createSignalToNoiseAdjust(), phantasus.TTest];
 
 phantasus.MarkerSelection.Functions.fromString = function (s) {
@@ -94,7 +95,7 @@ phantasus.MarkerSelection.prototype = {
       {
         name: 'grouping_value',
         value: '1',
-        help: 'Class values are categorized into two groups based on whether dataset values are greater than or equal to this value',
+        help: 'Class values are categorized into two groups based on whether dataset values are greater than or equal to this value'
       },
       {
         name: 'field',
@@ -122,7 +123,7 @@ phantasus.MarkerSelection.prototype = {
         name: 'number_of_markers',
         value: '100',
         type: 'text',
-        help: 'The initial number of markers to show in each direction. Click <button title="Filter (Ctrl+L)" type="button" class="btn btn-default btn-xs dropdown-toggle"><span class="fa fa-filter"></span></button> to change.'
+        help: 'The initial number of markers to show in each direction.'
       }, {
         name: 'permutations',
         value: '0',
@@ -132,10 +133,20 @@ phantasus.MarkerSelection.prototype = {
   execute: function (options) {
 
     var project = options.project;
-    // classA and classB are arrays of identifiers if run via user
+    // classA and classB are arrays of Identifiers if run via user
     // interface. If run via JSON, will be string arrays
     var classA = options.input.class_a;
+    var classB = options.input.class_b;
+    if (classA.length === 0 && classB.length === 0) {
+      throw 'No samples in class A and class B';
+    }
 
+    if (classA.length === 0) {
+      throw 'No samples in class A';
+    }
+    if (classB.length === 0) {
+      throw 'No samples in class B';
+    }
     for (var i = 0; i < classA.length; i++) {
       var val = classA[i];
       if (!(val instanceof phantasus.Identifier)) {
@@ -143,7 +154,7 @@ phantasus.MarkerSelection.prototype = {
           phantasus.Util.isArray(val) ? val : [val]);
       }
     }
-    var classB = options.input.class_b;
+
     for (var i = 0; i < classB.length; i++) {
       var val = classB[i];
       if (!(val instanceof phantasus.Identifier)) {
@@ -152,18 +163,16 @@ phantasus.MarkerSelection.prototype = {
       }
     }
     var npermutations = parseInt(options.input.permutations);
+    var dataset = project.getSortedFilteredDataset();
+
     var fieldNames = options.input.field;
     if (!phantasus.Util.isArray(fieldNames)) {
       fieldNames = [fieldNames];
     }
-    var dataset = project.getSortedFilteredDataset();
+
     var vectors = phantasus.MetadataUtil.getVectors(dataset
       .getColumnMetadata(), fieldNames);
-
     var idToIndices = phantasus.VectorUtil.createValuesToIndicesMap(vectors);
-    var f = phantasus.MarkerSelection.Functions
-      .fromString(options.input.metric);
-
     var aIndices = [];
     var bIndices = [];
     classA.forEach(function (id) {
@@ -181,16 +190,8 @@ phantasus.MarkerSelection.prototype = {
       bIndices = bIndices.concat(indices);
     });
 
-    if (aIndices.length === 0 && bIndices.length === 0) {
-      throw 'No samples in class A and class B';
-    }
-
-    if (aIndices.length === 0) {
-      throw 'No samples in class A';
-    }
-    if (bIndices.length === 0) {
-      throw 'No samples in class B';
-    }
+    var f = phantasus.MarkerSelection.Functions
+      .fromString(options.input.metric);
 
     var classASet = {};
     for (var i = 0; i < aIndices.length; i++) {
@@ -202,8 +203,8 @@ phantasus.MarkerSelection.prototype = {
       }
     }
     var isFishy = f.toString() === phantasus.FisherExact.toString();
-    if (aIndices.length === 1 || bIndices.length === 1
-      && !(f instanceof phantasus.FisherExact)) {
+    if ((aIndices.length === 1 || bIndices.length === 1)
+      && !isFishy && f.toString() !== phantasus.MeanDifference.toString()) {
       f = phantasus.FoldChange;
     }
     var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
@@ -237,8 +238,23 @@ phantasus.MarkerSelection.prototype = {
     for (var i = 0; i < bIndices.length; i++) {
       comparisonVector.setValue(bIndices[i], 'B');
     }
-    function done() {
 
+    function done(result) {
+      if (result) {
+        var pvalueVector = dataset.getRowMetadata().add('p_value');
+        var fdrVector = dataset.getRowMetadata().add('FDR(BH)');
+        var kVector = dataset.getRowMetadata().add('k');
+        for (var i = 0, size = pvalueVector.size(); i < size; i++) {
+          pvalueVector.setValue(i, result.rowSpecificPValues[i]);
+          fdrVector.setValue(i, result.fdr[i]);
+          kVector.setValue(i, result.k[i]);
+          v.setValue(i, result.scores[i]);
+        }
+        kVector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: 'i'});
+        vectors.push(pvalueVector);
+        vectors.push(fdrVector);
+        vectors.push(kVector);
+      }
       if (project.getRowFilter().getFilters().length > 0) {
         project.getRowFilter().setAnd(true, true);
       }
@@ -259,9 +275,10 @@ phantasus.MarkerSelection.prototype = {
       }
 
       project.setRowFilter(project.getRowFilter(), true);
-      project.setRowSortKeys([new phantasus.SortKey(vectors[0].getName(),
-        isFishy ? phantasus.SortKey.SortOrder.ASCENDING
-          : phantasus.SortKey.SortOrder.DESCENDING)], true);
+      project.setRowSortKeys([
+        new phantasus.SortKey(vectors[0].getName(),
+          isFishy ? phantasus.SortKey.SortOrder.ASCENDING
+            : phantasus.SortKey.SortOrder.DESCENDING)], true);
       // select samples used in comparison
       var selectedColumnIndices = new phantasus.Set();
       aIndices.forEach(function (index) {
@@ -272,19 +289,20 @@ phantasus.MarkerSelection.prototype = {
       });
       project.getColumnSelectionModel().setViewIndices(selectedColumnIndices, true);
 
-      project.setColumnSortKeys([new phantasus.SortKey(comparisonVector
-        .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
+      project.setColumnSortKeys([
+        new phantasus.SortKey(comparisonVector
+          .getName(), phantasus.SortKey.SortOrder.ASCENDING)], true);
 
       project.trigger('trackChanged', {
         vectors: vectors,
-        render: vectors.map(function () {
+        display: vectors.map(function () {
           return 'text';
         }),
         columns: false
       });
       project.trigger('trackChanged', {
         vectors: [comparisonVector],
-        render: ['color'],
+        display: ['color'],
         columns: true
       });
     }
@@ -319,55 +337,74 @@ phantasus.MarkerSelection.prototype = {
       vectors.push(contingencyTableVector);
       done();
     } else {
-      // background
       if (npermutations > 0) {
-        options.input.numClassA = aIndices.length;
-        options.input.npermutations = npermutations;
-        var blob = new Blob(
-          ['self.onmessage = function(e) {'
-          + 'importScripts(e.data.scripts);'
-          + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
-          + '}']);
-
-        var url = window.URL.createObjectURL(blob);
-        var worker = new Worker(url);
         var subset = new phantasus.SlicedDatasetView(dataset, null,
           aIndices.concat(bIndices));
 
-        worker.postMessage({
-          scripts: phantasus.Util.getScriptPath(),
-          dataset: phantasus.Dataset.toJSON(subset, {
-            columnFields: [],
-            rowFields: [],
-            seriesIndices: [0]
-          }),
-          input: options.input
-        });
+        options.input.background = options.input.background && typeof Worker !== 'undefined';
+        options.input.numClassA = aIndices.length;
+        options.input.npermutations = npermutations;
+        if (options.input.background) {
+          var blob = new Blob(
+            [
+              'self.onmessage = function(e) {'
+              + 'importScripts(e.data.scripts);'
+              + 'self.postMessage(phantasus.MarkerSelection.execute(phantasus.Dataset.fromJSON(e.data.dataset), e.data.input));'
+              + '}']);
 
-        worker.onmessage = function (e) {
-          var result = e.data;
-          var pvalueVector = dataset.getRowMetadata().add('p_value');
-          var fdrVector = dataset.getRowMetadata().add('FDR(BH)');
-          var kVector = dataset.getRowMetadata().add('k');
+          var url = window.URL.createObjectURL(blob);
+          var worker = new Worker(url);
+          worker.postMessage({
+            scripts: phantasus.Util.getScriptPath(),
+            dataset: phantasus.Dataset.toJSON(subset, {
+              columnFields: [],
+              rowFields: [],
+              seriesIndices: [0]
+            }),
+            input: options.input
+          });
 
-          for (var i = 0, size = pvalueVector.size(); i < size; i++) {
-            pvalueVector.setValue(i, result.rowSpecificPValues[i]);
-            fdrVector.setValue(i, result.fdr[i]);
-            kVector.setValue(i, result.k[i]);
-            v.setValue(i, result.scores[i]);
-          }
-          vectors.push(pvalueVector);
-          vectors.push(fdrVector);
-          vectors.push(kVector);
-          done();
-          worker.terminate();
-          window.URL.revokeObjectURL(url);
-        };
-        return worker;
+          worker.onmessage = function (e) {
+            done(e.data);
+            worker.terminate();
+            window.URL.revokeObjectURL(url);
+          };
+          return worker;
+        } else {
+          done(phantasus.MarkerSelection.execute(subset, options.input));
+        }
       } else {
         for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
           v.setValue(i, f(list1.setIndex(i), list2.setIndex(i)));
         }
+        // no permutations, compute asymptotic p-value if t-test
+        if (f.toString() === phantasus.TTest.toString() && typeof jStat !== 'undefined') {
+          var pvalueVector = dataset.getRowMetadata().add('p_value');
+          var fdrVector = dataset.getRowMetadata().add('FDR(BH)');
+          var rowSpecificPValues = new Float32Array(dataset.getRowCount());
+          for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
+            list1.setIndex(i);
+            list2.setIndex(i);
+            var m1 = phantasus.Mean(list1);
+            var m2 = phantasus.Mean(list2);
+            var v1 = phantasus.Variance(list1, m1);
+            var v2 = phantasus.Variance(list2, m2);
+            var n1 = phantasus.CountNonNaN(list1);
+            var n2 = phantasus.CountNonNaN(list2);
+            var df = phantasus.DegreesOfFreedom(v1, v2, n1, n2);
+            var t = v.getValue(i);
+            var p = 2.0 * (1 - jStat.studentt.cdf(Math.abs(t), df));
+            rowSpecificPValues[i] = p;
+            pvalueVector.setValue(i, p);
+          }
+          vectors.push(pvalueVector);
+          var fdr = phantasus.FDR_BH(rowSpecificPValues);
+          for (var i = 0, size = dataset.getRowCount(); i < size; i++) {
+            fdrVector.setValue(i, fdr[i]);
+          }
+          vectors.push(fdrVector);
+        }
+
         done();
       }
     }

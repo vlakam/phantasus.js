@@ -1,10 +1,13 @@
 phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   phantasus.AbstractCanvas.call(this);
+  this.font = {weight: '400'};
   this.project = project;
   this.name = name;
   this.isColumns = isColumns;
   var canvas = this.canvas;
   this.heatMap = heatMap;
+  this.selectedBackgroundColor = '#c8c8c8';
+  this.backgroundColor = 'rgb(255,255,255)';
   var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
     : project.getFullDataset().getRowMetadata()).getByName(name);
   if (vector && vector.getProperties().has(phantasus.VectorKeys.TITLE)) {
@@ -41,7 +44,8 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         };
       }
     } else {
-      if (pos.x < 3) {
+      if (pos.x < 3 && heatMap.getTrackIndex(name, isColumns) > 0) { // can't drag left on 1st
+        // row header
         return {
           cursor: 'ew-resize',
           isPrevious: true
@@ -90,13 +94,10 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
     track.showPopup(e, true);
     return false;
   };
-  this.selectedBackgroundColor = '#c8c8c8';
-  this.backgroundColor = '#f9f9f9';
+
   $(this.canvas).css({'background-color': this.backgroundColor}).on(
     'mousemove.phantasus', mouseMove).on('mouseout.phantasus', mouseExit)
-    .on('mouseenter.phantasus', mouseMove);
-
-  $(this.canvas).on('contextmenu.phantasus', showPopup);
+    .on('mouseenter.phantasus', mouseMove).on('contextmenu.phantasus', showPopup).addClass('phantasus-track-header ' + (isColumns ? 'phantasus-columns' : 'phantasus-rows'));
 
   var resizeCursor;
   var dragStartWidth = 0;
@@ -112,93 +113,91 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
   // }, 100);
   // $(canvas).on('mouseout', throttled).on('mousemove', throttled);
   this.hammer = phantasus.Util
-    .hammer(canvas, ['pan', 'tap', 'longpress'])
-    .on('longpress', this.longpress = function (event) {
-      event.preventDefault();
-      heatMap.setSelectedTrack(_this.name, isColumns);
-      var track = heatMap.getTrack(_this.name, isColumns);
-      track.showPopup(event.srcEvent, true);
+  .hammer(canvas, ['pan', 'tap', 'longpress'])
+  .on('longpress', this.longpress = function (event) {
+    event.preventDefault();
+    heatMap.setSelectedTrack(_this.name, isColumns);
+    var track = heatMap.getTrack(_this.name, isColumns);
+    track.showPopup(event.srcEvent, true);
+  })
+  .on(
+    'panend',
+    this.panend = function (event) {
+      _this.isMouseOver = false;
+      phantasus.CanvasUtil.dragging = false;
+      canvas.style.cursor = 'default';
+      var index = heatMap.getTrackIndex(_this.name,
+        isColumns);
+      var header = heatMap.getTrackHeaderByIndex(index,
+        isColumns);
+      var track = heatMap
+      .getTrackByIndex(index, isColumns);
+      var $canvas = $(track.canvas);
+      $canvas.css('z-index', '0');
+      $(header.canvas).css('z-index', '0');
+      heatMap.revalidate();
     })
-    .on(
-      'panend',
-      this.panend = function (event) {
-        _this.isMouseOver = false;
-        phantasus.CanvasUtil.dragging = false;
-        canvas.style.cursor = 'default';
-        var index = heatMap.getTrackIndex(_this.name,
-          isColumns);
-        var header = heatMap.getTrackHeaderByIndex(index,
-          isColumns);
-        var track = heatMap
-          .getTrackByIndex(index, isColumns);
-        var $canvas = $(track.canvas);
-        $canvas.css('z-index', '0');
-        $(header.canvas).css('z-index', '0');
-        heatMap.revalidate();
-      })
-    .on(
-      'panstart',
-      this.panstart = function (event) {
-        _this.isMouseOver = false;
-        if (phantasus.CanvasUtil.dragging) {
-          return;
-        }
-        resizeCursor = getResizeCursor(phantasus.CanvasUtil
-          .getMousePos(event.target, event, true));
-        if (resizeCursor != null) { // make sure start event was on
-          // hotspot
-          phantasus.CanvasUtil.dragging = true;
-          canvas.style.cursor = resizeCursor.cursor;
-          if (resizeCursor.isPrevious) {
-            var index = heatMap.getTrackIndex(_this.name,
-              isColumns);
-            index--; // FIXME index = -1
-            if (index === -1) {
-              index = 0;
-            }
-            var header = heatMap.getTrackHeaderByIndex(
-              index, isColumns);
-            dragStartWidth = header.getUnscaledWidth();
-            dragStartHeight = header.getUnscaledHeight();
-            resizeTrackName = header.name;
-          } else {
-            resizeTrackName = null;
-            dragStartWidth = _this.getUnscaledWidth();
-            dragStartHeight = _this.getUnscaledHeight();
-          }
-          event.preventDefault();
-          reorderingTrack = false;
-        } else {
+  .on(
+    'panstart',
+    this.panstart = function (event) {
+      _this.isMouseOver = false;
+
+      if (phantasus.CanvasUtil.dragging) {
+        return;
+      }
+      if (resizeCursor != null) { // resize
+        phantasus.CanvasUtil.dragging = true;
+        canvas.style.cursor = resizeCursor.cursor;
+        if (resizeCursor.isPrevious) {
           var index = heatMap.getTrackIndex(_this.name,
             isColumns);
-          if (index == -1) {
-            throw _this.name + ' not found';
+          index--; // FIXME index = -1
+          if (index === -1) {
+            index = 0;
           }
           var header = heatMap.getTrackHeaderByIndex(
             index, isColumns);
-          var track = heatMap.getTrackByIndex(index,
-            isColumns);
-          heatMap.setSelectedTrack(_this.name, isColumns);
-          var $canvas = $(track.canvas);
-          dragStartPosition = $canvas.position();
-          $canvas.css('z-index', '100');
-          $(header.canvas).css('z-index', '100');
-          phantasus.CanvasUtil.dragging = true;
-          resizeCursor = undefined;
-          reorderingTrack = true;
+          dragStartWidth = header.getUnscaledWidth();
+          dragStartHeight = header.getUnscaledHeight();
+          resizeTrackName = header.name;
+        } else {
+          resizeTrackName = null;
+          dragStartWidth = _this.getUnscaledWidth();
+          dragStartHeight = _this.getUnscaledHeight();
         }
-      })
-    .on(
-      'panmove',
-      this.panmove = function (event) {
-        _this.isMouseOver = false;
-        if (resizeCursor != null) {
-          var width;
-          var height;
-          if (resizeCursor.cursor === 'ew-resize') {
-            var dx = event.deltaX;
-            width = Math.max(8, dragStartWidth + dx);
-          }
+        event.preventDefault();
+        reorderingTrack = false;
+      } else { // move track
+        var index = heatMap.getTrackIndex(_this.name,
+          isColumns);
+        if (index == -1) {
+          throw _this.name + ' not found';
+        }
+        var header = heatMap.getTrackHeaderByIndex(
+          index, isColumns);
+        var track = heatMap.getTrackByIndex(index,
+          isColumns);
+        heatMap.setSelectedTrack(_this.name, isColumns);
+        var $canvas = $(track.canvas);
+        dragStartPosition = $canvas.position();
+        $canvas.css('z-index', '100');
+        $(header.canvas).css('z-index', '100');
+        phantasus.CanvasUtil.dragging = true;
+        resizeCursor = undefined;
+        reorderingTrack = true;
+      }
+    })
+  .on(
+    'panmove',
+    this.panmove = function (event) {
+      _this.isMouseOver = false;
+      if (resizeCursor != null) {
+        var width;
+        var height;
+        if (resizeCursor.cursor === 'ew-resize') {
+          var dx = event.deltaX;
+          width = Math.max(8, dragStartWidth + dx);
+        }
 
           if (resizeCursor.cursor === 'ns-resize') {
             var dy = event.deltaY;
@@ -268,10 +267,13 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
         }
         _this.isMouseOver = false;
         heatMap.setSelectedTrack(_this.name, isColumns);
-        if (isColumns && !heatMap.options.columnsSortable) {
+        var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
+          : project.getFullDataset().getRowMetadata()).getByName(name);
+        // vector will be null for row #
+        if ((isColumns && !heatMap.options.columnsSortable) || vector == null) {
           return;
         }
-        if (!isColumns && !heatMap.options.rowsSortable) {
+        if ((!isColumns && !heatMap.options.rowsSortable) || vector == null) {
           return;
         }
 
@@ -283,11 +285,10 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
             .getSortKeys(), _this.name);
         var sortOrder;
         var sortKey;
-        var vector = (isColumns ? project.getFullDataset().getColumnMetadata()
-          : project.getFullDataset().getRowMetadata()).getByName(name);
+
         var dataType = phantasus.VectorUtil.getDataType(vector);
-        if (existingSortKeyIndex != -1) {
-          sortKey = _this.getSortKeys()[existingSortKeyIndex];
+        if (existingSortKeyIndex != null) {
+          sortKey = _this.getSortKeys()[existingSortKeyIndex.index];
           if (sortKey.getSortOrder() === phantasus.SortKey.SortOrder.UNSORTED) {
             sortOrder = phantasus.SortKey.SortOrder.ASCENDING; // 1st
             // click
@@ -301,18 +302,21 @@ phantasus.VectorTrackHeader = function (project, name, isColumns, heatMap) {
             // click
           }
 
-        } else {
-          sortKey = new phantasus.SortKey(_this.name,
-            phantasus.SortKey.SortOrder.ASCENDING);
-          sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
-        }
-        if (sortKey != null) {
-          sortKey.setSortOrder(sortOrder);
-          _this.setSortingStatus(_this.getSortKeys(),
-            sortKey, additionalSort, isGroupBy);
-        }
-        // }
-      });
+      } else {
+        sortKey = new phantasus.SortKey(_this.name,
+          phantasus.SortKey.SortOrder.ASCENDING);
+        sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
+      }
+      if (sortKey != null) {
+        sortKey.setSortOrder(sortOrder);
+        _this.setSortingStatus(_this.getSortKeys(),
+          sortKey, additionalSort, isGroupBy);
+      }
+    });
+  $(this.canvas).on('mousedown', function (event) {
+    resizeCursor = getResizeCursor(phantasus.CanvasUtil
+    .getMousePos(event.target, event, true));
+  });
 };
 phantasus.VectorTrackHeader.FONT_OFFSET = 2;
 phantasus.VectorTrackHeader.prototype = {
@@ -327,7 +331,7 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getPreferredSize: function () {
     var size = this.getPrintSize();
-    size.width += 22;
+    size.width += 24; // leave space for sort, drag icon, lock
 
     if (!this.isColumns) {
       size.height = this.defaultFontHeight
@@ -353,8 +357,8 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getPrintSize: function () {
     var context = this.canvas.getContext('2d');
-    context.font = this.defaultFontHeight + 'px '
-      + phantasus.CanvasUtil.FONT_NAME;
+    context.font = this.fontWeight + ' ' + this.defaultFontHeight + 'px '
+      + phantasus.CanvasUtil.getFontFamily(context);
     var textWidth = 4 + context.measureText(this.name).width;
     return {
       width: textWidth,
@@ -423,10 +427,10 @@ phantasus.VectorTrackHeader.prototype = {
         } else {
           var sortKeyIndex = this.getSortKeyIndexForColumnName(
             sortKeys, sortKey.toString());
-          if (sortKeyIndex === -1) { // new sort column
+          if (sortKeyIndex === null) { // new sort column
             sortKeys.push(sortKey);
           } else { // change sort order of existing sort column
-            sortKeys[sortKeyIndex] = sortKey;
+            sortKeys[sortKeyIndex.index] = sortKey;
           }
         }
         this.setOrder(sortKeys);
@@ -444,13 +448,20 @@ phantasus.VectorTrackHeader.prototype = {
   },
   getSortKeyIndexForColumnName: function (sortKeys, columnName) {
     if (sortKeys != null) {
+      var counter = 0;
       for (var i = 0, size = sortKeys.length; i < size; i++) {
-        if (columnName === sortKeys[i].toString()) {
-          return i;
+        if (sortKeys[i].isUnlockable()) {
+          counter++;
+        }
+        if (sortKeys[i] instanceof phantasus.SortKey && columnName === sortKeys[i].toString()) {
+          return {
+            index: i,
+            number: counter
+          };
         }
       }
     }
-    return -1;
+    return null;
   },
   print: function (clip, context) {
     if (clip.height <= 6) {
@@ -459,13 +470,13 @@ phantasus.VectorTrackHeader.prototype = {
     context.textBaseline = 'bottom';
     if (this.isColumns) {
       context.textAlign = 'right';
-      context.font = Math.min(this.defaultFontHeight, clip.height
-          - phantasus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+      context.font = this.font.weight + ' ' + Math.min(this.defaultFontHeight, clip.height
+        - phantasus.VectorTrackHeader.FONT_OFFSET)
+        + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     } else {
       context.textAlign = 'left';
       context.font = (clip.height - phantasus.VectorTrackHeader.FONT_OFFSET)
-        + 'px ' + phantasus.CanvasUtil.FONT_NAME;
+        + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     }
     context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     context.fillText(this.name, 0, 0);
@@ -475,6 +486,9 @@ phantasus.VectorTrackHeader.prototype = {
     var name = this.name;
     var existingSortKeyIndex = this.getSortKeyIndexForColumnName(sortKeys,
       name);
+    var unlockableSortKeys = sortKeys.filter(function (key) {
+      return key.isUnlockable();
+    });
     phantasus.CanvasUtil.resetTransform(context);
     context.clearRect(0, 0, this.getUnscaledWidth(), this
       .getUnscaledHeight());
@@ -483,6 +497,7 @@ phantasus.VectorTrackHeader.prototype = {
       return;
     }
 
+    context.strokeStyle = '#ddd';
     if (this.isColumns) {
       context.beginPath();
       context.moveTo(0, this.getUnscaledHeight());
@@ -496,28 +511,27 @@ phantasus.VectorTrackHeader.prototype = {
       context.stroke();
       context.textAlign = 'left';
     }
-    var fontHeight = Math.min(this.defaultFontHeight, this
-        .getUnscaledHeight()
-      - phantasus.VectorTrackHeader.FONT_OFFSET);
-    var squished = this.heatMap.getTrack(this.name, this.isColumns).settings.squished;
-    context.font = (squished ? 'Italic ' : '') + fontHeight + 'px '
-      + phantasus.CanvasUtil.FONT_NAME;
+
     var textWidth = context.measureText(name).width;
     var isColumns = this.isColumns;
     var xpix = this.isColumns ? this.getUnscaledWidth() - 2 : 10;
     if (isColumns) {
-      if (existingSortKeyIndex != -1) {
+      if (existingSortKeyIndex != null) {
         xpix -= 6;
+        if (sortKeys[existingSortKeyIndex.index].getLockOrder() !== 0) {
+          xpix -= 10;
+        }
       }
       if (sortKeys.length > 1) {
         xpix -= 6;
       }
+
     }
+    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
     var ypix = this.isColumns ? (this.getUnscaledHeight() / 2)
       : (this.getUnscaledHeight() - (this.defaultFontHeight + phantasus.VectorTrackHeader.FONT_OFFSET) / 2);
     context.textBaseline = 'middle';
     if (this.isMouseOver) {
-      context.fillStyle = 'rgb(0,0,0)';
       var xdot = xpix - (isColumns ? textWidth + 4 : 4);
       var ydot = ypix - 3;
       for (var i = 0; i < 2; i++) {
@@ -526,149 +540,26 @@ phantasus.VectorTrackHeader.prototype = {
         }
       }
     }
-    context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
+    var fontHeight = Math.min(this.defaultFontHeight, this
+        .getUnscaledHeight()
+      - phantasus.VectorTrackHeader.FONT_OFFSET);
+    fontHeight = Math.min(fontHeight, phantasus.VectorTrack.MAX_FONT_SIZE);
+    context.font = this.font.weight + ' ' + fontHeight + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
     context.fillText(name, xpix, ypix);
-    // var vector = (this.isColumns ? this.project.getFullDataset()
-    // .getColumnMetadata() : this.project.getFullDataset()
-    // .getRowMetadata()).getByName(this.name);
-    // if (vector
-    // && vector.getProperties().get(
-    // phantasus.VectorKeys.SHOW_HEADER_SUMMARY)) {
-    // var summary = vector.getProperties().get(
-    // phantasus.VectorKeys.HEADER_SUMMARY);
-    // var track = this.heatMap.getTrack(this.name, this.isColumns);
-    // if (summary == null) {
-    // var visibleFieldIndices = vector.getProperties().get(
-    // phantasus.VectorKeys.VISIBLE_FIELDS);
-    //
-    // if (visibleFieldIndices == null) {
-    // visibleFieldIndices = phantasus.Util
-    // .seq(vector.getProperties().get(
-    // phantasus.VectorKeys.FIELDS).length);
-    // }
-    // var bigArray = [];
-    // var min = Number.MAX_VALUE;
-    // var max = Number.MAX_VALUE;
-    // for (var i = 0, size = vector.size(); i < size; i++) {
-    // var array = vector.getValue(i);
-    // if (array != null) {
-    // for (var j = 0, length = visibleFieldIndices.length; j < length; j++)
-    // {
-    // var value = array[visibleFieldIndices[j]];
-    // if (!isNaN(value)) {
-    // bigArray.push(value);
-    // min = value < min ? value : min;
-    // max = value > max ? value : max;
-    // }
-    // }
-    // }
-    // }
-    // var nbins = Math.ceil(phantasus.Log2(bigArray.length) + 1);
-    // var binSize = (max - min) / nbins;
-    // var binNumberToOccurences = new Uint32Array(nbins);
-    // var maxOccurences = 0;
-    // for (var i = 0, size = bigArray.length; i < size; i++) {
-    // var value = bigArray[i];
-    // var bin = Math.floor((value - min) / binSize);
-    // if (bin < 0) {
-    // bin = 0;
-    // } else if (bin >= binNumberToOccurences.length) {
-    // bin = binNumberToOccurences.length - 1;
-    // }
-    // binNumberToOccurences[bin]++;
-    // maxOccurences = Math.max(maxOccurences,
-    // binNumberToOccurences[bin]);
-    // }
-    // summary = {
-    // box : phantasus.BoxPlotItem(phantasus.VectorUtil
-    // .arrayAsVector(bigArray)),
-    // histogram : {
-    // binSize : binSize,
-    // total : bigArray.length,
-    // binNumberToOccurences : binNumberToOccurences,
-    // maxOccurences : maxOccurences,
-    // min : min,
-    // max : max
-    // }
-    //
-    // };
-    //
-    // vector.getProperties().set(phantasus.VectorKeys.HEADER_SUMMARY,
-    // summary);
-    // }
-    // var box = summary.box;
-    // context.save();
-    // context.translate(1, 0);
-    //
-    // var scale = track.createChartScale(this.getUnscaledWidth() - 2); //
-    // TODO
-    // // make
-    // // sure
-    // // scale
-    // // is
-    // // the
-    // // same
-    // // as
-    // // track
-    // var itemSize = 12;
-    // var pix = 1;
-    // var start = pix + 1;
-    // var end = pix + itemSize - 1;
-    // var center = (start + end) / 2;
-    // var _itemSize = itemSize - 2;
-    // var lineHeight = Math.max(2, _itemSize - 8);
-    // context.fillStyle = 'black';
-    // // box from q1 (25th q) to q3
-    // context.fillRect(Math.min(scale(box.q1), scale(box.q3)), start,
-    // Math.abs(scale(box.q1) - scale(box.q3)), _itemSize);
-    // // draw line from q1 to lav
-    // context.fillRect(Math.min(scale(box.q1),
-    // scale(box.lowerAdjacentValue)), center - lineHeight / 2,
-    // Math.abs(scale(box.q1) - scale(box.lowerAdjacentValue)),
-    // lineHeight);
-    // // draw line from q3 to uav
-    // context.fillRect(Math.min(scale(box.q3),
-    // scale(box.upperAdjacentValue)), center - lineHeight / 2,
-    // Math.abs(scale(box.q3) - scale(box.upperAdjacentValue)),
-    // lineHeight);
-    // var histogram = summary.histogram;
-    // var yscale = d3.scale.linear().domain([ 0, 1 ]).range([ 48, 14 ])
-    // .clamp(true);
-    // var xscale = d3.scale.linear().domain(
-    // [ histogram.min, histogram.max + histogram.binSize ])
-    // .range([ 1, this.getUnscaledWidth() - 2 ]).clamp(true);
-    // // context.beginPath();
-    // // context.moveTo(xscale(0), yscale(0));
-    //
-    // for (var i = 0, nbins = histogram.binNumberToOccurences.length; i <
-    // nbins; i++) {
-    // var n = histogram.binNumberToOccurences[i];
-    // if (n > 0) {
-    // var x = histogram.min + (i * histogram.binSize);
-    // var xend = histogram.min + (i * histogram.binSize)
-    // + histogram.binSize;
-    // var xstart = histogram.min + (i * histogram.binSize);
-    // var ypix = yscale(n / histogram.total);
-    // context.fillRect(xscale(xstart), ypix, xscale(xend)
-    // - xscale(xstart), Math.abs(ypix - yscale(0)));
-    // }
-    // }
-    //
-    // context.restore();
-    // }
     context.fillStyle = phantasus.CanvasUtil.FONT_COLOR;
-    if (existingSortKeyIndex !== -1) {
+    if (existingSortKeyIndex !== null) {
+      // draw arrow
       context.beginPath();
       var x = this.isColumns ? xpix + 4 : xpix + textWidth + 6;
       var arrowHeight = Math.min(8, this.getUnscaledHeight() / 2 - 1);
       var arrowWidth = 3;
-      if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
+      if (sortKeys[existingSortKeyIndex.index].getSortOrder() === phantasus.SortKey.SortOrder.ASCENDING) {
         // up arrow
         context.translate(x, ypix - arrowHeight);
         context.moveTo(0, 0);
         context.lineTo(arrowWidth, arrowHeight);
         context.lineTo(-arrowWidth, arrowHeight);
-      } else if (sortKeys[existingSortKeyIndex].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
+      } else if (sortKeys[existingSortKeyIndex.index].getSortOrder() === phantasus.SortKey.SortOrder.DESCENDING) { // down
         // arrow
         context.translate(x, ypix);
         context.moveTo(0, arrowHeight);
@@ -680,16 +571,22 @@ phantasus.VectorTrackHeader.prototype = {
         context.lineTo(arrowWidth, arrowHeight / 2);
         context.lineTo(0, arrowHeight);
         context.lineTo(-arrowWidth, arrowHeight / 2);
-
       }
       context.fill();
       phantasus.CanvasUtil.resetTransform(context);
-      if (sortKeys.length > 1) {
-        context.textAlign = 'left';
-        context.font = '8px ' + phantasus.CanvasUtil.FONT_NAME;
-        context.fillText('' + (existingSortKeyIndex + 1), x + 4,
-          ypix - 3);
+      context.textAlign = 'left';
+      if (unlockableSortKeys.length > 1) {
+        context.font = '8px ' + phantasus.CanvasUtil.getFontFamily(context);
+        var sortIndex = '' + (existingSortKeyIndex.number);
+        context.fillText(sortIndex, x + 4,
+          ypix - 2);
+        x += context.measureText(sortIndex).width;
       }
+      if (sortKeys[existingSortKeyIndex.index].getLockOrder() !== 0) {
+        context.font = fontHeight + 'px FontAwesome';
+        context.fillText('\uf023', x + arrowWidth + 2, ypix);
+      }
+
     }
   }
 };

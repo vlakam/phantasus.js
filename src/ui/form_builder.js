@@ -1,16 +1,21 @@
 phantasus.FormBuilder = function (options) {
-  var that = this;
+  var _this = this;
   this.prefix = _.uniqueId('form');
   this.$form = $('<form></form>');
   this.$form.attr('role', 'form').attr('id', this.prefix);
-  this.vertical = options && options.vertical;
-  if (!this.vertical) {
+  this.formStyle = options == null || options.formStyle == null ? 'horizontal' : options.formStyle;
+  this.$form.addClass('phantasus');
+  if (this.formStyle === 'horizontal') {
     this.titleClass = 'col-xs-12 control-label';
     this.labelClass = 'col-xs-4 control-label';
     this.$form.addClass('form-horizontal');
-  } else {
+  } else if (this.formStyle === 'vertical') {
     this.labelClass = 'control-label';
     this.titleClass = 'control-label';
+  } else if (this.formStyle === 'inline') {
+    this.titleClass = '';
+    this.labelClass = '';
+    this.$form.addClass('form-inline');
   }
   this.$form.on('submit', function (e) {
     e.preventDefault();
@@ -56,8 +61,8 @@ phantasus.FormBuilder = function (options) {
           e.preventDefault();
           e.stopPropagation();
           var files = e.originalEvent.dataTransfer.files;
-          that.setValue(name, isMultiple ? files : files[0]);
-          that.trigger('change', {
+          _this.setValue(name, isMultiple ? files : files[0]);
+          _this.trigger('change', {
             name: name,
             value: files[0]
           });
@@ -65,8 +70,8 @@ phantasus.FormBuilder = function (options) {
           var url = e.originalEvent.dataTransfer.getData('URL');
           e.preventDefault();
           e.stopPropagation();
-          that.setValue(name, isMultiple ? [url] : url);
-          that.trigger('change', {
+          _this.setValue(name, isMultiple ? [url] : url);
+          _this.trigger('change', {
             name: name,
             value: url
           });
@@ -84,7 +89,8 @@ phantasus.FormBuilder.showProgressBar = function (options) {
   content.push('<div class="row">');
   content.push('<div class="col-xs-8">');
   content
-    .push('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div></div>');
+    .push(
+      '<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div></div>');
   content.push('</div>'); // col
   content.push('<div class="col-xs-2">');
   content
@@ -113,13 +119,15 @@ phantasus.FormBuilder.showInDraggableDiv = function (options) {
   var width = options.width || '300px';
   var html = [];
   html
-    .push('<div style="top: 100px; position:absolute; padding-left:10px; padding-right:10px; width:'
+    .push('<div style="z-index: 1050; top: 100px; position:absolute; padding-left:10px; padding-right:10px; width:'
       + width
       + ' ; background:white; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid rgba(0,0,0,0.2); border-radius: 6px;">');
 
-  html
-    .push('<h4 style="cursor:move; border-bottom: 1px solid #e5e5e5;" name="header">'
-      + options.title + '</h4>');
+  if (options.title != null) {
+    html
+      .push('<h4 style="cursor:move; border-bottom: 1px solid #e5e5e5;" name="header">'
+        + options.title + '</h4>');
+  }
   html.push('<div name="content"></div>');
   html.push('</div>');
 
@@ -136,7 +144,7 @@ phantasus.FormBuilder.showInDraggableDiv = function (options) {
   options.$content.appendTo($content);
   $div.css('left', ($(window).width() / 2) - $content.outerWidth() / 2);
   $div.draggable({
-    handle: '[name=header]',
+    //handle: '[name=header]',
     containment: 'document'
   });
   // $div.resizable();
@@ -151,7 +159,7 @@ phantasus.FormBuilder.showMessageModal = function (options) {
       title: options.title,
       html: options.html,
       footer: ('<button type="button" class="btn btn-default"' +
-      ' data-dismiss="modal">OK</button>'),
+        ' data-dismiss="modal">OK</button>'),
       backdrop: options.backdrop,
       size: options.size,
       focus: options.focus,
@@ -209,7 +217,7 @@ phantasus.FormBuilder._showInModal = function (options) {
   $div.prependTo(options.appendTo != null ? options.appendTo : $(document.body));
   $div.modal({
     keyboard: true,
-    backdrop: options.backdrop === true ? true : false,
+    backdrop: options.backdrop === true ? true : false
   }).on('hidden.bs.modal', function (e) {
     $div.remove();
     if (options.onClose) {
@@ -241,7 +249,7 @@ phantasus.FormBuilder.showInModal = function (options) {
       title: options.title,
       html: options.html,
       footer: options.close ? ('<button type="button" class="btn btn-default" data-dismiss="modal">'
-      + options.close + '</button>')
+        + options.close + '</button>')
         : null,
       onClose: options.onClose,
       appendTo: options.appendTo,
@@ -300,9 +308,12 @@ phantasus.FormBuilder.showOkCancel = function (options) {
   // $div.css('left', $(window).width()
   // - $div.find('.modal-content').width() - 60);
   // }
+
   var $ok = $div.find('[name=ok]');
   $ok.on('click', function (e) {
-    options.okCallback();
+    if (options.okCallback) {
+      options.okCallback();
+    }
     $div.modal('hide');
   });
   $div.find('[name=cancel]').on('click', function (e) {
@@ -357,24 +368,28 @@ phantasus.FormBuilder.prototype = {
   addSeparator: function () {
     var html = [];
     html.push('<div class="form-group">');
-    if (!this.vertical) {
+    if (this.formStyle === 'horizontal') {
       html.push('<div class="col-xs-12">');
     }
     html.push('<hr />');
-    if (!this.vertical) {
+    if (this.formStyle === 'horizontal') {
       html.push('</div>');
     }
     html.push('</div>');
     this.$form.append(html.join(''));
   },
   _append: function (html, field, isFieldStart) {
-    var that = this;
+    var _this = this;
     var required = field.required;
     var name = field.name;
     var type = field.type;
     if (type == 'separator') {
-      html.push(this.vertical ? '<div class="form-group"></div>'
-        : '<div class="col-xs-12">');
+      if (this.formStyle === 'horizontal') {
+        html.push('<div class="col-xs-12">');
+      } else {
+        html.push('<div class="form-group">');
+      }
+
       html.push('<hr />');
       html.push('</div>');
       return;
@@ -384,31 +399,36 @@ phantasus.FormBuilder.prototype = {
     var help = field.help;
     var value = field.value;
     var showLabel = field.showLabel;
+    var style = field.style || '';
     var col = '';
     var labelColumn = '';
-    if (!this.vertical) {
+    if (this.formStyle === 'horizontal') {
       col = field.col || 'col-xs-8';
     }
+
     if (showLabel === undefined) {
       showLabel = 'checkbox' !== type && 'button' !== type
         && 'radio' !== type;
       showLabel = showLabel || field.options !== undefined;
     }
-    var id = that.prefix + '_' + name;
+    var id = _this.prefix + '_' + name;
     if (title === undefined) {
       title = name.replace(/_/g, ' ');
       title = title[0].toUpperCase() + title.substring(1);
     }
+    var endingDiv = false;
     if (showLabel) {
       html.push('<label for="' + id + '" class="' + this.labelClass
         + '">');
       html.push(title);
       html.push('</label>');
-      if (isFieldStart) {
+      if (isFieldStart && this.formStyle !== 'inline') {
         html.push('<div class="' + col + '">');
+        endingDiv = true;
       }
-    } else if (isFieldStart && !this.vertical) {
+    } else if (isFieldStart && this.formStyle === 'horizontal') { // no label
       html.push('<div class="col-xs-offset-4 ' + col + '">');
+      endingDiv = true;
     }
     if ('radio' === type) {
       if (field.options) {
@@ -422,7 +442,7 @@ phantasus.FormBuilder.prototype = {
               : choice;
             var selected = value === optionValue;
             html.push('<div class="radio"><label>');
-            html.push('<input value="' + optionValue
+            html.push('<input style="' + style + '" value="' + optionValue
               + '" name="' + field.name
               + '" type="radio"');
             if (selected) {
@@ -440,7 +460,7 @@ phantasus.FormBuilder.prototype = {
           });
       } else {
         html.push('<div class="radio"><label>');
-        html.push('<input value="' + value + '" name="' + name
+        html.push('<input style="' + style + '" value="' + value + '" name="' + name
           + '" id="' + id + '" type="radio"');
         if (field.checked) {
           html.push(' checked');
@@ -451,7 +471,7 @@ phantasus.FormBuilder.prototype = {
       }
     } else if ('checkbox' === type) {
       html.push('<div class="checkbox"><label>');
-      html.push('<input name="' + name + '" id="' + id
+      html.push('<input style="' + style + '" name="' + name + '" id="' + id
         + '" type="checkbox"');
       if (value) {
         html.push(' checked');
@@ -470,11 +490,11 @@ phantasus.FormBuilder.prototype = {
       // type = 'bootstrap-select';
       // }
       if (type == 'bootstrap-select') {
-        html.push('<select data-live-search="' + (field.search ? true : false) + '" data-selected-text-format="count" name="'
+        html.push('<select style="' + style + '" data-live-search="' + (field.search ? true : false) + '" data-selected-text-format="count" name="'
           + name + '" id="' + id
-          + '" class="selectpicker form-control"');
+          + '" data-actions-box="' + (field.selectAll ? true : false) + '" class="selectpicker' + (this.formStyle !== 'inline' ? ' form-control' : '') + '"');
       } else {
-        html.push('<select name="' + name + '" id="' + id
+        html.push('<select style="' + style + '" name="' + name + '" id="' + id
           + '" class="form-control"');
       }
       if (disabled) {
@@ -498,6 +518,8 @@ phantasus.FormBuilder.prototype = {
           var selected = false;
           if (_.isObject(value)) {
             selected = value[optionValue];
+          } else if (_.isArray(value)) {
+            selected = value.indexOf(optionValue) !== -1;
           } else {
             selected = value == optionValue;
           }
@@ -514,10 +536,10 @@ phantasus.FormBuilder.prototype = {
         html.push('<p class="help-block"><a data-name="' + name
           + '_all" href="#">All</a>&nbsp;|&nbsp;<a data-name="' + name
           + '_none" href="#">None</a></p>');
-        that.$form.on('click', '[data-name=' + name + '_all]',
+        _this.$form.on('click', '[data-name=' + name + '_all]',
           function (evt) {
             evt.preventDefault();
-            var $select = that.$form
+            var $select = _this.$form
               .find('[name=' + name + ']');
             $select.selectpicker('val', $.map($select
               .find('option'), function (o) {
@@ -525,17 +547,17 @@ phantasus.FormBuilder.prototype = {
             }));
             $select.trigger('change');
           });
-        that.$form.on('click', '[data-name=' + name + '_none]',
+        _this.$form.on('click', '[data-name=' + name + '_none]',
           function (evt) {
             evt.preventDefault();
-            var $select = that.$form
+            var $select = _this.$form
               .find('[name=' + name + ']');
             $select.selectpicker('val', []);
             $select.trigger('change');
           });
       }
     } else if ('textarea' == type) {
-      html.push('<textarea id="' + id + '" class="form-control" name="'
+      html.push('<textarea style="' + style + '" id="' + id + '" class="form-control" name="'
         + name + '"');
       if (required) {
         html.push(' required');
@@ -552,7 +574,7 @@ phantasus.FormBuilder.prototype = {
       }
       html.push('</textarea>');
     } else if ('button' == type) {
-      html.push('<button id="' + id + '" name="' + name
+      html.push('<button style="' + style + '" id="' + id + '" name="' + name
         + '" type="button" class="btn btn-default btn-sm">');
       if (field.icon) {
         html.push('<span class="' + field.icon + '"></span> ');
@@ -578,6 +600,7 @@ phantasus.FormBuilder.prototype = {
         options = options.concat(field.options);
 
       }
+
 
       // data types are file, dropbox, url, GEO, preloaded and predefined
       options.push('My Computer');
@@ -662,7 +685,7 @@ phantasus.FormBuilder.prototype = {
         + '_file"' + (isMultiple ? ' multiple' : '') + '>');
       // browse button clicked
       // select change
-      that.$form
+      _this.$form
         .on(
           'change',
           '[name=' + name + '_picker]',
@@ -681,35 +704,39 @@ phantasus.FormBuilder.prototype = {
                     : results.map(function (result) {
                     return result.link;
                   });
-                  that.setValue(name, val);
-                  that.trigger('change', {
-                    name: name,
-                    value: val
-                  });
-                },
-                linkType: 'direct',
-                multiselect: isMultiple
-              };
-              Dropbox.choose(options);
-              that.$form.find('[name=' + name + '_picker]').selectpicker('val', '');
-            } else if ('My Computer' === val) {
-              that.$form.find('[name=' + name + '_file]')
-                .click();
-              that.$form.find('[name=' + name + '_picker]').selectpicker('val', '');
-            }
+                _this.setValue(name, val);
+                _this.trigger('change', {
+                  name: name,
+                  value: val
+                });
+              },
+              linkType: 'direct',
+              multiselect: isMultiple
+            };
+            Dropbox.choose(options);
+            _this.$form.find('[name=' + name + '_picker]').selectpicker('val', '');
+          } else if ('My Computer' === val) {
+            _this.$form.find('[name=' + name + '_file]')
+            .click();
+            _this.$form.find('[name=' + name + '_picker]').selectpicker('val', '');
+          }
 
-            that.$form.find('[name=' + name + '_url]')
-              .css('display',
-                showUrlInput ? '' : 'none');
-            that.$form.find('[name=' + name + '_geo]')
+          _this.$form.find('[name=' + name + '_url]')
+          .css('display',
+            showUrlInput ? '' : 'none');
+          _this.$form.find('[name=' + name + '_text]')
+          .css('display',
+            showTextInput ? '' : 'none');
+          _this.$form.find('[name=' + name + '_geo]')
               .css('display',
                 showGSEInput ? '' : 'none');
-            that.$form.find('[name=' + name + '_pre]')
+          _this.$form.find('[name=' + name + '_pre]')
               .css('display',
                 showPreInput ? '' : 'none');
-          });
+        });
+
       // URL
-      that.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
+      _this.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
         var text = $.trim($(this).val());
         if (isMultiple) {
           text = text.split(',').filter(function (t) {
@@ -717,32 +744,32 @@ phantasus.FormBuilder.prototype = {
             return t !== '';
           });
         }
-        that.setValue(name, text);
+        _this.setValue(name, text);
         if (evt.which === 13) {
-          that.trigger('change', {
+          _this.trigger('change', {
             name: name,
             value: text
           });
         }
       });
-      that.$form.on('keyup', '[name=' + name + '_text]', function (evt) {
+      _this.$form.on('keyup', '[name=' + name + '_text]', function (evt) {
         var text = $.trim($(this).val());
-        that.setValue(name, text);
+        _this.setValue(name, text);
         if (evt.which === 13) {
-          that.trigger('change', {
+          _this.trigger('change', {
             name: name,
             value: text
           });
         }
       });
       // GEO
-      that.$form.on('keyup', '[name=' + name + '_geo]', function (evt) {
+      _this.$form.on('keyup', '[name=' + name + '_geo]', function (evt) {
         var text = $.trim($(this).val());
-        that.setValue(name, text);
+        _this.setValue(name, text);
         if (evt.which === 13) {
           // console.log('environment', evt);
-          console.log('object to trigger with result', that, 'name', name, 'text', text);
-          that.trigger('change', {
+          // console.log('object to trigger with result', _this, 'name', name, 'text', text);
+          _this.trigger('change', {
             name: name,
             value: {
               name: text.toUpperCase(),
@@ -752,13 +779,13 @@ phantasus.FormBuilder.prototype = {
         }
       });
       // Preloaded
-      that.$form.on('keyup', '[name=' + name + '_pre]', function (evt) {
+      _this.$form.on('keyup', '[name=' + name + '_pre]', function (evt) {
         var text = $.trim($(this).val());
-        that.setValue(name, text);
+        _this.setValue(name, text);
         if (evt.which === 13) {
           // console.log('environment', evt);
-          console.log('object to trigger with result', that, 'name', name, 'text', text);
-          that.trigger('change', {
+          console.log('object to trigger with result', _this, 'name', name, 'text', text);
+          _this.trigger('change', {
             name: name,
             value: {
               name: text,
@@ -768,11 +795,11 @@ phantasus.FormBuilder.prototype = {
         }
       });
       // browse file selected
-      that.$form.on('change', '[name=' + name + '_file]', function (evt) {
+      _this.$form.on('change', '[name=' + name + '_file]', function (evt) {
+
         var files = evt.target.files; // FileList object
-        console.log(files);
-        that.setValue(name, isMultiple ? files : files[0]);
-        that.trigger('change', {
+        _this.setValue(name, isMultiple ? files : files[0]);
+        _this.trigger('change', {
           name: name,
           value: isMultiple ? files : files[0]
         });
@@ -782,7 +809,7 @@ phantasus.FormBuilder.prototype = {
       if (type === 'div') {
         html.push('<div name="' + name + '" id="' + id + '"');
       } else {
-        html.push('<input type="' + type
+        html.push('<input style="' + style + '" type="' + type
           + '" class="form-control" name="' + name + '" id="'
           + id + '"');
       }
@@ -807,6 +834,10 @@ phantasus.FormBuilder.prototype = {
       if (disabled) {
         html.push(' disabled');
       }
+      if (field.autocomplete != null) {
+        html.push(' autocomplete="' + field.autocomplete + '"');
+      }
+
       html.push('>');
       if (type === 'div') {
         html.push('</div>');
@@ -817,20 +848,25 @@ phantasus.FormBuilder.prototype = {
       html.push(help);
       html.push('</span>');
     }
+    return endingDiv;
   },
   append: function (fields) {
     var html = [];
-    var that = this;
+    var _this = this;
     var isArray = phantasus.Util.isArray(fields);
     if (!isArray) {
       fields = [fields];
     }
     html.push('<div class="form-group">');
+    var endingDiv = false;
     _.each(fields, function (field, index) {
-      that._append(html, field, index === 0);
+      endingDiv || _this._append(html, field, index === 0);
     });
+
     html.push('</div>');
-    html.push('</div>');
+    if (endingDiv) {
+      html.push('</div>');
+    }
     var $div = $(html.join(''));
     this.$form.append($div);
     var checkBoxLists = $div.find('.checkbox-list');
@@ -876,17 +912,20 @@ phantasus.FormBuilder.prototype = {
       var html = [];
       var selection = $select.val();
       _.each(options, function (choice) {
-        html.push('<option value="');
         var isChoiceObject = _.isObject(choice)
           && choice.value !== undefined;
-        var optionValue = isChoiceObject ? choice.value : choice;
-        var optionText = isChoiceObject ? choice.name : choice;
-        html.push(optionValue);
-        html.push('"');
-
-        html.push('>');
-        html.push(optionText);
-        html.push('</option>');
+        if (choice && choice.divider) {
+          html.push('<option data-divider="true"></option>');
+        } else {
+          html.push('<option value="');
+          var optionValue = isChoiceObject ? choice.value : choice;
+          var optionText = isChoiceObject ? choice.name : choice;
+          html.push(optionValue);
+          html.push('"');
+          html.push('>');
+          html.push(optionText);
+          html.push('</option>');
+        }
       });
       $select.html(html.join(''));
       $select.val(selection);
@@ -894,7 +933,6 @@ phantasus.FormBuilder.prototype = {
         if ($select[0].options.length > 0) {
           $select.val($select[0].options[0].value);
         }
-
       }
       if ($select.hasClass('selectpicker')) {
         $select.selectpicker('refresh');

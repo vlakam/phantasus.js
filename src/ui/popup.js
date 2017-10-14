@@ -103,7 +103,7 @@ phantasus.Popup.showPopup = function (menuItems, position, component, callback) 
   }
 
   phantasus.Popup.$popupDiv.css({
-    height: popupHeight + 'px',
+    // height: popupHeight + 'px',
     display: 'block',
     left: left,
     top: top

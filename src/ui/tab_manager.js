@@ -168,11 +168,12 @@ phantasus.TabManager = function (options) {
     _this.$nav.find('[data-link=' + _this.activeTabId + ']').each(function () {
       $(this).parent().addClass('active');// not added via droptab
     });
+    var scrollTop = document.body.scrollTop;
     $('#' + _this.activeTabId).focus();
+    document.body.scrollTop = scrollTop; // focus can change scroll position
     if (_this.adding) {
       return;
     }
-
     _this.trigger('change', {
       tab: _this.activeTabId,
       previous: previous
@@ -305,7 +306,11 @@ phantasus.TabManager.prototype = {
     if ($a.length === 0) {
       // no content
       if (this.options.landingPage) {
-        this.options.landingPage.show();
+        if (typeof this.options.landingPage === 'function') {
+          this.options.landingPage().show();
+        } else {
+          this.options.landingPage.show();
+        }
       }
     }
 
@@ -404,6 +409,7 @@ phantasus.TabManager.prototype = {
     phantasus.FormBuilder.showOkCancel({
       title: 'Rename Tab',
       content: builder.$form,
+      focus: document.activeElement,
       okCallback: function () {
         var name = $.trim(builder.getValue('name'));
         if (name !== '') {

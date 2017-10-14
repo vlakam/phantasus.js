@@ -3,16 +3,24 @@ phantasus.CanvasUtil = function () {
 phantasus.CanvasUtil.dragging = false;
 
 phantasus.CanvasUtil.FONT_NAME = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-phantasus.CanvasUtil.FONT_COLOR = 'rgb(34, 34, 34)';
+phantasus.CanvasUtil.FONT_COLOR = 'rgb(0, 0, 0)';
+phantasus.CanvasUtil.getFontFamily = function (context) {
+  // older versions of Adobe choke when a font family contains a font that is not installed
+  return (typeof C2S !== 'undefined' && context instanceof C2S) || (typeof canvas2pdf !== 'undefined' && context instanceof canvas2pdf.PdfContext)
+    ? 'Helvetica'
+    : phantasus.CanvasUtil.FONT_NAME;
+};
 phantasus.CanvasUtil.getPreferredSize = function (c) {
   var size = c.getPreferredSize();
   var prefWidth = c.getPrefWidth();
   var prefHeight = c.getPrefHeight();
   // check for override override
   if (prefWidth !== undefined) {
+    size.widthSet = true;
     size.width = prefWidth;
   }
   if (prefHeight !== undefined) {
+    size.heightSet = true;
     size.height = prefHeight;
   }
   return size;
@@ -43,12 +51,12 @@ phantasus.CanvasUtil.setBounds = function (canvas, bounds) {
   }
 };
 
-phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
+phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2, isFill) {
   if (size2 < 0) {
     return;
   }
   context.beginPath();
-  if (shape === 'minus') {
+  if (shape === 'circle-minus') {
     context.arc(x, y, size2, 0, 2 * Math.PI, false);
     context.moveTo(x - size2, y);
     context.lineTo(x + size2, y);
@@ -122,7 +130,7 @@ phantasus.CanvasUtil.drawShape = function (context, shape, x, y, size2) {
     context.lineTo(x - size2, y - size2);
     context.lineTo(x + size2, y);
   }
-  context.stroke();
+  isFill ? context.fill() : context.stroke();
 
 };
 phantasus.CanvasUtil.drawLine = function (context, x1, y1, x2, y2) {
@@ -159,21 +167,23 @@ phantasus.CanvasUtil.createCanvas = function () {
   return $c[0];
 };
 phantasus.CanvasUtil.getHeaderStringWidth = function (context, s) {
-  context.font = '14px ' + phantasus.CanvasUtil.FONT_NAME;
+  context.font = '14px ' + phantasus.CanvasUtil.getFontFamily(context);
   return context.measureText(s).width + 18;
+};
+
+phantasus.CanvasUtil.forceSubPixelRendering = function (context) {
+  context.getImageData(0, 0, 1, 1);
 };
 phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions,
                                                      end) {
   if (positions.getSize() < 6) {
     return 0;
   }
-  var fontSize = Math.min(24, positions.getSize() - 2);
+  var fontSize = Math.min(phantasus.VectorTrack.MAX_FONT_SIZE, positions.getSize() - 2);
   if (fontSize <= 0) {
     return 0;
   }
-
-  context.font = fontSize + 'px ' + phantasus.CanvasUtil.FONT_NAME;
-
+  context.font = fontSize + 'px ' + phantasus.CanvasUtil.getFontFamily(context);
   var toString = phantasus.VectorTrack.vectorToString(vector);
   var maxWidth = 0;
   // var maxWidth2 = 0;
@@ -193,7 +203,7 @@ phantasus.CanvasUtil.getVectorStringWidth = function (context, vector, positions
     // maxWidth2 = width;
     // }
   }
-  return maxWidth > 0 ? (maxWidth + 2) : maxWidth;
+  return maxWidth === 0 ? maxWidth : (maxWidth + 2);
 };
 phantasus.CanvasUtil.clipString = function (context, string, availTextWidth) {
   var textWidth = context.measureText(string).width;

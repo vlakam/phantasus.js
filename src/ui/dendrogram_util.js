@@ -73,7 +73,7 @@ phantasus.DendrogramUtil.convertEdgeLengthsToHeights = function (rootNode) {
     n: counter
   };
 };
-phantasus.DendrogramUtil.writeNewick = function (node, out) {
+phantasus.DendrogramUtil.writeNewick = function (node, out, leafNodeIdFunction) {
   if (node.children != null && node.children.length > 0) {
     // indent
     out.push('(');
@@ -81,11 +81,11 @@ phantasus.DendrogramUtil.writeNewick = function (node, out) {
       if (i > 0) {
         out.push(',');
       }
-      phantasus.DendrogramUtil.writeNewick(node.children[i], out);
+      phantasus.DendrogramUtil.writeNewick(node.children[i], out, leafNodeIdFunction);
     }
     out.push(')');
   }
-  out.push(node.index != null ? node.index : ''); // leaf nodes have index
+  out.push(node.index != null ? leafNodeIdFunction(node) : ''); // leaf nodes have index
   out.push(':');
   var parentHeight = node.parent ? node.parent.height : node.height;
   out.push(parentHeight - node.height);
@@ -115,8 +115,7 @@ phantasus.DendrogramUtil.parseNewick = function (text) {
   }
 
   visit(rootNode);
-  var maxHeight = phantasus.DendrogramUtil
-    .convertEdgeLengthsToHeights(rootNode).maxHeight;
+  var maxHeight = phantasus.DendrogramUtil.convertEdgeLengthsToHeights(rootNode).maxHeight;
   phantasus.DendrogramUtil.setNodeDepths(rootNode);
   phantasus.DendrogramUtil.setIndices(rootNode);
   return {
@@ -256,13 +255,13 @@ phantasus.DendrogramUtil.setNodeDepths = function (rootNode) {
 phantasus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
                                                    project, summaryFunction) {
   summaryFunction = summaryFunction || function (array) {
-      var min = Number.MAX_VALUE;
-      for (var i = 0; i < array.length; i++) {
-        // sum += array[i].weight;
-        min = Math.min(min, array[i].weight);
-      }
-      return min;
-    };
+    var min = Number.MAX_VALUE;
+    for (var i = 0; i < array.length; i++) {
+      // sum += array[i].weight;
+      min = Math.min(min, array[i].weight);
+    }
+    return min;
+  };
   var setWeights = function (node) {
     if (node.children !== undefined) {
       var children = node.children;
@@ -279,8 +278,7 @@ phantasus.DendrogramUtil.sortDendrogram = function (root, vectorToSortBy,
   var nodeIdToModelIndex = {};
   var leafNodes = phantasus.DendrogramUtil.getLeafNodes(root);
   _.each(leafNodes, function (node) {
-    nodeIdToModelIndex[node.id] = project
-      .convertViewColumnIndexToModel(node.index);
+    nodeIdToModelIndex[node.id] = project.convertViewColumnIndexToModel(node.index);
   });
   phantasus.DendrogramUtil.dfs(root, function (node) {
     if (node.children) {
@@ -455,8 +453,9 @@ phantasus.DendrogramUtil.search = function (options) {
   return nmatches;
 }
 ;
-phantasus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
-                                                           isColumns) {
+phantasus.DendrogramUtil.squishNonSearchedNodes = function (
+  heatMap,
+  isColumns) {
   if (isColumns) {
     heatMap.getHeatMapElementComponent().getColumnPositions().setSize(13);
   } else {
@@ -493,13 +492,11 @@ phantasus.DendrogramUtil.squishNonSearchedNodes = function (heatMap,
     clusterIds.push(clusterNumber);
   }
   if (isColumns) {
-    heatMap.getHeatMapElementComponent().getColumnPositions()
-      .setSquishedIndices(squishedIndices);
+    heatMap.getHeatMapElementComponent().getColumnPositions().setSquishedIndices(squishedIndices);
     heatMap.getProject().setGroupColumns(
       [new phantasus.SpecifiedGroupByKey(clusterIds)], false);
   } else {
-    heatMap.getHeatMapElementComponent().getRowPositions()
-      .setSquishedIndices(squishedIndices);
+    heatMap.getHeatMapElementComponent().getRowPositions().setSquishedIndices(squishedIndices);
     heatMap.getProject().setGroupRows(
       [new phantasus.SpecifiedGroupByKey(clusterIds)], false);
   }

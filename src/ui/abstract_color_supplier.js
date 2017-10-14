@@ -18,7 +18,6 @@ phantasus.AbstractColorSupplier.toJSON = function (cs) {
   var json = {
     fractions: cs.fractions,
     colors: cs.colors,
-    names: cs.names,
     min: cs.min,
     max: cs.max,
     missingColor: cs.missingColor,
@@ -26,10 +25,13 @@ phantasus.AbstractColorSupplier.toJSON = function (cs) {
     stepped: cs.stepped,
     transformValues: cs.transformValues
   };
-  if (cs.conditions) {
+  if (cs.names) {
+    json.names = cs.names;
+  }
+  if (cs.conditions && cs.conditions.array.length > 0) {
     json.conditions = cs.conditions.array;
   }
-  if (cs.sizer) {
+  if (cs.sizer && cs.sizer.seriesName != null) {
     json.size = {
       seriesName: cs.sizer.seriesName,
       min: cs.sizer.min,
@@ -41,9 +43,24 @@ phantasus.AbstractColorSupplier.toJSON = function (cs) {
 phantasus.AbstractColorSupplier.fromJSON = function (json) {
   var cs = json.stepped ? new phantasus.SteppedColorSupplier()
     : new phantasus.GradientColorSupplier();
+
+  if (json.scalingMode == null && json.type != null) {
+    json.scalingMode = json.type; // old
+  }
+  if (json.scalingMode === 'relative' || json.scalingMode === 0) {
+    json.scalingMode = 0;
+  } else if (json.scalingMode === 'fixed' || json.scalingMode === 1) {
+    json.scalingMode = 1;
+  } else { // default to relative
+    json.scalingMode = 0;
+  }
   cs.setScalingMode(json.scalingMode);
-  cs.setMin(json.min);
-  cs.setMax(json.max);
+  if (json.min != null) {
+    cs.setMin(json.min);
+  }
+  if (json.max != null) {
+    cs.setMax(json.max);
+  }
   if (json.missingColor != null) {
     cs.setMissingColor(json.missingColor);
   }
@@ -51,8 +68,16 @@ phantasus.AbstractColorSupplier.fromJSON = function (json) {
     cs.setTransformValues(json.transformValues);
   }
 
+  if (json.map) { // old
+    json.values = json.map.map(function (item) {
+      return item.value;
+    });
+    json.colors = json.map.map(function (item) {
+      return item.color;
+    });
+  }
   var fractions = json.fractions;
-  if (json.values) { // map to fractions
+  if (json.values) { // map values to fractions
     fractions = [];
     var values = json.values;
     var min = Number.MAX_VALUE;
@@ -69,6 +94,12 @@ phantasus.AbstractColorSupplier.fromJSON = function (json) {
     for (var i = 0; i < values.length; i++) {
       fractions.push(valueToFraction(values[i]));
     }
+    if (json.min == null) {
+      cs.setMin(min);
+    }
+    if (json.max == null) {
+      cs.setMax(max);
+    }
   }
   if (json.colors != null && json.colors.length > 0) {
     cs.setFractions({
@@ -77,7 +108,6 @@ phantasus.AbstractColorSupplier.fromJSON = function (json) {
       names: json.names
     });
   }
-
   if (json.size) {
     cs.getSizer().setSeriesName(json.size.seriesName);
     cs.getSizer().setMin(json.size.min);
@@ -93,6 +123,9 @@ phantasus.AbstractColorSupplier.fromJSON = function (json) {
       var ltf = function () {
         return true;
       };
+      if (condition.seriesName == null) {
+        condition.seriesName = condition.series; // series is deprecated
+      }
       if (condition.v1 != null && !isNaN(condition.v1)) {
         gtf = condition.v1Op === 'gt' ? function (val) {
           return val > condition.v1;

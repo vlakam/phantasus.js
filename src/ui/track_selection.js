@@ -26,6 +26,42 @@ phantasus.TrackSelection = function (track, positions, selectionModel, isColumns
   }
 
   var panning = false;
+  var scrollIntervalId;
+  var lastScrollTime = new Date().getTime();
+  var _this = this;
+  var throttlePanMove = 50;
+
+  function mouseleave(e) {
+
+    // listen for mouse hold events
+    var scroll = function () {
+      var now = new Date().getTime();
+      var rect = canvas.getBoundingClientRect();
+      var doPan = false;
+      if (!isColumns) {
+        if (e.clientY > rect.bottom || e.clientY < rect.top) {
+          doPan = true;
+        }
+      } else {
+        if (e.clientX > rect.right || e.clientX < rect.left) {
+          doPan = true;
+        }
+      }
+      if (doPan) {
+        _this.panmove(e);
+        scrollIntervalId = setTimeout(scroll, throttlePanMove);
+      }
+    };
+    scrollIntervalId = setTimeout(scroll, throttlePanMove);
+    $(canvas).one('mouseover', mouseover);
+  }
+
+  function mouseover() {
+    // on mouse exit, see if mouse held
+    // on mouse enter, stop listening
+    clearTimeout(scrollIntervalId);
+    $(canvas).one('mouseleave', mouseleave);
+  }
 
   this.hammer = phantasus.Util
     .hammer(canvas, ['pan', 'tap', 'longpress'])
@@ -37,15 +73,23 @@ phantasus.TrackSelection = function (track, positions, selectionModel, isColumns
       track.showPopup(event.srcEvent);
     }).on('panend', this.panend = function (event) {
       panning = false;
+      clearInterval(scrollIntervalId);
+      $(canvas).off('mouseover mouseleave');
     })
     .on(
       'panmove',
       this.panmove = function (event) {
+        var now = new Date().getTime();
+        var elapsed = now - lastScrollTime;
+        if (elapsed < throttlePanMove) {
+          return;
+        }
+
         var position = getPosition(event);
         var endIndex = positions.getIndex(position[coord],
           false);
-        var commandKey = phantasus.Util.IS_MAC ? event.srcEvent.metaKey
-          : event.srcEvent.ctrlKey;
+        var commandKey = (event.srcEvent == null) ? false : (phantasus.Util.IS_MAC ? event.srcEvent.metaKey
+          : event.srcEvent.ctrlKey);
         var viewIndices = commandKey ? selectionModel
           .getViewIndices() : new phantasus.Set();
         var _startIndex = startIndex;
@@ -60,32 +104,38 @@ phantasus.TrackSelection = function (track, positions, selectionModel, isColumns
         selectionModel.setViewIndices(viewIndices, true);
         if (!isColumns) {
           var scrollTop = heatMap.scrollTop();
-          var scrollBottom = scrollTop
-            + heatMap.heatmap.getUnscaledHeight();
-          if (position.y > scrollBottom) {
-            heatMap.scrollTop(scrollTop + 8);
+          var heatMapHeight = heatMap.heatmap.getUnscaledHeight();
+          var scrollBottom = scrollTop + heatMapHeight;
+          if (position.y > scrollBottom) { // scroll down
+            heatMap.scrollTop(position.y + 8 - heatMapHeight);
           } else if (position.y < scrollTop) {
-            heatMap.scrollTop(scrollTop - 8);
+            heatMap.scrollTop(position.y - 8);
           }
         } else {
           var scrollLeft = heatMap.scrollLeft();
-          var scrollRight = scrollLeft
-            + heatMap.heatmap.getUnscaledWidth();
+          var heatMapWidth = heatMap.heatmap.getUnscaledWidth();
+          var scrollRight = scrollLeft + heatMapWidth;
           if (position.x > scrollRight) {
-            heatMap.scrollLeft(scrollLeft + 8);
+            heatMap.scrollLeft(position.x + 8 - heatMapWidth);
           } else if (position.x < scrollLeft) {
-            heatMap.scrollLeft(scrollLeft - 8);
+            heatMap.scrollLeft(position.x - 8);
           }
         }
         event.preventDefault();
-        event.srcEvent.stopPropagation();
-        event.srcEvent.stopImmediatePropagation();
+        if (event.srcEvent != null) {
+          event.srcEvent.stopPropagation();
+          event.srcEvent.stopImmediatePropagation();
+        }
+        lastScrollTime = new Date().getTime();
       })
     .on('panstart', this.panstart = function (event) {
       heatMap.setSelectedTrack(track.name, isColumns);
       var position = getPosition(event, true);
       startIndex = positions.getIndex(position[coord], false);
       panning = true;
+
+      $(canvas).one('mouseleave.phantasus', mouseleave);
+
     })
     .on(
       'tap doubletap',

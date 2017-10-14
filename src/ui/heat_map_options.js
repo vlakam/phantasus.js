@@ -15,41 +15,6 @@ phantasus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'select',
       options: []
-    }, {
-      name: 'load_predefined_scheme',
-      required: true,
-      type: 'select',
-      options: [{
-        name: '',
-        value: ''
-      }, {
-        name: 'relative',
-        value: 'gene'
-      }, {
-        name: 'binary',
-        value: 'binary'
-      }, {
-        name: 'MAF',
-        value: 'MAF'
-      }, {
-        name: 'fixed (-1, -0.5, 0.5, 1)',
-        value: 'wtcs'
-      }, {
-        name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
-        value: 'cn'
-      }, {
-        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY2().name,
-        value: '100scale2'
-      }, {
-        name: 'fixed ' + phantasus.HeatMapColorScheme.Predefined.SUMMLY().name,
-        value: '100scale1'
-      }]
-    }, {
-      name: 'save_color_scheme',
-      type: 'button'
-    }, {
-      name: 'load_color_scheme',
-      type: 'file'
     }];
 
   items.push({
@@ -64,31 +29,79 @@ phantasus.HeatMapOptions = function (heatMap) {
     title: 'Size by minimum',
     required: true,
     type: 'text',
-    col: 'col-xs-4'
+    style: 'max-width: 100px;'
   });
   items.push({
     name: 'size_by_maximum',
     title: 'Size by maximum',
     required: true,
     type: 'text',
-    col: 'col-xs-4'
+    style: 'max-width: 100px;'
   });
 
   items.push({
     name: 'conditional_rendering',
     required: true,
-    type: 'button',
-    col: 'col-xs-4'
+    type: 'button'
+  });
+
+  items.push({type: 'separator'});
+
+  var createColorSchemeOptions = function () {
+    var colorSchemeOptions = [
+      {
+        name: 'relative',
+        value: 'relative'
+      }, {
+        name: 'binary',
+        value: 'binary'
+      }, {
+        name: 'MAF',
+        value: 'MAF'
+      }, {
+        name: 'fixed (-1.5, -0.1, 0.1, 1.5)',
+        value: 'cn'
+      }];
+    var savedColorSchemeKeys = [];
+    if (localStorage.getItem('phantasus-colorScheme') != null) {
+      savedColorSchemeKeys = _.keys(JSON.parse(localStorage.getItem('phantasus-colorScheme')));
+    }
+    if (savedColorSchemeKeys.length > 0) {
+      colorSchemeOptions.push({divider: true});
+      colorSchemeOptions = colorSchemeOptions.concat(savedColorSchemeKeys);
+    }
+    colorSchemeOptions.push({divider: true});
+    colorSchemeOptions.push('My Computer...');
+    return colorSchemeOptions;
+  };
+
+  items.push([
+    {
+      name: 'saved_color_scheme',
+      required: true,
+      type: 'bootstrap-select',
+      options: createColorSchemeOptions()
+    }, {name: 'load_color_scheme', type: 'button'}, {name: 'delete_color_scheme', type: 'button'}]);
+  items.push({
+    name: 'save_color_scheme',
+    type: 'button'
   });
 
   var displayItems = [
     {
       disabled: heatMap.getProject().getFullDataset().getColumnCount() !== heatMap.getProject().getFullDataset().getRowCount(),
       name: 'link_rows_and_columns',
+      help: 'For square matrices',
       required: true,
       type: 'checkbox',
-      col: 'col-xs-4',
+      style: 'max-width: 100px;',
       value: heatMap.getProject().isSymmetric()
+    },
+    {
+      name: 'show_row_number',
+      required: true,
+      type: 'checkbox',
+      value: heatMap.isShowRowNumber()
     },
     {
       name: 'show_grid',
@@ -100,21 +113,21 @@ phantasus.HeatMapOptions = function (heatMap) {
       name: 'grid_thickness',
       required: true,
       type: 'text',
-      col: 'col-xs-4',
+      style: 'max-width: 100px;',
       value: phantasus.Util.nf(heatMap.heatmap.getGridThickness())
     },
     {
       name: 'grid_color',
       required: true,
       type: 'color',
-      col: 'col-xs-2',
+      style: 'max-width: 50px;',
       value: heatMap.heatmap.getGridColor()
     },
     {
       name: 'row_size',
       required: true,
       type: 'text',
-      col: 'col-xs-4',
+      style: 'max-width: 100px;',
       value: phantasus.Util.nf(heatMap.heatmap.getRowPositions()
         .getSize())
     },
@@ -122,7 +135,7 @@ phantasus.HeatMapOptions = function (heatMap) {
       name: 'column_size',
       required: true,
       type: 'text',
-      col: 'col-xs-4',
+      style: 'max-width: 100px;',
       value: phantasus.Util.nf(heatMap.heatmap
         .getColumnPositions().getSize())
     }, {
@@ -130,6 +143,14 @@ phantasus.HeatMapOptions = function (heatMap) {
       required: true,
       type: 'checkbox',
       value: heatMap.heatmap.isDrawValues()
+    }, {
+      name: 'number_of_fraction_digits',
+      required: true,
+      type: 'number',
+      min: 0,
+      step: 1,
+      style: 'max-width: 100px;',
+      value: phantasus.Util.getNumberFormatPatternFractionDigits(heatMap.heatmap.getDrawValuesFormat().toJSON().pattern)
     }];
   if (heatMap.rowDendrogram) {
     displayItems
@@ -137,7 +158,7 @@ phantasus.HeatMapOptions = function (heatMap) {
         name: 'row_dendrogram_line_thickness',
         required: true,
         type: 'text',
-        col: 'col-xs-4',
+        style: 'max-width: 100px;',
         value: phantasus.Util
           .nf(heatMap.rowDendrogram ? heatMap.rowDendrogram.lineWidth
             : 1)
@@ -149,7 +170,7 @@ phantasus.HeatMapOptions = function (heatMap) {
         name: 'column_dendrogram_line_thickness',
         required: true,
         type: 'text',
-        col: 'col-xs-4',
+        style: 'max-width: 100px;',
         value: phantasus.Util
           .nf(heatMap.columnDendrogram ? heatMap.columnDendrogram.lineWidth
             : 1)
@@ -160,14 +181,15 @@ phantasus.HeatMapOptions = function (heatMap) {
     name: 'info_window',
     required: true,
     type: 'select',
-    col: 'col-xs-4',
-    options: [{
-      name: 'Fixed To Top',
-      value: 0
-    }, {
-      name: 'New Window',
-      value: 1
-    }],
+    style: 'max-width:130px;',
+    options: [
+      {
+        name: 'Fixed To Top',
+        value: 0
+      }, {
+        name: 'New Window',
+        value: 1
+      }],
     value: heatMap.tooltipMode
   });
 
@@ -221,6 +243,7 @@ phantasus.HeatMapOptions = function (heatMap) {
     heatMap.heatmap.repaint();
     colorSchemeChooser.restoreCurrentValue();
   });
+
   function createMetadataField(isColumns) {
     var options = [];
     var value = {};
@@ -249,6 +272,7 @@ phantasus.HeatMapOptions = function (heatMap) {
   var annotationsBuilder = new phantasus.FormBuilder();
   annotationsBuilder.append(createMetadataField(false));
   annotationsBuilder.append(createMetadataField(true));
+
   function annotationsListener($select, isColumns) {
     var names = [];
     _.each(heatMap.getVisibleTrackNames(isColumns), function (name) {
@@ -309,11 +333,27 @@ phantasus.HeatMapOptions = function (heatMap) {
     heatMap.revalidate();
     colorSchemeChooser.restoreCurrentValue();
   });
+  var $fractionDigits = displayFormBuilder.$form.find('[name=number_of_fraction_digits]');
   displayFormBuilder.$form.find('[name=show_values]').on('click', function (e) {
-    heatMap.heatmap.setDrawValues($(this).prop('checked'));
+    var drawValues = $(this).prop('checked');
+    heatMap.heatmap.setDrawValues(drawValues);
+    // $fractionDigits.prop('disabled', !drawValues);
     heatMap.revalidate();
     colorSchemeChooser.restoreCurrentValue();
   });
+
+  $fractionDigits.on(
+    'keyup input', _.debounce(
+      function () {
+        var n = parseInt($(this)
+          .val());
+        if (n >= 0) {
+          heatMap.heatmap.setDrawValuesFormat(phantasus.Util.createNumberFormat('.' + n + 'f'));
+          heatMap.heatmap.setInvalid(true);
+          heatMap.heatmap.repaint();
+        }
+      }, 100));
+
   displayFormBuilder.$form.find('[name=inline_tooltip]').on('click',
     function (e) {
       heatMap.options.inlineTooltip = $(this).prop('checked');
@@ -364,16 +404,25 @@ phantasus.HeatMapOptions = function (heatMap) {
         heatMap.getProject().setSymmetric(null);
       }
     });
+  displayFormBuilder.find('show_row_number').on('click',
+    function (e) {
+      var checked = $(this).prop('checked');
+      heatMap.setShowRowNumber(checked);
+      heatMap.revalidate();
+    });
 
   var $colorByValue = colorSchemeFormBuilder.$form
     .find('[name=color_by_value]');
   var separateSchemesField = heatMap.heatmap.getColorScheme()
     .getSeparateColorSchemeForRowMetadataField();
   if (separateSchemesField != null) {
-    $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
-      .createValueToIndexMap(
-        heatMap.project.getFullDataset().getRowMetadata()
-          .getByName(separateSchemesField)).keys()));
+    var v = heatMap.project.getFullDataset().getRowMetadata()
+      .getByName(separateSchemesField);
+    if (v != null) {
+      $colorByValue.html(phantasus.Util.createOptions(phantasus.VectorUtil
+        .createValueToIndexMap(
+          v).keys()));
+    }
   }
 
   if (separateSchemesField != null) {
@@ -433,120 +482,139 @@ phantasus.HeatMapOptions = function (heatMap) {
 
   colorSchemeFormBuilder.find('save_color_scheme').on('click', function (e) {
     e.preventDefault();
-    var blob = new Blob([JSON.stringify(heatMap.heatmap.getColorScheme().toJSON())], {
-      type: 'application/json'
+    // prompt to save to file or local storage
+    var saveColorSchemeFormBuilder = new phantasus.FormBuilder();
+    saveColorSchemeFormBuilder.append({name: 'save_to', type: 'radio', value: 'Browser Storage', options: ['Browser Storage', 'File']});
+    saveColorSchemeFormBuilder.append({name: 'color_scheme_name', type: 'text'});
+    saveColorSchemeFormBuilder.append({name: 'file_name', type: 'text'});
+    saveColorSchemeFormBuilder.setVisible('file_name', false);
+    saveColorSchemeFormBuilder.find('save_to').on('change', function () {
+      var isBrowser = $(this).val() === 'Browser Storage';
+      saveColorSchemeFormBuilder.setVisible('file_name', !isBrowser);
+      saveColorSchemeFormBuilder.setVisible('color_scheme_name', isBrowser);
     });
-    saveAs(blob, 'color_scheme.json');
-  });
-  colorSchemeFormBuilder.on('change', function (e) {
-    if (e.name === 'load_color_scheme') {
-      if (e.value !== '' && e.value != null) {
-        phantasus.Util.getText(e.value).done(
-          function (text) {
-            var json = JSON.parse($.trim(text));
-            heatMap.heatmap.getColorScheme().fromJSON(json);
-            colorSchemeChooser
-              .setColorScheme(heatMap.heatmap
-                .getColorScheme());
-            heatMap.heatmap.setInvalid(true);
-            heatMap.heatmap.repaint();
-
-          }).fail(function () {
-          phantasus.FormBuilder.showInModal({
-            title: 'Error',
-            html: 'Unable to read saved color scheme.'
-          });
-        });
-
-      }
-    }
-  });
-
-  colorSchemeFormBuilder.$form
-    .on(
-      'change',
-      '[name=load_predefined_scheme]',
-      function (e) {
-        var val = $(this).val();
-        if (val !== '') {
-          if (val === 'gene') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .RELATIVE()));
-          } else if (val === 'cn') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .CN()));
-          } else if (val === 'wtcs') {
-            heatMap.heatmap.getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier({
-                    type: 'fixed',
-                    map: [{
-                      value: -1,
-                      color: 'blue'
-                    }, {
-                      value: -0.5,
-                      color: 'white'
-                    }, {
-                      value: 0.5,
-                      color: 'white'
-                    }, {
-                      value: 1,
-                      color: 'red'
-                    }]
-                  }));
-          } else if (val === 'MAF') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .MAF()));
-          } else if (val === 'binary') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .BINARY()));
-          } else if (val === '100scale1') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .SUMMLY()));
-
-          } else if (val === '100scale2') {
-            heatMap.heatmap
-              .getColorScheme()
-              .setColorSupplierForCurrentValue(
-                phantasus.HeatMapColorScheme
-                  .createColorSupplier(phantasus.HeatMapColorScheme.Predefined
-                    .SUMMLY2()));
-
-          } else {
-            // console.log('not found');
+    phantasus.FormBuilder.showOkCancel({
+      title: 'Save Color Scheme',
+      ok: true,
+      cancel: true,
+      draggable: true,
+      content: saveColorSchemeFormBuilder.$form,
+      appendTo: heatMap.getContentEl(),
+      align: 'right',
+      okCallback: function () {
+        var colorSchemeText = JSON.stringify(heatMap.heatmap.getColorScheme().toJSON());
+        if (saveColorSchemeFormBuilder.getValue('save_to') === 'Browser Storage') {
+          var name = saveColorSchemeFormBuilder.getValue('color_scheme_name').trim();
+          if (name === '') {
+            name = 'my color scheme';
           }
-          colorSchemeChooser
-            .setColorScheme(heatMap.heatmap
-              .getColorScheme());
-          heatMap.heatmap.setInvalid(true);
-          heatMap.heatmap.repaint();
-          $(this).val('');
+          var colorSchemeObject = localStorage.getItem('phantasus-colorScheme');
+          if (colorSchemeObject == null) {
+            colorSchemeObject = {};
+          } else {
+            colorSchemeObject = JSON.parse(colorSchemeObject);
+          }
+          colorSchemeObject[name] = colorSchemeText;
+          localStorage.setItem('phantasus-colorScheme', JSON.stringify(colorSchemeObject));
+          colorSchemeFormBuilder.setOptions('saved_color_scheme', createColorSchemeOptions());
         } else {
-          // console.log('empty option selected');
+          var name = saveColorSchemeFormBuilder.getValue('file_name').trim();
+          if (name === '') {
+            name = 'color_scheme.json';
+          }
+          var blob = new Blob([colorSchemeText], {
+            type: 'application/json'
+          });
+          saveAs(blob, name);
         }
-        colorSchemeChooser.restoreCurrentValue();
-      });
+      },
+      focus: heatMap.getFocusEl()
+    });
+  });
+
+  colorSchemeFormBuilder.setEnabled('delete_color_scheme', false);
+  colorSchemeFormBuilder.find('delete_color_scheme').on('click', function () {
+    var key = colorSchemeFormBuilder.getValue('saved_color_scheme');
+    var savedColorSchemes = JSON.parse(localStorage.getItem('phantasus-colorScheme'));
+    delete savedColorSchemes[key];
+    localStorage.setItem('phantasus-colorScheme', JSON.stringify(savedColorSchemes));
+    colorSchemeFormBuilder.setOptions('saved_color_scheme', createColorSchemeOptions());
+
+  });
+  colorSchemeFormBuilder.find('saved_color_scheme').on('change', function () {
+    colorSchemeFormBuilder.setEnabled('delete_color_scheme', ['relative', 'cn', 'MAF', 'binary', 'My Computer...'].indexOf(
+      colorSchemeFormBuilder.getValue('saved_color_scheme')) === -1);
+  });
+  colorSchemeFormBuilder.find('load_color_scheme').on('click',
+    function (e) {
+      var val = colorSchemeFormBuilder.getValue('saved_color_scheme');
+      var repaint = true;
+      if (val === 'relative') {
+        heatMap.heatmap
+          .getColorScheme()
+          .setColorSupplierForCurrentValue(
+            phantasus.AbstractColorSupplier.fromJSON(phantasus.HeatMapColorScheme.Predefined
+              .RELATIVE()));
+      } else if (val === 'cn') {
+        heatMap.heatmap
+          .getColorScheme()
+          .setColorSupplierForCurrentValue(
+            phantasus.AbstractColorSupplier.fromJSON(phantasus.HeatMapColorScheme.Predefined
+              .CN()));
+      } else if (val === 'MAF') {
+        heatMap.heatmap
+          .getColorScheme()
+          .setColorSupplierForCurrentValue(
+            phantasus.AbstractColorSupplier.fromJSON(phantasus.HeatMapColorScheme.Predefined
+              .MAF()));
+      } else if (val === 'binary') {
+        heatMap.heatmap
+          .getColorScheme()
+          .setColorSupplierForCurrentValue(
+            phantasus.AbstractColorSupplier.fromJSON(phantasus.HeatMapColorScheme.Predefined
+              .BINARY()));
+      } else if (val === 'My Computer...') {
+        repaint = false;
+        var $file = $('<input style="display:none;" type="file">');
+        $file.appendTo(heatMap.getContentEl());
+        $file.click();
+        $file.on('change', function (evt) {
+          var files = evt.target.files;
+          phantasus.Util.getText(evt.target.files[0]).done(
+            function (text) {
+              var json = JSON.parse($.trim(text));
+              heatMap.heatmap.getColorScheme().fromJSON(json);
+              colorSchemeChooser
+                .setColorScheme(heatMap.heatmap
+                  .getColorScheme());
+              heatMap.heatmap.setInvalid(true);
+              heatMap.heatmap.repaint();
+
+            }).fail(function () {
+            phantasus.FormBuilder.showInModal({
+              title: 'Error',
+              html: 'Unable to read color scheme.'
+            });
+          }).always(function () {
+            $file.remove();
+          });
+
+        });
+      } else {
+        var savedColorSchemes = JSON.parse(localStorage.getItem('phantasus-colorScheme'));
+        var scheme = JSON.parse(savedColorSchemes[val]);
+        heatMap.heatmap.getColorScheme().fromJSON(scheme);
+        // saved in local storage
+      }
+      if (repaint) {
+        colorSchemeChooser
+          .setColorScheme(heatMap.heatmap
+            .getColorScheme());
+        heatMap.heatmap.setInvalid(true);
+        heatMap.heatmap.repaint();
+      }
+      colorSchemeChooser.restoreCurrentValue();
+    });
   colorSchemeFormBuilder.$form
     .find('[name=color_by]')
     .on(
@@ -606,9 +674,15 @@ phantasus.HeatMapOptions = function (heatMap) {
       colorSchemeChooser.restoreCurrentValue();
 
     }, 100));
-  displayFormBuilder.$form.find('[name=gap_size]').on('keyup',
+  displayFormBuilder.$form.find('[name=row_gap_size]').on('keyup',
     _.debounce(function (e) {
-      heatMap.gapSize = parseFloat($(this).val());
+      heatMap.rowGapSize = parseFloat($(this).val());
+      heatMap.revalidate();
+      colorSchemeChooser.restoreCurrentValue();
+    }, 100));
+  displayFormBuilder.$form.find('[name=column_gap_size]').on('keyup',
+    _.debounce(function (e) {
+      heatMap.columnGapSize = parseFloat($(this).val());
       heatMap.revalidate();
       colorSchemeChooser.restoreCurrentValue();
     }, 100));

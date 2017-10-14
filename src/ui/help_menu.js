@@ -9,19 +9,39 @@ phantasus.HelpMenu = function () {
   html.push('</button>');
   html
     .push('<ul class="dropdown-menu dropdown-menu-right" role="menu">');
+  html.push('<li><a data-name="contact" href="#">Contact</a></li>');
 
-  html.push('<li><a data-name="about" href="about.html">About</a></li>');
-
-  // html.push('<li><a data-name="contact" href="#">Contact</a></li>');
-
-  // html.push('<li><a data-name="linking" href="#">Linking</a></li>');
-  html.push('<li><a data-name="tutorial" href="phantasus-tutorial.html">Tutorial</a></li>');
-  // html.push('<li><a data-name="source" href="#">Source Code</a></li>');
-  // html.push('<li role="presentation" class="divider"></li>');
-  // html.push('<li><a data-name="keymap" href="#">Keymap Reference</a></li>');
+  html.push('<li><a data-name="tutorial" href="#">Tutorial</a></li>');
+  html.push('<li><a data-name="source" href="#">Source Code</a></li>');
+  html.push('<li><a data-name="about" href="#">About</a></li>');
 
   html.push('</ul>');
   html.push('</div>');
   this.$el = $(html.join(''));
+  this.$el.find('[data-name=contact]').on('click', function (e) {
+    phantasus.FormBuilder.showInModal({
+      title: 'Contact',
+      html: 'Please email us at daria.zenkova.cs@gmail.com',
+      focus: document.activeElement
+    });
+    e.preventDefault();
+  });
+  this.$el.find('[data-name=tutorial]').on('click', function (e) {
+    window
+    .open('phantasus-tutorial.html');
+    e.preventDefault();
 
+  });
+
+  this.$el.find('[data-name=source]').on('click', function (e) {
+    window.open('https://github.com/ctlab/phantasus');
+    e.preventDefault();
+
+  });
+
+  this.$el.find('[data-name=about]').on('click', function (e) {
+    window.open('about.html');
+    e.preventDefault();
+
+  });
 };

@@ -1,25 +1,38 @@
 phantasus.PermutationPValues = function (dataset, aIndices, bIndices,
-                                        numPermutations, f) {
+                                        numPermutations, f, continuousList) {
   var numRows = dataset.getRowCount();
   /** unpermuted scores */
   var scores = new Float32Array(numRows);
   /** Whether to smooth p values */
   var smoothPValues = true;
-  var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
-    dataset, null, aIndices));
-  var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
-    dataset, null, bIndices));
-
-  for (var i = 0; i < numRows; i++) {
-    scores[i] = f(list1.setIndex(i), list2.setIndex(i));
-  }
-  dataset = new phantasus.SlicedDatasetView(dataset, null, aIndices
+  var permuter;
+  var permutationScore;
+  if (aIndices != null) {
+    var list1 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
+      dataset, null, aIndices));
+    var list2 = new phantasus.DatasetRowView(new phantasus.SlicedDatasetView(
+      dataset, null, bIndices));
+    dataset = new phantasus.SlicedDatasetView(dataset, null, aIndices
     .concat(bIndices));
+    permuter = new phantasus.UnbalancedPermuter(aIndices.length,
+      bIndices.length);
+    permutationScore = new phantasus.TwoClassPermutationScore();
+    permutationScore.init(dataset, f);
+    for (var i = 0; i < numRows; i++) {
+      scores[i] = f(list1.setIndex(i), list2.setIndex(i));
+    }
+  } else { // continuous
+    permuter = new phantasus.UnbalancedContinuousPermuter(continuousList.size());
+    permutationScore = new phantasus.ContinuousPermutationScore(continuousList);
+    permutationScore.init(dataset, f);
+    var list = new phantasus.DatasetRowView(dataset);
+    for (var i = 0; i < numRows; i++) {
+      scores[i] = f(continuousList, list.setIndex(i));
+    }
+  }
+
   var rowSpecificPValues = new Float32Array(numRows);
-  var permuter = new phantasus.UnbalancedPermuter(aIndices.length,
-    bIndices.length);
-  var permutationScore = new phantasus.TwoClassPermutationScore();
-  permutationScore.init(dataset, f);
+
   for (var permutationIndex = 0; permutationIndex < numPermutations; permutationIndex++) {
     permutationScore.setPermutation(permuter.next());
     for (var i = 0; i < numRows; i++) {
@@ -78,6 +91,33 @@ phantasus.PermutationPValues.prototype = {
   getBonferroni: function (index) {
     return Math.min(this.rowSpecificPValues[index] * this.numRows, 1);
   }
+};
+
+phantasus.UnbalancedContinuousPermuter = function (size) {
+  var indices = new Uint32Array(size);
+  for (var i = 0; i < indices.length; i++) {
+    indices[i] = i;
+  }
+  var n = indices.length;
+  // Returns a random integer between min (included) and max (included)
+  // Using Math.round() will give you a non-uniform distribution!
+  function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  this.next = function () {
+    // shuffle indices array
+    for (var i = n - 1; i >= 1; i--) {
+      var j = getRandomIntInclusive(0, i); // random integer such that
+      // 0 ≤ j ≤ i
+      // exchange a[j] and a[i]
+      var tmp = indices[j];
+      indices[j] = indices[i];
+      indices[i] = tmp;
+    }
+
+    return indices;
+  };
 };
 
 phantasus.UnbalancedPermuter = function (numClassZero, numClassOne) {
@@ -149,6 +189,26 @@ phantasus.TwoClassPermutationScore.prototype = {
     this.classOneView.setDataset(new phantasus.SlicedDatasetView(
       this.dataset, null, oneIndices));
 
+  }
+
+};
+
+phantasus.ContinuousPermutationScore = function (referenceList) {
+  this.referenceList = referenceList;
+};
+phantasus.ContinuousPermutationScore.prototype = {
+  getScore: function (index) {
+    this.datasetRowView.setIndex(index);
+    return this.f(this.referenceListView, this.datasetRowView);
+  },
+  init: function (dataset, f) {
+    this.dataset = dataset;
+    this.referenceListView = null;
+    this.datasetRowView = new phantasus.DatasetRowView(dataset);
+    this.f = f;
+  },
+  setPermutation: function (indices) {
+    this.referenceListView = new phantasus.SlicedVector(this.referenceList, indices);
   }
 
 };
