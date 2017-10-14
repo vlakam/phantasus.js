@@ -48,65 +48,70 @@ phantasus.SortDialog = function (project) {
   $chooserDiv.appendTo($outer);
   $div.appendTo($outer);
   phantasus.FormBuilder
-    .showOkCancel({
-      title: 'Sort',
-      content: $outer,
-      okCallback: function () {
-        var $forms = $div.find('form');
-        var sortBy = $forms.find('[name=sortBy]').map(function () {
-          return $(this).val();
-        });
-        var lockOrder = $forms.find('[name=lockOrder]').map(function () {
+  .showOkCancel({
+    title: 'Sort',
+    content: $outer,
+    okCallback: function () {
+      var $forms = $div.find('form');
+      var sortBy = $forms.find('[name=sortBy]').map(function () {
+        return $(this).val();
+      });
+      var lockOrder = $forms.find('[name=lockOrder]').map(function () {
           return $(this).prop('checked');
         });
-        var sortOrder = $forms.find('[name=sortOrder]:checked')
-          .map(function () {
-            return $(this).val();
-          });
+        varsortOrder = $forms.find('[name=sortOrder]:checked')
+      .map(function () {
+        return $(this).val();
+      });
 
-        var groupBy = $div.find('[name=groupBy]').val();
-        var newSortKeys = [];
-        var modelIndices = _this.isColumns ? project
-          .getRowSelectionModel().toModelIndices() : project
-          .getColumnSelectionModel().toModelIndices();
-        var existingSortKeys = _this.isColumns ? project
-          .getColumnSortKeys() : project.getRowSortKeys();
-        for (var i = 0; i < existingSortKeys.length; i++) {
-          // delete existing sort keys that were locked and were deleted by user
-          if (existingSortKeys[i].isUnlockable()) {
-            existingSortKeys.splice(i, 1);
-            i--;
+      var groupBy = $div.find('[name=groupBy]').val();
+      var newSortKeys = [];
+      var modelIndices = _this.isColumns ? project
+      .getRowSelectionModel().toModelIndices() : project
+      .getColumnSelectionModel().toModelIndices();
+      var existingSortKeys = _this.isColumns ? project
+      .getColumnSortKeys() : project.getRowSortKeys();
+      for (
+      var i = 0; i <
+        existingSortKeys.length; i++) {
+        // delete existing sort keys that were locked and were deleted by user
+      if (existingSortKeys[i].isUnlockable()) {
+        existingSortKeys.splice(i, 1) ;
+          i--;
           }
         }
 
-        var newSortKeyFields = new phantasus.Set();
-        for (var i = 0; i < sortBy.length; i++) {
-          if (!newSortKeyFields.has(sortBy[i])) { // don't add 2x
-            newSortKeyFields.add(sortBy[i]);
-            var key = null;
-            if (sortBy[i] === 'selection') {
-              key = new phantasus.SortByValuesKey(
-                modelIndices, sortOrder[i],
-                _this.isColumns);
-            } else if (sortBy[i] !== '') {
-              key = new phantasus.SortKey(
-                sortBy[i], sortOrder[i]);
-            }
+      var newSortKeyFields = new phantasus.Set();
+      for (var i = 0; i < sortBy.length; i++) {
+        if (!newSortKeyFields.has(sortBy[i])) {// don't add 2x
+          newSortKeyFields.add(sortBy[i]);
+          var key = null;if (sortBy[i] === 'selection') {
+            key =new phantasus.SortByValuesKey(
+              modelIndices, sortOrder[i],
+              _this.isColumns);
+          } else if (sortBy[i] !== '') {
+            key =new phantasus.SortKey(
+              sortBy[i], sortOrder[i]);}
             if (key != null) {
               newSortKeys.push(key);
               if (lockOrder[i]) {
                 key.setLockOrder(1);
               }
-            }
           }
+        if (key != null) {
+              newSortKeys.push(key);
+              if (lockOrder[i]) {
+                key.setLockOrder(1);
+              }
+            }}
+      }
+      var newGroupKeys = [];
+      if (groupBy != null) {
+        for (var i = 0; i < groupBy.length; i++) {
+          newGroupKeys.push(new phantasus.SortKey(groupBy[i],
+            phantasus.SortKey.SortOrder.UNSORTED));
         }
-        var newGroupKeys = [];
-        if (groupBy != null) {
-          for (var i = 0; i < groupBy.length; i++) {
-            newGroupKeys.push(new phantasus.SortKey(groupBy[i],
-              phantasus.SortKey.SortOrder.UNSORTED));
-          }
-        }
+      }
 
         if (_this.isColumns) {
           project.setGroupColumns(newGroupKeys, true);

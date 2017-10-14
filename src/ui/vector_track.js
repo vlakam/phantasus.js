@@ -1146,6 +1146,13 @@ phantasus.VectorTrack.prototype = {
         });
 
       }
+      if (this.isRenderAs(morpheus.VectorTrack.RENDER.TEXT_AND_FONT)) {
+        sectionToItems.Display.push({
+          name: 'Edit Fonts...'
+        });
+
+      }
+
       if (this.isRenderAs(phantasus.VectorTrack.RENDER.TEXT_AND_FONT)) {
         sectionToItems.Display.push({
           name: 'Edit Fonts...'
@@ -1226,68 +1233,68 @@ phantasus.VectorTrack.prototype = {
       return;
     }
     phantasus.Popup
-      .showPopup(
-        items,
-        {
-          x: e.pageX,
-          y: e.pageY
-        },
-        e.target,
-        function (event, item) {
-          var customItem;
-          if (item === NUMBER_FORMAT) {
-            var vector = _this.getFullVector();
-            var formatter = vector
-              .getProperties().get(phantasus.VectorKeys.FORMATTER);
-            if (formatter != null) {
-              if (typeof formatter === 'object') { // convert to function
-                formatter = phantasus.Util.createNumberFormat(formatter.pattern);
-                vector.getProperties().set(phantasus.VectorKeys.FORMATTER, formatter);
-              }
+    .showPopup(
+      items,
+      {
+        x: e.pageX,
+        y: e.pageY
+      },
+      e.target,
+      function (event, item) {
+        var customItem;
+        if (item === NUMBER_FORMAT) {
+          var vector = _this.getFullVector();
+          var formatter = vector
+          .getProperties().get(phantasus.VectorKeys.FORMATTER);
+          if (formatter != null) {
+            if (typeof formatter === 'object') { // convert to function
+              formatter = phantasus.Util.createNumberFormat(formatter.pattern);
+              vector.getProperties().set(phantasus.VectorKeys.FORMATTER, formatter);
             }
-            var pattern = formatter != null ? formatter.toJSON().pattern : '.2f';
-            var formBuilder = new phantasus.FormBuilder();
-            formBuilder.append({
-              name: 'number_of_fraction_digits',
-              type: 'number',
-              value: phantasus.Util.getNumberFormatPatternFractionDigits(pattern),
-              required: true,
-              style: 'max-width:60px;'
-            });
-            formBuilder.find('number_of_fraction_digits').on(
-              'keyup input', _.debounce(
-                function () {
-                  var n = parseInt($(this)
-                    .val());
-                  if (n >= 0) {
-                    vector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: '.' + n + 'f'});
-                    _this.setInvalid(true);
-                    _this.repaint();
-                  }
-                }, 100));
-            phantasus.FormBuilder.showInModal({
-              title: 'Format',
-              close: 'Close',
-              html: formBuilder.$form,
-              focus: heatmap.getFocusEl()
-            });
-          } else if (item === 'Copy') {
-            heatmap.getActionManager().execute(isColumns ? 'Copy Selected Columns' : 'Copy' +
-              ' Selected Rows');
-          } else if (item === FIELDS) {
-            var visibleFieldIndices = _this
-              .getFullVector()
-              .getProperties()
-              .get(phantasus.VectorKeys.VISIBLE_FIELDS);
-            var visibleFields;
-            if (visibleFieldIndices == null) {
-              visibleFields = arrayFields.slice(0);
-            } else {
-              visibleFields = [];
-              for (var i = 0; i < visibleFieldIndices.length; i++) {
-                visibleFields
-                  .push(arrayFields[visibleFieldIndices[i]]);
-              }
+          }
+          var pattern = formatter != null ? formatter.toJSON().pattern : '.2f';
+          var formBuilder = new phantasus.FormBuilder();
+          formBuilder.append({
+            name: 'number_of_fraction_digits',
+            type: 'number',
+            value: phantasus.Util.getNumberFormatPatternFractionDigits(pattern),
+            required: true,
+            style: 'max-width:60px;'
+          });
+          formBuilder.find('number_of_fraction_digits').on(
+            'keyup input', _.debounce(
+              function () {
+                var n = parseInt($(this)
+                .val());
+                if (n >= 0) {
+                  vector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: '.' + n + 'f'});
+                  _this.setInvalid(true);
+                  _this.repaint();
+                }
+              }, 100));
+          phantasus.FormBuilder.showInModal({
+            title: 'Format',
+            close: 'Close',
+            html: formBuilder.$form,
+            focus: heatmap.getFocusEl()
+          });
+        } else if (item === 'Copy') {
+          heatmap.getActionManager().execute(isColumns ? 'Copy Selected Columns' : 'Copy' +
+            ' Selected Rows');
+        } else if (item === FIELDS) {
+          var visibleFieldIndices = _this
+          .getFullVector()
+          .getProperties()
+          .get(phantasus.VectorKeys.VISIBLE_FIELDS);
+          var visibleFields;
+          if (visibleFieldIndices == null) {
+            visibleFields = arrayFields.slice(0);
+          } else {
+            visibleFields = [];
+            for (var i = 0; i < visibleFieldIndices.length; i++) {
+              visibleFields
+              .push(arrayFields[visibleFieldIndices[i]]);
+            }
 
             }
             var availableFields = [];
@@ -1313,312 +1320,312 @@ phantasus.VectorTrack.prototype = {
             var list = new phantasus.DualList(leftOptions,
               rightOptions);
 
-            phantasus.FormBuilder
-              .showOkCancel({
-                title: 'Fields',
-                okCallback: function () {
-                  var visibleFields = list
-                    .getOptions(false);
-                  var visibleFieldIndices = [];
-                  for (var i = 0; i < visibleFields.length; i++) {
-                    visibleFieldIndices
-                      .push(arrayFields
-                        .indexOf(visibleFields[i]));
-                  }
-                  var fullVector = _this
-                    .getFullVector();
-                  fullVector
-                    .getProperties()
-                    .set(
-                      phantasus.VectorKeys.VISIBLE_FIELDS,
-                      visibleFieldIndices);
+          phantasus.FormBuilder
+          .showOkCancel({
+            title: 'Fields',
+            okCallback: function () {
+              var visibleFields = list
+              .getOptions(false);
+              var visibleFieldIndices = [];
+              for (var i = 0; i < visibleFields.length; i++) {
+                visibleFieldIndices
+                .push(arrayFields
+                .indexOf(visibleFields[i]));
+              }
+              var fullVector = _this
+              .getFullVector();
+              fullVector
+              .getProperties()
+              .set(
+                phantasus.VectorKeys.VISIBLE_FIELDS,
+                visibleFieldIndices);
 
-                  var summaryFunction = fullVector
-                    .getProperties()
-                    .get(
-                      phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
-                  if (summaryFunction) {
-                    summaryFunction.indices = visibleFieldIndices;
-                  }
-                  var updatedVector = _this.isColumns ? _this.project
-                      .getFullDataset()
-                      .getColumnMetadata()
-                      .add(_this.name)
-                    : _this.project
-                      .getFullDataset()
-                      .getRowMetadata()
-                      .add(_this.name);
-                  // remove cached summary field
-                  for (var i = 0; i < updatedVector
-                    .size(); i++) {
-                    var array = fullVector
-                      .getValue(i);
-                    if (array != null) {
-                      array.summary = undefined;
-                    }
+              var summaryFunction = fullVector
+              .getProperties()
+              .get(
+                phantasus.VectorKeys.ARRAY_SUMMARY_FUNCTION);
+              if (summaryFunction) {
+                summaryFunction.indices = visibleFieldIndices;
+              }
+              var updatedVector = _this.isColumns ? _this.project
+                .getFullDataset()
+                .getColumnMetadata()
+                .add(_this.name)
+                : _this.project
+                .getFullDataset()
+                .getRowMetadata()
+                .add(_this.name);
+              // remove cached summary field
+              for (var i = 0; i < updatedVector
+              .size(); i++) {
+                var array = fullVector
+                .getValue(i);
+                if (array != null) {
+                  array.summary = undefined;
+                }
 
                   }
 
-                  _this.setInvalid(true);
-                  _this.repaint();
-                },
-                content: list.$el
-              });
-          } else if (item === 'Edit Bar Color...') {
-            var formBuilder = new phantasus.FormBuilder();
-            formBuilder.append({
-              name: 'bar_color',
-              type: 'color',
-              value: _this.settings.barColor,
-              required: true,
-              style: 'max-width:50px;'
+              _this.setInvalid(true);
+              _this.repaint();
+            },
+            content: list.$el
+          });
+        } else if (item === 'Edit Bar Color...') {
+          var formBuilder = new phantasus.FormBuilder();
+          formBuilder.append({
+            name: 'bar_color',
+            type: 'color',
+            value: _this.settings.barColor,
+            required: true,
+            style: 'max-width:50px;'
+          });
+          formBuilder.find('bar_color').on(
+            'change',
+            function () {
+              _this.settings.barColor = $(this)
+              .val();
+              _this.setInvalid(true);
+              _this.repaint();
             });
-            formBuilder.find('bar_color').on(
-              'change',
-              function () {
-                _this.settings.barColor = $(this)
-                  .val();
+          phantasus.FormBuilder.showInModal({
+            title: 'Bar Color',
+            close: 'Close',
+            html: formBuilder.$form,
+            focus: heatmap.getFocusEl()
+          });
+        } else if (item === COLOR_BAR_SIZE) {
+          var formBuilder = new phantasus.FormBuilder();
+          formBuilder.append({
+            name: 'size',
+            type: 'text',
+            value: _this.settings.colorBarSize,
+            required: true,
+            style: 'max-width:50px;'
+          });
+          formBuilder.find('size').on(
+            'change',
+            function () {
+              var val = parseFloat($(this)
+              .val());
+              if (val > 0) {
+                _this.settings.colorBarSize = val;
                 _this.setInvalid(true);
                 _this.repaint();
-              });
-            phantasus.FormBuilder.showInModal({
-              title: 'Bar Color',
-              close: 'Close',
-              html: formBuilder.$form,
-              focus: heatmap.getFocusEl()
+              }
             });
-          } else if (item === COLOR_BAR_SIZE) {
-            var formBuilder = new phantasus.FormBuilder();
-            formBuilder.append({
-              name: 'size',
-              type: 'text',
-              value: _this.settings.colorBarSize,
-              required: true,
-              style: 'max-width:50px;'
-            });
-            formBuilder.find('size').on(
-              'change',
-              function () {
-                var val = parseFloat($(this)
-                  .val());
-                if (val > 0) {
-                  _this.settings.colorBarSize = val;
-                  _this.setInvalid(true);
-                  _this.repaint();
+          phantasus.FormBuilder.showInModal({
+            title: 'Color Bar Size',
+            close: 'Close',
+            html: formBuilder.$form,
+            focus: heatmap.getFocusEl()
+          });
+        } else if (item === ANNOTATE_SELECTION) {
+          heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
+            ' Selected Rows');
+        } else if (item === DELETE) {
+          phantasus.FormBuilder
+          .showOkCancel({
+            title: 'Delete',
+            content: 'Are you sure you want to delete '
+            + _this.name + '?',
+            okCallback: function () {
+              var metadata = isColumns ? project
+                .getFullDataset()
+                .getColumnMetadata()
+                : project
+                .getFullDataset()
+                .getRowMetadata();
+              metadata
+              .remove(phantasus.MetadataUtil
+              .indexOf(
+                metadata,
+                _this.name));
+              var sortKeys = isColumns ? project
+                .getColumnSortKeys()
+                : project
+                .getRowSortKeys();
+              var sortKeyIndex = _.indexOf(
+                sortKeys.map(function (key) {
+                  return key.field;
+                }), _this.name);
+              if (sortKeyIndex !== -1) {
+                sortKeys.splice(
+                  sortKeyIndex, 1);
+                if (isColumns) {
+                  project
+                  .setColumnSortKeys(
+                    sortKeys,
+                    true);
+                } else {
+                  project.setRowSortKeys(
+                    sortKeys, true);
                 }
-              });
-            phantasus.FormBuilder.showInModal({
-              title: 'Color Bar Size',
-              close: 'Close',
-              html: formBuilder.$form,
-              focus: heatmap.getFocusEl()
-            });
-          } else if (item === ANNOTATE_SELECTION) {
-            heatmap.getActionManager().execute(isColumns ? 'Annotate Selected Columns' : 'Annotate' +
-              ' Selected Rows');
-          } else if (item === DELETE) {
-            phantasus.FormBuilder
-              .showOkCancel({
-                title: 'Delete',
-                content: 'Are you sure you want to delete '
-                + _this.name + '?',
-                okCallback: function () {
-                  var metadata = isColumns ? project
-                      .getFullDataset()
-                      .getColumnMetadata()
-                    : project
-                      .getFullDataset()
-                      .getRowMetadata();
-                  metadata
-                    .remove(phantasus.MetadataUtil
-                      .indexOf(
-                        metadata,
-                        _this.name));
-                  var sortKeys = isColumns ? project
-                      .getColumnSortKeys()
-                    : project
-                      .getRowSortKeys();
-                  var sortKeyIndex = _.indexOf(
-                    sortKeys.map(function (key) {
-                      return key.field;
-                    }), _this.name);
-                  if (sortKeyIndex !== -1) {
-                    sortKeys.splice(
-                      sortKeyIndex, 1);
-                    if (isColumns) {
-                      project
-                        .setColumnSortKeys(
-                          sortKeys,
-                          true);
-                    } else {
-                      project.setRowSortKeys(
-                        sortKeys, true);
-                    }
-                  }
-                  var groupByKeys = isColumns ? project
-                      .getGroupColumns()
-                    : project
-                      .getGroupRows();
-                  var groupByKeyIndex = _
-                    .indexOf(
-                      groupByKeys
-                        .map(function (key) {
-                          return key.field;
-                        }),
-                      _this.name);
-                  if (groupByKeyIndex !== -1) {
-                    groupByKeys.splice(
-                      groupByKeyIndex, 1);
-                    if (isColumns) {
-                      project
-                        .setGroupColumns(
-                          groupByKeys,
-                          true);
-                    } else {
-                      project.setGroupRows(
-                        groupByKeys,
-                        true);
-                    }
-                  }
-                  if (!isColumns) {
-                    // remove from any group
-                    // by or sort by
-                    project
-                      .trigger(
-                        'rowTrackRemoved',
-                        {
-                          vector: _this
-                            .getFullVector()
-                        });
-                  } else {
-                    project
-                      .trigger(
-                        'columnTrackRemoved',
-                        {
-                          vector: _this
-                            .getFullVector()
-                        });
-                  }
+              }
+              var groupByKeys = isColumns ? project
+                .getGroupColumns()
+                : project
+                .getGroupRows();
+              var groupByKeyIndex = _
+              .indexOf(
+                groupByKeys
+                .map(function (key) {
+                  return key.field;
+                }),
+                _this.name);
+              if (groupByKeyIndex !== -1) {
+                groupByKeys.splice(
+                  groupByKeyIndex, 1);
+                if (isColumns) {
+                  project
+                  .setGroupColumns(
+                    groupByKeys,
+                    true);
+                } else {
+                  project.setGroupRows(
+                    groupByKeys,
+                    true);
                 }
-              });
-          } else if (item === CLEAR_SELECTION) {
-            heatmap.getActionManager().execute(isColumns ? 'Clear Selected Columns' : 'Clear' +
-              ' Selected Rows');
-          } else if (item === INVERT_SELECTION) {
-            heatmap.getActionManager().execute(isColumns ? 'Invert Selected Columns' : 'Invert' +
-              ' Selected Rows');
-          } else if (item === MOVE_TO_TOP) {
-            heatmap.getActionManager().execute(isColumns ? 'Move Selected Columns To Top' : 'Move' +
-              ' Selected Rows To Top');
-          } else if (item === SORT_ASC || item === SORT_DESC) {
-            var sortKey = new phantasus.SortKey(
-              _this.name,
-              item === SORT_ASC ? phantasus.SortKey.SortOrder.ASCENDING
-                : phantasus.SortKey.SortOrder.DESCENDING);
-            if (_this.isColumns) {
-              _this.project
-                .setColumnSortKeys(
-                  phantasus.SortKey
-                    .keepExistingSortKeys(
-                      [sortKey],
-                      project
-                        .getColumnSortKeys()),
-                  true);
-            } else {
-              _this.project
-                .setRowSortKeys(
-                  phantasus.SortKey
-                    .keepExistingSortKeys(
-                      [sortKey],
-                      project
-                        .getRowSortKeys()),
-                  true);
+              }
+              if (!isColumns) {
+                // remove from any group
+                // by or sort by
+                project
+                .trigger(
+                  'rowTrackRemoved',
+                  {
+                    vector: _this
+                    .getFullVector()
+                  });
+              } else {
+                project
+                .trigger(
+                  'columnTrackRemoved',
+                  {
+                    vector: _this
+                    .getFullVector()
+                  });
+              }
             }
-          } else if (item == SORT_SEL_ASC
-            || item == SORT_SEL_DESC
-            || item === SORT_SEL_TOP_N) {
-            var sortOrder;
-            if (item === SORT_SEL_ASC) {
-              sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
-            } else if (item === SORT_SEL_DESC) {
-              sortOrder = phantasus.SortKey.SortOrder.DESCENDING;
-            } else {
-              sortOrder = phantasus.SortKey.SortOrder.TOP_N;
+          });
+        } else if (item === CLEAR_SELECTION) {
+          heatmap.getActionManager().execute(isColumns ? 'Clear Selected Columns' : 'Clear' +
+            ' Selected Rows');
+        } else if (item === INVERT_SELECTION) {
+          heatmap.getActionManager().execute(isColumns ? 'Invert Selected Columns' : 'Invert' +
+            ' Selected Rows');
+        } else if (item === MOVE_TO_TOP) {
+          heatmap.getActionManager().execute(isColumns ? 'Move Selected Columns To Top' : 'Move' +
+            ' Selected Rows To Top');
+        } else if (item === SORT_ASC || item === SORT_DESC) {
+          var sortKey = new phantasus.SortKey(
+            _this.name,
+            item === SORT_ASC ? phantasus.SortKey.SortOrder.ASCENDING
+              : phantasus.SortKey.SortOrder.DESCENDING);
+          if (_this.isColumns) {
+            _this.project
+            .setColumnSortKeys(
+              phantasus.SortKey
+              .keepExistingSortKeys(
+                [sortKey],
+                project
+                .getColumnSortKeys()),
+              true);
+          } else {
+            _this.project
+            .setRowSortKeys(
+              phantasus.SortKey
+              .keepExistingSortKeys(
+                [sortKey],
+                project
+                .getRowSortKeys()),
+              true);
+          }
+        } else if (item == SORT_SEL_ASC
+          || item == SORT_SEL_DESC
+          || item === SORT_SEL_TOP_N) {
+          var sortOrder;
+          if (item === SORT_SEL_ASC) {
+            sortOrder = phantasus.SortKey.SortOrder.ASCENDING;
+          } else if (item === SORT_SEL_DESC) {
+            sortOrder = phantasus.SortKey.SortOrder.DESCENDING;
+          } else {
+            sortOrder = phantasus.SortKey.SortOrder.TOP_N;
+          }
+          heatmap.sortBasedOnSelection(sortOrder,
+            isColumns, e && e.shiftKey);
+        } else if (item === SELECT_ALL) {
+          heatmap.getActionManager().execute(isColumns ? 'Select All Columns' : 'Select All Rows');
+        } else if (item === 'Auto Range') {
+          delete _this.settings.min;
+          delete _this.settings.max;
+          delete _this.settings.mid;
+          _this._update();
+          heatmap.revalidate();
+        } else if (item === 'Custom Range...') {
+          var formBuilder = new phantasus.FormBuilder();
+          var items = [
+            {name: 'min',
+            required: true,
+            type: 'number',
+            value: _this.settings.min
+          }, {
+            name: 'mid',
+            required: true,
+            type: 'number',
+            value: _this.settings.mid
+          }, {
+            name: 'max',
+            required: true,
+            type: 'number',
+            value: _this.settings.max
+          }];
+          _.each(items, function (item) {
+            formBuilder.append(item);
+          });
+          phantasus.FormBuilder
+          .showOkCancel({
+            title: 'Range',
+            content: formBuilder.$form,
+            okCallback: function () {
+              _this.settings.min = parseFloat(formBuilder
+              .getValue('min'));
+              _this.settings.mid = parseFloat(formBuilder
+              .getValue('mid'));
+              _this.settings.max = parseFloat(formBuilder
+              .getValue('max'));
+              _this._update();
+              heatmap.revalidate();
             }
-            heatmap.sortBasedOnSelection(sortOrder,
-              isColumns, e && e.shiftKey);
-          } else if (item === SELECT_ALL) {
-            heatmap.getActionManager().execute(isColumns ? 'Select All Columns' : 'Select All Rows');
-          } else if (item === 'Auto Range') {
-            delete _this.settings.min;
-            delete _this.settings.max;
-            delete _this.settings.mid;
-            _this._update();
-            heatmap.revalidate();
-          } else if (item === 'Custom Range...') {
-            var formBuilder = new phantasus.FormBuilder();
-            var items = [
-              {
-                name: 'min',
-                required: true,
-                type: 'number',
-                value: _this.settings.min
-              }, {
-                name: 'mid',
-                required: true,
-                type: 'number',
-                value: _this.settings.mid
-              }, {
-                name: 'max',
-                required: true,
-                type: 'number',
-                value: _this.settings.max
-              }];
-            _.each(items, function (item) {
-              formBuilder.append(item);
-            });
-            phantasus.FormBuilder
-              .showOkCancel({
-                title: 'Range',
-                content: formBuilder.$form,
-                okCallback: function () {
-                  _this.settings.min = parseFloat(formBuilder
-                    .getValue('min'));
-                  _this.settings.mid = parseFloat(formBuilder
-                    .getValue('mid'));
-                  _this.settings.max = parseFloat(formBuilder
-                    .getValue('max'));
-                  _this._update();
-                  heatmap.revalidate();
-                }
-              });
-          } else if (item === 'Squished') {
-            _this.settings.squished = !_this.settings.squished;
-            heatmap.revalidate();
-          } else if (item === 'Color Key') {
-            var legend = new phantasus.HeatMapTrackColorLegend(
-              [_this], isColumns ? _this.project
-                  .getColumnColorModel()
-                : _this.project
-                  .getRowColorModel());
-            var size = legend.getPreferredSize();
-            legend.setBounds(size);
-            legend.repaint();
+          });
+        } else if (item === 'Squished') {
+          _this.settings.squished = !_this.settings.squished;
+          heatmap.revalidate();
+        } else if (item === 'Color Key') {
 
-            phantasus.FormBuilder.showInModal({
-              title: 'Color Key',
-              html: legend.canvas,
-              focus: heatmap.getFocusEl()
-            });
-          } else if (item === 'Shape Key') {
-            var legend = new phantasus.HeatMapTrackShapeLegend(
-              [_this], isColumns ? _this.project
-                  .getColumnShapeModel()
-                : _this.project
-                  .getRowShapeModel());
-            var size = legend.getPreferredSize();
-            legend.setBounds(size);
-            legend.repaint();
+          var legend = new phantasus.HeatMapTrackColorLegend(
+            [_this], isColumns ? _this.project
+              .getColumnColorModel()
+              : _this.project
+              .getRowColorModel());
+          var size = legend.getPreferredSize();
+          legend.setBounds(size);
+          legend.repaint();
+
+          phantasus.FormBuilder.showInModal({
+            title: 'Color Key',
+            html: legend.canvas,
+            focus: heatmap.getFocusEl()
+          });
+        } else if (item === 'Shape Key') {
+          var legend = new phantasus.HeatMapTrackShapeLegend(
+            [_this], isColumns ? _this.project
+              .getColumnShapeModel()
+              : _this.project
+              .getRowShapeModel());
+          var size = legend.getPreferredSize();
+          legend.setBounds(size);
+          legend.repaint();
 
             phantasus.FormBuilder.showInModal({
               title: 'Shape Key',

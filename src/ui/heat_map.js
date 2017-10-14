@@ -1842,6 +1842,9 @@ phantasus.HeatMap.prototype = {
 
         }
         if (option.formatter) {
+          v.getProperties().set(morpheus.VectorKeys.FORMATTER, morpheus.Util.createNumberFormat(option.formatter));
+        }
+        if (option.formatter) {
           v.getProperties().set(phantasus.VectorKeys.FORMATTER, phantasus.Util.createNumberFormat(option.formatter));
         }
         if (track.isRenderAs(phantasus.VectorTrack.RENDER.COLOR)
