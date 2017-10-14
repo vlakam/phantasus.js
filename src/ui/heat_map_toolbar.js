@@ -75,8 +75,8 @@ phantasus.HeatMapToolBar = function (heatMap) {
       ' data-type="toggle"' +
       ' class="dropdown-checkbox fa fa-check"></span>Match Any Search Term</a></li>');
 
-    searchHtml
-    .push('<li><a data-group="searchMode" data-name="matchAll" href="#"><span' +
+    searchHtml.push(
+      '<li><a data-group="searchMode" data-name="matchAll" href="#"><span' +
       ' data-type="toggle"></span>Match All Search Terms</a></li>');
 
     searchHtml.push('<li role="separator" class="divider"></li>');
