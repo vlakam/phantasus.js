@@ -1,6 +1,7 @@
 phantasus.NearestNeighbors = function () {
 };
-phantasus.NearestNeighbors.Functions = [phantasus.Cosine, phantasus.Euclidean,
+phantasus.NearestNeighbors.Functions = [
+  phantasus.Cosine, phantasus.Euclidean,
   phantasus.Jaccard, phantasus.KendallsCorrelation, phantasus.Pearson, phantasus.Spearman,
   phantasus.WeightedMean];
 phantasus.NearestNeighbors.Functions.fromString = function (s) {
@@ -14,7 +15,8 @@ phantasus.NearestNeighbors.Functions.fromString = function (s) {
 
 phantasus.NearestNeighbors.execute = function (dataset, input) {
   var f = phantasus.NearestNeighbors.Functions.fromString(input.metric);
-  var permutations = new phantasus.PermutationPValues(dataset, null, null, input.npermutations, f, phantasus.Vector.fromArray('', input.listValues));
+  var permutations = new phantasus.PermutationPValues(dataset, null, null, input.npermutations, f,
+    phantasus.Vector.fromArray('', input.listValues));
   return {
     rowSpecificPValues: permutations.rowSpecificPValues,
     k: permutations.k,
