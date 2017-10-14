@@ -80,7 +80,7 @@ phantasus.SampleDatasets = function (options) {
         exampleHtml.push('</tr></tbody></table>');
 
         exampleHtml
-          .push('<div class="text-muted">TCGA data version 1/11/2015</div><span class="text-muted">Please adhere to <a target="_blank" href="http://cancergenome.nih.gov/abouttcga/policies/publicationguidelines"> the TCGA publication guidelines</a></u> when using TCGA data in your publications.</span>');
+          .push('<div class="text-muted">TCGA data (1/28/2016)</div><span class="text-muted">Please adhere to <a target="_blank" href="http://cancergenome.nih.gov/abouttcga/policies/publicationguidelines"> the TCGA publication guidelines</a></u> when using TCGA data in your publications.</span>');
 
         exampleHtml.push('<div data-name="tcga"></div>');
         $(exampleHtml.join('')).appendTo($el);

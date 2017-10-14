@@ -186,12 +186,9 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   if (options == null) {
     options = {};
   }
-  var isFile = fileOrUrl instanceof File;
+  var isFile = phantasus.Util.isFile(fileOrUrl);
   var isString = phantasus.Util.isString(fileOrUrl);
   var ext = options.extension ? options.extension : phantasus.Util.getExtension(phantasus.Util.getFileName(fileOrUrl));
-
-  // console.log("before reading", fileOrUrl, options, isFile, isString, ext);
-
   var datasetReader;
   var str = fileOrUrl.toString();
 

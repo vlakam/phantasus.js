@@ -240,6 +240,7 @@ phantasus.OpenDatasetTool.prototype = {
                 });
               });
         } else if (action === 'open') { // new tab
+          console.log('open')
           if (newDataset.length && newDataset.length > 0) {
             for (var i = 0; i < newDataset.length; i++) {
               new phantasus.HeatMap({
@@ -256,7 +257,6 @@ phantasus.OpenDatasetTool.prototype = {
               inheritFromParent: false
             });
           }
-
         } else {
           console.log('Unknown action: ' + action);
         }
