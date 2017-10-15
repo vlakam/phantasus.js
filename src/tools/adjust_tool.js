@@ -99,7 +99,6 @@ phantasus.AdjustDataTool.prototype = {
               i, j)));
           }
         }
-        changed = true;
       }
       if (options.input.inverse_log_2) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {
@@ -110,11 +109,9 @@ phantasus.AdjustDataTool.prototype = {
             }
           }
         }
-        changed = true;
       }
       if (options.input.quantile_normalize) {
         phantasus.QNorm.execute(dataset);
-        changed = true;
       }
       if (options.input['z-score']) {
         for (var i = 0, nrows = dataset.getRowCount(); i < nrows; i++) {

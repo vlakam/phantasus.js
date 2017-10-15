@@ -12,7 +12,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
     + '</div></div>');
 
   var formBuilder = new phantasus.FormBuilder({
-    vertical: true
+    formStyle: 'vertical'
   });
   this.formBuilder = formBuilder;
   var rowOptions = [];
@@ -290,8 +290,8 @@ phantasus.PcaPlotTool.prototype = {
     var plotlyDefaults = phantasus.PcaPlotTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
-    var chartWidth = 400;
-    var chartHeight = 400;
+    var chartWidth = 600;
+    var chartHeight = 600;
 
 
     var project = this.project;

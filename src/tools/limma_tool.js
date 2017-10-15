@@ -159,7 +159,7 @@ phantasus.LimmaTool.prototype = {
                 }
 
               });
-              alert("Limma finished successfully");
+              // alert("Limma finished successfully");
               project.trigger("trackChanged", {
                 vectors: vs,
                 display: []
