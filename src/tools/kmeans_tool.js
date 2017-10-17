@@ -27,10 +27,14 @@ phantasus.KmeansTool.prototype = {
   execute: function (options) {
     var project = options.project;
     var dataset = project.getSortedFilteredDataset();
+
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
+
+    console.log(trueIndices, project.rowSelectionModel, project.columnSelectionModel);
 
     var columnIndices = [];
     var rowIndices = [];
+
     if (options.input.use_selected_only) {
       var selectedDataset = project.getSelectedDataset();
       var selectedIndices = phantasus.Util.getTrueIndices(selectedDataset);

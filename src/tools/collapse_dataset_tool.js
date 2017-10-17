@@ -1,7 +1,8 @@
 phantasus.CollapseDatasetTool = function () {
 };
 phantasus.CollapseDatasetTool.Functions = [phantasus.Mean, phantasus.Median,
-  new phantasus.MaxPercentiles([25, 75]), phantasus.Min, phantasus.Max, phantasus.Percentile, phantasus.Sum];
+  new phantasus.MaxPercentiles([25, 75]), phantasus.Min, phantasus.Max, phantasus.Percentile, phantasus.Sum,
+  phantasus.MaximumMeanProbe, phantasus.MaximumMedianProbe];
 phantasus.CollapseDatasetTool.Functions.fromString = function (s) {
   for (var i = 0; i < phantasus.CollapseDatasetTool.Functions.length; i++) {
     if (phantasus.CollapseDatasetTool.Functions[i].toString() === s) {
@@ -28,7 +29,9 @@ phantasus.CollapseDatasetTool.prototype = {
     form.setVisible('percentile', false);
     form.$form.find('[name=collapse_method]').on('change', function (e) {
       form.setVisible('percentile', $(this).val() === phantasus.Percentile.toString());
+      form.setVisible('collapse', !phantasus.CollapseDatasetTool.Functions.fromString($(this).val()).selectOne)
     });
+
 
     setValue('Rows');
   },
@@ -65,8 +68,10 @@ phantasus.CollapseDatasetTool.prototype = {
         return phantasus.Percentile(vector, p);
       };
     }
+
+    console.log("Chosen function", f);
     var collapseToFields = options.input.collapse_to_fields;
-    if (collapseToFields.length === 0) {
+    if (!collapseToFields || collapseToFields.length === 0) {
       throw new Error('Please select one or more fields to collapse to');
     }
     var dataset = project.getFullDataset();
@@ -76,9 +81,10 @@ phantasus.CollapseDatasetTool.prototype = {
     }
     var allFields = phantasus.MetadataUtil.getMetadataNames(dataset
       .getRowMetadata());
-    dataset = phantasus.CollapseDataset(dataset, collapseToFields, f, true);
+    var collapseMethod = f.selectOne ? phantasus.SelectRow : phantasus.CollapseDataset;
+    dataset = collapseMethod(dataset, collapseToFields, f, true);
     if (!rows) {
-      dataset = new phantasus.TransposedDatasetView(dataset);
+      dataset = phantasus.DatasetUtil.copy(new phantasus.TransposedDatasetView(dataset));
     }
     var set = new phantasus.Map();
     _.each(allFields, function (field) {
@@ -89,9 +95,9 @@ phantasus.CollapseDatasetTool.prototype = {
     });
     // hide fields that were not part of collapse to
     // console.log("Collapse ", set);
-    set.forEach(function (val, name) {
-      // heatMap.setTrackVisible(name, false, !rows);
-    });
+    // set.forEach(function (val, name) {
+    //   heatMap.setTrackVisible(name, false, !rows);
+    // });
     return new phantasus.HeatMap({
       name: heatMap.getName(),
       dataset: dataset,

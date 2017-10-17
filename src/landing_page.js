@@ -262,7 +262,7 @@ phantasus.LandingPage.prototype = {
       };
 
       phantasus.OpenDatasetTool.fileExtensionPrompt(fileName, function (readOptions) {
-        console.log("fileExtensionPrompt", readOptions);
+        // console.log("fileExtensionPrompt", readOptions);
         if (readOptions) {
           for (var key in readOptions) {
             options.dataset.options[key] = readOptions[key];

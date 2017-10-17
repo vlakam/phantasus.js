@@ -975,7 +975,6 @@ phantasus.DatasetUtil.getNonEmptyRows = function (dataset) {
   return rowsToKeep;
 };
 phantasus.DatasetUtil.getContentArray = function (dataset) {
-
   var array = [];
   var nr = dataset.rows;
   var nc = dataset.columns;

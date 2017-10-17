@@ -120,6 +120,7 @@ phantasus.CountIf = function (vector, criteria) {
 
 };
 phantasus.Mean = function (vector) {
+  console.log("Mean", vector);
   var sum = 0;
   var count = 0;
   for (var i = 0, length = vector.size(); i < length; i++) {

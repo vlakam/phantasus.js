@@ -1864,15 +1864,17 @@ phantasus.Util.getTrueIndices = function (dataset) {
   var savedDataset = dataset;
   //console.log("rows processing");
   while (dataset.dataset) {
-    if (!dataset.rowIndices) {
+    var transposed = dataset instanceof phantasus.TransposedDatasetView;
+    var currentIndices = transposed ? dataset.columnIndices : dataset.rowIndices;
+    if (currentIndices == undefined) {
       dataset = dataset.dataset;
       continue;
     }
-    rowIndices = dataset.rowIndices;
+    rowIndices = currentIndices;
     //console.log(iter, "rows:", rows.length, rows);
     var newRows = Array.apply(null, Array(rows.length)).map(Number.prototype.valueOf, 0);
     for (var i = 0; i < rows.length; i++) {
-      newRows[i] = dataset.rowIndices[rows[i]];
+      newRows[i] = currentIndices[rows[i]];
     }
     rows = newRows;
     dataset = dataset.dataset;
@@ -1882,16 +1884,17 @@ phantasus.Util.getTrueIndices = function (dataset) {
   //console.log("columns processing");
   dataset = savedDataset;
   while (dataset.dataset) {
-    if (!dataset.columnIndices) {
+    transposed = dataset instanceof phantasus.TransposedDatasetView;
+    currentIndices = transposed ? dataset.rowIndices : dataset.columnIndices;
+    if (currentIndices == undefined) {
       dataset = dataset.dataset;
       continue;
     }
     columnIndices = dataset.columnIndices;
 
-    //console.log(iter, "columns:", columns.length, columns);
     var newCols = Array.apply(null, Array(columns.length)).map(Number.prototype.valueOf, 0)
     for (i = 0; i < columns.length; i++) {
-      newCols[i] = dataset.columnIndices[columns[i]];
+      newCols[i] = currentIndices[columns[i]];
     }
     columns = newCols;
 

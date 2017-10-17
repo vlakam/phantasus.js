@@ -49,5 +49,17 @@ phantasus.DatasetAdapter.prototype = {
   },
   toString: function () {
     return this.dataset.toString();
+  },
+  getESSession: function () {
+    return this.dataset.getESSession();
+  },
+  setESSession: function (esSession) {
+    this.dataset.setESSession(esSession);
+  },
+  getESVariable: function () {
+    return this.dataset.getESVariable();
+  },
+  setESVariable: function (variable) {
+    this.dataset.setESVariable(variable);
   }
 };
