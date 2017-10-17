@@ -15,12 +15,13 @@ describe('collapse_tool_test', function () {
         project: heatmap.getProject(),
         input: {
           collapse_method: 'Maximum Mean Probe',
+          collapse: 'Rows',
           collapse_to_fields: ['id']
         }
       });
       expect(newHeatMap.getProject().getFullDataset())
         .toBeDatasetValues(new phantasus.Dataset({
-          array: [[4, 6], [10, 12]],
+          array: [[10, 12], [4, 6]],
           rows: 2,
           columns: 2
         }), 0.00001);
@@ -41,12 +42,13 @@ describe('collapse_tool_test', function () {
         project: heatmap.getProject(),
         input: {
           collapse_method: 'Maximum Median Probe',
+          collapse: 'Rows',
           collapse_to_fields: ['id']
         }
       });
       expect(newHeatMap.getProject().getFullDataset())
         .toBeDatasetValues(new phantasus.Dataset({
-          array: [[4, 6], [10, 12]],
+          array: [[10, 12], [4, 6]],
           rows: 2,
           columns: 2
         }), 0.00001);
