@@ -1,8 +1,6 @@
 phantasus.CollapseDataset = function (dataset, collapseToFields,
                                      summarizeFunction, shallowCopy) {
 
-  console.log("CollapseDataset arguments", dataset, collapseToFields, summarizeFunction, shallowCopy);
-
   var vectors = [];
   var nfields = collapseToFields.length;
 
@@ -82,8 +80,6 @@ phantasus.CollapseDataset = function (dataset, collapseToFields,
 
 phantasus.SelectRow = function (dataset, collapseToFields,
                                   summarizeFunction, shallowCopy) {
-  console.log("SelectRow arguments", dataset, collapseToFields, summarizeFunction, shallowCopy);
-
   var vectors = [];
   var nfields = collapseToFields.length;
 
@@ -121,10 +117,18 @@ phantasus.SelectRow = function (dataset, collapseToFields,
     phantasus.MetadataUtil.copy(dataset.getColumnMetadata(),
       collapsedDataset.getColumnMetadata());
   }
-  var collapseToVectors = [];
+  /*var collapseToVectors = [];
   for (var i = 0; i < nfields; i++) {
     collapseToVectors.push(collapsedDataset.getRowMetadata().add(
       collapseToFields[i]));
+  }*/
+  var names = phantasus.MetadataUtil.getMetadataNames(dataset.getRowMetadata());
+  var collapseToVectors = [];
+  var allvectors = [];
+  for (var i = 0; i < names.length; i++) {
+    var v = dataset.getRowMetadata().getByName(names[i]);
+    collapseToVectors.push(collapsedDataset.getRowMetadata().add(names[i]));
+    allvectors.push(v);
   }
 
   var counter = 0;
@@ -139,12 +143,18 @@ phantasus.SelectRow = function (dataset, collapseToFields,
         view.setSeriesIndex(series);
         var chosenIndex = summarizeFunction(view).index;
         view.setIndex(chosenIndex);
-        indexInDataset = view.rowIndices[chosenIndex];
+        indexInDataset = view.dataset.rowIndices[chosenIndex];
 
         for (var j = 0, ncols = dataset.getColumnCount(); j < ncols; j++) {
           collapsedDataset.setValue(counter, j,
             view.getValue(j), series);
         }
+      }
+      for (var i = 0; i < names.length; i++) {
+        var collapsedToVector = collapseToVectors[i];
+        var vector = allvectors[i];
+        collapsedToVector.setValue(counter, vector
+          .getValue(indexInDataset));
       }
       counter++;
     });

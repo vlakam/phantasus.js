@@ -5,7 +5,6 @@ phantasus.SampleDatasets = function (options) {
   var _this = this;
   var $el = options.$el;
   this.callback = options.callback;
-  console.log(this.callback);
   $el.on('click', '[name=ccle]', function (e) { // button click
     var $this = $(this);
     var obj = {};

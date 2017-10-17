@@ -69,7 +69,6 @@ phantasus.CollapseDatasetTool.prototype = {
       };
     }
 
-    console.log("Chosen function", f);
     var collapseToFields = options.input.collapse_to_fields;
     if (!collapseToFields || collapseToFields.length === 0) {
       throw new Error('Please select one or more fields to collapse to');

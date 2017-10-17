@@ -19,10 +19,10 @@ phantasus.MaximumMedianProbe.toString = function() {
 phantasus.MaximumMedianProbe.selectOne = true;
 
 phantasus.MaximumUnivariateFunction = function(rowView, fun) {
-  console.log("MaximumUnivariateFunction args", rowView, fun);
+  // console.log("MaximumUnivariateFunction args", rowView, fun);
   var curMax = Number.NEGATIVE_INFINITY;
   var curIndex = -1;
-  for (var i = 0; i < rowView.size(); i++) {
+  for (var i = 0; i < rowView.dataset.getRowCount(); i++) {
     rowView.setIndex(i);
     var mean = fun(rowView);
     if (mean > curMax) {
