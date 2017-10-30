@@ -365,7 +365,8 @@ phantasus.HeatMap = function (options) {
                 dataset: dataset[i],
                 parent: _this.heatmap,
                 symmetric: _this.options.symmetric,
-                inheritFromParent: false
+                inheritFromParent: false,
+                addedMessage: "Dataset " + dataset[0].seriesNames[0] + " is opened"
               });
               // console.log(i, dataset[i], heatmap);
             }
@@ -378,7 +379,7 @@ phantasus.HeatMap = function (options) {
         });
       },
       cancelCallback: function () {
-        _this.options.dataset.reject('Session cancelled.');
+        _this.options.dataset.reject('Session cancelled');
       }
     });
   }
@@ -392,7 +393,20 @@ phantasus.HeatMap = function (options) {
   }
 
   var isPrimary = this.options.parent == null;
-  if (this.options.parent == null) {
+
+  // history
+  if (isPrimary) {
+    this.history = [];
+  } else {
+    this.history = this.options.parent.getHistory();
+  }
+
+  if (this.options.addedMessage) {
+    this.writeToHistory(this.options.addedMessage);
+  }
+
+  // tabManager
+  if (isPrimary) {
 
     if (!phantasus.Util.isHeadless()) {
       if (this.options.tabManager == null) {
@@ -629,7 +643,8 @@ phantasus.HeatMap = function (options) {
             name: dataset[i].seriesNames[0],
             dataset: dataset[i],
             symmetric: _this.options.symmetric,
-            inheritFromParent: false
+            inheritFromParent: false,
+            addedMessage: "Dataset " + dataset[0].seriesNames[0] + " is opened"
           });
           console.log(i, dataset[i], heatmap);
         }
@@ -1280,6 +1295,12 @@ phantasus.HeatMap.prototype = {
     this.trigger('dendrogramChanged', {
       isColumns: isColumns
     });
+  },
+  getHistory: function () {
+    return this.history;
+  },
+  writeToHistory: function (message) {
+    this.history.push(message);
   },
   getTabManager: function () {
     return this.tabManager;

@@ -974,6 +974,13 @@ phantasus.ActionManager = function () {
     }
   });
 
+  this.add({
+    name: 'History',
+    ellipsis: false,
+    cb: function (options) {
+      phantasus.HeatMap.showTool(new phantasus.HistoryTool(), options.HeatMap())
+    }
+  })
 };
 phantasus.ActionManager.prototype = {
   getActions: function () {

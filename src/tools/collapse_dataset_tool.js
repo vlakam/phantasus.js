@@ -101,7 +101,8 @@ phantasus.CollapseDatasetTool.prototype = {
       name: heatMap.getName(),
       dataset: dataset,
       parent: heatMap,
-      symmetric: false
+      symmetric: false,
+      addedMessage: "CollapseDatasetTool " + options.input
     });
   }
 };

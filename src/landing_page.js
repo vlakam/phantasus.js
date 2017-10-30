@@ -85,12 +85,14 @@ phantasus.LandingPage.prototype = {
             throw new Error("Dataset" + " " + options.dataset.file + " does not exist");
           }
           if (filenames.length === 1) {
+            options.addedMessage = "Dataset " + options.dataset.file + " is opened";
             new phantasus.HeatMap(options);
           }
           else {
             for (var j = 0; j < filenames.length; j++) {
               var specificOptions = options;
               specificOptions.dataset.file = filenames[j];
+              specificOptions.addedMessage = "Dataset " + filenames[j] + " is opened";
 
               new phantasus.HeatMap(specificOptions);
             }

@@ -140,7 +140,8 @@ phantasus.AdjustDataTool.prototype = {
         name: heatMap.getName(),
         dataset: dataset,
         parent: heatMap,
-        symmetric: project.isSymmetric() && dataset.getColumnCount() === dataset.getRowCount()
+        symmetric: project.isSymmetric() && dataset.getColumnCount() === dataset.getRowCount(),
+        addedMessage: "AdjustTool " + options.input
       });
     }
   }
