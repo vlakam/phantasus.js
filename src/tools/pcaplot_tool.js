@@ -2,6 +2,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
   var _this = this;
   this.project = chartOptions.project;
   var project = this.project;
+  var drawFunction = null;
 
 
   this.$el = $('<div class="container-fluid">'
@@ -138,10 +139,6 @@ phantasus.PcaPlotTool = function (chartOptions) {
     type: "bootstrap-select",
     options: naOptions
   });
-  formBuilder.append({
-    name: "draw",
-    type: "button"
-  });
 
 
   function setVisibility() {
@@ -154,7 +151,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
   this.tooltip = [];
   formBuilder.$form.find("select").on("change", function (e) {
     setVisibility();
-
+    drawFunction();
   });
   setVisibility();
 
@@ -180,6 +177,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
       project.getRowSelectionModel().off('selectionChanged.chart', trackChanged);
       project.getColumnSelectionModel().off('selectionChanged.chart', trackChanged);
       _this.$el.empty();
+      _this.pca = null;
     },
 
     resizable: true,
@@ -188,7 +186,8 @@ phantasus.PcaPlotTool = function (chartOptions) {
   });
   this.$dialog = $dialog;
 
-  this.draw();
+  drawFunction = this.init();
+  drawFunction();
 };
 
 phantasus.PcaPlotTool.getVectorInfo = function (value) {
@@ -285,17 +284,13 @@ phantasus.PcaPlotTool.prototype = {
       });
 
   },
-  draw: function () {
+  init: function () {
     var _this = this;
     var plotlyDefaults = phantasus.PcaPlotTool.getPlotlyDefaults();
     var layout = plotlyDefaults.layout;
     var config = plotlyDefaults.config;
-    var chartWidth = 600;
-    var chartHeight = 600;
 
-
-    var project = this.project;
-    this.formBuilder.$form.find('[name="draw"]').on('click', function () {
+    return function () {
       _this.$chart.empty();
 
       var dataset = _this.project.getSortedFilteredDataset();
@@ -474,17 +469,20 @@ phantasus.PcaPlotTool.prototype = {
         };
 
 
-        var req = ocpu.call("calcPCA", args, function (session) {
-          session.getObject(function (success) {
-            _this.pca = JSON.parse(success);
-            drawResult();
+        if (!_this.pca) {
+          var req = ocpu.call("calcPCA", args, function (session) {
+            session.getObject(function (success) {
+              _this.pca = JSON.parse(success);
+              drawResult();
+            });
+
+          }, false, "::" + dataset.getESVariable());
+          req.fail(function () {
+            new Error("PcaPlot call failed" + req.responseText);
           });
-
-        }, false, "::" + dataset.getESVariable());
-        req.fail(function () {
-          new Error("PcaPlot call failed" + req.responseText);
-        });
-
+        } else {
+          drawResult();
+        }
       });
 
 
@@ -492,9 +490,8 @@ phantasus.PcaPlotTool.prototype = {
         alert("Problems occured during transforming dataset to ExpressionSet\n" + reason);
       });
 
-    });
+    };
   }
-
 };
 
 
