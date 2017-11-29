@@ -192,6 +192,14 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
+    name: 'Submit to Shiny GAM',
+    cb: function (options) {
+      phantasus.HeatMap.showTool(new phantasus.shinyGamTool(), options.heatMap);
+    },
+    icon: 'fa fa-share-square-o'
+  });
+
+  this.add({
     which: [67], // C
     commandKey: true,
     name: 'Copy'

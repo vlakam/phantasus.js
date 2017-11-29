@@ -86,7 +86,7 @@ phantasus.DatasetUtil.readDatasetArray = function (datasets) {
     p.fail(function (err) {
       var message = [
         'Error opening ' + phantasus.Util
-        .getFileName(url) + '.'];
+          .getFileName(url) + '.'];
       if (err.message) {
         message.push('<br />Cause: ');
         message.push(err.message);
@@ -198,8 +198,8 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
   else if (options.preloaded) {
     datasetReader = new phantasus.PreloadedReader();
     fileOrUrl = {
-      name : fileOrUrl,
-      exactName : options.exactName
+      name: fileOrUrl,
+      exactName: options.exactName
     }
   }
   else if (ext === '' && str != null && str.indexOf('blob:') === 0) {
@@ -220,13 +220,13 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
       var blob = new Blob(
         [
           'self.onmessage = function(e) {'
-        + 'importScripts(e.data.path);'
-        + 'var ext = phantasus.Util.getExtension(phantasus.Util'
-        + '.getFileName(e.data.fileOrUrl));'
-        + 'var datasetReader = phantasus.DatasetUtil.getDatasetReader(ext,'
-        + '	e.data.options);'
-        + 'datasetReader.read(e.data.fileOrUrl, function(err,dataset) {'
-        + '	self.postMessage(dataset);' + '	});' + '}']);
+          + 'importScripts(e.data.path);'
+          + 'var ext = phantasus.Util.getExtension(phantasus.Util'
+          + '.getFileName(e.data.fileOrUrl));'
+          + 'var datasetReader = phantasus.DatasetUtil.getDatasetReader(ext,'
+          + '	e.data.options);'
+          + 'datasetReader.read(e.data.fileOrUrl, function(err,dataset) {'
+          + '	self.postMessage(dataset);' + '	});' + '}']);
 
       var blobURL = window.URL.createObjectURL(blob);
       var worker = new Worker(blobURL);
@@ -251,7 +251,7 @@ phantasus.DatasetUtil.read = function (fileOrUrl, options) {
           // console.log('ready to resolve with', dataset);
           deferred.resolve(dataset);
           if (!options.isGEO && !options.preloaded) {
-            phantasus.DatasetUtil.toESSessionPromise({ dataset: dataset });
+            phantasus.DatasetUtil.toESSessionPromise({dataset: dataset});
           }
         }
       });
@@ -1017,7 +1017,7 @@ phantasus.DatasetUtil.getMetadataArray = function (dataset) {
   var varLabels = [];
   for (var j = 0; j < rowMeta.getMetadataCount(); j++) {
     var vecJ = rowMeta.get(j);
-    for (var l = 0; l < dataset.getRowCount(); l++){
+    for (var l = 0; l < dataset.getRowCount(); l++) {
       fDataArray.push({
         strval: vecJ.getValue(l) ? vecJ.getValue(l).toString() : "",
         isNA: false

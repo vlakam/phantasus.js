@@ -205,3 +205,7 @@
 .phantasus-footer-links li + li {
   margin-left: 15px;
 }
+
+.phantasus-warning-color {
+  color: darkred;
+}
