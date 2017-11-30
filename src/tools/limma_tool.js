@@ -110,7 +110,7 @@ phantasus.LimmaTool.prototype = {
       .map(String.prototype.valueOf, "");
 
     for (var j = 0; j < dataset.getColumnCount(); j++) {
-      values[dataset.columnIndices[j]] = v.getValue(j);
+      values[j] = v.getValue(j);
     }
 
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
