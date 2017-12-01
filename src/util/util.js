@@ -1954,3 +1954,7 @@ phantasus.Util.getMessages = function(session) {
     }
   });
 };
+
+phantasus.Util.setLibrary = function (libraryName) {
+  ocpu.seturl('/ocpu/library/' + libraryName + '/R');
+};

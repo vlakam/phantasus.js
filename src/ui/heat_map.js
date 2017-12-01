@@ -257,6 +257,7 @@ phantasus.HeatMap = function (options) {
           ' Tab'],
         Tools: [
           'New Heat Map',
+          'Submit to Shiny GAM',
           null,
           'Hierarchical Clustering',
           null,
