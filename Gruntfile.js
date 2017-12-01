@@ -25,7 +25,7 @@ module.exports = function (grunt) {
           preserveComments: false
         },
         files: {
-          'js/phantasus-external.min.js': ['js/phantasus-external.js']
+          'js/phantasus-external-latest.min.js': ['js/phantasus-external.js']
         }
       }
     },
@@ -46,14 +46,6 @@ module.exports = function (grunt) {
           'css/animate.css', 'css/phantasus.css'],
         dest: 'css/phantasus.all.css'
       },
-      extJsAll: {
-        nonull: true,
-        src: [
-          'js/phantasus-external.js',
-          'js/echarts.min.js', 'js/papaparse.min.js',
-          'js/plotly-latest.min.js'],
-        dest: 'js/phantasus-external-latest.min.js'
-      },
       extJs: {
         nonull: true,
         dest: 'js/phantasus-external.js',
@@ -70,7 +62,8 @@ module.exports = function (grunt) {
           'js/jquery.event.drag-2.2.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js', 'js/jstat.min.js', 'js/blob-stream.js', 'js/d3-labeler.js',
-          'js/canvas2pdf.js', 'js/pdfkit.js']
+          'js/canvas2pdf.js', 'js/pdfkit.js', 'js/echarts.min.js', 'js/papaparse.min.js',
+          'js/plotly-latest.min.js']
       },
       phantasus: {
         options: {
@@ -86,17 +79,57 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      files: ['src/*.js', 'src/**/*.js'],
-      tasks: ['concat:phantasus']
+      phantasus: {
+        files: ['src/*.js', 'src/**/*.js'],
+        tasks: ['concat:phantasus', 'uglify:phantasus'],
+        options: {
+          livereload: true
+        }
+      },
+      ext: {
+        files: ['js/*.js'],
+        tasks: ['concat:extJs', 'uglify:extJs']
+      }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 3000,
+          base: './',
+          keepalive: true,
+          hostname: '127.0.0.1',
+          livereload: true,
+          middleware: function(connect, options, middlewares) {
+            middlewares.unshift(function(req, res, next) {
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              return next();
+            });
+
+            return middlewares;
+          },
+        }
+      }
+    },
+    concurrent: {
+      dev: ['watch', 'connect']
     }
+  });
+
+  grunt.registerTask('serve', function () {
+    grunt.task.run('dist');
+    grunt.task.run('concurrent');
   });
 
   // rebuild js and css:
   // grunt concat:phantasus concat:extJs uglify concat:extJsAll
-  grunt.registerTask('default', 'watch');
+  grunt.registerTask('default', 'serve');
+  grunt.registerTask('dist', 'concat', 'uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-concurrent');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+
 };
