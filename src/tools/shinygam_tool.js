@@ -25,8 +25,7 @@ phantasus.shinyGamTool.prototype = {
 
     ocpu.call('shinyGAMAnalysis', {
       fData: fData,
-      fvarLabels: fvarLabels,
-      orgCode: "mmu"
+      fvarLabels: fvarLabels
     }, function (context) {
       context.getObject('.val', null, function (link) {
         window.open(link.split('"')[1], '_blank');
