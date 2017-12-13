@@ -132,12 +132,8 @@ phantasus.PcaPlotTool = function (chartOptions) {
   formBuilder.append({
     name: "label",
     type: "bootstrap-select",
-    options: columnOptions
-  });
-  formBuilder.append({
-    name: "replace_NA_with",
-    type: "bootstrap-select",
-    options: naOptions
+    options: columnOptions,
+    value: columnOptions.indexOf('title') ? 'title' : null
   });
 
 
@@ -145,7 +141,6 @@ phantasus.PcaPlotTool = function (chartOptions) {
     formBuilder.setOptions("color", columnOptions, true);
     formBuilder.setOptions("size", numericColumnOptions, true);
     formBuilder.setOptions("label", columnOptions, true);
-    formBuilder.setOptions("replace_NA_with", naOptions, true);
   }
 
   this.tooltip = [];
@@ -320,7 +315,7 @@ phantasus.PcaPlotTool.prototype = {
       var label = _this.formBuilder.getValue('label');
       var textByVector = getTrueVector(dataset.getColumnMetadata().getByName(label));
 
-      var na = _this.formBuilder.getValue('replace_NA_with');
+      var na = 'mean';
       var color = colorByVector ? [] : null;
       var size = sizeByVector ? [] : 12;
       var text = [];
@@ -434,7 +429,6 @@ phantasus.PcaPlotTool.prototype = {
             return;
           }
 
-
           label_array = data.map(function (type) {
             var result = type.x.map(function (x, idx) {
               return {
@@ -459,26 +453,33 @@ phantasus.PcaPlotTool.prototype = {
           label_array = [].concat.apply([], label_array);
         };
 
-        var putLabels = function (plot) {
+        var putLabels = function () {
           if (!label) {
             return;
           }
 
+          var plot = _this.$chart.children()[0];
+          var xrange = plot._fullLayout.xaxis.range;
+          var yrange = plot._fullLayout.yaxis.range;
           var svg = d3.select('.cartesianlayer .subplot .gridlayer');
+          svg.selectAll(".label").data([]).exit().remove();
+          svg.selectAll(".link").data([]).exit().remove();
 
-          label_array.forEach(function (label) {
-            label.x = plot._fullLayout.xaxis.l2p(label.x);
-            label.y = plot._fullLayout.yaxis.l2p(label.y);
+          var tempLabels = label_array.filter(function (label) {
+            return label.x >= xrange[0] && label.x <= xrange[1] && label.y >= yrange[0] && label.y <= yrange[1];
+          }).map(function (label) {
+            return {x: plot._fullLayout.xaxis.l2p(label.x), y: plot._fullLayout.yaxis.l2p(label.y), name: label.name};
           });
 
-          anchor_array.forEach(function (anchor) {
-            anchor.x = plot._fullLayout.xaxis.l2p(anchor.x);
-            anchor.y = plot._fullLayout.yaxis.l2p(anchor.y);
+          var tempAnchors = anchor_array.filter(function (anchor) {
+            return anchor.x >= xrange[0] && anchor.x <= xrange[1] && anchor.y >= yrange[0] && anchor.y <= yrange[1];
+          }).map(function (anchor) {
+            return {x: plot._fullLayout.xaxis.l2p(anchor.x), y: plot._fullLayout.yaxis.l2p(anchor.y), r: anchor.r};
           });
 
           // Draw labels
           labels = svg.selectAll(".label")
-            .data(label_array)
+            .data(tempLabels)
             .enter()
             .append("text")
             .attr("class", "label")
@@ -497,14 +498,14 @@ phantasus.PcaPlotTool.prototype = {
           // Size of each label
           var index = 0;
           labels.each(function () {
-            label_array[index].width = this.getBBox().width;
-            label_array[index].height = this.getBBox().height;
+            tempLabels[index].width = this.getBBox().width;
+            tempLabels[index].height = this.getBBox().height;
             index += 1;
           });
 
           // Draw links
           links = svg.selectAll(".link")
-            .data(label_array)
+            .data(tempLabels)
             .enter()
             .append("line")
             .attr("class", "link")
@@ -524,8 +525,8 @@ phantasus.PcaPlotTool.prototype = {
             .attr("stroke", "gray");
 
           d3.labeler()
-            .label(label_array)
-            .anchor(anchor_array)
+            .label(tempLabels)
+            .anchor(tempAnchors)
             .width(plot._fullLayout._size.w)
             .height(plot._fullLayout._size.h)
             .force_bounds(true)
@@ -534,14 +535,22 @@ phantasus.PcaPlotTool.prototype = {
           labels
             .transition()
             .duration(800)
-            .attr("x", function(d) { return (d.x); })
-            .attr("y", function(d) { return (d.y); });
+            .attr("x", function (d) {
+              return (d.x);
+            })
+            .attr("y", function (d) {
+              return (d.y);
+            });
 
           links
             .transition()
             .duration(800)
-            .attr("x2",function(d) { return (d.x); })
-            .attr("y2",function(d) { return (d.y); });
+            .attr("x2", function (d) {
+              return (d.x);
+            })
+            .attr("y2", function (d) {
+              return (d.y);
+            });
         };
 
         var drawResult = function () {
@@ -588,6 +597,7 @@ phantasus.PcaPlotTool.prototype = {
 
           prepareLabelData();
           Plotly.newPlot(myPlot, data, layout, config).then(putLabels);
+          myPlot.on('plotly_afterplot', putLabels);
         };
 
 
