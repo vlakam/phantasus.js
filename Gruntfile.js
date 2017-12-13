@@ -50,7 +50,7 @@ module.exports = function (grunt) {
         nonull: true,
         dest: 'js/phantasus-external.js',
         src: [
-          'js/d3.min.js', 'js/jquery-2.2.4.min.js',
+          'js/d3.min.js', 'js/plotly-latest.min.js', 'js/jquery-2.2.4.min.js',
           'js/bootstrap.min.js', 'js/underscore-min.js',
           'js/newick.js', 'js/hammer.min.js',
           'js/jquery.mousewheel.min.js',
@@ -62,8 +62,7 @@ module.exports = function (grunt) {
           'js/jquery.event.drag-2.2.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js', 'js/jstat.min.js', 'js/blob-stream.js', 'js/d3-labeler.js',
-          'js/canvas2pdf.js', 'js/pdfkit.js', 'js/echarts.min.js', 'js/papaparse.min.js',
-          'js/plotly-latest.min.js']
+          'js/canvas2pdf.js', 'js/pdfkit.js', 'js/echarts.min.js', 'js/papaparse.min.js']
       },
       phantasus: {
         options: {
@@ -94,7 +93,7 @@ module.exports = function (grunt) {
     connect: {
       server: {
         options: {
-          port: 3000,
+          port: grunt.option('port') || 3000,
           base: './',
           keepalive: true,
           hostname: '127.0.0.1',
@@ -123,7 +122,10 @@ module.exports = function (grunt) {
   // rebuild js and css:
   // grunt concat:phantasus concat:extJs uglify concat:extJsAll
   grunt.registerTask('default', 'serve');
-  grunt.registerTask('dist', 'concat', 'uglify');
+  grunt.registerTask('dist', function () {
+    grunt.task.run('concat');
+    grunt.task.run('uglify');
+  });
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
