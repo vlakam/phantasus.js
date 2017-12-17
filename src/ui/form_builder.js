@@ -643,12 +643,15 @@ phantasus.FormBuilder.prototype = {
 
       html.push('<div>');
 
+      html.push('<div id="'+name+'_url"style="display: none">');
       html
         .push('<input placeholder="'
           + (isMultiple ? 'Enter one or more URLs'
             : 'Enter a URL')
-          + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+          + '" class="form-control" style="width:50%; display:inline-block;" type="text" name="'
           + name + '_url">');
+      html.push('<input type="submit" style="margin-left: 10px;" class="btn button-default" value="Load">');
+      html.push('</div>');
 
 /*      if (field.preloadedExists) {
         html
@@ -659,12 +662,13 @@ phantasus.FormBuilder.prototype = {
       }*/
 
       if (field.gse !== false) {
-        html.push('<div>');
+        html.push('<div id="'+name+'_geo" style="display: none">');
         html
           .push('<input placeholder="'
-            + "Enter a GSE or GDS identifier"
-            + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+            + "Enter a GSE or GDS identifier (e.g. GSE53986)"
+            + '" class="form-control" style="width:50%; display:inline-block;" type="text" name="'
             + name + '_geo">');
+        html.push('<input type="submit" style="margin-left: 10px;" class="btn button-default" value="Load">');
         html.push('</div>');
       }
       if (field.text) {
@@ -673,11 +677,14 @@ phantasus.FormBuilder.prototype = {
             + name + '_text">');
       }
 
+      html.push('<div id="'+name+'_pre" style="display: none">');
       html
         .push('<input placeholder="'
           + 'Enter a dataset name here'
-          + '" class="form-control" style="width:50%; display:none;" type="text" name="'
+          + '" class="form-control" style="width:50%; display:inline-block;" type="text" name="'
           + name + '_pre">');
+      html.push('<input type="submit" style="margin-left: 10px;" class="btn button-default" value="Load">');
+      html.push('</div>');
 
       html.push('</div>');
 
@@ -721,37 +728,36 @@ phantasus.FormBuilder.prototype = {
             _this.$form.find('[name=' + name + '_picker]').selectpicker('val', '');
           }
 
-          _this.$form.find('[name=' + name + '_url]')
+          _this.$form.find('#' + name + '_url')
           .css('display',
             showUrlInput ? '' : 'none');
           _this.$form.find('[name=' + name + '_text]')
           .css('display',
             showTextInput ? '' : 'none');
-          _this.$form.find('[name=' + name + '_geo]')
+          _this.$form.find('#' + name + '_geo')
               .css('display',
                 showGSEInput ? '' : 'none');
-          _this.$form.find('[name=' + name + '_pre]')
+          _this.$form.find('#' + name + '_pre')
               .css('display',
                 showPreInput ? '' : 'none');
         });
 
       // URL
-      _this.$form.on('keyup', '[name=' + name + '_url]', function (evt) {
-        var text = $.trim($(this).val());
+      var URL_dispatcher = function (form) {
+        var text = $.trim(form.find('[name=' + name + '_url]').val());;
         if (isMultiple) {
           text = text.split(',').filter(function (t) {
             t = $.trim(t);
             return t !== '';
           });
         }
-        _this.setValue(name, text);
-        if (evt.which === 13) {
-          _this.trigger('change', {
-            name: name,
-            value: text
-          });
-        }
-      });
+        _this.trigger('change', {
+          name: name,
+          value: text
+        });
+      };
+
+      //??
       _this.$form.on('keyup', '[name=' + name + '_text]', function (evt) {
         var text = $.trim($(this).val());
         _this.setValue(name, text);
@@ -763,37 +769,32 @@ phantasus.FormBuilder.prototype = {
         }
       });
       // GEO
-      _this.$form.on('keyup', '[name=' + name + '_geo]', function (evt) {
-        var text = $.trim($(this).val());
-        _this.setValue(name, text);
-        if (evt.which === 13) {
+      var geo_dispatcher = function (form) {
+        var text = $.trim(form.find('[name=' + name + '_geo]').val());
           // console.log('environment', evt);
           // console.log('object to trigger with result', _this, 'name', name, 'text', text);
-          _this.trigger('change', {
-            name: name,
-            value: {
-              name: text.toUpperCase(),
-              isGEO: true
-            }
-          })
-        }
-      });
+        _this.trigger('change', {
+          name: name,
+          value: {
+            name: text.toUpperCase(),
+            isGEO: true
+          }
+        })
+      };
+
       // Preloaded
-      _this.$form.on('keyup', '[name=' + name + '_pre]', function (evt) {
-        var text = $.trim($(this).val());
-        _this.setValue(name, text);
-        if (evt.which === 13) {
-          // console.log('environment', evt);
-          console.log('object to trigger with result', _this, 'name', name, 'text', text);
-          _this.trigger('change', {
-            name: name,
-            value: {
-              name: text,
-              preloaded: true
-            }
-          })
-        }
-      });
+      var PRE_dispatcher = function (form) {
+        var text = $.trim(form.find('[name=' + name + '_pre]').val());
+        // console.log('environment', evt);
+        //console.log('object to trigger with result', _this, 'name', name, 'text', text);
+        _this.trigger('change', {
+          name: name,
+          value: {
+            name: text,
+            preloaded: true
+          }
+        })
+      };
       // browse file selected
       _this.$form.on('change', '[name=' + name + '_file]', function (evt) {
 
@@ -803,6 +804,17 @@ phantasus.FormBuilder.prototype = {
           name: name,
           value: isMultiple ? files : files[0]
         });
+      });
+
+      //SUBMIT
+      _this.$form.on('submit', function () {
+        var val = $(this).find('[name=' + name + '_picker]').val(); //many
+        var showUrlInput = val === 'URL';
+        var showGSEInput = val === 'GEO Datasets';
+        var showPreInput = val === 'Saved on server datasets';
+        if (showGSEInput) geo_dispatcher($(this));
+        if (showUrlInput) URL_dispatcher($(this));
+        if (showPreInput) PRE_dispatcher($(this));
       });
     } else {
       type = type == null ? 'text' : type;

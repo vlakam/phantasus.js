@@ -257,7 +257,6 @@ phantasus.HeatMap = function (options) {
           ' Tab'],
         Tools: [
           'New Heat Map',
-          'Submit to Shiny GAM',
           null,
           'Hierarchical Clustering',
           null,
@@ -279,7 +278,8 @@ phantasus.HeatMap = function (options) {
           null,
           'k-means',
           'limma',
-          'PCA Plot'],
+          'PCA Plot',
+          'Submit to Shiny GAM'],
         View: ['Zoom In', 'Zoom Out', null, 'Fit To Window', 'Fit Rows To Window', 'Fit Columns To Window', null, '100%', null, 'Options'],
         Edit: [
           'Copy Image',
