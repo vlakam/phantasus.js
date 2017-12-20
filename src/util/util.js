@@ -1956,5 +1956,7 @@ phantasus.Util.getMessages = function(session) {
 };
 
 phantasus.Util.setLibrary = function (libraryName) {
-  ocpu.seturl('/ocpu/library/' + libraryName + '/R');
+  if (!window.libraryPrefix) window.libraryPrefix = '/';
+
+  ocpu.seturl(window.libraryPrefix + 'ocpu/library/' + libraryName + '/R');
 };

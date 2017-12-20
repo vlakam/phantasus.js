@@ -60,7 +60,7 @@ module.exports = function (grunt) {
           'js/jquery-ui.min.js', 'js/parser.js',
           'js/FileSaver.min.js', 'js/colorbrewer.js',
           'js/jquery.event.drag-2.2.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
-          'js/js.cookie.js','js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
+          'js/js.cookie.js', 'js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js', 'js/jstat.min.js', 'js/blob-stream.js', 'js/d3-labeler.js',
           'js/canvas2pdf.js', 'js/pdfkit.js', 'js/echarts.min.js', 'js/papaparse.min.js']
       },
@@ -95,14 +95,24 @@ module.exports = function (grunt) {
         options: {
           port: grunt.option('port') || 3000,
           base: './',
+          livereload: true,
           keepalive: true,
           hostname: '127.0.0.1',
-          livereload: true,
-          middleware: function(connect, options, middlewares) {
-            middlewares.unshift(function(req, res, next) {
+          middleware: function (connect, options, middlewares) {
+            middlewares.unshift(function (req, res, next) {
               res.setHeader('Access-Control-Allow-Origin', '*');
               return next();
             });
+
+            if (grunt.option('prefix')) {
+              console.log('Found prefix for OpenCPU library:' + grunt.option('prefix'));
+              middlewares.unshift(function (req, res, next) {
+                if (res.inject) {
+                  res.inject('<script>window.libraryPrefix = \'' + grunt.option('prefix') + '\'</script>');
+                }
+                return next();
+              });
+            }
 
             return middlewares;
           },
@@ -110,7 +120,10 @@ module.exports = function (grunt) {
       }
     },
     concurrent: {
-      dev: ['watch', 'connect']
+      dev: {
+        tasks: ['watch', 'connect'],
+        options: {logConcurrentOutput: true}
+      }
     }
   });
 
