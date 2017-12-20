@@ -27,6 +27,7 @@ phantasus.KmeansTool.prototype = {
   execute: function (options) {
     var project = options.project;
     var dataset = project.getSortedFilteredDataset();
+    var promise = $.Deferred();
 
     var trueIndices = phantasus.Util.getTrueIndices(dataset);
 
@@ -82,6 +83,7 @@ phantasus.KmeansTool.prototype = {
             v.setValue(i, clusters[i]);
           }
           v.getProperties().set("phantasus.dataType", "string");
+          promise.resolve();
           project.trigger("trackChanged", {
             vectors: [v],
             display: ["color"]
@@ -89,9 +91,12 @@ phantasus.KmeansTool.prototype = {
         })
       }, false, "::" + dataset.getESVariable());
       req.fail(function () {
+        promise.reject();
         throw new Error("Kmeans call to OpenCPU failed" + req.responseText);
       });
 
     });
+
+    return promise;
   }
 };
