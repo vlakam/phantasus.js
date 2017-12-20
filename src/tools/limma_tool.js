@@ -60,6 +60,7 @@ phantasus.LimmaTool.prototype = {
     var field = options.input.field;
     var classA = options.input.class_a;
     var classB = options.input.class_b;
+    var promise = $.Deferred();
 
     if (classA.length == 0 || classB.length == 0) {
       throw new Error("You must choose at least one option in each class");
@@ -164,6 +165,7 @@ phantasus.LimmaTool.prototype = {
                 vectors: vs,
                 display: []
               });
+              promise.resolve();
             })
           };
           phantasus.BlobFromPath.getFileObject(filePath, function (file) {
@@ -172,8 +174,11 @@ phantasus.LimmaTool.prototype = {
         })
       }, false, "::" + dataset.getESVariable());
       req.fail(function () {
+        promise.reject();
         throw new Error("Limma call failed" + req.responseText);
       });
     });
+
+    return promise;
   }
 };
