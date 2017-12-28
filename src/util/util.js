@@ -1113,12 +1113,12 @@ phantasus.Util._intFormat = typeof d3 !== 'undefined' ? d3.format(',i')
 phantasus.Util.intFormat = function (n) {
   return phantasus.Util._intFormat(n);
 };
-phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.2f') : function (d) {
+phantasus.Util._nf = typeof d3 !== 'undefined' ? d3.format('.5g') : function (d) {
   return '' + d;
 };
 
 phantasus.Util.getNumberFormatPatternFractionDigits = function (pattern) {
-  return parseInt(pattern.substring(1, pattern.length - 1)) || 0;
+  return parseInt(pattern.substring(1, pattern.length)) || 0;
 };
 
 phantasus.Util.nf = function (n) {

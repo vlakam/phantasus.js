@@ -1252,7 +1252,7 @@ phantasus.VectorTrack.prototype = {
               vector.getProperties().set(phantasus.VectorKeys.FORMATTER, formatter);
             }
           }
-          var pattern = formatter != null ? formatter.toJSON().pattern : '.2f';
+          var pattern = formatter != null ? formatter.toJSON().pattern : '.5g';
           var formBuilder = new phantasus.FormBuilder();
           formBuilder.append({
             name: 'number_of_fraction_digits',
@@ -1267,7 +1267,7 @@ phantasus.VectorTrack.prototype = {
                 var n = parseInt($(this)
                 .val());
                 if (n >= 0) {
-                  vector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: '.' + n + 'f'});
+                  vector.getProperties().set(phantasus.VectorKeys.FORMATTER, {pattern: '.' + n + 'g'});
                   _this.setInvalid(true);
                   _this.repaint();
                 }
