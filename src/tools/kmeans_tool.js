@@ -12,16 +12,6 @@ phantasus.KmeansTool.prototype = {
     return [{
       name: "number_of_clusters",
       type: "text"
-    }, {
-      name: "replace_NA_with",
-      type: "bootstrap-select",
-      options: [{
-        name: "mean",
-        value: "mean"
-      }, {
-        name: "median",
-        value: "median"
-      }]
     }];
   },
   execute: function (options) {
@@ -51,7 +41,7 @@ phantasus.KmeansTool.prototype = {
     if (isNaN(number)) {
       throw new Error("Enter the expected number of clusters");
     }
-    var replacena = options.input.replace_NA_with;
+    var replacena = "mean";
     var esPromise = dataset.getESSession();
 
     console.log(dataset);
