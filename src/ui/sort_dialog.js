@@ -59,7 +59,7 @@ phantasus.SortDialog = function (project) {
       var lockOrder = $forms.find('[name=lockOrder]').map(function () {
           return $(this).prop('checked');
         });
-        varsortOrder = $forms.find('[name=sortOrder]:checked')
+        var sortOrder = $forms.find('[name=sortOrder]:checked')
       .map(function () {
         return $(this).val();
       });
