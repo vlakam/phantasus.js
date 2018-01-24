@@ -4,7 +4,7 @@ phantasus.GctWriter12 = function () {
     rowId: 'id',
     columnId: 'id'
   };
-  this.nf = phantasus.Util.createNumberFormat('.2f');
+  this.nf = phantasus.Util.createNumberFormat('.5g');
 };
 phantasus.GctWriter12.prototype = {
   setNumberFormat: function (nf) {

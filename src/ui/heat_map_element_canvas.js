@@ -23,7 +23,7 @@ phantasus.HeatMapElementCanvas = function (project) {
   this.gridThickness = 0.1;
   this.elementDrawCallback = null;
   this.drawCallback = null;
-  this.drawValuesFormat = phantasus.Util.createNumberFormat('.2f');
+  this.drawValuesFormat = phantasus.Util.createNumberFormat('.5g');
 };
 phantasus.HeatMapElementCanvas.GRID_COLOR = '#808080';
 phantasus.HeatMapElementCanvas.prototype = {

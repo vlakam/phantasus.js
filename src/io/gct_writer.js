@@ -1,5 +1,5 @@
 phantasus.GctWriter = function () {
-  this.nf = phantasus.Util.createNumberFormat('.2f');
+  this.nf = phantasus.Util.createNumberFormat('.5g');
 };
 
 phantasus.GctWriter.idFirst = function (model) {
