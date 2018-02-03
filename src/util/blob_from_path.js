@@ -9,14 +9,16 @@ phantasus.BlobFromPath.getFileBlob = function (url, cb) {
   });
   xhr.send();
 };
-
-phantasus.BlobFromPath.blobToFile = function (blob) {
-  blob.lastModifiedDate = new Date();
-  return blob;
-};
+// If we add lastModifiedDate to blob it will stay blob, not File. But this operation is prohibited
+// To make it File we need name and mimo
+// phantasus.BlobFromPath.blobToFile = function (blob) {
+//   blob.lastModifiedDate = new Date();
+//   return blob;
+// };
 
 phantasus.BlobFromPath.getFileObject = function (filePathOrUrl, cb) {
   phantasus.BlobFromPath.getFileBlob(filePathOrUrl, function (blob) {
-    cb(phantasus.BlobFromPath.blobToFile(blob));
+    //cb(phantasus.BlobFromPath.blobToFile(blob));
+    cb(blob);
   });
 };
