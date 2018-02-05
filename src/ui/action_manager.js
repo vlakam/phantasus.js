@@ -202,7 +202,9 @@ phantasus.ActionManager = function () {
   this.add({
     name: 'Submit to Enrichr',
     cb: function (options) {
-      phantasus.HeatMap.showTool(new phantasus.enrichrTool(), options.heatMap);
+      new phantasus.enrichrTool(
+        options.heatMap.getProject()
+      );
     },
     icon: 'fa fa-table'
   });

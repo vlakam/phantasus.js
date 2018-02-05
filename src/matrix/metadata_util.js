@@ -347,16 +347,19 @@ phantasus.MetadataUtil.autocomplete = function (model) {
   };
 };
 
-phantasus.MetadataUtil.getMetadataNames = function (metadataModel) {
+phantasus.MetadataUtil.getMetadataNames = function (metadataModel, unsorted) {
   var names = [];
   for (var i = 0, count = metadataModel.getMetadataCount(); i < count; i++) {
     names.push(metadataModel.get(i).getName(i));
   }
-  names.sort(function (a, b) {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
-    return (a < b ? -1 : (a === b ? 0 : 1));
-  });
+
+  if (!unsorted) {
+    names.sort(function (a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+      return (a < b ? -1 : (a === b ? 0 : 1));
+    });
+  }
   return names;
 };
 phantasus.MetadataUtil.getVectors = function (metadataModel, names) {
