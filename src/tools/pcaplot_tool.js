@@ -113,6 +113,11 @@ phantasus.PcaPlotTool = function (chartOptions) {
     options: numericColumnOptions
   });
   formBuilder.append({
+    name: 'shape',
+    type: 'bootstrap-select',
+    options: columnOptions
+  });
+  formBuilder.append({
     name: "color",
     type: "bootstrap-select",
     options: columnOptions
@@ -134,6 +139,12 @@ phantasus.PcaPlotTool = function (chartOptions) {
     type: "bootstrap-select",
     options: columnOptions,
     value: columnOptions.indexOf('title') ? 'title' : null
+  });
+  formBuilder.append({
+    name: 'visible_labels',
+    type: 'bootstrap-select',
+    options: ['On', 'Off'],
+    value: 'On'
   });
 
 
@@ -176,7 +187,7 @@ phantasus.PcaPlotTool = function (chartOptions) {
     },
 
     resizable: true,
-    height: 600,
+    height: 620,
     width: 950
   });
   this.$dialog = $dialog;
@@ -298,6 +309,8 @@ phantasus.PcaPlotTool.prototype = {
 
       var colorBy = _this.formBuilder.getValue('color');
       var sizeBy = _this.formBuilder.getValue('size');
+      var shapeBy = _this.formBuilder.getValue('shape');
+
       var getTrueVector = function (vector) {
         while (vector && vector.indices.length == 0) {
           vector = vector.v;
@@ -308,6 +321,7 @@ phantasus.PcaPlotTool.prototype = {
       _this.colorByVector = getTrueVector(dataset.getColumnMetadata().getByName(colorBy));
       var colorByVector = _this.colorByVector;
       var sizeByVector = getTrueVector(dataset.getColumnMetadata().getByName(sizeBy));
+      var shapeByVector = getTrueVector(dataset.getColumnMetadata().getByName(shapeBy));
 
       var pc1 = _this.formBuilder.getValue('x-axis');
       var pc2 = _this.formBuilder.getValue('y-axis');
@@ -318,9 +332,10 @@ phantasus.PcaPlotTool.prototype = {
       var na = 'mean';
       var color = colorByVector ? [] : null;
       var size = sizeByVector ? [] : 12;
+      var shapes = shapeByVector ? [] : null;
       var text = [];
       var sizeFunction = null;
-      var n = indices.columns.length;
+      var drawLabels = _this.formBuilder.getValue('visible_labels') === 'On';
 
 
       var data = [];
@@ -329,8 +344,7 @@ phantasus.PcaPlotTool.prototype = {
         sizeFunction = d3.scale.linear().domain(
           [minMax.min, minMax.max]).range([6, 19])
           .clamp(true);
-      }
-      if (sizeByVector) {
+
         for (var j = 0; j < sizeByVector.indices.length; j++) {
           var sizeByValue = sizeByVector.getValue(j);
           size.push(sizeFunction(sizeByValue));
@@ -341,63 +355,87 @@ phantasus.PcaPlotTool.prototype = {
           text.push(textByVector.getValue(j));
         }
       }
-      var categoriesIndices;
-      var categoryNameMap;
-      if (colorByVector) {
-        var categories = new Map();
-        categoriesIndices = new Map();
-        categoryNameMap = new Map();
-        var catNum = 1;
-        for (var j = 0; j < colorByVector.indices.length; j++) {
-          var colorByValue = colorByVector.getValue(j);
-          if (!categories.get(colorByValue)) {
-            categories.set(colorByValue, catNum);
-            categoryNameMap.set(catNum, colorByValue);
-            catNum += 1;
-          }
-          if (!categoriesIndices.get(categories.get(colorByValue))) {
-            categoriesIndices.set(categories.get(colorByValue), []);
-          }
-          categoriesIndices.get(categories.get(colorByValue)).push(j);
+      if (shapeByVector) {
+        var allShapes = ['circle', 'square', 'diamond', 'cross', 'triangle-up', 'star', 'hexagram', 'bowtie', 'diamond-cross', 'hourglass', 'hash-open'];
+        var uniqShapes = {};
+        shapes = _.map(shapeByVector.indices, function (index) {
+          var value = shapeByVector.getValue(index);
 
+          if (!uniqShapes[value]) {
+            uniqShapes[value] = allShapes[_.size(uniqShapes) % _.size(allShapes)];
+          }
+
+          return uniqShapes[value]
+        });
+
+        if (_.size(uniqShapes) > _.size(allShapes)) {
+          phantasus.FormBuilder.showInModal({
+            title: 'Warning',
+            html: 'Too much factors for shapes. Repeating will occur'
+          });
         }
 
-        for (var cat = 1; cat < catNum; cat++) {
-          var curText = [];
-          var curSize = sizeByVector ? [] : size;
-          var curColor = phantasus.VectorColorModel.CATEGORY_ALL[(cat - 1) % 60];
-          for (var i = 0; i < categoriesIndices.get(cat).length; i++) {
-            curText.push(text[categoriesIndices.get(cat)[i]]);
-            if (sizeByVector) {
-              curSize.push(size[categoriesIndices.get(cat)[i]]);
-            }
-          }
+        _.each(uniqShapes, function (shape, categoryName) {
           data.push({
+            x: [1000], y: [1000],
             marker: {
-              fillcolor: curColor,
-              color: curColor,
-              size: curSize
+              symbol: shape,
+              color: '#000000',
+              size: 10
             },
-            text: curText,
-            type: "scatter",
+            name: categoryName,
+            legendgroup: 'shapes',
             mode: "markers",
-            name: categoryNameMap.get(cat)
-          })
-        }
-      } else {
-        data.push({
-          marker: {
-            color: color,
-            size: size
-          },
-          name: " ",
-          mode: "markers",
-          text: text,
-          type: "scatter"
+            text: text,
+            type: "scatter",
+            showlegend: true
+          });
         });
       }
 
-      _this.categoriesIndices = categoriesIndices;
+      if (colorByVector) {
+        var uniqColors = {};
+        color = _.map(colorByVector.indices, function (index) {
+          var value = colorByVector.getValue(index);
+
+          if (!uniqColors[value]) {
+            uniqColors[value] = phantasus.VectorColorModel.CATEGORY_ALL[_.size(uniqColors) % 60];
+          }
+
+          return uniqColors[value]
+        });
+
+        _.each(uniqColors, function (color, categoryName) {
+          data.push({
+            x: [1000], y: [1000],
+            marker: {
+              fillcolor: color,
+              color: color,
+              size: 10
+            },
+            name: categoryName,
+            legendgroup: 'colors',
+            mode: "markers",
+            type: "scatter",
+            showlegend: true
+          });
+        });
+      }
+
+      data.unshift({
+        marker: {
+          color: color,
+          size: size,
+          symbol: shapes
+        },
+        name: " ",
+        mode: "markers",
+        text: text,
+        type: "scatter",
+        showlegend: false
+      });
+
+
       var columnIndices = indices.columns;
       var rowIndices = indices.rows;
 
@@ -429,28 +467,25 @@ phantasus.PcaPlotTool.prototype = {
             return;
           }
 
-          label_array = data.map(function (type) {
-            var result = type.x.map(function (x, idx) {
+          var labelData = data.map(function (type) {
+            if (!type.text) {
+              return [];
+            }
+
+            var labels = type.x.map(function (x, idx) {
               return {
                 x: x,
                 y: type.y[idx],
-                name: type.text[idx]
-              };
-            });
-            type.text = null;
-            return result;
-          });
-          anchor_array = data.map(function (type) {
-            return type.x.map(function (x, idx) {
-              return {
-                x: x,
-                y: type.y[idx],
+                name: type.text[idx],
                 r: type.marker.size
               };
             });
+            type.text = null;
+            return labels;
           });
-          anchor_array = [].concat.apply([], anchor_array);
-          label_array = [].concat.apply([], label_array);
+
+          label_array = [].concat.apply([], labelData);
+          anchor_array = [].concat.apply([], labelData);
         };
 
         var putLabels = function () {
@@ -461,7 +496,7 @@ phantasus.PcaPlotTool.prototype = {
           var plot = _this.$chart.children()[0];
           var xrange = plot._fullLayout.xaxis.range;
           var yrange = plot._fullLayout.yaxis.range;
-          var svg = d3.select('.cartesianlayer .subplot .gridlayer');
+          var svg = d3.select(plot).select('.cartesianlayer .subplot .gridlayer');
           svg.selectAll(".label").data([]).exit().remove();
           svg.selectAll(".link").data([]).exit().remove();
 
@@ -554,36 +589,28 @@ phantasus.PcaPlotTool.prototype = {
         };
 
         var drawResult = function () {
-          var x = _this.pca.pca[pc1];
-          var y = _this.pca.pca[pc2];
-          if (_this.colorByVector) {
-            for (var cat = 1; cat <= _this.categoriesIndices.size; cat++) {
-              var curX = [];
-              var curY = [];
-              for (var j = 0; j < _this.categoriesIndices.get(cat).length; j++) {
-                curX.push(x[_this.categoriesIndices.get(cat)[j]]);
-                curY.push(y[_this.categoriesIndices.get(cat)[j]]);
-              }
-              data[cat - 1].x = curX;
-              data[cat - 1].y = curY;
-            }
-          }
-          else {
-            data[0].x = x;
-            data[0].y = y;
-          }
+          data[0].x = _this.pca.pca[pc1];
+          data[0].y = _this.pca.pca[pc2];
+
           layout.margin = {
             b: 40,
             l: 60,
             t: 25,
             r: 10
           };
+          var xmin = _.min(data[0].x),
+              xmax = _.max(data[0].x),
+              ymin = _.min(data[0].y),
+              ymax = _.max(data[0].y);
+
           layout.xaxis = {
             title: _this.pca.xlabs[pc1],
+            range: [xmin - (xmax - xmin) * 0.1, xmax + (xmax - xmin) * 0.1],
             zeroline: false
           };
           layout.yaxis = {
             title: _this.pca.xlabs[pc2],
+            range: [ymin - (ymax - ymin) * 0.1, ymax + (ymax - ymin) * 0.1],
             zeroline: false
           };
           layout.showlegend = true;
@@ -593,9 +620,11 @@ phantasus.PcaPlotTool.prototype = {
           var myPlot = $chart[0];
           $chart.appendTo(_this.$chart);
 
-          layout.showlegend = !(size === 12 && color == null);
 
-          prepareLabelData();
+          if (drawLabels) {
+            prepareLabelData();
+          }
+
           Plotly.newPlot(myPlot, data, layout, config).then(putLabels);
           myPlot.on('plotly_afterplot', putLabels);
         };
