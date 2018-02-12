@@ -399,6 +399,7 @@ phantasus.FormBuilder.prototype = {
     var help = field.help;
     var value = field.value;
     var showLabel = field.showLabel;
+    var tooltipHelp = field.tooltipHelp;
     var style = field.style || '';
     var col = '';
     var labelColumn = '';
@@ -421,6 +422,10 @@ phantasus.FormBuilder.prototype = {
       html.push('<label for="' + id + '" class="' + this.labelClass
         + '">');
       html.push(title);
+      if (tooltipHelp) {
+        html.push('<div style="padding-left: 5px;" class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="' + tooltipHelp + '"></div>');
+
+      }
       html.push('</label>');
       if (isFieldStart && this.formStyle !== 'inline') {
         html.push('<div class="' + col + '">');

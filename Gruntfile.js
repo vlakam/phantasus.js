@@ -86,7 +86,12 @@ module.exports = function (grunt) {
         }
       },
       ext: {
-        files: ['js/*.js'],
+        files: ['js/*.js',
+          //ignore
+          '!js/phantasus-external.js',
+          '!js/phantasus-external-latest.min.js',
+          '!js/phantasus.js',
+          '!js/phantasus-latest.min.js'],
         tasks: ['concat:extJs', 'uglify:extJs']
       }
     },

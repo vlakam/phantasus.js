@@ -200,6 +200,16 @@ phantasus.ActionManager = function () {
   });
 
   this.add({
+    name: 'Submit to Enrichr',
+    cb: function (options) {
+      new phantasus.enrichrTool(
+        options.heatMap.getProject()
+      );
+    },
+    icon: 'fa fa-table'
+  });
+
+  this.add({
     which: [67], // C
     commandKey: true,
     name: 'Copy'
