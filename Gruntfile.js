@@ -8,16 +8,6 @@ module.exports = function (grunt) {
       + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; %> */'
     },
     uglify: {
-      phantasus: {
-        options: {
-          mangle: false,
-          compress: false,
-          preserveComments: false
-        },
-        files: {
-          'js/phantasus-latest.min.js': ['js/phantasus.js']
-        },
-      },
       extJs: {
         options: {
           mangle: false,
@@ -25,7 +15,9 @@ module.exports = function (grunt) {
           preserveComments: false
         },
         files: {
-          'js/phantasus-external-latest.min.js': ['js/phantasus-external.js']
+          'js/phantasus-external-other.min.js': ['js/phantasus-external-other.js'],
+          'js/phantasus-external-pdfkit-xlsx.min.js': ['js/phantasus-external-pdfkit-xlsx.js'],
+          'js/phantasus-external-plotly-echarts.min.js': ['js/phantasus-external-plotly-echarts.js']
         }
       }
     },
@@ -48,21 +40,33 @@ module.exports = function (grunt) {
       },
       extJs: {
         nonull: true,
-        dest: 'js/phantasus-external.js',
+        dest: 'js/phantasus-external-other.js',
         src: [
-          'js/d3.min.js', 'js/plotly-latest.min.js', 'js/jquery-2.2.4.min.js',
+          'js/d3.min.js', 'js/jquery-2.2.4.min.js',
           'js/bootstrap.min.js', 'js/underscore-min.js',
           'js/newick.js', 'js/hammer.min.js',
           'js/jquery.mousewheel.min.js',
           'js/bootstrap-select.min.js',
-          'js/xlsx.full.min.js', 'js/canvas2svg.js',
+          'js/canvas2svg.js',
           'js/canvg.js', 'js/rgbcolor.js',
           'js/jquery-ui.min.js', 'js/parser.js',
           'js/FileSaver.min.js', 'js/colorbrewer.js',
           'js/jquery.event.drag-2.2.js', 'js/slick.min.js', 'js/canvas-toBlob.js',
           'js/js.cookie.js', 'js/long.js', 'js/bytebuffer.js', 'js/protobuf.js',
           'js/opencpu-0.5.js', 'js/jstat.min.js', 'js/blob-stream.js', 'js/d3-labeler.js',
-          'js/canvas2pdf.js', 'js/pdfkit.js', 'js/echarts.min.js', 'js/papaparse.min.js']
+          'js/canvas2pdf.js', 'js/papaparse.min.js']
+      },
+      extJs2: {
+        nonull: true,
+        dest: 'js/phantasus-external-pdfkit-xlsx.js',
+        src: [
+          'js/pdfkit.js', 'js/xlsx.full.min.js']
+      },
+      extJs3: {
+        nonull: true,
+        dest: 'js/phantasus-external-plotly-echarts.js',
+        src: [
+          'js/plotly-latest.min.js', 'js/echarts.min.js']
       },
       phantasus: {
         options: {
@@ -88,11 +92,9 @@ module.exports = function (grunt) {
       ext: {
         files: ['js/*.js',
           //ignore
-          '!js/phantasus-external.js',
-          '!js/phantasus-external-latest.min.js',
-          '!js/phantasus.js',
-          '!js/phantasus-latest.min.js'],
-        tasks: ['concat:extJs', 'uglify:extJs']
+          '!js/phantasus-external*.js',
+          '!js/phantasus.js'],
+        tasks: ['concat', 'uglify']
       }
     },
     connect: {
@@ -137,13 +139,12 @@ module.exports = function (grunt) {
     grunt.task.run('concurrent');
   });
 
-  // rebuild js and css:
-  // grunt concat:phantasus concat:extJs uglify concat:extJsAll
   grunt.registerTask('default', 'serve');
   grunt.registerTask('dist', function () {
     grunt.task.run('concat');
     grunt.task.run('uglify');
   });
+
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
