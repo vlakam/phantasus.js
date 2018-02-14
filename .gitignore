@@ -1,9 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 node_modules/
-phantasus-external-other.min.js
-phantasus-external-pdfkit-xlsx.min.js
-phantasus-external-plotly-echarts.min.js
+phantasus-external-*.js
+phantasus-external-*.js.gz
+phantasus-external.js
 phantasus.js
 .RData
 .Rhistory
