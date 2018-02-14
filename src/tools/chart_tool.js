@@ -266,7 +266,8 @@ phantasus.ChartTool = function (chartOptions) {
 
     resizable: true,
     height: 600,
-    width: 900
+    width: 900,
+    closeOnEscape: false
   });
   this.$dialog = $dialog;
   this.draw();

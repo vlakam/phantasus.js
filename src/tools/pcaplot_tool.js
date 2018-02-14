@@ -188,7 +188,8 @@ phantasus.PcaPlotTool = function (chartOptions) {
 
     resizable: true,
     height: 620,
-    width: 950
+    width: 950,
+    closeOnEscape: false
   });
   this.$dialog = $dialog;
 

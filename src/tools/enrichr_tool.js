@@ -78,6 +78,7 @@ phantasus.enrichrTool = function (project) {
     resizable: true,
     height: 450,
     width: 600,
+    closeOnEscape: false,
     buttons: [
       {
         text: "Cancel",
